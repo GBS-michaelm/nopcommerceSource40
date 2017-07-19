@@ -1,3 +1,4 @@
 bin/
 obj/
 /.vs
+/Presentation/Nop.Web/Plugins/
