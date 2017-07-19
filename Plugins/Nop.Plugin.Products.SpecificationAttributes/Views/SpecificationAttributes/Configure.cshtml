@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Products.SpecificationAttributes.Models.ConfigureModel
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Welcome to product Specification Attributes plugin
+            </div>            
+        </div>
+    </div>
+}

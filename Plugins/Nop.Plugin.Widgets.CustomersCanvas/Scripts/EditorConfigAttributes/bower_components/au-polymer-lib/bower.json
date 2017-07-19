@@ -1,0 +1,36 @@
+{
+    "name": "au-polymer-lib",
+    "version": "1.0.22",
+    "authors": [
+        "Andrew Maxim Alex"
+    ],
+    "description": "Aurigma Polymer Custom Elements.",
+    "private": true,
+    "ignore": [],
+    "dependencies": {
+        "polymer": "^1.3.1",
+        "iron-signals": "*",
+        "iron-media-query": "*",
+        "iron-resizable-behavior": "*",
+        "paper-item": "*",
+        "paper-menu": "*",
+        "paper-card": "*",
+        "paper-spinner": "*",
+        "paper-tabs": "*",
+        "paper-toolbar": "*",
+        "iron-label": "*",
+        "iron-flex-layout": "*",
+        "iron-icons": "*",
+        "iron-pages": "*",
+        "iron-image": "*",
+        "paper-icon-button": "*",
+        "paper-radio-group": "*",
+        "paper-radio-button": "*",
+        "iron-overlay-behavior": "*",
+        "paper-listbox": "*",
+        "paper-dropdown-menu": "*",
+        "iron-component-page": "*",
+        "iron-demo-helpers": "*",
+        "juicy-html": "1.2.0"
+    }
+}

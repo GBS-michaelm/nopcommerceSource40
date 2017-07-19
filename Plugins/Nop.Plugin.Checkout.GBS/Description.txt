@@ -1,0 +1,10 @@
+Group: Misc
+FriendlyName: GBS Checkout
+SystemName: Checkout.GBS
+Version: 2.00
+SupportedVersions: 3.90
+Author: Joe Barrus
+DisplayOrder: 1
+FileName: Nop.Plugin.Checkout.GBS.dll
+Description: 
+LimitedToStores: 6

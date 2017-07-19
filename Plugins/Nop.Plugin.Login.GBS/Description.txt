@@ -1,0 +1,8 @@
+﻿Group: Misc
+FriendlyName: GBS LOGIN SERVICE
+SystemName: Login.GBS
+Version: 1.00
+SupportedVersions: 3.90
+Author: Joe BArrus
+DisplayOrder: 1
+FileName: Nop.Plugin.Login.GBS.dll

@@ -1,0 +1,151 @@
+﻿@model Nop.Plugin.Shipping.GBS.Models.Product.ProductExtendedFieldsModel
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4> Admin Resource for service / webApi </h4>
+        <hr>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.LoginId_OverrideForStore, model => model.LoginId, Model.ActiveStoreScopeConfiguration)
+            @*@Html.LabelFor(model => model.LoginId, htmlAttributes: new { @class = "control-label col-md-4" })*@
+            @Html.Label("Login Id", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.LoginId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LoginId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.Password_OverrideForStore, model => model.Password, Model.ActiveStoreScopeConfiguration)
+            @*@Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-4" })*@
+            @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.GBSShippingWebServiceAddress_OverrideForStore, model => model.GBSShippingWebServiceAddress, Model.ActiveStoreScopeConfiguration)
+            @*@Html.NopLabelFor(model => model.GBSShippingWebServiceAddress)*@
+            @Html.Label("Shipping Web Srv Address", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.GBSShippingWebServiceAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GBSShippingWebServiceAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.GBSStoreNamePrepend_OverrideForStore, model => model.GBSStoreNamePrepend, Model.ActiveStoreScopeConfiguration)
+            @*@Html.LabelFor(model => model.GBSStoreNamePrepend, htmlAttributes: new { @class = "control-label col-md-4" })*@
+            @Html.Label("Store Name Prepend", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.GBSStoreNamePrepend, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GBSStoreNamePrepend, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.UseFlatRate_OverrideForStore, model => model.UseFlatRate, Model.ActiveStoreScopeConfiguration)
+            @Html.Label("Use Flat Rate?", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.UseFlatRate, new { htmlAttributes = new { @class = "" } })
+                @Html.ValidationMessageFor(model => model.UseFlatRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.OverrideStoreCheckboxFor(model => model.FlatRateAmount_OverrideForStore, model => model.FlatRateAmount, Model.ActiveStoreScopeConfiguration)
+            @Html.Label("Flat Rate Amount", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.FlatRateAmount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FlatRateAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+        <hr>
+        <h4> Admin Side Extended Filed Local Resource Description </h4>
+        <hr>
+        <div class="form-group">
+            @*@Html.LabelFor(model => model.ShippingCategoryA, htmlAttributes: new { @class = "control-label col-md-4" })*@
+            @Html.Label("Description for Extended Field A", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.ShippingCategoryA, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ShippingCategoryA, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*@Html.LabelFor(model => model.ShippingCategoryB, htmlAttributes: new { @class = "control-label col-md-4" })*@
+            @Html.Label("Description for Extended Field B", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.ShippingCategoryB, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ShippingCategoryB, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr >
+        <h4> Local Resource Setting Update </h4>
+        <hr>
+        <div>
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.ShippingOptionDesError, htmlAttributes: new { @class = "control-label col-md-4" })*@
+                @Html.Label("Add Error Message for Rate", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.ShippingOptionDesError, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ShippingOptionDesError, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.ShippingOptionDesSuccess, htmlAttributes: new { @class = "control-label col-md-4" })*@
+                @Html.Label("Add Success Message for Rate", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.ShippingOptionDesSuccess, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ShippingOptionDesSuccess, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.ShippingOptionDesName, htmlAttributes: new { @class = "control-label col-md-4" })*@
+                @Html.Label("Add Description for Rate", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.ShippingOptionDesName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ShippingOptionDesName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.AddShippingCategoryWebApiUrl, htmlAttributes: new { @class = "control-label col-md-4" })*@
+                @Html.Label("Add GBS Product Table Name", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.TableName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TableName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+         
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-6">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+

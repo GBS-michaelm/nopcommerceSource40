@@ -1,0 +1,45 @@
+{
+  "name": "au-polymer-lib",
+  "version": "1.0.22",
+  "authors": [
+    "Andrew Maxim Alex"
+  ],
+  "description": "Aurigma Polymer Custom Elements.",
+  "private": true,
+  "ignore": [],
+  "dependencies": {
+    "polymer": "^1.3.1",
+    "iron-signals": "*",
+    "iron-media-query": "*",
+    "iron-resizable-behavior": "*",
+    "paper-item": "*",
+    "paper-menu": "*",
+    "paper-card": "*",
+    "paper-spinner": "*",
+    "paper-tabs": "*",
+    "paper-toolbar": "*",
+    "iron-label": "*",
+    "iron-flex-layout": "*",
+    "iron-icons": "*",
+    "iron-pages": "*",
+    "iron-image": "*",
+    "paper-icon-button": "*",
+    "paper-radio-group": "*",
+    "paper-radio-button": "*",
+    "iron-overlay-behavior": "*",
+    "paper-listbox": "*",
+    "paper-dropdown-menu": "*",
+    "iron-component-page": "*",
+    "iron-demo-helpers": "*",
+    "juicy-html": "1.2.0"
+  },
+  "_release": "1.0.22",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.22",
+    "commit": "88bbe8509141e2351e4c786e3df5d88a034eba57"
+  },
+  "_source": "https://tfs/tfs/CC_Collection/Integration/_git/au-polymer-lib",
+  "_target": "^1.0.21",
+  "_originalSource": "git+https://tfs/tfs/CC_Collection/Integration/_git/au-polymer-lib"
+}

@@ -1,0 +1,91 @@
+﻿@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Orders;
+@using System.Web.Mvc;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@using Nop.Services.Catalog;
+@using Nop.Plugin.Widgets.CustomersCanvas.Services;
+@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcEditorLoaderModel
+
+@{
+    Layout = "";
+    var settingsService = EngineContext.Current.Resolve<ISettingService>();
+    var ccSettings = settingsService.LoadSetting<CcSettings>();
+    var productService = EngineContext.Current.Resolve<IProductService>();
+    var productAttributeMappings = productService.GetProductById(Model.ProductId).ProductAttributeMappings;
+
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/bootstrap/bootstrap.min.css");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/bootstrap/bootstrap.min.js");
+}
+
+@{ 
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/aurigma.css");
+   
+    // polyfills
+	Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/es6-shim.min.js");
+	Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/finally.js");
+}
+
+<script type="text/javascript">
+
+    $().ready(function () {
+
+        // When RequireJS-compatible modules are inserted through <script>, you have to add require.js reference only in the end. That's why we dynamically load it only when the page is loaded completely.
+        var requireJsUrl = "@Url.Content("~/Plugins/Widgets.CustomersCanvas/Scripts/require.js")";
+        $.getScript(requireJsUrl).done(function () {
+
+            var requireCommon = requirejs.config({
+                baseUrl: '@Url.Content("~/Plugins/Widgets.CustomersCanvas/Scripts/")',
+            });
+
+            requireCommon(['ecommerce-driver', 'resource-helper'], function (driver, resources) {
+
+                var editorLoaderModel = JSON.parse(JSON.stringify(@Html.Raw(Json.Encode(Model))));
+
+                var editorJson = JSON.parse(@Html.Raw(Json.Encode(Model.Editor)));
+                var config = JSON.parse(@Html.Raw(Json.Encode(Model.Config)));
+
+                if (typeof (editorJson.styles) === 'object' && Array.isArray(editorJson.styles)) {
+                    editorJson.styles.forEach(function (style) {
+                        resources.loadLink("@Url.Content(Model.Path)/styles/" + style, "stylesheet", "text/css");
+                    });
+                }
+
+                // TODO: Consider removing it - only non-RequireJS scripts should be connected this way
+                if (typeof (editorJson.imports) === 'object' && Array.isArray(editorJson.imports)) {
+                    editorJson.imports.forEach(function (imported) {
+                        // if we meet a HTML file there, we consider it as a Polymer component and import it in a Polymer way.
+                        if (imported.endsWith(".html")) {
+                            resources.loadLink("@Url.Content(Model.Path)/imports/" + imported, "import");
+                        } else {
+                            resources.loadScript("@Url.Content(Model.Path)/imports/" + imported);
+                        }
+                    });
+                }
+
+                var editorModuleName = !!editorJson.entry ? editorJson.entry : "editor.js";
+
+                // Remove extension
+                var namecomp = editorModuleName.split(".");
+                namecomp.pop();
+                editorModuleName = namecomp.join(".");
+
+                var requirePlugin = requirejs.config({
+                    baseUrl: '@Url.Content(Model.Path)',
+                });
+
+                requirePlugin([editorModuleName], function (editor) {
+                    editorLoaderModel.ProductDetails.updateCartItemId = editorLoaderModel.UpdateCartItemId;
+
+                    driver.init(editorLoaderModel.ProductDetails, editor, config, editorLoaderModel.PluginSettings, null, editorLoaderModel.Quantity, editorLoaderModel.User);
+                    driver.orders.current.data = editorLoaderModel.CcData != null ? JSON.parse(editorLoaderModel.CcData.Data) : null;
+                    var editorid = "#editor-parent-for-productid-@Model.ProductDetails.Id";
+                    driver.products.current.renderEditor($(editorid)[0]);
+                });
+
+            });
+        }).fail(function () {
+            console.error("Failed to load RequireJS from " + requireJsUrl);
+        });
+    });
+</script>

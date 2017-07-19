@@ -1,0 +1,71 @@
+﻿@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcOrderModel
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Domain.Catalog;
+
+<div class="panel-group">
+    <table class="table table-hover table-bordered text-center">
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <thead>
+            <tr>
+                <th>
+                    @T("Admin.Orders.Products.Picture")
+                </th>
+                <th>
+                    @T("Admin.Orders.Products.ProductName")
+                </th>
+                <th>
+                    @T("Admin.Orders.Products.Quantity")
+                </th>
+                <th>
+                   Design
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td style="text-align: center; width: 15%;">
+                        <img src="@item.PictureThumbnailUrl" alt="" title="" />
+                    </td>
+                    <td style="text-align: left; width: 15%;">
+                        <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
+                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                        {
+                            <p>
+                                @Html.Raw(item.AttributeInfo)
+                            </p>
+                        }
+                    </td>
+                    <td style="width: 15%;">
+                        <div>@item.Quantity</div>
+                     </td>
+
+                    <td style="width: 55%;">
+                        @{
+                            var index = Model.Items.IndexOf(item);
+                        }
+
+                        @if (Model.CcResult.ElementAt(index) != null)
+                        {
+                            foreach (var img in Model.CcResult.ElementAt(index).ProofUrls)
+                            {
+                                <div style="display:inline-block"><a href="@img" target="_blank"><img src="@img" style="max-width:200px; max-height:200px" /></a></div>
+                            }
+
+                            foreach (var url in Model.CcResult.ElementAt(index).HiResUrls)
+                            {
+                                <div><a target="_blank" href="@url">Download pdf</a></div>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>  

@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.PriceCalculation.GBS.Models;
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <table class="adminContent">
+        <tr>
+            @*<td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSLoginWebServiceAddress_OverrideForStore, model => model.GBSLoginWebServiceAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSLoginWebServiceAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSLoginWebServiceAddress)
+                @Html.ValidationMessageFor(model => model.GBSLoginWebServiceAddress)
+            </td>*@
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+    
+}

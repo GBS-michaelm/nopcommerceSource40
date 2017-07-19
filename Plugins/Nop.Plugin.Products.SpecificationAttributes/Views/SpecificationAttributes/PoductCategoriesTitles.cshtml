@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Nop.Plugin.Products.SpecificationAttributes.Models.ProductCategoryTitleModel>
+@{
+    Layout = "";  
+}
+<div class="product-by">
+    @T("Product.Category") :
+    @foreach (var item in Model)
+    {
+        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">@item.CategoryName</a><text>, </text>
+    }
+</div>

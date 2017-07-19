@@ -1,0 +1,13 @@
+﻿@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Infrastructure;
+@{
+    Html.AppendScriptParts("~/Plugins/Widgets.CustomersCanvas/Scripts/webcomponents-lite.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/widget/CcWidget.js");
+}
+<script type="text/javascript">
+    var ccWidgetBaseUrl = '@Url.Content("~/")';
+</script>
+

@@ -1,0 +1,199 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../iron-label/iron-label.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-signals/iron-signals.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="au-responsive-image.html">
+<dom-module id="au-image-preview-list">
+    <template>
+        <style include="iron-flex">
+            :host {
+                width: 100%;
+                height: 100%;
+                --paper-tabs: {
+                    width: 100%;
+                    height: 100px;
+                    background: var(--primary-color);
+                    @apply --layout-flex;
+                };
+                @apply --layout;
+            }
+            
+            .flex-horizontal {
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+            }
+            
+            .flex-vertical {
+                @apply --layout-vertical;
+                @apply --layout-center-justified;
+            }
+            
+            .flex-auto {
+                @apply --layout-flex-auto;
+            }
+            
+            .thumb {
+                width: 96px;
+                height: 96px;
+                flex: 1 1 auto;
+            }
+            
+            #editStep {
+               @apply --au-image-preview-list-edit-button;
+            }
+            
+            #editStep:hover {
+                @apply --au-image-preview-list-edit-button-hover;
+            }
+
+            #editStep .text{
+                text-decoration:underline;
+            }
+            
+            .slider {
+                @apply --layout-horizontal;
+                @apply --layout-center-center;
+                flex-wrap: nowrap;
+            }
+            #thumbtabs{
+                flex: 1 1 auto;
+                background: transparent;
+            }
+
+            .container{
+                  @apply --layout;
+                  @apply --layout-vertical;
+                  @apply --layout-flex-auto;
+                  width:100%;
+                  height:100%;
+            }
+
+            .padding {
+               padding:5px;
+            }
+
+        </style>
+        <iron-signals on-iron-signal-approveimageupdate="setImage"></iron-signals>
+        <div class="container">
+            <div class="flex-vertical flex-auto padding">
+                <au-responsive-image src="[[src]]" id="imageHolder" class="flex-vertical"></au-responsive-image>
+                <paper-button id="editStep" on-tap="_editStepHandler">
+                   <!-- <iron-icon icon="editor:mode-edit"></iron-icon>-->
+                    <span class="text">Edit [[title]]</span>
+                </paper-button>
+            </div>
+            <template is="dom-if" id="carousel" if="[[isShowCarousel]]" on-dom-change="_onCarouselAttachedDetached">
+                <div class="horizontal layout center">
+                    <paper-icon-button icon="chevron-left" on-tap="_toLeft"></paper-icon-button>
+                    <paper-tabs id="thumbtabs" selected="{{selectedImageId}}" scrollable>
+                        <template is="dom-repeat" items="[[images]]">
+                            <paper-tab>
+                                <au-responsive-image class="thumb" src="[[item.src]]"></<au-responsive-image>
+                            </paper-tab>
+                        </template>
+                    </paper-tabs>
+                    <paper-icon-button icon="chevron-right" on-tap="_toRight"></paper-icon-button>   
+                </div>
+            </template>
+        </div>
+    </template>
+    <script>
+    Polymer({
+        is: 'au-image-preview-list',
+        properties: {
+            images: {
+                type: Array,
+                value: [],
+                notify: true
+            },
+            src: {
+                type: String,
+                computed:"_getSrc(images, selectedImageId)"
+            },
+            title: {
+                type: String,
+                computed:"_getTitle(images, selectedImageId)"
+            },
+            selectedImageId: {
+                type: Number,
+                value: 0,
+                notify: true
+            },
+            isShowCarousel: {
+                type: Boolean,
+                computed:"_isShowCarousel(images)"
+            }
+        },
+        _isShowCarousel:function(images){
+            return images && images.length > 1;
+        },
+        _getCarouselElement:function(){
+            return this.$$("#thumbtabs");
+        },
+        _onCarouselAttachedDetached:function(e){
+            if(this._getCarouselElement()){
+               this._getCarouselElement().hideScrollButtons = true;
+            }
+        },
+        _getSrc:function(images, selectedImageId){
+            if(images.length > 0){
+                return images[selectedImageId].src;
+            }
+            return "";
+        },
+        _getTitle:function(images, selectedImageId){
+            if(images.length > 0){
+                return images[selectedImageId].title;
+            }
+            return "";
+        },
+        _toLeft: function() {
+            this._getCarouselElement().selectPrevious();
+        },
+        _toRight: function() {
+            this._getCarouselElement().selectNext();
+        },
+        _updateImage: function(e) {
+            return this.setImage(e.detail.title, e.detail.step, e.detail.src);
+        },
+        setImage: function(title, step, src) {
+            var img = this.images.filter(function(item) {
+                return item.title === title;
+            })[0];
+
+            var imgIndex = this.images.indexOf(img);
+            if (imgIndex == -1) {
+                this.push('images', {
+                    title: title,
+                    step:step,
+                    src: src
+                });
+            } else {
+                this.set('images.' + imgIndex, {
+                    title: title,
+                    step:step,
+                    src: src
+                });
+            }
+            this.images = this.images.slice(0);
+        },
+        _editStepHandler: function(){
+           this.fire('iron-signal', {
+                name: "show-tab",
+                data: this.images[this.selectedImageId]
+           });
+        }
+    });
+    </script>
+</dom-module>

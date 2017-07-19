@@ -1,0 +1,33 @@
+﻿using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Models.Catalog;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Nop.Plugin.Products.SpecificationAttributes.Models
+{
+    public class ConfigureModel : BaseNopEntityModel
+    {
+        [NopResourceDisplayName("Plugin.ProductArtist.ArtistName")]
+        public string ArtistName { get; set; }
+    }
+
+    public class ProductCategoryTitleModel : BaseNopEntityModel
+    {
+        public string CategoryName { get; set; }
+
+        public string SeName { get; set; }
+    }
+
+    public class ProductByArtistModel: BaseNopEntityModel
+    {
+        public ProductByArtistModel()
+        {
+            Products = new List<ProductOverviewModel>();
+        }
+
+        public string ArtistName { get; set; }
+
+        public IList<ProductOverviewModel> Products { get; set; }
+    }
+}

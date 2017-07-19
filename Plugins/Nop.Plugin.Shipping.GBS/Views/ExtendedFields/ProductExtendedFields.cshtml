@@ -1,0 +1,40 @@
+﻿@model Nop.Plugin.Shipping.GBS.Models.Product.ProductGBSModel
+
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Catalog;
+@using System.Text;
+@using Nop.Services
+@using Nop.Services.Customers
+@using Nop.Services.Stores
+
+
+@{
+    Layout = null;
+}
+
+
+    @{
+        var leftColumnClass =  "col-md-4";
+        var rightColumnClass = "col-md-7";
+    }
+    <div class="form-group" >
+        <div class="@leftColumnClass">
+            @Html.NopLabelFor(model => model.ShippingCategoryA)         
+        </div>
+        <div class="@rightColumnClass">
+            @Html.NopEditorFor(model => model.ShippingCategoryA)
+            @Html.ValidationMessageFor(model => model.ShippingCategoryA)
+        </div>
+        </div>
+    <div class="form-group">
+
+        <div class="@leftColumnClass">
+            @Html.NopLabelFor(model => model.ShippingCategoryB)
+        </div>
+        <div class="@rightColumnClass">
+            @Html.NopEditorFor(model => model.ShippingCategoryB)
+            @Html.ValidationMessageFor(model => model.ShippingCategoryB)
+        </div>
+</div>
+
+

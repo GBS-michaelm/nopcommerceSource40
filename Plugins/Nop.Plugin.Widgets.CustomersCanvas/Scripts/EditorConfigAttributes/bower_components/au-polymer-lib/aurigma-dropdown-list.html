@@ -1,0 +1,85 @@
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="aurigma-dropdown-list">
+  <style>
+      :host{
+        display:block;
+        margin:5px;
+      }
+      paper-dropdown-menu{
+        width:100%;
+      }
+
+      paper-listbox{
+        width :100%;
+        max-height: var(--aurigma-color-scheme-picker-max-menu-height, 300px);
+        background-color: var(--theme-primary-color);
+        color:var(--theme-secondary-color);
+        overflow-y: auto;
+      } 
+  </style>
+  <template>
+  <paper-dropdown-menu label="{{title}}" disabled$="{{!enabled}}" vertical-align="top">
+    <paper-listbox class="dropdown-content" style$="width:[[elementWidth]];" selected="{{selected}}" attr-for-selected="[[attrForSelected]]">
+      <content></content>
+    </paper-listbox>
+  </paper-dropdown-menu>
+</template>
+</dom-module>
+<script>
+  Polymer({
+      is: 'aurigma-dropdown-list',
+      properties: {
+        title:{
+          type:String,
+          value:""
+        },
+        attrForSelected:{
+          type:String,
+          value:""
+        },
+        selected:{
+           type:Array,
+           value:null
+        },
+        enabled:{
+           type:Boolean,
+           value:true
+        },
+        elementWidth:{
+           type:String,
+           value:""
+        }
+
+      },
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+      listeners: {
+        'iron-resize': '_onIronResize',
+        'iron-select': '_onIronSelect'
+      },
+      _onIronResize:function(){
+        this.elementWidth = this.clientWidth + "px"
+      },
+      modelForElement: function (el) {
+        var model;
+        if(model = el._templateInstance){
+           return model.item || null;
+        }
+        return null;
+      },
+      _onIronSelect:function(e,data){
+        this.fire('change', this.modelForElement(data.item));
+      },
+      attached: function() {
+        this.async(function(){
+           this.notifyResize();
+        },1);
+      },
+  });
+</script>

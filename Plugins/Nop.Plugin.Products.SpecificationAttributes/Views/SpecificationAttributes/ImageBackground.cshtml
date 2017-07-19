@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "";
+    string color = ViewBag.DefaultColor;
+    string className = ViewBag.ClassName;
+    int productId = ViewBag.ProductId;
+
+    bool isImage = false;
+    if (color != null)
+    {
+        if (color.Contains("#") && color.Length == 7)
+        {
+            isImage = false;
+        }
+        else
+        {
+            isImage = true;
+        }
+    }
+}
+<script type="text/javascript">
+   
+    $(document).on("nopAjaxFiltersFiltrationCompleteEvent", function () {
+        $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').addClass('@className');
+        $("div").find("[data-productid='@productId'].product-item").find('.picture').find('a').addClass('@className');
+        if ('@isImage' == 'True') {
+            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
+            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-image", "url('@color')");
+        }
+        else {
+            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').css("background-color", "@color");
+            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-color", "@color");
+        }
+    });
+
+    $(window).load(function () {
+        $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').addClass('@className');
+        $("div").find("[data-productid='@productId'].product-item").find('.picture').find('a').addClass('@className');
+        if ('@isImage' == 'True') {
+            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
+            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-image", "url('@color')");
+        }
+        else {
+            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').css("background-color", "@color");
+            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-color", "@color");
+        }
+  });
+
+</script>
+
+<style>
+    .Horizontal {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
+    }
+
+    .Vertical {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
+    }
+</style>

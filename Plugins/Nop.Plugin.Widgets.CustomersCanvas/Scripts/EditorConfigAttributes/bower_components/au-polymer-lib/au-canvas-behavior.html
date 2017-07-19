@@ -1,0 +1,1044 @@
+<script>
+ /**
+  * @polymerBehavior
+  */   
+auCanvasBehavior = {
+    properties: {
+        customersCanvas: {
+            type: Object,
+        },
+        isReady: {
+            type: Boolean,
+            value: false
+        },
+        baseUrl: {
+            type: String,
+            notify: true
+        },
+        isPlaceholder: {
+            type: Boolean,
+            value: false,
+        },
+    },
+    _getBaseUrl: function() {
+        return this.baseUrl;
+    },
+
+    created: function() {
+        this.customersCanvas = new AurigmaPromise();
+    },
+
+    load: function(productDefinition, editorConfig) {
+        var self = this;
+        return CustomersCanvas.IframeApi.loadEditor(this.$.editorFrame, productDefinition, editorConfig).then(function(editor) {
+            return editor.getProduct().then(function(product) {
+                return product.switchTo(product.surfaces[0]).then(function() {
+                    self.customersCanvas.resolve(editor);
+                    self.fire('ready', {
+                        product: product,
+                        customersCanvas: editor
+                    });
+                });
+            }).catch(function(error) {
+                console.error("Load failed with exception: ", error);
+            });
+        });
+    },
+
+    setMockupTo: function(name, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.getProduct().then(function(product) {
+                    var surface;
+                    if (typeof(surfaceIndex) === 'undefined') {
+                        surface = product.currentSurface;
+                    } else {
+                        surface = product.surfaces[surfaceIndex];
+                    }
+                    return surface.setMockup({
+                        up: {
+                            mockupFile: name
+                        }
+                    });
+                });
+            })
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call setMockupTo";
+            });
+    },
+
+    setSurfaceTo: function(surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.getProduct().then(function(product) {
+                    return product.switchTo(product.surfaces[surfaceIndex]);
+                });
+            })
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call setSurfaceTo";
+            });
+    },
+
+    addText: function(layerName, text, placement, font, isRich, noneditable, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__addText, layerName, text, placement, font, isRich, noneditable, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call addText";
+            });
+    },
+
+    updateText: function(layerName, text, isRich, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__updateText, layerName, text, isRich, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call updateText";
+            });
+    },
+
+    updateImage: function(layerName, imageFileName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__updateImage, layerName, imageFileName, this._getBaseUrl(), surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call updateImage";
+            });
+    },
+
+    resetPlaceholder: function(layerName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__resetPlaceholder, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call resetPlaceholder";
+            });
+    },
+
+    prohibitAllEditing: function(surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__prohibitAllEditing, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call prohibitAllEditing";
+            });
+
+    },
+
+    setLockFor: function(layerName, value, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__setLockFor, layerName, value, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call setLockFor";
+            });
+    },
+
+    selectItem: function(layerName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__selectItem, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call selectItem";
+            });
+    },
+
+    forceUpdate: function() {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__forceUpdate);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call forceUpdate";
+            });
+
+    },
+    getResults: function(proofWidth, proofHeight) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.finishProductDesign({
+                    maxWidth: proofWidth,
+                    maxHeight: proofHeight
+                });
+            })
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call getResults";
+            });
+    },
+
+    getProofImages: function(width, height) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.getProofImages({
+                    maxWidth: width,
+                    maxHeight: height
+                });
+            })
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call getProofImages";
+            });
+    },
+    updateRectangleColor: function(layerName, color, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__updateRectangleColor, layerName, color, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call updateRectangleColor";
+            });
+    },
+
+    addNoPrintRectangle: function(layerName, x, y, width, height, color, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__addNoPrintRectangle, x, y, width, height, color, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call addNoPrintRectangle";
+            });
+    },
+
+    getText: function(layerName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__getText, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call getText";
+            });
+    },
+
+    hasPlaceholder: function(surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__hasPlaceholder, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call hasPlaceholder";
+            });
+    },
+
+    toggleObjectInspector: function(isShow) {
+        return Promise.all([
+            this.__methodExecuter(this.__toggleElement, ".sidebarContainer", isShow),
+            this.__methodExecuter(this.__toggleElement, ".controlsToolbar", isShow),
+            this.__methodExecuter(this.__expandEditorContainer, !isShow)
+        ]).catch(function(err) {
+            console.log(err);
+            throw "Failed to call toggleObjectInspector";
+        });
+    },
+
+    toggleTopToolbar: function(isShow) {
+       return this.__methodExecuter(this.__toggleElement, "cc-top-toolbar", isShow);
+    },
+
+    toggleLeftToolbar: function(isShow) {
+       return this.__methodExecuter(this.__toggleElement, ".leftToolbar", isShow);
+    },
+
+    toggleBottomToolbar: function(isShow) {
+        return this.__methodExecuter(this.__toggleElement, ".bottomToolbar", isShow);
+    },
+
+    setTextPatching: function() {
+        return this.customersCanvas.then(function(editor) {
+            return editor.eval(this.__setTextPatching);
+        }.bind(this)).catch(function(err) {
+            console.log(err);
+            throw "Failed to call setTextPatching";
+        });
+
+    },
+
+    subscribeToTextChanges: function(layerName, callback) {
+        return this.customersCanvas.then(function(editor) {
+            editor.subscribe('textChanged', function(args) {
+                if (args['layerName'] === layerName && callback && typeof(callback) === 'function')
+                    callback(args['text']);
+            });
+        });
+    },
+
+    clearSelection: function() {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__clearSelection);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call clearSelection";
+            });
+    },
+
+    getFontSetting: function(layerName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__getFontSetting, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call getFontSetting.";
+            });
+    },
+
+    setFontSetting: function(layerName, fontSettings, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__setFontSetting, layerName, fontSettings, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call setFontSetting.";
+            });
+    },
+
+    fillTextFields: function(layerName, text) {
+        return this.customersCanvas
+            .then(function(editor) {
+                editor.getProduct()
+                    .then(function(product) {
+                        product.surfaces.forEach(function(item, surfaceIndex) {
+                            editor.eval(this.__updateText, layerName, text, null, surfaceIndex);
+                        }.bind(this));
+                    }.bind(this))
+            }.bind(this));
+    },
+
+    subscribeTextCrop: function() {
+        var self = this;
+        this.customersCanvas
+            .then(function(editor) {
+                editor.subscribe("$text_cropped_event", function(id, name, cropped) {
+                    self.fire('iron-signal', {
+                        name: "cropped",
+                        data: {
+                            cropped: cropped
+                        }
+                    });
+                });
+
+                return editor.eval(this.__subscribeTextCrop);
+
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call subscribeTextCrop.";
+            });
+    },
+
+    addMockupImage: function(layerName, imageName, width, height, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__addMockupImage, layerName, imageName, this._getBaseUrl(), width, height, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call addMockupImage";
+            });
+    },
+
+    removeMockupImage: function(layerName, surfaceIndex) {
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval(this.__removeMockupImage, layerName, surfaceIndex);
+            }.bind(this))
+            .catch(function(err) {
+                console.log(err);
+                throw "Failed to call removeMockupImage";
+            });
+    },
+
+    applyColorThemePalette: function(palette) {
+        return this.__methodExecuter(this.__applyColorThemePalette, palette || []);
+    },
+
+
+    /* STARTING CODE WHICH RUNS INSIDE CC IFRAME */
+
+    /**
+     * @param {Function} method
+     * @param {...Object} params
+     * @return {Promise}
+     */
+    __methodExecuter: function(method, params) {
+        var args = Array.from(arguments);
+        var funcCaller = arguments.callee.caller;
+        var callerFuncName = funcCaller ? funcCaller.name : null;
+        var self = this;
+        return this.customersCanvas
+            .then(function(editor) {
+                return editor.eval.apply(editor, args);
+            })
+            .catch(function(err) {
+                console.error(err);
+                if(!callerFuncName && funcCaller){
+                    for (var o in self) {
+                        if (funcCaller === self[o]){
+                            callerFuncName = o;
+                            break;
+                        } 
+                    }
+                }
+                throw "Failed to call " + callerFuncName;
+            });
+    },
+
+    /**
+     * 
+     * Experemental method that injects local behaviour functions into customersCanvas side function.
+     * @example
+     *  var func = function(isShow){
+     *    this.__toggleElement(".sidebarContainer", isShow);
+     *    this.__toggleElement(".controlsToolbar", false);
+     *    this.__expandEditorContainer(!isShow);
+     *  };
+     *  this.__complexMethodExecuter(func, true);
+     * 
+     * @param {Function} complexMethod
+     * @param {...Object} params
+     * @return {Promise}
+     */
+    __complexMethodExecuter: function(complexMethod, params) {
+        params = Array.prototype.slice.call(arguments);
+        var complexMethodStr = params.shift().toString();
+        var needToInject = complexMethodStr.split(/^.*this\.([^\(]+)\s*\(.*$/mig).filter(function(item, i){return i > 0 && /[\w\d]+/ig.test(item);});
+        var curlyIndex =  complexMethodStr.indexOf("{");
+
+        var paramsStr =/^.*\(([^\)]+)\).*$/ig.exec(complexMethodStr.substring(0, curlyIndex))[1]; 
+        var injectedPart = "";
+        var bodyPart = complexMethodStr.substring(curlyIndex + 1, complexMethodStr.length - 1);
+
+        var self = this;
+        needToInject.forEach(function(injectedMethodName){
+            if(self[injectedMethodName]){
+                injectedPart += " var " + injectedMethodName + " = " + self[injectedMethodName].toString() + ";"
+            }
+            bodyPart = bodyPart.replace("this." + injectedMethodName, injectedMethodName);
+        });
+        var updatedMethod = new Function(paramsStr, [injectedPart, bodyPart].join(""));
+        return this.__methodExecuter.apply(this, [updatedMethod].concat(params));
+    },
+
+    __removeMockupImage: function(layerName, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.mockup.getDownContainers()[0];
+
+        var items = layer.getItems().filter(function(item, index) {
+            return item.name.toLowerCase().indexOf(layerName.toLowerCase()) == -1
+        });
+        
+        layer.setItems(items);
+        spEditor.productHandler.updateView();
+    },
+
+    __addMockupImage: function(layerName, imageName, ccUrl, width, height, surfaceIndex) {
+        if (!ccUrl) {
+            ccUrl = document.location.protocol + "//" + document.location.hostname;
+            if (!!document.location.port) {
+                ccUrl += ":" + document.location.port;
+            }
+            ccUrl += spEditor.productHandler._app.configuration.appDomainUrl;
+        }
+
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.mockup.getDownContainers()[0];
+        var items = layer.getItems();
+
+        var image = null;
+        var isItemExist = false;
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                image = item;
+                isItemExist = true;
+            }
+        });
+
+        var point = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.Math.PointF(0, 0);
+        if (image == null) {
+            image = new CustomersCanvas.Model.ImageItem(null, point, width, height);
+        }
+
+        var transformRectangle = image.getTransformedRectangle();
+        image.loadImage(ccUrl, imageName, image.sourceRectangle).then(function() {
+            image.name = layerName;
+            image.setTransformedRectangle(transformRectangle);
+            if (!isItemExist) {
+                items.push(image);
+            }
+            layer.setItems(items);
+            spEditor.productHandler.updateView();
+        });
+
+    },
+
+    __subscribeTextCrop: function() {
+        var BoundedTextItem = CustomersCanvas.Model.BoundedTextItem;
+        var spEditor = window.spEditor;
+
+        var boundedTexts = spEditor.model.product.getAllItems().filter(function(i){ return i instanceof BoundedTextItem});
+
+        boundedTexts.forEach(function(item) {
+            item.checkTextCrop = true;
+            spEditor.productHandler.updateItem(item, {
+                addToHistory: false
+            });
+
+            spEditor.rootScope.$watch(
+                 function(){ return item.currentTextImage.textCropped; },
+                 function(textCropped) {
+                    spEditor._postMessageServer
+                        .notifySubscribers("$text_cropped_event", item.id, item.name, textCropped);
+                }
+            );
+        });
+    },
+
+
+    __setFontSetting: function(layerName, fontSettings, surfaceIndex) {
+        if (fontSettings) {
+            var product = spEditor.model.product;
+            var surface = null;
+            if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+                surface = product.getCurrentSurface();
+            } else {
+                surface = product.getSurfaces()[surfaceIndex];
+            }
+
+            var layer = surface.getPrintAreas()[0].getContainers()[1];
+            var items = layer.getItems();
+            items.forEach(function(item) {
+                if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                    if (typeof(item._font) !== 'undefined') {
+                        if (fontSettings.font) {
+                            item._font.fauxBold = fontSettings.font.fauxBold;
+                            item._font.fauxItalic = fontSettings.font.fauxItalic;
+                            item._font.postScriptName = fontSettings.font.postScriptName;
+                            item._font.size = fontSettings.font.size;
+                        }
+                        item.actualAngle = fontSettings.actualAngle;
+                        item.underline = fontSettings.underline;
+                        if (fontSettings.color) {
+                            item.color.A = fontSettings.color.A;
+                            item.color.R = fontSettings.color.R;
+                            item.color.G = fontSettings.color.G;
+                            item.color.B = fontSettings.color.B;
+                        }
+                        // item.alignment = fontSettings.alignment;
+                        item.tracking = fontSettings.tracking;
+                        item.leading = fontSettings.leading;
+                        item.horizontalScale = fontSettings.horizontalScale;
+                        item.verticalScale = fontSettings.verticalScale;
+                        item.stroke = fontSettings.stroke;
+                        item.shadow = fontSettings.shadow;
+                    }
+                }
+            });
+            spEditor.productHandler.updateView();
+        }
+    },
+
+    __getFontSetting: function(layerName, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var fontSettings = {};
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                if (typeof(item._font) !== 'undefined') {
+                    if (item._font) {
+                        fontSettings.font = item._font;
+                        fontSettings.actualAngle = item.actualAngle;
+                        fontSettings.underline = item.underline;
+                        fontSettings.color = item.color;
+                        // fontSettings.alignment = item.alignment;
+                        fontSettings.tracking = item.tracking;
+                        fontSettings.leading = item.leading;
+                        fontSettings.horizontalScale = item.horizontalScale;
+                        fontSettings.verticalScale = item.verticalScale;
+                        fontSettings.stroke = item.stroke;
+                        fontSettings.shadow = item.shadow;
+                    }
+                }
+            }
+        });
+        return fontSettings;
+    },
+
+    __clearSelection: function() {
+        spEditor._canvas.clearSelectedVObjects();
+    },
+
+    __setTextPatching: function() {
+        patch({
+            object: CustomersCanvas.SimplePolygraphy.WidgetsController.prototype,
+            method: "setText",
+            after: function(args) {
+                var text = args[1];
+                var itemName = args[0].name;
+                this._handler._app._postMessageServer.notifySubscribers('textChanged', {
+                    layerName: itemName,
+                    text: text
+                });
+            },
+        });
+
+        function patch(options) {
+            var origMethod = options.object[options.method];
+
+            if (options.replace) {
+                options.object[options.method] = function() {
+                    var rv = options.replace.call(this, origMethod, arguments);
+
+                    if (options.once)
+                        options.object[options.method] = origMethod;
+
+                    return rv;
+                };
+            } else
+            if (options.before) {
+                options.object[options.method] = function() {
+                    options.before.call(this, arguments);
+
+                    if (options.once)
+                        options.object[options.method] = origMethod;
+
+                    return origMethod.apply(this, arguments);
+                };
+            } else
+            if (options.after) {
+                options.object[options.method] = function() {
+                    origMethod.apply(this, arguments);
+
+                    if (options.once)
+                        options.object[options.method] = origMethod;
+
+                    return options.after.call(this, arguments);
+                };
+            }
+        }
+    },
+
+    /**
+     * @param {!String}  ementSelector
+     * @param {boolean=} isShow
+     */
+    __toggleElement: function(elementSelector, isShow) {
+        var element = elementSelector && elementSelector.length > 0 ? document.querySelector(elementSelector) : null;
+        if (element) {
+            if(typeof isShow == "undefined"){
+                isShow = !element.offsetParent
+            }
+            if(isShow){
+                 if(element.hasAttribute("hidden")){
+                     element.removeAttribute("hidden");
+                 }
+                 if(element.style.display == 'none'){
+                    element.style.display = 'block'
+                 }
+            }else{
+                if(!element.hasAttribute("hidden")){
+                     element.setAttribute("hidden", "");
+                 }
+            }
+        }
+    },
+
+    /**
+     * @param {boolean=} isExpand
+     */
+    __expandEditorContainer: function(isExpand) {
+        var editorContainer = document.querySelector('.editorContainer');
+        if (editorContainer) {
+              editorContainer.style.minWidth = isExpand ? "100%" : (editorContainer.style.width || "70%");
+        }
+    },
+
+    __hasPlaceholder: function(surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var item = items.find(function(item) {
+            return item.type == "PlaceholderItem";
+        });
+        if (item)
+            return true;
+        else
+            return false;
+    },
+
+    __getText: function(layerName, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+
+        if (typeof(isRich) === 'undefined') {
+            isRich = false;
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var item = items.find(function(item) {
+            return item.name.toLowerCase() == layerName.toLowerCase() && typeof(item.text) != 'undefined';
+        });
+
+        if (item)
+            return item.text;
+        else return "";
+    },
+
+    __resetPlaceholder: function(layerName, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0 && item.type == "PlaceholderItem") {
+                item.content = new CustomersCanvas.Model.ImageItem();
+            }
+        });
+    },
+
+    __updateImage: function(layerName, imageFileName, ccUrl, surfaceIndex) {
+        //imageFileName is file from folder SourceImages in CC instance
+        if (!ccUrl) {
+            ccUrl = document.location.protocol + "//" + document.location.hostname;
+            if (!!document.location.port) {
+                ccUrl += ":" + document.location.port;
+            }
+            ccUrl += spEditor.productHandler._app.configuration.appDomainUrl;
+        }
+
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                var img = item;
+                if (item.type == "PlaceholderItem" && item.content.type == "ImageItem") {
+                    item.contentResizeMode = 1;
+                    img = item.content;
+                }
+                img.loadImage(ccUrl, imageFileName, item.sourceRectangle).then(function() {
+                    spEditor.productHandler.updateView();
+                    item.name = layerName;
+                });
+            }
+        });
+    },
+
+    __addText: function(layerName, text, placement, fontSetting, isRich, noneditable, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+
+        if (typeof(isRich) === 'undefined') {
+            isRich = false;
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+
+        var r = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.Math.RectangleF(placement.x, placement.y, placement.width, placement.height);
+        var textItem = new CustomersCanvas.Model.BoundedTextItem(text, r, fontSetting.name, fontSetting.size);
+        var alignments = {
+            left: 0,
+            center: 1,
+            right: 2,
+            justify: 3,
+            lastleft: 4,
+            lastright: 5,
+            lastcenter: 6,
+            lastjustify: 7
+        };
+        if (typeof(alignments[fontSetting.alignment.toLowerCase()]) !== "undefined") {
+            textItem.alignment = alignments[fontSetting.alignment.toLowerCase()];
+        }
+        textItem.name = layerName;
+        textItem.isRichText = isRich;
+        if (typeof(fontSetting.color) !== "undefined") {
+            textItem.color = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.RgbColor(fontSetting.color);
+        }
+        if (typeof(fontSetting.fauxBold) !== "undefined") {
+            textItem.font.fauxBold = fontSetting.fauxBold;
+        }
+        if (typeof(fontSetting.fauxItalic) !== "undefined") {
+            textItem.font.fauxItalic = fontSetting.fauxItalic;
+        }
+        if (typeof(fontSetting.leading) !== "undefined") {
+            textItem.leading = fontSetting.leading;
+        }
+        if (noneditable) {
+            textItem.manipulationPermissions.allowRotate = false;
+            textItem.manipulationPermissions.allowArbitraryResize = false;
+            textItem.manipulationPermissions.allowProportionalResize = false;
+            textItem.manipulationPermissions.allowMoveHorizontal = false;
+            textItem.manipulationPermissions.allowMoveVertical = false;
+            textItem.manipulationPermissions.allowDelete = false;
+            textItem.textPermissions.allowChangeShadow = false;
+            textItem.textPermissions.allowChangeStroke = false;
+        }
+
+        textItem.getItemChangedEvent().add(function() {
+            spEditor._widgetsController._handler.itemChangedEvent.fire(textItem);
+        });
+
+        items.push(textItem);
+        layer.setItems(items);
+        spEditor.productHandler.updateView();
+    },
+
+    __updateText: function(layerName, text, isRich, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+
+        if (typeof(isRich) === 'undefined' || isRich === null) {
+            isRich = false;
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var oiListener = spEditor.injector.get(CustomersCanvas.Editors.SimplePolygraphy.Widgets.IObjectInspectorListener.injectName);
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                item.isRichText = isRich;
+                oiListener.setText(item, text.toString());
+                item.text = text.toString();
+                item.name = layerName;
+            }
+        });
+
+        // Workaround for a problem when empty strings are not redrawn properly
+        function isNullOrWhiteSpace(str) {
+            return str == null || str.replace(/\s/g, '').length < 1;
+        }
+        if (isNullOrWhiteSpace(text)) {
+            spEditor.productHandler.updateView();
+        }
+    },
+
+    __updateRectangleColor: function(layerName, color, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+
+        var layer = surface.mockup.getDownContainers()[0];
+        var items = layer.getItems();
+
+        items.forEach(function(item) {
+            if (item.name.toLowerCase().indexOf(layerName.toLowerCase()) >= 0) {
+                item.fillColor = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.RgbColor(color);
+            }
+        });
+        spEditor.productHandler.updateView();
+    },
+
+    __addNoPrintRectangle: function(x, y, width, height, color, name, surfaceIndex) {
+        var r = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.Math.RectangleF(x, y, width, height);
+        var rectangle = new CustomersCanvas.Model.RectangleItem(r);
+        rectangle.name = name;
+        rectangle.locked = true;
+        rectangle.fillColor = new Aurigma.GraphicsMill.AjaxControls.VectorObjects.RgbColor(color);
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var container = new CustomersCanvas.Model.MockupContainer([rectangle]);
+        surface.mockup.setDownContainers([container]);
+        spEditor.productHandler.updateView();
+    },
+
+    __prohibitAllEditing: function(surfaceIndex) {
+        var prohibitManipulations = function(item) {
+            item.manipulationPermissions.allowRotate = false;
+            item.manipulationPermissions.allowArbitraryResize = false;
+            item.manipulationPermissions.allowProportionalResize = false;
+            item.manipulationPermissions.allowMoveHorizontal = false;
+            item.manipulationPermissions.allowMoveVertical = false;
+            item.manipulationPermissions.allowDelete = false;
+        }
+
+        var prohibitTextEditing = function(item) {
+            item.textPermissions.allowChangeShadow = false;
+            item.textPermissions.allowChangeStroke = false;
+        }
+
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        items.forEach(function(item) {
+            prohibitManipulations(item);
+            if (item.type === "BoundedTextItem" || item.type === "PlainTextItem") {
+                prohibitTextEditing(item);
+            }
+            item.locked = true;
+        });
+    },
+
+    __selectItem: function(layerName, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var item = items.find(function(i) {
+            return i.name.toLowerCase() == layerName.toLowerCase();
+        });
+        if (!!item && (typeof(item.text) === 'undefined' || item.text != "")) {
+            var vo = item.correspondingVObject;
+            if (!spEditor._canvas.isVObjectSelected(vo))
+                spEditor._canvas.set_selectedVObjects([vo]);
+        }
+    },
+
+    __setLockFor: function(layerName, value, surfaceIndex) {
+        var product = spEditor.model.product;
+        var surface = null;
+        if (typeof(surfaceIndex) === 'undefined' || surfaceIndex == null) {
+            surface = product.getCurrentSurface();
+        } else {
+            surface = product.getSurfaces()[surfaceIndex];
+        }
+        var layer = surface.getPrintAreas()[0].getContainers()[1];
+        var items = layer.getItems();
+        var item = items.find(function(i) {
+            return i.name.toLowerCase() == layerName.toLowerCase();
+        });
+        if (!!item) {
+            item.locked = value;
+        }
+    },
+
+    __forceUpdate: function() {
+        spEditor.productHandler.updateView();
+    },
+
+    __applyColorThemePalette: function(palette) {
+        var page = spEditor.productHandler.product.getSurfaces()[0];
+        var layer = page.getPrintAreas()[0].getContainers()[1];
+        layer.getItems().forEach(function(elem) {
+            var matches = elem.name.match(/COLOR:\D+:\d+/g);
+            if (!!matches) {
+                matches.forEach(function(match) {
+                    // Contains three elements: 0 = COLOR, 1 = FILL or STROKE, 2 = index in a palette (1-based)
+                    var colorVariable = match.split(":");
+                    if (colorVariable.length > 2 && palette.length >= colorVariable[2]) {
+                        var colorStr = palette[colorVariable[2] - 1];
+                        var voNameSpace =  Aurigma.GraphicsMill.AjaxControls.VectorObjects;
+                        var colorConstructor = /device-cmyk/.test(colorStr) ? voNameSpace.CmykColor : voNameSpace.RgbColor
+                        var color = new colorConstructor(colorStr);
+                        switch (colorVariable[1]) {
+                            case "FILL":
+                                if (elem.type == "ShapeItem") {
+                                    elem.fillColor = color;
+                                }
+                                if (elem instanceof CustomersCanvas.Model.BaseTextItem) {
+                                    elem.color = color;
+                                }
+                                break;
+                            case "STROKE":
+                                if (elem.type == "ShapeItem") {
+                                    elem.borderColor = color;
+                                } else if (elem instanceof CustomersCanvas.Model.BaseTextItem && !!elem.stroke) {
+                                    elem.stroke.Color = color;
+                                }
+                                break;
+                        }
+                    }
+                })
+            }
+            spEditor.productHandler.updateItem(elem);
+        });
+        spEditor.productHandler.getProductUpdateEvent().fire();
+        spEditor.productHandler.updateView();
+    }
+
+    /* END OF THE CODE WHICH RUNS INSIDE CC IFRAME */
+};
+</script>

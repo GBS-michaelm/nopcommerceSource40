@@ -1,0 +1,369 @@
+﻿@using Nop.Core.Domain.Catalog;
+@using Nop.Services;
+@using Nop.Core.Domain.Catalog
+@using Nop.Services
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Admin.Models.Catalog;
+
+
+@model ProductModel.ProductAttributeValueModel
+
+@{
+    Html.AddScriptParts("~/Administration/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Administration/Content/farbtastic/farbtastic.css");
+
+    //register CSS and JS
+    Html.AddCssFileParts("~/Administration/Scripts/fineuploader/fineuploader-4.2.2.min.css");
+    Html.AddScriptParts("~/Administration/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
+
+    //other variables
+    
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
+    var picture = pictureService.GetPictureById(Model.ImageSquaresPictureId);
+
+    const int pictureSize = 100;
+}
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ProductAttributeMappingId)
+@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
+@Html.HiddenFor(model => model.DisplayImageSquaresPicture)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
+        toggleProductType();
+    });
+
+    function toggleProductType() {
+        var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
+        if (selectedProductTypeId == @(((int) AttributeValueType.Simple).ToString())) {
+            $('#group-associated-product').hide();
+        $('#group-quantity').hide();
+        $('#group-price-adjustment').show();
+        $('#group-weight-adjustment').show();
+        $('#group-cost').show();
+    } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
+        $('#group-associated-product').show();
+        $('#group-quantity').show();
+        $('#group-price-adjustment').hide();
+        $('#group-weight-adjustment').hide();
+        $('#group-cost').hide();
+    }
+}
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AttributeValueTypeId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
+                            @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
+                        </div>
+                    </div>
+                    <div class="form-group" id="group-associated-product">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AssociatedProductId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.HiddenFor(model => model.AssociatedProductId)
+                            <span id="associate-product-name">@Model.AssociatedProductName</span>
+                            @Html.ValidationMessageFor(model => model.AssociatedProductId)
+                            <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary">
+                                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="group-quantity">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Quantity)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Quantity)
+                            @Html.ValidationMessageFor(model => model.Quantity)
+                        </div>
+                    </div>
+
+                    @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Locales[item].Name)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Locales[item].Name)
+                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                            </div>
+                        </div>
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    </div>
+    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Name)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                    </div>
+    ))
+                    @if (Model.ImageSquaresPictureId != null && Model.ImageSquaresPictureId != 0)
+                    {
+                        <p> <input name="colortype" type="radio" value="color" > Color </p>
+                        <p> <input name="colortype" type="radio" value="image" checked> Texture </p>
+                        <input type="text" id="ImageSquaresPictureId" name="ImageSquaresPictureId" style="display:none;" value="@Model.ImageSquaresPictureId" />
+                    }
+                    else
+                    {
+                        <p> <input name="colortype" type="radio" value="color" checked> Color </p>
+                        <p> <input name="colortype" type="radio" value="image"> Texture </p>
+                    }
+
+
+                    <div id="optioncolordiv" style="display:block;">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ColorSquaresRgb)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ColorSquaresRgb)
+                                <div id="color-picker"></div>
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                    });
+                                </script>
+                                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="imageoptiondiv" style="display:none;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="@(clientId + "image")" class="uploaded-image">
+                                    <img src="@(pictureService.GetPictureUrl(Model.ImageSquaresPictureId, pictureSize, true))" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @*fine uploader container*@
+                                <div id="@clientId" class="upload-image-button pull-left margin-t-5">
+                                    <noscript>
+                                        <p>Please enable JavaScript to use file uploader.</p>
+                                    </noscript>
+                                </div>
+                                <div class="remove-image-button pull-left margin-t-5">
+                                    @if (picture != null)
+                                    {
+                                        <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
+                                    }
+                                    else
+                                    {
+                                        <span id="@(clientId + "remove")" class="btn bg-red" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+                        <script type="text/template" id="@(clientId)-qq-template">
+                            <div class="qq-uploader-selector qq-uploader">
+                                <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                                    <span>@T("Common.FileUploader.DropFiles")</span>
+                                </div>
+                                <div class="qq-upload-button-selector qq-upload-button">
+                                    <div>@T("Common.FileUploader.Upload")</div>
+                                </div>
+                                <span class="qq-drop-processing-selector qq-drop-processing">
+                                    <span>@T("Common.FileUploader.Processing")</span>
+                                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                                </span>
+                                <ul class="qq-upload-list-selector qq-upload-list">
+                                    <li>
+                                        <div class="qq-progress-bar-container-selector">
+                                            <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                        </div>
+                                        <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                                        <span class="qq-upload-file-selector qq-upload-file"></span>
+                                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                                        <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                                        <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                                        <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                                        <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </script>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@(clientId)").fineUploader({
+                                    request: {
+                                        endpoint: '@(Url.Content("~/Plugins/CcProduct/AsyncUpload"))'
+                                    },
+                                    template: "@(clientId)-qq-template",
+                                    multiple: false
+                                }).on("complete", function (event, id, name, responseJSON, xhr) {
+                                    if (responseJSON.success) {
+
+                                        var imageSquaresPictureId = document.createElement('input');
+                                        imageSquaresPictureId.setAttribute("type", "text");
+                                        imageSquaresPictureId.setAttribute("id", "ImageSquaresPictureId");
+                                        imageSquaresPictureId.setAttribute("name", "ImageSquaresPictureId");
+                                        imageSquaresPictureId.setAttribute("style", "display:none");
+                                        imageSquaresPictureId.value = responseJSON.pictureId;
+
+                                        $("#imageoptiondiv").append(imageSquaresPictureId);
+
+                                        $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
+                                        $("#@(clientId + "value") input").val(responseJSON.pictureId);
+                                        $("#@(clientId + "remove")").show();
+                                    }
+                                });
+                                $("#@(clientId + "remove")").click(function (e) {
+                                    $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
+                                    $("#@(clientId + "value") input").val(0);
+                                    $(this).hide();
+                                });
+                            });
+                        </script>
+                    </div>
+
+                    <script>
+                        $("input[name='colortype']").change(function (elem) {
+                            if (elem.target.checked) {
+                                var status = $(this).val();
+                                if (status === 'color') {
+                                    $("#optioncolordiv").show();
+                                    $("#imageoptiondiv").hide();
+
+                                    $("#@(clientId + "remove")").click();
+
+                                    if ($("#imageoptiondiv #PictureId").length > 0)
+                                    {
+                                        $("#imageoptiondiv #PictureId")[0].remove();
+                                    }
+                                    if ($("#imageoptiondiv #ImageSquaresPictureId").length > 0)
+                                    {
+                                        $("#imageoptiondiv #ImageSquaresPictureId")[0].remove();
+                                    }
+                                    if ($("#ImageSquaresPictureId").length > 0)
+                                    {
+                                        $("#ImageSquaresPictureId")[0].remove();
+                                    }
+
+                                } else {
+                                    $("#optioncolordiv").hide();
+                                    $("#imageoptiondiv").show();
+                                }
+                            }
+                        });
+
+                        $("input[name='colortype']").change();
+                    </script>
+
+                        <div class="form-group" id="group-price-adjustment">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.PriceAdjustment)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PriceAdjustment)
+                                @Html.ValidationMessageFor(model => model.PriceAdjustment)
+                            </div>
+                        </div>
+                        <div class="form-group" id="group-weight-adjustment">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.WeightAdjustment)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.WeightAdjustment)
+                                @Html.ValidationMessageFor(model => model.WeightAdjustment)
+                            </div>
+                        </div>
+                        <div class="form-group" id="group-cost">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Cost)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Cost)
+                                @Html.ValidationMessageFor(model => model.Cost)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.IsPreSelected)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.IsPreSelected)
+                                @Html.ValidationMessageFor(model => model.IsPreSelected)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.DisplayOrder)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayOrder)
+                                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.PictureId)
+                            </div>
+                            <div class="col-md-9">
+                                <div class="attribute-picture-selection-block clearfix">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
+                                                   @if (Model.PictureId == 0) { <text> checked="checked" </text>    }>
+                                            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture")
+                                        </label>
+                                    </div>
+                                    @foreach (var pic in Model.ProductPictureModels)
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@pic.PictureId" id="id_image_@pic.PictureId"
+                                                       @if (pic.PictureId == Model.PictureId) { <text> checked="checked" </text>     }>
+                                                <img src="@pic.PictureUrl" alt="" title="" width="75">
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                                @Html.ValidationMessageFor(model => model.PictureId)
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Order.GBS.Models;
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <b>@T("Plugins.Order.GBS.Notes")</b>
+            </td>
+        </tr>   
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.LoginId_OverrideForStore, model => model.LoginId, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.LoginId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LoginId)
+                @Html.ValidationMessageFor(model => model.LoginId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Password_OverrideForStore, model => model.Password, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.Password):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSOrderWebServiceAddress_OverrideForStore, model => model.GBSOrderWebServiceAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSOrderWebServiceAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSOrderWebServiceAddress)
+                @Html.ValidationMessageFor(model => model.GBSOrderWebServiceAddress)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSPrintFileWebServiceAddress_OverrideForStore, model => model.GBSPrintFileWebServiceAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSPrintFileWebServiceAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSPrintFileWebServiceAddress)
+                @Html.ValidationMessageFor(model => model.GBSPrintFileWebServiceAddress)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSStoreNamePrepend_OverrideForStore, model => model.GBSStoreNamePrepend, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSStoreNamePrepend):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSStoreNamePrepend)
+                @Html.ValidationMessageFor(model => model.GBSStoreNamePrepend)  
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+    
+}

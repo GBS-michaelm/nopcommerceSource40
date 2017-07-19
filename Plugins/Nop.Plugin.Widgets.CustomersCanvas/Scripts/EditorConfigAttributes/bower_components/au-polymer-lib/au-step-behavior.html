@@ -1,0 +1,69 @@
+<script>
+AuStepBehavior = {
+    properties: {
+        config: {
+            type: Object,
+        },
+        title: {
+            type: String,
+        },
+        subtitle: {
+            type: String,
+        },
+        option: {
+            type: Object,
+            computed: '_getOption(driver, config)'
+        },
+        inited: {
+            type: Boolean,
+            value: false,
+        },
+        driver: {
+            type: Object,
+        },
+
+    },
+
+    attached: function() {
+        this.title = this.config.title;
+        this.subtitle = this.config.subtitle;
+    },
+
+    _initComplete: function() {
+        this.inited = true;
+        if (this.$.optioncomponent) {
+            this.$.optioncomponent.renotify();
+        }
+        this.afterInit();
+    },
+
+    // do not remove!
+    afterInit: function() {},
+
+    _getOption: function(driver, config) {
+        if (typeof(config.optionNames) !== 'undefined') {
+            this._getAddictionOptions();
+            return driver.products.current.options[config.optionNames.option];
+        }
+    },
+
+    _getAddictionOptions: function() { },
+
+    /*
+        rgbToRgba: function(color) {
+            var newCol = color.replace(/rgb/i, "rgba");
+            newCol = newCol.replace(/\)/i, ',255)');
+            return newCol;
+        },
+
+        hexToRgb: function(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        },
+    */
+};
+</script>

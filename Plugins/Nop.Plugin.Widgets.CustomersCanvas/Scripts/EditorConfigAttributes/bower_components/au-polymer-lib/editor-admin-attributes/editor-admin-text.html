@@ -1,0 +1,67 @@
+<link rel="import" href="../../iron-signals/iron-signals.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../iron-input/iron-input.html">
+<link rel="import" href="attribute-editor-behaviour.html">
+<dom-module id="editor-admin-text">
+    <template>
+        <style>
+        :host {
+            display: block;
+            margin-bottom: 20px;
+        }
+        
+        .horizcenter {
+            text-align: center;
+            position: relative;
+        }
+        
+        .div-inline {
+            display: inline-block;
+        }
+        
+        .admin-design-text {
+            margin-left: 40px;
+            position: absolute;
+            top: 50%;
+            margin-top: -0.625em;
+        }
+        
+        paper-input {
+            width: 300px;
+        }
+        </style>
+        <div class="card-content">
+            <!-- <div class="horizcenter"> -->
+                <div class="div-inline">
+                    <paper-input is="iron-input" id="uni-paper-input" type="{{inputType}}" min="{{min}}" max="{{max}}" label="Input [[attributeName]]" bind-value="{{attributeValue}}"></paper-input>
+                </div>
+            <!-- </div> -->
+        </div>
+    </template>
+    <script>
+    Polymer({
+        is: 'editor-admin-text',
+        behaviors: [AttributeEditorBehaviour],
+        properties: {
+            inputType: {
+                type: String,
+                value: "text"
+            },
+            min: {
+                type: String,
+            },
+            max: {
+                type: String,
+            }
+        },
+
+        attached: function() {
+            this.attributeValue = this.defaultValue;
+            if (!!this.defaultValue)  {
+                this.$["uni-paper-input"].updateValueAndPreserveCaret(this.defaultValue);
+            }
+        },
+
+    });
+    </script>
+</dom-module>

@@ -1,0 +1,9 @@
+﻿Group: Widgets
+FriendlyName: CustomersCanvas
+SystemName: Widgets.CustomersCanvas
+Version: 1.0
+SupportedVersions: 3.90
+Author: Aurigma Inc.
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.CustomersCanvas.dll
+Description: This plugin allow to configure products with CustomersCanvas.

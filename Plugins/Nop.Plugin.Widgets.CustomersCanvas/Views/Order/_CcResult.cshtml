@@ -1,0 +1,81 @@
+﻿@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Orders;
+@using System.Web.Mvc;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@using Nop.Services.Catalog;
+@using Nop.Plugin.Widgets.CustomersCanvas.Services;
+@using Newtonsoft.Json
+@using Nop.Services
+@model Nop.Plugin.Widgets.CustomersCanvas.Data.CcResult
+@{
+    var ccService = EngineContext.Current.Resolve<ICcService>();
+    var id = "ccResult" + Guid.NewGuid().ToString("N");
+
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.userevents.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.draganddrop.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.window.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.button.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Head, @"~/Plugins/Widgets.CustomersCanvas/Scripts/turnjs/turn.js");
+    Html.AddScriptParts(ResourceLocation.Head, @"~/Plugins/Widgets.CustomersCanvas/Scripts/Flipbook/ccFlipBook.js");
+
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/aurigma.css");
+    string hiResUrl = "";
+    if (Model != null && Model.HiResUrls != null && Model.HiResUrls.Any())
+    {
+        hiResUrl = Model.HiResUrls.First() + "/" + Model.HiResOutputName;
+    }
+}
+<script type="text/javascript">
+    if (typeof Promise !== "function") {
+        @Html.Raw(ccService.JsWritePromisePolyfill())
+    }
+
+    if (window["_CcResultsScriptsLoaded"] !== true) {
+        @Html.Raw(ccService.JsWriteScriptTags(new[]
+        {
+            @Url.Content(@"~/Administration/Scripts/HiResDownload/ccHiResDownload.js"),
+            @Url.Content(@"~/Administration/Scripts/Flipbook/ccFlipBook.js")
+        }))
+    }
+
+    window["_CcResultsScriptsLoaded"] = true;
+</script>
+@if (Model != null)
+{
+    <br/>
+    <div id="@id" class="ccResult">
+        @if (!string.IsNullOrWhiteSpace(Model.ReturnToEditUrl))
+        {
+            <a href="@Model.ReturnToEditUrl">View in the editor</a>
+            <br>
+            <br>
+        }
+        
+        
+        @if (Model.HiResUrls != null && Model.HiResUrls.Any())
+        {
+            for (var i = 0; i < Model.HiResUrls.Length; i++)
+            {
+                <a href="@Model.HiResUrls[i]">
+                    download pdf
+                </a>
+                <br/>
+            }
+        }
+        
+        @if (Model.ProofUrls != null && Model.ProofUrls.Any())
+        {
+            for (var i = 0; i < Model.ProofUrls.Length; i++)
+            {
+                <a href="@Model.ProofUrls[i]">
+                    <img src="@Model.ProofUrls[i]" alt="Proof image @(i + 1)" style="max-width: 80px; max-height: 80px;"/>
+                </a>
+                <br/>
+            }
+        }
+
+    </div>
+}

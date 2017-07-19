@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<link rel="import" href="attribute-editor-behaviour.html">
+<link rel="import" href="./bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="./bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="./bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="./bower_components/paper-item/paper-item.html">
+<link rel="import" href="attribute-editor-behaviour.html">
+<link rel="import" href="attribute-templates-behaviour.html">
+<dom-module id="editor-admin-design">
+    <dom-module id="editor-admin-list">
+        <template>
+            <style>
+            :host {
+                display: block;
+                margin-bottom: 20px;
+            }
+            
+            .horizcenter {
+                text-align: center;
+                position: relative;
+            }
+            
+            .div-inline {
+                display: inline-block;
+            }
+            
+            .admin-design-text {
+                margin-left: 40px;
+                position: absolute;
+                top: 50%;
+                margin-top: -0.625em;
+            }
+            
+            paper-dropdown-menu {
+                width: 300px;
+            }
+            </style>
+            <div class="card-content">
+                <div class="horizcenter">
+                    <div class="admin-design-text" style="">
+                        <b>
+                        Select element for [[attributeName]]:
+                    </b>
+                    </div>
+                    <div class="div-inline">
+                        <paper-dropdown-menu>
+                            <paper-listbox id="template-select" class="dropdown-content">
+                                <template is="dom-repeat" items="[[sourseElements]]">
+                                    <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <script>
+        Polymer({
+            is: "editor-admin-list",
+            behaviors: [AttributeEditorBehaviour],
+            properties: {
+                sourseElements: {
+                    type: Array,
+                    observer: "_sourceElementsChanges"
+                },
+                selectedElement: {
+                    type: Object,
+                },
+                listType: {
+                    type: String,
+                    value: "dropdown"
+                },
+            },
+
+            attached: function() {
+                var self = this;
+                this.attributeValue = this.defaultValue;
+                var select = this.$["template-select"];
+                select.addEventListener("iron-select", function(e) {
+                    var item = e.detail.item;
+                    self._selectedItemChange(item);
+                });
+            },
+
+            _selectedItemChange: function(item) {
+                var self = this;
+                if (item) {
+                    var value = item['name'];
+                    this.attributeValue = value;
+                    self.selectedElement = item;
+                }
+            },
+
+            _sourceElementsChanges: function(newValue, oldValue) {
+                var self = this;
+                var select = this.$["template-select"];
+                if (typeof(newValue[0]) === 'string') {
+                    this.sourseElements = newValue.map(function(item) {
+                        if (typeof(item) === 'string') {
+                            return {
+                                name: item
+                            };
+                        } else {
+                            return item;
+                        }
+                    });
+                }
+                if (!!this.defaultValue) {
+                    this.sourseElements.forEach(function(item, index) {
+                        if (item.name == self.defaultValue)
+                            select.selectIndex(index);
+                    });
+                }
+            },
+
+        });
+        </script>
+    </dom-module>

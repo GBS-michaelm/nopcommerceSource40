@@ -1,0 +1,307 @@
+<link rel="import" href="../../iron-signals/iron-signals.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="editor-admin-design.html">
+<link rel="import" href="editor-admin-design-folder.html">
+<link rel="import" href="editor-admin-text.html">
+<link rel="import" href="editor-admin-list.html">
+<dom-module id="editor-admin-attributes">
+    <template>
+        <style>
+        :host {
+            display: block;
+        }
+        </style>
+           <iron-signals on-iron-signal-empty-attributes="_clearAttrDiv"></iron-signals>
+        <div id="editor-admin-attributes">
+        </div>
+    </template>
+    <script>
+    Polymer({
+        is: 'editor-admin-attributes',
+        properties: {
+            ccUrl: {
+                type: String,
+            },
+            editorConfig: {
+                type: String,
+                value: "",
+                observer: "editorConfigObserver"
+            },
+            defaultValues: {
+                type: Array,
+            },
+            configObj: {
+                type: Object,
+            }
+        },
+
+        editorConfigObserver: function(newValue, oldValue) {
+            if (newValue && typeof(newValue) === 'string') {
+                if (typeof(newValue) === 'string') {
+                    this.configObj = JSON.parse(newValue).config;
+                } else if (typeof(newValue) == 'object') {
+                    this.configObj = newValue.config;
+                }
+
+
+                var self = this;
+                self.editorConfig = this.processConfig(JSON.parse(this.editorConfig)).config;
+
+                var attributes = [];
+                if (!!self.editorConfig.attributeNames) {
+                    Object.keys(self.editorConfig.attributeNames).forEach(function(item) {
+                        attributes.push(self.editorConfig.attributeNames[item]);
+                    });
+                } else {
+                    var attributes = this.parseConfig();
+                }
+                self.createForm(attributes);
+            }
+        },
+
+        parseConfig: function() {
+            return this._exploreProps(this.editorConfig);
+        },
+
+        _exploreProps: function(obj, parent) {
+            var self = this;
+            var result = [];
+            if (Array.isArray(obj)) {
+                obj.forEach(function(item) {
+                    var res = self._exploreProps(item, Object.keys(parent)[0]);
+                    res.forEach(function(item) {
+                        result.push(item);
+                    });
+                });
+            } else if (typeof(obj) === 'object') {
+                Object.keys(obj).forEach(function(key) {
+                    var res = self._exploreProps(obj[key], obj);
+                    res.forEach(function(item) {
+                        result.push(item);
+                    });
+                });
+            } else if (typeof(obj) === 'string') {
+                var templates = obj.match(/%product\.attributes\..+%/g);
+                if (templates != null) {
+                    var attrName = self._getAttrName(obj);
+                    result.push({
+                        name: attrName,
+                        value: obj.replaceAll("%", ""),
+                        property: parent,
+                        settings: self._getAttributeSettings(this.editorConfig, attrName)
+                    });
+                }
+            }
+            return result;
+        },
+
+        processConfig: function(config, title) {
+            var self = this;
+            var result = null;
+            var replaceValue = "";
+            var _currentStep = "";
+            switch (true) {
+                case Array.isArray(config):
+                    result = [];
+                    config.forEach(function(item) {
+                        result.push(self.processConfig(item));
+                    });
+                    break;
+                case typeof(config) === "object":
+                    var result = {};
+                    Object.keys(config).forEach(function(key) {
+                        if (title == 'steps')
+                            _currentStep = key;
+                        result[key] = self.processConfig(config[key], key);
+                    });
+                    break;
+                case typeof(config) === "number" || typeof(config) === "boolean":
+                    return config;
+                default:
+                    result = config;
+                    var placeholders = result.match(/%[^%]+%/g);
+                    if (Array.isArray(placeholders)) {
+                        placeholders.forEach(function(placeholder) {
+                            var mainRegex = new RegExp("%.*#([a-zA-Z_0-9]+.?)+#.*%", "g");
+                            var line = placeholder.match(mainRegex);
+                            if (line != null) {
+                                var regex = new RegExp("#([a-zA-Z_0-9]+.?)+#", "g");
+                                var str = line[0].match(regex)[0];
+                                var clearStr = str.replace("#", "").replace("#", "");
+                                var path = clearStr.split('.');
+                                var value = self.configObj;
+                                path.forEach(function(item) {
+                                    value = value[item];
+                                });
+                                value = value.name;
+                                placeholder = placeholder.replace(str, value);
+                                result = result.replace(str, value);
+                            }
+                        });
+                    }
+                    break;
+            }
+            return result;
+        },
+
+        createForm: function(attributes) {
+            var self = this;
+            this.productAttributes = {};
+            var div = this.$["editor-admin-attributes"];
+            $(div).empty()
+            if (attributes.length > 0) {
+                attributes.forEach(function(item) {
+                    var defaultValue = "";
+                    if (self.defaultValues) {
+                        self.defaultValues.forEach(function(value) {
+                            if (value.name.toLowerCase() === item.name.toLowerCase()) {
+                                defaultValue = value.value;
+                            }
+                        });
+                    }
+                    var rootFolder = "";
+                    if (!!item.settings.rootFolder)
+                        rootFolder = item.settings.rootFolder;
+                    var lowerCaseType = "";
+                    if (!!item.settings.type) {
+                        lowerCaseType = item.settings.type.toLowerCase();
+                    } else {
+                        switch (item.name.toLowerCase()) {
+                            case 'template':
+                            case 'fronttemplate':
+                            case 'front template':
+                            case 'backtemplate':
+                            case 'back template':
+                            case 'template1':
+                            case 'template2':
+                                lowerCaseType = 'design';
+                                break;
+                            case 'mockup':
+                            case 'frontmockup':
+                            case 'backmockup':
+                            case 'previewmockup':
+                            case 'downmockup':
+                            case 'upmockup':
+                            case 'front mockup':
+                            case 'back mockup':
+                            case 'preview mockup':
+                            case 'down mockup':
+                            case 'up mockup':
+                                lowerCaseType = 'mockup';
+                                break;
+                            case 'designfolder':
+                            case 'design folder':
+                                lowerCaseType = 'designfolder';
+                                break;
+                            case 'mockupfolder':
+                            case 'mockup folder':
+                                lowerCaseType = 'mockupfolder';
+                                break;
+                            default:
+                                lowerCaseType = "text";
+                        }
+                    }
+                    switch (lowerCaseType) {
+                        case 'mockupfolder':
+                            var designElem = document.createElement("editor-admin-design-folder");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            designElem.ccUrl = self.ccUrl;
+                            designElem.folder = "mockups";
+                            designElem.rootFolder = rootFolder;
+                            div.appendChild(designElem);
+                            break;
+                        case 'designfolder':
+                            var designElem = document.createElement("editor-admin-design-folder");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            designElem.ccUrl = self.ccUrl;
+                            designElem.folder = "designs";
+                            designElem.rootFolder = rootFolder;
+                            div.appendChild(designElem);
+                            break;
+                        case 'mockup':
+                            var designElem = document.createElement("editor-admin-design");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            designElem.ccUrl = self.ccUrl;
+                            designElem.folder = "mockups";
+                            designElem.rootFolder = rootFolder;
+                            div.appendChild(designElem);
+                            break;
+                        case 'design':
+                            var designElem = document.createElement("editor-admin-design");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            designElem.ccUrl = self.ccUrl;
+                            designElem.folder = "designs";
+                            designElem.rootFolder = rootFolder;
+                            div.appendChild(designElem);
+                            break;
+                        case 'list':
+                            var designElem = document.createElement("editor-admin-list");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            var values = [];
+                            if (!!item.settings.values) {
+                                values = item.settings.values;
+                            }
+                            designElem.sourseElements = values;
+                            div.appendChild(designElem);
+                            break;
+                        case 'number':
+                            var designElem = document.createElement("editor-admin-text");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            designElem.inputType = 'number';
+                            if (!!item.settings.min) {
+                                designElem.min = item.settings.min.toString();
+                            }
+                            if (!!item.settings.max) {
+                                designElem.max = item.settings.max.toString();;
+                            }
+                            div.appendChild(designElem);
+                            break;
+                        case 'text':
+                        default:
+                            var designElem = document.createElement("editor-admin-text");
+                            designElem.attributeName = item.name;
+                            designElem.defaultValue = defaultValue;
+                            div.appendChild(designElem);
+                            break;
+                    };
+                });
+            }
+        },
+
+        _clearAttrDiv: function() {
+            var div = this.$["editor-admin-attributes"];
+            $(div).empty();
+        },
+
+        _getAttributeSettings: function(item, attrName) {
+            if (!!item.attributeNames) {
+                var key = Object.keys(item.attributeNames).find(function(itemKey) {
+                    if (attrName == item.attributeNames[itemKey].name)
+                        if (!!item.attributeNames[itemKey].settings) {
+                            return (item.attributeNames[itemKey].settings)
+                        }
+                });
+                if (!!key) {
+                    return item.attributeNames[key].settings;
+                }
+            }
+            return {};
+        },
+
+        _getAttrName: function(value) {
+            if (value.indexOf("product.attributes.") > -1) {
+                value = value.replace("product.attributes.", "");
+            }
+            value = value.replaceAll("%", "");
+            return value;
+        },
+
+    });
+    </script>
+</dom-module>

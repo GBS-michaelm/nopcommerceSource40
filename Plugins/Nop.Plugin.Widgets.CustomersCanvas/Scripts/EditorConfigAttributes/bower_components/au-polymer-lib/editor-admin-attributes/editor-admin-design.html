@@ -1,0 +1,123 @@
+<link rel="import" href="../../iron-signals/iron-signals.html">
+<link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../paper-listbox/paper-listbox.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="attribute-editor-behaviour.html">
+<link rel="import" href="attribute-templates-behaviour.html">
+<link rel="import" href="../au-responsive-image.html">
+<dom-module id="editor-admin-design">
+    <template>
+        <style>
+        :host {
+            display: block;
+            margin-bottom: 20px;
+        }
+        
+        .horizcenter {
+            text-align: center;
+            position: relative;
+        }
+        
+        #responsiveimage {
+            width: 200px;
+            height: 200px;
+            left: 50%;
+            margin-left: -100px;
+            display: block;
+            visibility: hidden
+        }
+        
+        .div-inline {
+            display: inline-block;
+        }
+        
+        .admin-design-text {
+            margin-left: 40px;
+            position: absolute;
+            top: 50%;
+            margin-top: -0.625em;
+        }
+        
+        paper-dropdown-menu {
+            width: 300px;
+        }
+        </style>
+        <div class="card-content">
+            <!-- <div class="horizcenter"> -->
+                <div class="div-inline">
+                    <au-responsive-image id="responsiveimage" src="{{selectedFile.imageUrl}}"> </au-responsive-image>
+                    <paper-dropdown-menu label="Select template for [[attributeName]]">
+                        <paper-listbox id="template-select" class="dropdown-content">
+                            <template is="dom-repeat" items="[[sourseFiles]]">
+                                <paper-item name="[[item.name]]" image-url="[[item.imageUrl]]">[[item.name]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                <!-- </div> -->
+            </div>
+        </div>
+    </template>
+    <script>
+    Polymer({
+        is: 'editor-admin-design',
+        behaviors: [AttributeEditorBehaviour, AttributeTemplatesBehaviour],
+        properties: {
+            selectedFile: {
+                type: Object,
+            },
+            sourseFiles: {
+                type: Array,
+                observer: "_sourceFilesChanges"
+            }
+        },
+
+        attached: function() {
+            var self = this;
+            var select = this.$["template-select"];
+            select.addEventListener("iron-select", function(e) {
+                self.$["responsiveimage"].style.visibility = "visible";
+                var item = e.detail.item;
+                self._selectedItemNameChange(item);
+            });
+            this._getTemplates();
+        },
+
+        _selectedItemNameChange: function(item) {
+            var self = this;
+            if (item) {
+                var value = item['name'];
+                this.attributeValue = value;
+                self.selectedFile = item;
+            }
+        },
+
+        _sourceFilesChanges: function(newValue, oldValue) {
+            var self = this;
+            var select = this.$["template-select"];
+            if (!!this.defaultValue) {
+                this.sourseFiles.forEach(function(item, index) {
+                    if (item.name == self.defaultValue)
+                        select.selectIndex(index);
+                });
+            }
+        },
+
+        _handleTemplates: function(templateList) {
+            var self = this;
+            if (templateList) {
+                templateList = templateList.map(function(template) {
+                    var image = self._getTemplatePic(template, 200, 200);
+                    return {
+                        name: template,
+                        imageUrl: image
+                    };
+                });
+                self.sourseFiles = templateList;
+            } else {
+                self.sourseFiles = [];
+            }
+        },
+
+    });
+    </script>
+</dom-module>
