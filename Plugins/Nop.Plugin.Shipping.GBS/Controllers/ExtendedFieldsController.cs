@@ -99,10 +99,12 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
 
             var model = new ProductExtendedFieldsModel
             {
-                LoginId = _gbsShippingSetting.LoginId,
-                Password = _gbsShippingSetting.Password,
-                GBSShippingWebServiceAddress = _gbsShippingSetting.GBSShippingWebServiceAddress,
-                GBSStoreNamePrepend = _gbsShippingSetting.GBSStoreNamePrepend,
+                LoginId = GBSShippingSettings.LoginId,
+                Password = GBSShippingSettings.Password,
+                GBSShippingWebServiceAddress = GBSShippingSettings.GBSShippingWebServiceAddress,
+                GBSStoreNamePrepend = GBSShippingSettings.GBSStoreNamePrepend,
+                UseFlatRate = GBSShippingSettings.UseFlatRate,
+                FlatRateAmount = GBSShippingSettings.FlatRateAmount,
                 ActiveStoreScopeConfiguration = storeScope,
 
                 TableName = _localizationService.GetLocaleStringResourceByName("Plugins.Shipping.GBS.Product.Table.Name").ResourceValue.ToString(),
@@ -130,6 +132,7 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
                 model.GBSStoreNamePrepend_OverrideForStore = _settingService.SettingExists(GBSShippingSettings, x => x.GBSStoreNamePrepend, storeScope);
                 model.UseFlatRate_OverrideForStore = _settingService.SettingExists(GBSShippingSettings, x => x.UseFlatRate, storeScope);
                 model.FlatRateAmount_OverrideForStore = _settingService.SettingExists(GBSShippingSettings, x => x.FlatRateAmount, storeScope);
+
             }
 
 
@@ -166,6 +169,8 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
             GBSShippingSetting.Password = model.Password;
             GBSShippingSetting.GBSShippingWebServiceAddress= model.GBSShippingWebServiceAddress;
             GBSShippingSetting.GBSStoreNamePrepend = model.GBSStoreNamePrepend;
+            GBSShippingSetting.UseFlatRate = model.UseFlatRate;
+            GBSShippingSetting.FlatRateAmount = model.FlatRateAmount;
 
 
             ///* We do not clear cache after each setting update.
