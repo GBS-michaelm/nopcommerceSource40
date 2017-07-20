@@ -1,0 +1,40 @@
+﻿@using Nop.Web.Models.ShoppingCart;
+@using System.Web.UI;
+@{
+  
+ 
+  
+
+ 
+}
+
+<div class="helpful-information">
+    <div class="text-uppercase">
+        <strong>@T("shoppingcart.helpfulinformation")</strong>
+    </div>
+
+    <div class="toggle">
+        <div class="togglet"><i class="toggle-closed icon-ok-circle"></i><i class="toggle-open icon-remove-circle"></i>@T("shoppingcart.helpfulinformation.subtitle1")</div>
+        <div class="togglec">@T("shoppingcart.helpfulinformation.subbody1")</div>
+    </div>
+    <div class="toggle">
+        <div class="togglet"><i class="toggle-closed icon-ok-circle"></i><i class="toggle-open icon-remove-circle"></i>@T("shoppingcart.helpfulinformation.subtitle2")</div>
+        <div class="togglec">@T("shoppingcart.helpfulinformation.subbody2")</div>
+    </div>
+    <div class="toggle">
+        <div class="togglet"><i class="toggle-closed icon-ok-circle"></i><i class="toggle-open icon-remove-circle"></i>@T("shoppingcart.helpfulinformation.subtitle3")</div>
+        <div class="togglec">@T("shoppingcart.helpfulinformation.subbody3")</div>
+    </div>
+    <div class="toggle">
+        <div class="togglet"><i class="toggle-closed icon-ok-circle"></i><i class="toggle-open icon-remove-circle"></i>@T("shoppingcart.helpfulinformation.subtitle4")</div>
+        <div class="togglec">@T("shoppingcart.helpfulinformation.subbody4")</div>
+    </div>
+
+</div>
+@{
+
+
+    Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/functions.js", true, true);
+
+
+}

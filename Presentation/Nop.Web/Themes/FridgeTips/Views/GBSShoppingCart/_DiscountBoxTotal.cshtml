@@ -1,0 +1,51 @@
+﻿@model ShoppingCartModel.DiscountBoxModel
+@using Nop.Web.Models.ShoppingCart;
+@{
+    var currentURL = Request.Url.AbsolutePath;
+}
+@if (Model.Display)
+{
+    using (Html.BeginRouteForm((!String.IsNullOrEmpty(Model.CurrentCode)) ? "GBSRemoveDiscount" : "GBSApplyDiscount", FormMethod.Post, new { enctype = "multipart /form-data", id = "shopping-cart-form" }))
+    {
+
+        <input type="hidden" name="urlname" value="@currentURL" />
+        if (!String.IsNullOrEmpty(Model.CurrentCode))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".discount-box-td").hide();
+                    $(".coupon-total-wrap").show();
+                });
+            </script>
+            <div class="current-code">
+                <span class="bg-success">
+                    @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
+
+
+                    <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")">
+                </span>
+            </div>
+        }
+        else
+        {
+            <div id="coupon-total-wrap" >
+           
+
+            @*<div class="hint gbs-padding-bottom-10">@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>*@
+            <div class="col-md-6 col-sm-6">
+                <input name="discountcouponcode" type="text" class="discount-coupon-code form-control" />&nbsp;
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button button-3d button-small button-rounded button-teal" />
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Message))
+            {
+                <div class="@(Model.IsApplied ? "message bg-success" : "message bg-danger")">
+                    @Model.Message
+                </div>
+            }
+            </div>
+        }
+
+    }
+}

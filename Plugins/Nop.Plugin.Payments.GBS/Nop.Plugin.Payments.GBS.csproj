@@ -41,9 +41,6 @@
     <Reference Include="GBSPaymentServiceClient">
       <HintPath>..\..\Libraries\GBS\GBSPaymentServiceClient.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\dev.services.houseofmagnets\Libraries\log4net-2.0.7\bin\net\4.5\release\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="PaymentService">
       <HintPath>..\..\Libraries\GBS\PaymentService.dll</HintPath>
     </Reference>

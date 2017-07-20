@@ -1,0 +1,142 @@
+﻿@model CheckoutConfirmModel
+@using Nop.Web.Models.Checkout;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-checkout-page");
+    Html.AppendPageCssClassParts("html-order-confirm-page");
+}
+
+<div class="page checkout-page col-sm-9 col-md-9 gbs-margin-bottom-20">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
+ 
+    <div class="confirm-order-wrap gbs-checkout-border gbs-padding-15 row">
+       
+        <div class="confirm-title-wrap">
+            <h3>@T("Checkout.ConfirmYourOrder")</h3>
+        </div>
+        <div class="confirm-info-check gbs-margin-top-20">
+            <span>Confirm that all of your order details are correct and place your order.</span>
+        </div>
+        @Html.Widget("checkout_confirm_top")
+        <div class="confirm-order">
+            @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('.confirm-order-next-step-button').click(function () {
+                            //terms of service
+                            var termOfServiceOk = true;
+                            if ($('#termsofservice').length > 0) {
+                                //terms of service element exists
+                                if (!$('#termsofservice').is(':checked')) {
+                                    $("#terms-of-service-warning-box").dialog();
+                                    termOfServiceOk = false;
+                                } else {
+                                    termOfServiceOk = true;
+                                }
+                            }
+                            if (termOfServiceOk) {
+                                //$('#confirm-order-form').submit();
+                                //$('.confirm-order-next-step-button').attr('disabled', 'disabled');
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    });
+                </script>
+                if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                {
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                }
+                else
+                {
+                    if (Model.TermsOfServiceOnOrderConfirmPage)
+                    {
+                        <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
+                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+                        </div>
+                        <div class="terms-of-service">
+                            <input id="termsofservice" type="checkbox" name="termsofservice"/>
+                            <span>
+                                @T("Checkout.TermsOfService.IAccept")
+                                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                            </span>
+                            <script>
+                                $(document).ready(function() {
+                                    $('#read-terms').on('click', function(e) {
+                                        e.preventDefault();
+                                        displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                                    });
+                                });
+                            </script>
+                        </div>
+                    }
+                    <div class="primary-buttons">
+                        <div class="form-group row">
+                            <div class="col-md-4 col-sm-4">
+               
+                                <button type="submit" name="nextstep"  class="button button-rounded button-reveal button-green tright"><i class="icon-line-arrow-right"></i><span>@T("Checkout.ConfirmButton")</span></button>
+                            </div>
+                            <div class="col-md-8 col-sm-8 order-total-wrap gbs-text-green">
+                                <span class="order-total-title">Total:</span>&nbsp;<span id="order-totals-copy"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $('#confirm-order-form').on('submit', function () {
+                            var button = $(this).find('input[type="submit"][name="nextstep"]');
+                            setTimeout(function() {
+                                button.attr('disabled', 'disabled');
+                            }, 0);
+                        });
+                    </script>
+                }
+                if (Model.Warnings.Count > 0)
+                {
+                    <div class="message-error style-msg errormsg">
+                        <div class="validation-summary-errors sb-msg">
+                            <ul>
+                                @foreach (var warning in Model.Warnings)
+                                {
+                                    if (warning.ToLower().Contains("payment error"))
+                                    {
+                                        <li><i class="icon-remove"></i>@warning</li>
+                                        <li><i class="icon-remove"></i>@Html.Action("TopicBlock", "Topic", new { systemName = "ncc_payment_error_msg" })</li>
+                                    }
+                                    else
+                                    {
+                                        <li><i class="icon-remove"></i>@warning</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @Html.Widget("checkout_confirm_bottom")
+        <div class="order-summary-body">
+          @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+        </div>
+    </div>
+</div>
+<div class="col-sm-3 col-md-3">
+   @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+</div>
+<div class="col-sm-12 col-md-12">
+    <div class="order-summary-confirm">
+        @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = false })
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".order-summary-body .total-info").hide();
+        $("#order-totals-copy").html($(".order-total strong").html());
+    });
+</script>

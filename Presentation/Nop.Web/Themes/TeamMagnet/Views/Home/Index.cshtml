@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+<div class="page home-page">
+    <div class="page-body">
+	<div class="row1">
+        @Html.Widget("home_page_top")
+       
+	   <div class="home-promo-tiles">
+            <p><a href="/request-quote"><img src="/Content/Images/uploaded/tile_quote.jpg" alt="Request a Quote"></a></p>
+			<p><a href="/testimonials"><img src="/Content/Images/uploaded/tile_testimonials.jpg" alt="Read Testimonials"></a></p>
+        </div>
+		
+		
+	</div>
+        @Html.Widget("home_page_before_categories")
+        @Html.Action("HomepageCategories", "Catalog")
+        @Html.Action("TopicBlock", "Topic", new { systemName = "tm_home-cta" })
+        @Html.Action("TopicBlock", "Topic", new { systemName = "tm_testimonials-home-page" })
+        @Html.Widget("home_page_before_products")
+        @Html.Action("HomepageProducts", "Product")
+        @Html.Widget("home_page_before_best_sellers")
+        @Html.Action("HomepageBestSellers", "Product")
+        @Html.Widget("home_page_before_news")
+        @Html.Action("HomePageNews", "News")
+        @Html.Widget("home_page_before_poll")
+        @Html.Action("HomePagePolls", "Poll")
+        @Html.Widget("home_page_bottom")
+    </div>
+</div>
+
+
