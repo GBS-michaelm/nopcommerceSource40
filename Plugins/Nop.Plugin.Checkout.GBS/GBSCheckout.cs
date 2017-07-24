@@ -39,7 +39,7 @@ namespace Nop.Plugin.Checkout.GBS
 
         //public override void Uninstall()
         //{
-        //    throw new NotImplementedException(); ////
+        //    throw new NotImplementedException();
         //}
     }
 }

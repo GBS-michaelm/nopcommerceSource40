@@ -121,9 +121,16 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
             _lstOfProduct.zipCode = zipCode;
             // Call Web Service to get the Shipping rate
             GBSShippingServiceClient myShippingRateSrv = new GBSShippingServiceClient();
-            
- //put in code to set flat rate in Config window for NCC
-            string _FixedRate = myShippingRateSrv.GetShippingRate(_gbsShippingSetting.GBSShippingWebServiceAddress, _gbsShippingSetting.LoginId, _gbsShippingSetting.Password, _lstOfProduct );
+
+            //put in code to set flat rate in Config window for NCC
+            string _FixedRate = String.Empty;
+            if (_gbsShippingSetting.UseFlatRate)
+            {
+                _FixedRate = _gbsShippingSetting.FlatRateAmount.ToString();
+            } else
+            {
+                _FixedRate = myShippingRateSrv.GetShippingRate(_gbsShippingSetting.GBSShippingWebServiceAddress, _gbsShippingSetting.LoginId, _gbsShippingSetting.Password, _lstOfProduct);
+            }
 
 
             // Build response with custom shipping option 

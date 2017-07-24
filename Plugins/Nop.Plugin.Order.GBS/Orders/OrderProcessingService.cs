@@ -417,7 +417,8 @@ namespace Nop.Services.Custom.Orders
                     else
                     {
                         PlaceOrderContainter orderContainer = this.PreparePlaceOrderDetails(processPaymentRequest);
-                        SaveFailedOrder(processPaymentRequest, orderContainer);
+                        SaveFailedOrder(processPaymentRequest, orderContainer, myResult); 
+
 
                     }
                 }          
@@ -652,7 +653,7 @@ namespace Nop.Services.Custom.Orders
 
             return productSpecsDict;
         }
-        protected void SaveFailedOrder(ProcessPaymentRequest paymentRequest, PlaceOrderContainter orderContainer)
+        protected void SaveFailedOrder(ProcessPaymentRequest paymentRequest, PlaceOrderContainter orderContainer, PlaceOrderResult placeOrderResult)
         {
             string insert = "";
             try
@@ -726,6 +727,11 @@ namespace Nop.Services.Custom.Orders
                             break;
                     }
                 }
+                String errors = "";
+                foreach (string error in placeOrderResult.Errors)
+                {
+                    errors += ": "+error;
+                }
 
                 DBManager manager = new DBManager();
                 Dictionary<string, Object> paramDic = new Dictionary<string, Object>();
@@ -767,11 +773,11 @@ namespace Nop.Services.Custom.Orders
                 paramDic.Add("@ShippingMethod", ShippingMethod);
                 paramDic.Add("@ShippingRateComputationMethodSystemName", ShippingRateComputationMethodSystemName);
                 paramDic.Add("@CustomValuesXml", CustomValuesXml);
-
+                paramDic.Add("@Errors", errors);
 
                 insert = "EXEC usp_InsertFailedOrder @GBSOrderID,@StoreID,@CustomerId,@BillingAddressId,@ShippingAddressId,@PickupAddressId,@PickUpInStore,@PaymentMethodSystemName,@CustomerCurrencyCode,@CurrencyRate,@CustomerTaxDisplayTypeId,@VatNumber,@OrderSubtotalInclTax,";
                 insert += "@OrderSubtotalExclTax,@OrderSubTotalDiscountInclTax,@OrderSubTotalDiscountExclTax,@OrderShippingInclTax,@OrderShippingExclTax,@PaymentMethodAdditionalFeeInclTax,@PaymentMethodAdditionalFeeExclTax,@TaxRates,@OrderTax,@OrderDiscount,@OrderTotal,@RewardPointsWereAdded,@CheckoutAttributeDescription,";
-                insert += "@CheckoutAttributesXml,@CustomerLanguageId,@AffiliateId,@CustomerIp,@CardType,@CardName,@MaskedCreditCardNumber,@CardExpirationMonth,@CardExpirationYear,@ShippingMethod,@ShippingRateComputationMethodSystemName,@CustomValuesXml";
+                insert += "@CheckoutAttributesXml,@CustomerLanguageId,@AffiliateId,@CustomerIp,@CardType,@CardName,@MaskedCreditCardNumber,@CardExpirationMonth,@CardExpirationYear,@ShippingMethod,@ShippingRateComputationMethodSystemName,@CustomValuesXml,@Errors";
 
                 manager.SetParameterizedQueryNoData(insert, paramDic);
 

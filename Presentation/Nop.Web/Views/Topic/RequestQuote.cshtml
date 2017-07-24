@@ -1,0 +1,221 @@
+﻿@model TopicModel
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Topics;
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    }
+    else
+    {
+        /*pop-up windows*/
+        Layout = "~/Views/Shared/_RootPopup.cshtml";
+    }
+
+    if (!Model.IsPasswordProtected)
+    {
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        Html.AddMetaDescriptionParts(Model.MetaDescription);
+        Html.AddMetaKeywordParts(Model.MetaKeywords);
+    }
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(topicUrl);
+    }
+}
+@if (Model.IsPasswordProtected)
+{
+    // For popup topics, use a minimal layout that includes the Ajax and jQuery scripts
+    if (isPopup != null && isPopup == true)
+    {
+        Layout = "~/Views/Shared/_RootPopup.cshtml";
+    }
+    
+    
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#button-password').click(function () {
+                var postData = {
+                    id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                    password: $('#password').val()
+                };
+                addAntiForgeryToken(postData);
+
+
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#ph-topic #ph-title h1').html(data.Title);
+                            if ($('#ph-topic #ph-title h1').text().length == 0) {
+                                $('#ph-title').hide();
+                            }
+                            $('#ph-topic .page-body').html(data.Body);
+                            $('#ph-password').hide();
+                            $('#ph-topic').show();
+                        }
+                        else {
+                            $('#password-error').text(data.Error);
+                            $('#ph-password #password').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        $(document).ready(function () {
+            $('#ph-topic').hide();
+            $('#ph-password #password').select().focus();
+        });
+    </script>
+    <div class="topic-password" id="ph-password">
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
+        {
+            @Html.HiddenFor(model => model.Id)
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                @Html.Password("password")
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
+            </div>
+            <div class="password-error">
+                <span id="password-error"></span>
+            </div>
+        }
+    </div>
+}
+<div class="page topic-page" id="ph-topic">
+    <div class="page-title" id="ph-title">
+        <h1>@Model.Title</h1>
+    </div>
+    <div class="page-body">
+	<div class="col_half nobottommargin">
+	@Html.Widget("request-quote-form")
+	</div>
+	<!--
+	<div class="col_half nobottommargin">
+  <form id="template-contactform" 
+
+class="nobottommargin" action="/include/sendemail.php" method="post" name="template-contactform" novalidate>
+    <div class="fancy-title title-dotted-border">
+      <h3>Your contact info:</h3>
+    </div>
+    <div class="form-contact-info">
+      <div class="col_half">
+        <label for="template-contactform-name">Name <small>*</small></label>
+        <input id="template-contactform-name" class="sm-form-control required error" name="template-contactform-name" type="text" value="" />
+      </div>
+      <div class="col_half col_last">
+        <label for="template-contactform-subject">Team / Company <small>*</small></label>
+        <input id="template-contactform-subject" class="required sm-form-control error" name="template-contactform-subject" type="text" value="" />
+      </div>
+      <div class="col_half">
+        <label for="template-contactform-email">Email <small>*</small></label>
+        <input id="template-contactform-email" class="required email sm-form-control error" name="template-contactform-email" type="email" value="" />
+      </div>
+      <div class="col_half col_last">
+        <label for="template-contactform-phone">Phone</label>
+        <input id="template-contactform-phone" class="sm-form-control" name="template-contactform-phone" type="text" value="" />
+      </div>
+    </div>
+    <div class="fancy-title title-dotted-border">
+      <h3>About your project:</h3>
+    </div>
+    <div class="col_half">
+      <label for="template-contactform-product">Product <small>*</small></label>
+      <select id="template-contactform-product" class="sm-form-control required error" name="template-contactform-product">
+        <option value="">-- Select One --</option>
+        <option value="Custom Magnets">Custom Magnets</option>
+        <option value="Autograph Books">Autograph Books</option>
+        <option value="Brochure Holders">Brochure Holders</option>
+        <option value="Pocket Schedule Holders">Pocket Schedule Holders</option>
+        <option value="Photo Books">Photo Books</option>
+        <option value="Puzzles">Puzzles</option>
+        <option value="Membership Cards">Membership Cards</option>
+        <option value="Fan On Board Signs">Fan On Board Signs</option>
+        <option value="Color-Me Magnets">Color-Me Magnets</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="col_half col_last">
+      <label for="template-contactform-qty">Quantity <small>*</small></label>
+      <select id="template-contactform-qty" class="sm-form-control required error" name="template-contactform-qty">
+        <option selected="selected" value="">-- Select One --</option>
+        <option value="Under 2,500">Under 2,500</option>
+        <option value="2,500">2,500</option>
+        <option value="5,000">5,000</option>
+        <option value="7,500">7,500</option>
+        <option value="10,000">10,000</option>
+        <option value="15,000">15,000</option>
+        <option value="20,000">20,000</option>
+        <option value="25,000">25,000</option>
+        <option value="50,000">50,000</option>
+        <option value="100,000">100,000</option>
+        <option value="Above 100,000">Above 100,000</option>
+      </select>
+    </div>
+    <div class="clear">&nbsp;</div>
+    <div class="col_half">
+      <label for="template-contactform-art">Art Ready?</label>
+      <select id="template-contactform-art" class="sm-form-control" name="template-contactform-art">
+        <option value="">-- Select One --</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No, we will provide</option>
+        <option value="Help">No, we need your help</option>
+      </select>
+    </div>
+    <div class="col_one_fourth">
+      <label for="template-contactform-width">Width</label>
+      <input id="template-contactform-width" class="sm-form-control" name="template-contactform-width" type="text" value="" />
+    </div>
+    <div class="col_one_fourth col_last">
+      <label for="template-contactform-height">Height</label>
+      <input id="template-contactform-height" class="sm-form-control" name="template-contactform-height" type="text" value="" />
+    </div>
+    <div class="clear">&nbsp;</div>
+    <div class="col_full">
+      <label for="template-contactform-message">Comments </label>
+      <textarea id="template-contactform-message" class="sm-form-control" cols="30" name="template-contactform-message" rows="6"></textarea>
+    </div>
+    <div class="col_full hidden">
+      <input id="template-contactform-botcheck" class="sm-form-control" name="template-contactform-botcheck" type="text" value="" />
+    </div>
+    <div class="col_full">
+      <button id="template-contactform-submit" class="button-1 register-button" name="template-contactform-submit" type="submit" value="submit">Request Quote</button>
+    </div>
+  </form>
+</div>
+-->
+<!-- .postcontent end -->
+
+<!-- Sidebar
+					
+
+============================================= -->
+<div class="col_half col_last nobottommargin">
+
+
+
+        @Html.Raw(Model.Body)
+		
+		
+		
+		</div>
+<!-- .sidebar end -->
+
+
+		
+    </div>
+</div>

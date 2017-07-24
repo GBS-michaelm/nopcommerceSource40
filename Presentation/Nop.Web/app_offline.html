@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body onload="getDomain()">
+
+<div class="Absolute-Center">
+
+<h1>We'll be right back.</h1>
+<p>We are hard at work improving <br> <span id="domain"></span> <br> and will be back shortly.</p>
+<p>Sorry for the inconvenience.</p><br> 
+<button class="button"><a href="mailto:info@gogbs.com?subject=Please%20Notify%20Me&amp;body=Please%20notify%20me%20when%20the%20site%20is%20once%20again%20available." target="_self">Notify Me!</a></button>
+
+</div>
+
+<script>
+function getDomain() {
+    var domain = document.domain;
+    document.getElementById("domain").innerHTML = domain;
+}
+</script>
+
+<style>
+h1 {
+    color: gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 300%;
+    text-align: center;
+}
+p  {
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 120%;
+    text-align: center;
+}
+
+.downdownbaby  {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 120%;
+    text-align: center;
+}
+
+a  {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 120%;
+    text-align: center;
+}
+
+.Absolute-Center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+}
+
+.button {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 11px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+</style>
+</body>
+</html>

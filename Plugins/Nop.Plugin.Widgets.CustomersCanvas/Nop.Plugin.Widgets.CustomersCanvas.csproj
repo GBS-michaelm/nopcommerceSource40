@@ -34,7 +34,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\nopcommerceDev\Plugins\Widgets.CustomersCanvas\</OutputPath>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Widgets.CustomersCanvas\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -455,6 +455,8 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.2.0.6\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.2.0.6\build\Microsoft.TypeScript.MSBuild.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.2.0.6\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.2.0.6\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <ProjectExtensions />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <PropertyGroup>
