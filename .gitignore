@@ -2,3 +2,4 @@ bin/
 obj/
 /.vs
 /Presentation/Nop.Web/Plugins/
+/Presentation/Nop.Web/Content/Images/Thumbs
