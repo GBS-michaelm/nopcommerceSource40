@@ -9,6 +9,6 @@
     {
         itemCount++;
         <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">@item.CategoryName</a>
-        if (itemCount != Model.Count()) {<text>, </text>}
+        if (itemCount != Model.Count()){<text>, </text>}
     }
 </div>
