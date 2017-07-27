@@ -61,7 +61,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes
 
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "product_artist_name",
+            return new List<string> { "product_artist_name","product_listing_widget","product_details_widget",
                 "productdetails_bottom", "product_category_titles", "product_by_artist",
                 "categorydetails_top","productbox_addinfo_after" };
         }

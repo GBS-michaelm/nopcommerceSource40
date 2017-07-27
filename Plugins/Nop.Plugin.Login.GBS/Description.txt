@@ -6,3 +6,4 @@ SupportedVersions: 3.90
 Author: Joe BArrus
 DisplayOrder: 1
 FileName: Nop.Plugin.Login.GBS.dll
+LimitedToStores: 6

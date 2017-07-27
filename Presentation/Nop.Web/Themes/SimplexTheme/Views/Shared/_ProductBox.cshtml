@@ -23,6 +23,7 @@
 }
 
 <div class="product-item clearfix" data-productid="@Model.Id">
+    @Html.Widget("product_listing_widget", Model.Id)
     <div class="picture">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />

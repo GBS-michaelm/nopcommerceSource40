@@ -10375,3 +10375,196 @@ div#DigiCertClickID_EUn4Gw8WSeal {
         font-size: 13px;
     }
 }
+
+
+/* static Topic menu css Above the Mega Menu -- Nav 7/26/17 */
+    .newmneu {
+            width: 100%;
+            padding: 7px 0px;
+    }
+    .newmneu ul {
+            width: 100%;
+            text-align: right;
+    }
+    .newmneu ul li {
+            display: inline-block;
+            padding: 0px 10px;
+    }
+    .newmneu ul li a {
+            color: #333;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: bold;
+    }
+
+
+/*---------------------- CSS For Mega Menu --  Nav 7/26/17----------------------*/
+.header-top-right ul li .ico-wishlist {
+    background: url(../images/wishlist-icon.png) no-repeat scroll 15px 10px;
+}
+
+.header-top-right ul li .ico-register {
+    background: url(../images/register-icon.png) no-repeat scroll 15px 10px;
+}
+
+.header-menu .mega-menu > li > a, .header-menu .mega-menu > li > span {
+    padding: 25px 22px;
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+    .header-menu .mega-menu > li > a:hover {
+        background: #375759;
+        color: #fff;
+    }
+
+.header-menu .mega-menu > li:hover > a {
+    background: #375759;
+    color: #fff;
+}
+
+.header-menu .mega-menu > li:hover > a, .header-menu .mega-menu > li:hover > span {
+    color: #fff;
+}
+
+.header-menu .mega-menu > li > a::before, .header-menu .mega-menu > li > span::before {
+    display: none;
+}
+
+.header-menu .mega-menu .sublist li a:before {
+    display: none;
+}
+
+.header-menu .mega-menu .sublist-wrap {
+    position: absolute;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176)
+}
+
+    .header-menu .mega-menu .sublist-wrap:after {
+        bottom: 100%;
+        left: 40px;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(255, 255, 255, 0);
+        border-bottom-color: #fff;
+        border-width: 12px;
+    }
+
+.header-menu .mega-menu .sublist li a:hover {
+    color: #446769;
+}
+
+.header-menu .mega-menu {
+    text-align: left;
+}
+
+.newmneu ul li a:hover {
+    color: #446769
+}
+
+@media only screen and (max-width:1000px) {
+    .header-menu ul.mega-menu {
+        display: none !important;
+    }
+
+    .header-menu .menu-title {
+        margin: 0px;
+        width: 100%;
+        background: #446769 url(../images/menu-icon.png) no-repeat center right;
+    }
+
+    .header-menu .close {
+        float: inherit;
+        opacity: 1;
+        text-shadow: inherit;
+        color: #fff;
+        line-height: 22px;
+    }
+
+    .header-menu .mega-menu-responsive {
+        margin-top: 0px;
+        width: 100%;
+        margin-bottom: 0px;
+    }
+
+        .header-menu .mega-menu-responsive > li > a, .header-menu .mega-menu-responsive > li > span {
+            padding: 10px 18px;
+            min-height: inherit;
+            color: #fff;
+            font-size: 13px;
+        }
+
+            .header-menu .mega-menu-responsive > li > a:hover {
+                background: #3b5b5d
+            }
+
+    .header-menu .container .row .col-md-12 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .header-menu .mega-menu-responsive .plus-button {
+        height: 42px;
+        padding: 10px;
+    }
+
+    .header-menu .mega-menu-responsive .sublist li.back-button {
+        display: none
+    }
+
+    .header-menu .mega-menu-responsive .subli-wrap .subli {
+        margin: 0px;
+    }
+
+    .header-menu .mega-menu-responsive .sublist li {
+        margin: 0px;
+    }
+
+        .header-menu .mega-menu-responsive .sublist li a {
+            padding: 8px 30px !important;
+            color: #fff;
+            font-size: 12px;
+        }
+
+            .header-menu .mega-menu-responsive .sublist li a:hover {
+                background: #2c4648;
+                color: #fff;
+            }
+
+    .newmneu ul li a {
+        text-transform: inherit
+    }
+
+    .newmneu ul {
+        text-align: center
+    }
+
+    .header-menu .mega-menu-responsive > li {
+        background-color: #446769;
+        border-top: 1px solid #444444;
+        text-transform: uppercase
+    }
+
+    .header-menu .plus-button {
+        border: 0px;
+        background: url(../images/menu-arrow.png) no-repeat right center;
+    }
+
+    .header-menu .mega-menu-responsive .sublist {
+        background: #375759;
+    }
+
+        .header-menu .mega-menu-responsive .sublist li.back-button {
+            display: none
+        }
+}
+/*---------------------- Nav 7/26/17 ----------------------*/
+.related-products-grid .owl-carousel .owl-stage-outer {
+    min-height: 250px;
+}
