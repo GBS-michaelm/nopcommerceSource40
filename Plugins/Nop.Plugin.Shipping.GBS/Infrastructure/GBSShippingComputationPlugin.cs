@@ -76,7 +76,12 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            return null;
+            decimal _FixedRate = new decimal(0.0);
+            if (_gbsShippingSetting.UseFlatRate)
+            {
+                _FixedRate = _gbsShippingSetting.FlatRateAmount;
+            }
+            return _FixedRate;
         }
 
         /// <summary>
@@ -116,13 +121,13 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
             }
 
             // Get ZipCode and Product/s ID/S
-            var zipCode = getShippingOptionRequest.ShippingAddress.ZipPostalCode.Substring(0, 3); 
+            var zipCode = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.ZipPostalCode)) ? getShippingOptionRequest.ShippingAddress.ZipPostalCode.Substring(0, 3) : String.Empty; 
             // Get Categorized Value from String Resources
             _lstOfProduct.zipCode = zipCode;
             // Call Web Service to get the Shipping rate
             GBSShippingServiceClient myShippingRateSrv = new GBSShippingServiceClient();
 
-            //put in code to set flat rate in Config window for NCC
+            //check for Flat Rate
             string _FixedRate = String.Empty;
             if (_gbsShippingSetting.UseFlatRate)
             {
