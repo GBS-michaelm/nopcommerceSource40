@@ -31,3 +31,4 @@ Widgets.CustomersCanvas
 SevenSpikes.Nop.Plugins.MegaMenu
 Shipping.FixedOrByWeight
 Nop.Plugin.Shipping.GBS
+Nop.Plugin.Api
