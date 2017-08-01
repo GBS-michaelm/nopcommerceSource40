@@ -28,6 +28,9 @@ using Nop.Web.Extensions;
 using Nop.Services.Seo;
 using Nop.Web.Models.Media;
 using Nop.Web.Factories;
+using System.Collections;
+using Nop.Services.Orders;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -58,8 +61,12 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly IMeasureService _measureService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IProductModelFactory _productModelFactory;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly OrderSettings _orderSettings;
+        private readonly IOrderService _orderService;
 
-        public SpecificationAttributesController(ICustomerService customerService,
+        public SpecificationAttributesController(
+            ICustomerService customerService,
             ILanguageService languageService,
             ISettingService settingService,
             IStoreService storeService,
@@ -83,7 +90,10 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             IPictureService pictureService,
             IMeasureService measureService,
             IUrlRecordService urlRecordService, 
-            IProductModelFactory productModelFactory)
+            IProductModelFactory productModelFactory, 
+            IOrderService orderService, 
+            OrderSettings orderSettings,
+            IOrderProcessingService orderProcessingService)
         {
             _customerService = customerService;
             _languageService = languageService;
@@ -110,6 +120,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             _measureService = measureService;
             _urlRecordService = urlRecordService;
             _productModelFactory = productModelFactory;
+            _orderSettings = orderSettings;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
         }
 
         [AdminAuthorize]
@@ -194,111 +207,279 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         [ChildActionOnly]
         public ActionResult PublicInfo(string widgetZone, object additionalData = null)
         {
-            var id = Convert.ToInt32(additionalData);
-            if (id <= 0)
-                return Content("");
-
-            var product = _productService.GetProductById(id);
-            if (product == null)
-                return Content("");
-
-            if (widgetZone == "product_by_artist")
+            var id = 0;
+            object o = additionalData;
+            IEnumerable list = o as IEnumerable;
+            if (list != null)
             {
-                return ArtistProducts(product.Id);
+                IEnumerable<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> c = list.Cast<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel>();//.OfType<CustomerOrderListModel.OrderDetailsModel>();
+
+                if (widgetZone == "order_listing_widget")
+                {
+                    return OrderListing(c.ToList());
+                }
             }
-            //if (widgetZone == "productdetails_bottom" || widgetZone == "productbox_addinfo_after")    Image background updates by Nav July 7/27/17
-            if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget")
+            else
             {
-                var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
-                var pictureModel = new PictureModel
-                {
-                    ImageUrl = _pictureService.GetPictureUrl(sciPicture, 150, true),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-                };
-                ViewBag.ProductId = product.Id;
-                ViewBag.SeName = product.GetSeName();
-                var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
-                var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
-                if (imageSpecAttrOption.Any())
-                {
-                    var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
-                    var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
-                    if (defaultEnvelopType.Any())
-                    {
-                        string className = defaultEnvelopType.FirstOrDefault().Name;
-                        ViewBag.ClassName = className;
 
-                        if (defaultColorOption.Any())
+                id = Convert.ToInt32(additionalData);
+                if (id <= 0)
+                    return Content("");
+
+                var product = _productService.GetProductById(id);
+                if (product == null)
+                    return Content("");
+                if (widgetZone == "orderdetails_product_line")
+                {
+                    return OrderProductImage(product.Id);
+                }
+                if (widgetZone == "product_by_artist")
+                {
+                    return ArtistProducts(product.Id);
+                }
+                //widgetZone == "productdetails_bottom" || widgetZone == "productbox_addinfo_after" || 
+                if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget")
+                {
+                    var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
+                    var pictureModel = new PictureModel
+                    {
+                        ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
+                    };
+                    ViewBag.ProductId = product.Id;
+                    ViewBag.SeName = product.GetSeName();
+                    var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
+                    var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+                    if (imageSpecAttrOption.Any())
+                    {
+                        var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                        var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                        if (defaultEnvelopType.Any())
                         {
-                            var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
-                            ViewBag.DefaultColor = optionValue;
-                            if (optionValue.Contains("#") && optionValue.Length == 7)
+                            string className = defaultEnvelopType.FirstOrDefault().Name;
+                            ViewBag.ClassName = className;
+
+                            if (defaultColorOption.Any())
                             {
-                                ViewBag.DefaultColor = "background-color:" + optionValue;
+                                var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                                ViewBag.DefaultColor = optionValue;
+                                if (optionValue.Contains("#") && optionValue.Length == 7)
+                                {
+                                    ViewBag.DefaultColor = "background-color:" + optionValue;
+                                }
+                                else
+                                {
+                                    ViewBag.DefaultColor = "background-image:url('" + optionValue + "')";
+                                }
                             }
                             else
                             {
-                                ViewBag.DefaultColor = "background-image:url('" + optionValue + "')";
+                                ViewBag.DefaultColor = "";
                             }
+                            if (widgetZone == "product_details_widget")
+                            {
+                                return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", pictureModel);
+                            }
+
+                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                        }
+
+                    }
+                    else
+                    {
+                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                    }
+
+                    if (widgetZone == "product_details_widget")
+                    {
+                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", pictureModel);
+                    }
+
+                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                }
+
+                if (widgetZone == "product_category_titles")
+                {
+                    IEnumerable<ProductCategoryTitleModel> productCategoriesModel = new List<ProductCategoryTitleModel>();
+                    var categories = product.ProductCategories.Select(x => x.Category);
+                    productCategoriesModel = categories.Select(x =>
+                    {
+                        return new ProductCategoryTitleModel
+                        {
+                            CategoryName = x.Name,
+                            SeName = x.GetSeName()
+                        };
+                    });
+
+                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PoductCategoriesTitles.cshtml", productCategoriesModel);
+                }
+
+                if (product.ProductSpecificationAttributes.Any())
+                {
+                    var prodSpecAttriOptions = product.ProductSpecificationAttributes.Select(x => x.SpecificationAttributeOption);
+                    if (prodSpecAttriOptions.Any())
+                    {
+                        var specAttr = prodSpecAttriOptions.Where(x => x.SpecificationAttribute.Name == "Artist").FirstOrDefault();
+                        if (specAttr != null)
+                        {
+                            ViewBag.ArtistName = specAttr.Name;
+                            ViewBag.ArtistId = specAttr.Id;
+                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PublicInfo.cshtml");
+                        }
+                    }
+                }
+            }
+            return Content("");
+        }
+
+        [ChildActionOnly]
+        public ActionResult OrderListing(IEnumerable<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> list)
+        {
+            var model1 = new List<CustomerOrderListModel.OrderDetailsModel>();
+            if (list != null)
+            {
+
+                foreach (var l in list)
+                {
+                    var order = _orderService.GetOrderById(l.Id);
+                    var proitems = order.OrderItems;
+                    var firstName = order.ShippingAddress != null ? order.ShippingAddress.FirstName : "";
+                    var lastName = order.ShippingAddress != null ? order.ShippingAddress.LastName : "";
+
+                    var model = new CustomerOrderListModel.OrderDetailsModel()
+                    {
+                        Id = l.Id,
+                        OrderTotal = l.OrderTotal,
+                        OrderStatus = l.OrderStatus,
+                        PaymentStatus = l.PaymentStatus,
+                        ShippingStatus = l.ShippingStatus,
+                        CreatedOn = l.CreatedOn,
+                        IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
+                        IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
+                        ShipTo = firstName + " " + lastName
+                    };
+                    
+                    foreach (var orderItem in proitems)
+                    {
+                        var sciPicture = orderItem.Product.ProductPictures.FirstOrDefault().PictureId;
+                        var orderItemModel = new CustomerOrderListModel.OrderItemModel
+                        {
+                            Id = orderItem.Id,
+                            OrderItemGuid = orderItem.OrderItemGuid,
+                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, null /* _productAttributeParser*/),
+                            ProductId = orderItem.Product.Id,
+                            ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                            ProductSeName = orderItem.Product.GetSeName(),
+                            Quantity = orderItem.Quantity,
+                            AttributeInfo = orderItem.AttributeDescription,
+                            UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
+                            ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+
+                        };
+                        var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
+                        var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+                        if (imageSpecAttrOption.Any())
+                        {
+                            var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                            var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                            if (defaultEnvelopType.Any())
+                            {
+                                string className = defaultEnvelopType.FirstOrDefault().Name;
+                                orderItemModel.ClassName = className;
+
+                                if (defaultColorOption.Any())
+                                {
+                                    var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                                    orderItemModel.DefaultColor = optionValue;
+                                }
+                                else
+                                {
+                                    orderItemModel.DefaultColor = "";
+                                }
+                                //      ViewBag.ProductId = orderItem.Product.Id;
+                            }
+                        }
+
+
+
+                        //rental info
+                        if (orderItem.Product.IsRental)
+                        {
+                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                            orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                                rentalStartDate, rentalEndDate);
+                        }
+                        model.Items.Add(orderItemModel);
+                    }
+                    model1.Add(model);
+                    //model1.Add(l);
+
+                }
+
+            }
+            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderListing.cshtml", model1.ToList());
+        }
+
+        [ChildActionOnly]
+        public ActionResult OrderProductImage(int additionalData)
+        {
+            var id = Convert.ToInt32(additionalData);
+            if (id <= 0)
+                return Content("");
+            var orderitem = _orderService.GetOrderItemById(id);
+            var product = _productService.GetProductById(orderitem.ProductId);
+            if (product == null)
+                return Content("");
+
+
+
+            var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
+            var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+            if (imageSpecAttrOption.Any())
+            {
+                var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                if (defaultEnvelopType.Any())
+                {
+                    string className = defaultEnvelopType.FirstOrDefault().Name;
+                    ViewBag.ClassName = className;
+
+                    if (defaultColorOption.Any())
+                    {
+                        var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                        ViewBag.DefaultColor = optionValue;
+                        if (optionValue.Contains("#") && optionValue.Length == 7)
+                        {
+                            ViewBag.DefaultColor = "background-color:" + optionValue;
                         }
                         else
                         {
-                            ViewBag.DefaultColor = "";
+                            ViewBag.DefaultColor = "background-image:url('" + optionValue + "')";
                         }
-
-                        if (widgetZone == "product_details_widget")
-                        {
-                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", pictureModel);
-                        }
-
-                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
                     }
-                }
-                else
-                {
-                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
-                }
-                return Content("");
-            }
-
-            if (widgetZone == "product_category_titles")
-            {
-                IEnumerable<ProductCategoryTitleModel> productCategoriesModel = new List<ProductCategoryTitleModel>();
-                var categories = product.ProductCategories.Select(x => x.Category);
-                productCategoriesModel = categories.Select(x =>
-                {
-                    return new ProductCategoryTitleModel
+                    else
                     {
-                        CategoryName = x.Name,
-                        SeName = x.GetSeName()
-                    };
-                });
-
-                return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PoductCategoriesTitles.cshtml", productCategoriesModel);
-            }
-
-            string ParentsCategoryName = string.Empty;
-            if (product.ProductCategories.Any())
-            {
-                foreach (var _x in product.ProductCategories)
-                {
-                    int ParentCategoryId = _x.Category.ParentCategoryId;
-
-                    var _xx = _categoryService.GetCategoryById(ParentCategoryId);
-                    ParentsCategoryName = ParentCategoryId > 0 ? _categoryService.GetCategoryById(ParentCategoryId).Name.ToString() : "No Parent Category Found";
-                    if (ParentsCategoryName.Equals("Artist"))
-                    {
-                        ViewBag.seName = _urlRecordService.GetActiveSlug(_x.CategoryId, "Category", 0);
-                        ViewBag.ArtistName = _x.Category.Name;
-                        ViewBag.ArtistId = _x.CategoryId;
-                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PublicInfo.cshtml");
+                        ViewBag.DefaultColor = "";
                     }
+                    ViewBag.ProductId = product.Id;
                 }
-
             }
+            var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
+            var pictureModel = new PictureModel
+            {
+                ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
+                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
+            };
+            //    return model;
 
-            return Content("");
+            ViewBag.ProductId = product.Id;
+            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderProductImage.cshtml", pictureModel);
+
+
+            //  return Content("");
         }
 
         public ActionResult ArtistProducts(int productId)

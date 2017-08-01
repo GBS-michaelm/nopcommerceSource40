@@ -1,0 +1,48 @@
+﻿@model ShoppingCartModel.DiscountBoxModel
+@using Nop.Web.Models.ShoppingCart;
+@{
+    var currentURL = Request.Url.AbsolutePath;
+}
+@if (Model.Display)
+{
+    using (Html.BeginRouteForm("GBSApplyDiscount", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
+    {
+      
+
+        <div id="coupon-total-wrap" class="gbs-no-display">
+            <input type="hidden" name="urlname" value="@currentURL" />
+            @*<div class="hint gbs-padding-bottom-10">@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>*@
+            <div class="col-md-6 col-xs-6 col-sm-6">
+                <input name="discountcouponcode" type="text" class="discount-coupon-code form-control" />&nbsp;
+            </div>
+            <div class="col-md-6 col-xs-6 col-sm-6">
+                <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button button-3d button-small button-rounded button-teal" />
+            </div>
+            @foreach (var message in Model.Messages)
+            {
+                <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
+                    @message
+                </div>
+            }
+            @foreach (var discount in Model.AppliedDiscountsWithCodes)
+            {
+                <div class="current-code">
+                    <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
+                    @*empty value (little hack for FormValueExistsAttribute)*@
+                    <input type="submit" name="removediscount-@discount.Id" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
+                </div>
+            }
+            </div>
+            <script type="text/javascript">
+        $(document).ready(function () {
+            $('#discountcouponcode').keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#applydiscountcouponcode').click();
+                    return false;
+                }
+            });
+        });
+            </script>
+
+    }
+}

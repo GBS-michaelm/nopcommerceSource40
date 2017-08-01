@@ -1,0 +1,26 @@
+﻿@model Nop.Web.Models.Media.PictureModel
+@{
+    Layout = "";
+    string color = ViewBag.DefaultColor;
+    string className = ViewBag.ClassName;
+    int productId = ViewBag.ProductId;
+
+}
+<div class="product-item clearfix" data-productid="@productId">
+    <div class="picture" style="@color">
+        <a href="" title="@Model.Title" class="@className">
+            <img alt="@Model.AlternateText" src="@Model.ImageUrl" title="@Model.Title" />
+        </a>
+    </div>
+</div>
+
+<style>
+    .Horizontal {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
+    }
+
+    .Vertical {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
+    }
+</style>
+<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />

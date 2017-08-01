@@ -1,0 +1,102 @@
+﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+
+<div class="tabcontainer order-details-page">
+
+    <ul class="tabheading">
+        <li class="active" rel="tab1"><a href="javascript:return false;">Orders</a> </li>
+        <li rel="tab2"><a href="javascript:return false;">Open Orders</a> </li>
+        <li rel="tab3"><a href="javascript:return false;">Cancelled Orders</a> </li>
+    </ul>
+
+
+
+    <div class="tabbody active" id="tab1" style="display: block;">
+        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
+
+    </div>
+
+    <div class="tabbody" id="tab2" style="display: none;">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
+                {
+                    if (order.OrderStatus != "Complete")
+                    {
+                       
+                            @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
+                     
+                    }
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
+                </div>
+            }
+        </div>
+
+    </div>
+    <div class="tabbody" id="tab3" style="display: none;">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
+                {
+                    if (order.OrderStatus == "Cancelled")
+                    {
+                        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
+                    }
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+<style>
+    .Horizontal {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
+    }
+
+    .Vertical {
+        background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
+    }
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        //$("#GoDirectlyToNumber").keydown(function (event) {
+            //if (event.keyCode === 13) {
+             //   $("#go-to-order-by-number").click();
+                $('#go-to-order-by-number').click(function (e) {
+                    e.preventDefault();
+                    var ids = $('#GoDirectlyToNumber').val();
+                    alert(ids);
+                    $('#ordersearchsubmit #selectedIds').val(ids);
+                    $('#ordersearchsubmit').submit();
+                    return false;
+                });
+            //    return false;
+            //}
+        });
+   // });
+</script>
+<script>
+    $('.tabheading li').click(function () {
+        var tabid = $(this).attr("rel");
+        $(this).parents('.tabcontainer').find('.active').removeClass('active');
+        $('.tabbody').hide();
+        $('#' + tabid).show();
+        $(this).addClass('active');
+
+        return false;
+    });
+</script>
+<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />

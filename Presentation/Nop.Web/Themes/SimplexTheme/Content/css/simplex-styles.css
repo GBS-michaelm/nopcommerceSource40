@@ -5179,7 +5179,8 @@ a.eu-cookie-privacyinfo-tag {
     margin-bottom: 0px;
 }
 
-.order-completed-page .section.order-completed, .order-completed-page .panel-heading h1 { /*text-align:center;*/
+.order-completed-page .section.order-completed, .order-completed-page .panel-heading h1 {
+    text-align: center;
 }
 
 
@@ -8814,6 +8815,7 @@ body:not(.device-touch) .social-icon i {
 
     .account-page .panel-heading h1 {
         font-size: 24px;
+        padding-left: 0px;
     }
 
 .address-list .panel-heading {
@@ -8831,6 +8833,7 @@ body:not(.device-touch) .social-icon i {
 
 .account-page .page-title.panel-heading {
     padding: 0px;
+    border: 0px;
 }
 
 .account-page .page-title {
@@ -9083,10 +9086,6 @@ ul.info li label {
 .gbs-color-black {
     color: black;
 }
-
-.gbs-color-green {
-    color: #59BA41;
-}
 /* Cart/Checkout Custom CSS Alex Kang*/
 .cart.table.table-bordered tbody td {
     border: 1px solid #ccc !important;
@@ -9222,8 +9221,8 @@ ul.info li label {
 
 .shopping-cart-page #checkout {
     position: relative;
-    bottom: 79px;
-    left: 93px;
+    bottom: 65px;
+    left: 134px;
 }
 
 .cart .sku-info {
@@ -9264,29 +9263,6 @@ ul.info li label {
 .confirm-order .icon-remove {
     float: left
 }
-
-.empty-message-content {
-    font-weight: bold;
-}
-
-.no-data .topic-html-content {
-    border: none;
-}
-
-.order-success-msg-title {
-    font-size: 26px;
-}
-
-.order-completed-page .topic-html-content {
-    border: none;
-}
-
-.flyout-cart-button {
-    position: relative;
-    left: 56px;
-}
-
-
 /* Process Steps Custom CSS */
 .process-steps li:after, .process-steps li:before {
     top: 68px !important;
@@ -9474,10 +9450,6 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 }
 
 /*---- DASHBOARD STYLES ---- */
-.account-page .panel-heading h1 {
-    font-size: 36px;
-}
-
 .account-page .form-group label {
     text-align: left;
     font-weight: normal;
@@ -9639,10 +9611,10 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     font-weight: bold;
     font-size: 18px;
 }
-
-.owl-item.active {
-    width: auto !important;
-}
+/*
+.owl-item.active {  
+	width: auto!important;
+}*/
 
 
 /*-- GROUPED PRODUCT PAGE STYLES ---*/
@@ -9780,6 +9752,79 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 .wishlist-mobile {
     width: 86px; /*-- same size as the alternate view thumbnails in the product details page --*/
 }
+
+.order-details-area .panel-heading {
+    font-size: 16px;
+}
+
+.side-content {
+    padding: 0px;
+}
+
+.container .sidebar {
+    padding: 0px;
+}
+
+.order-details-page .page-title {
+    border: 0px;
+    padding: 0px 0px 15px 0px;
+}
+
+    .order-details-page .page-title h1 {
+        padding-left: 0px;
+        font-size: 20px;
+    }
+
+.products .panel-default {
+    box-shadow: none !important;
+}
+
+.product-slider .related-products-grid .sliderinner .item-box .thumbnail {
+    overflow: inherit;
+    width: 100%;
+}
+
+    .product-slider .related-products-grid .sliderinner .item-box .thumbnail .product-item {
+        margin: auto;
+        display: table;
+        float: none;
+    }
+
+.related-products-slider .owl-controls .owl-nav .owl-prev {
+    font-size: 0px;
+    background: url(../images/carousel-arrowleft.png) no-repeat;
+    left: 0px !important;
+    opacity: 1;
+    margin-top: -10px;
+}
+
+    .related-products-slider .owl-controls .owl-nav .owl-prev:hover {
+        background: url(../images/carousel-arrowleft.png) no-repeat;
+        background-color: #333 !important;
+    }
+
+.related-products-slider .owl-controls .owl-nav .owl-next {
+    font-size: 0px;
+    background: url(../images/carousel-arrowright.png) no-repeat;
+    right: 0px !important;
+    opacity: 1;
+    margin-top: -10px;
+}
+
+    .related-products-slider .owl-controls .owl-nav .owl-next:hover {
+        background: url(../images/carousel-arrowright.png) no-repeat;
+        background-color: #333 !important;
+    }
+
+.related-products-slider .owl-dots {
+    display: none !important;
+}
+
+.product-slider .related-products-grid .sliderinner .item-box {
+    padding: 0px;
+}
+
+
 
 
 @media only screen and (max-width: 1200px) {
@@ -10154,6 +10199,10 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     .navbar-toggle {
         margin-right: 15px;
     }
+
+    .product-slider .owl-carousel {
+        padding: 0px 15px;
+    }
 }
 
 
@@ -10376,29 +10425,9 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     }
 }
 
-
-/* static Topic menu css Above the Mega Menu -- Nav 7/26/17 */
-    .newmneu {
-            width: 100%;
-            padding: 7px 0px;
-    }
-    .newmneu ul {
-            width: 100%;
-            text-align: right;
-    }
-    .newmneu ul li {
-            display: inline-block;
-            padding: 0px 10px;
-    }
-    .newmneu ul li a {
-            color: #333;
-            text-transform: uppercase;
-            font-size: 13px;
-            font-weight: bold;
-    }
+/***************add new css 11/07/2017*************/
 
 
-/*---------------------- CSS For Mega Menu --  Nav 7/26/17----------------------*/
 .header-top-right ul li .ico-wishlist {
     background: url(../images/wishlist-icon.png) no-repeat scroll 15px 10px;
 }
@@ -10408,7 +10437,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 }
 
 .header-menu .mega-menu > li > a, .header-menu .mega-menu > li > span {
-    padding: 25px 22px;
+    padding: 26px 22px 25px 22px;
     color: #fff;
     font-size: 14px;
     text-transform: uppercase;
@@ -10515,7 +10544,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     }
 
     .header-menu .mega-menu-responsive .sublist li.back-button {
-        display: none
+        display: none;
     }
 
     .header-menu .mega-menu-responsive .subli-wrap .subli {
@@ -10527,9 +10556,11 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     }
 
         .header-menu .mega-menu-responsive .sublist li a {
-            padding: 8px 30px !important;
+            padding: 12px 18px !important;
             color: #fff;
+            border-bottom: 1px solid #1f3d3f;
             font-size: 12px;
+            text-transform: capitalize;
         }
 
             .header-menu .mega-menu-responsive .sublist li a:hover {
@@ -10548,7 +10579,8 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     .header-menu .mega-menu-responsive > li {
         background-color: #446769;
         border-top: 1px solid #444444;
-        text-transform: uppercase
+        text-transform: uppercase;
+        margin: 0px;
     }
 
     .header-menu .plus-button {
@@ -10558,13 +10590,84 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 
     .header-menu .mega-menu-responsive .sublist {
         background: #375759;
+        padding: 0px;
     }
 
         .header-menu .mega-menu-responsive .sublist li.back-button {
-            display: none
+            display: none;
         }
 }
-/*---------------------- Nav 7/26/17 ----------------------*/
+/* static menu css*/
+.newmneu {
+    width: 100%;
+    padding: 1px;
+}
+
+    .newmneu ul {
+        width: 100%;
+        text-align: right;
+    }
+
+        .newmneu ul li {
+            display: inline-block;
+            padding: 0px 10px;
+        }
+
+            .newmneu ul li a {
+                color: #333;
+                text-transform: uppercase;
+                font-size: 13px;
+                font-weight: bold;
+            }
+    .newmneu > .container > .topic-html-content {
+        border: none;
+    }
+    .newmneu > .container > .topic-html-content > .topic-html-content {
+          padding: 0px;
+    }
+    /*Mega menu CSS*/
+    /*.header-menu, .back-button {
+    display: block !important;
+}
+
+.mega-menu {
+    border: 0px !important;
+    margin: 0px !important;
+}*/
+    @media all and (max-width: 1000px) {
+        .mega-menu {
+        display: block !important
+    }
+}
+
 .related-products-grid .owl-carousel .owl-stage-outer {
     min-height: 250px;
+}
+
+.goToTop .header-menu .mega-menu > li > a, .goToTop .header-menu .mega-menu > li > span {
+    padding: 26px 15px 25px
+}
+
+@media all and (max-width: 1000px) {
+    .goToTop .header-links-wrapper .flyout-main-wrapper {
+        display: none
+    }
+
+    .goToTop .header-menu .menu-title {
+        font-size: 0px;
+        position: absolute;
+        top: 0px;
+        height: 50px;
+    }
+
+    .goToTop .fixed-logo {
+        margin-left: 10px;
+        margin-top: 1px;
+        height: 50px;
+    }
+
+    .header-menu .mega-menu-responsive {
+        float: left;
+        width: 100%;
+    }
 }

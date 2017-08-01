@@ -116,6 +116,7 @@
                 </div>
             }
         }
+        @Html.Widget("order_listing_widget", Model.Orders)
         <div class="order-list row">
             @if (Model.Orders.Count > 0)
             {
