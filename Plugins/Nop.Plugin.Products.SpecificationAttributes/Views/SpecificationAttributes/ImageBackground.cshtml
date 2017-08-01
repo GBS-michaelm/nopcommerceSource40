@@ -1,58 +1,23 @@
-﻿@{
+﻿@model Nop.Web.Models.Media.PictureModel
+@{
     Layout = "";
     string color = ViewBag.DefaultColor;
     string className = ViewBag.ClassName;
     int productId = ViewBag.ProductId;
-
-    bool isImage = false;
-    if (color != null)
-    {
-        if (color.Contains("#") && color.Length == 7)
-        {
-            isImage = false;
-        }
-        else
-        {
-            isImage = true;
-        }
-    }
+    string sename = ViewBag.SeName;
 }
 <script type="text/javascript">
-   
     $(document).on("nopAjaxFiltersFiltrationCompleteEvent", function () {
         $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').addClass('@className');
         $("div").find("[data-productid='@productId'].product-item").find('.picture').find('a').addClass('@className');
-        if ('@isImage' == 'True') {
-            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
-            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-image", "url('@color')");
-        }
-        else {
-            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').css("background-color", "@color");
-            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-color", "@color");
-        }
-    });
-
-    $(window).load(function () {
-        $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').addClass('@className');
-        $("div").find("[data-productid='@productId'].product-item").find('.picture').find('a').addClass('@className');
-        if ('@isImage' == 'True') {
-            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
-            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-image", "url('@color')");
-        }
-        else {
-            $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').css("background-color", "@color");
-            $("div").find("[data-productid='@productId'].product-item").find('.picture').css("background-color", "@color");
-        }
   });
 
 </script>
 
-<style>
-    .Horizontal {
-        background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
-    }
+<div class="pictures" style="@color">
+    <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.Title" class="@className">
+        <img alt="" src="@Model.ImageUrl" title="@Model.Title" />
+    </a>
+</div>
 
-    .Vertical {
-        background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
-    }
-</style>
+<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />
