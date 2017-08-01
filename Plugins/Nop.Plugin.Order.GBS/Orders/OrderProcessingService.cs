@@ -774,10 +774,11 @@ namespace Nop.Services.Custom.Orders
                 paramDic.Add("@ShippingRateComputationMethodSystemName", ShippingRateComputationMethodSystemName);
                 paramDic.Add("@CustomValuesXml", CustomValuesXml);
                 paramDic.Add("@Errors", errors);
+                paramDic.Add("@OrderGuid", paymentRequest.OrderGuid);
 
                 insert = "EXEC usp_InsertFailedOrder @GBSOrderID,@StoreID,@CustomerId,@BillingAddressId,@ShippingAddressId,@PickupAddressId,@PickUpInStore,@PaymentMethodSystemName,@CustomerCurrencyCode,@CurrencyRate,@CustomerTaxDisplayTypeId,@VatNumber,@OrderSubtotalInclTax,";
                 insert += "@OrderSubtotalExclTax,@OrderSubTotalDiscountInclTax,@OrderSubTotalDiscountExclTax,@OrderShippingInclTax,@OrderShippingExclTax,@PaymentMethodAdditionalFeeInclTax,@PaymentMethodAdditionalFeeExclTax,@TaxRates,@OrderTax,@OrderDiscount,@OrderTotal,@RewardPointsWereAdded,@CheckoutAttributeDescription,";
-                insert += "@CheckoutAttributesXml,@CustomerLanguageId,@AffiliateId,@CustomerIp,@CardType,@CardName,@MaskedCreditCardNumber,@CardExpirationMonth,@CardExpirationYear,@ShippingMethod,@ShippingRateComputationMethodSystemName,@CustomValuesXml,@Errors";
+                insert += "@CheckoutAttributesXml,@CustomerLanguageId,@AffiliateId,@CustomerIp,@CardType,@CardName,@MaskedCreditCardNumber,@CardExpirationMonth,@CardExpirationYear,@ShippingMethod,@ShippingRateComputationMethodSystemName,@CustomValuesXml,@Errors,@OrderGuid";
 
                 manager.SetParameterizedQueryNoData(insert, paramDic);
 
