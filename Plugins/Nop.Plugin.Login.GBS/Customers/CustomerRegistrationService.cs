@@ -172,7 +172,29 @@ namespace Nop.Services.Custom.Customers
 
         public override CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
         {
-            CustomerRegistrationResult result = base.RegisterCustomer(request); 
+
+            string errCode;
+            CustomerRegistrationResult result = null;
+            var results = new CustomerRegistrationResult();
+            if (IsValidPassword(request.Password, out errCode))
+            {
+                result = base.RegisterCustomer(request);
+            }
+            else
+            {
+                switch (errCode.ToUpper())
+                {
+                    case "ERROR_PASSWORD_NO_LETTER":
+                    case "ERROR_PASSWORD_NO_NUMBER":
+                    case "ERROR_PASSWORD_LENGTH":
+                        results.AddError("Passwords must contain at least 1 letter, 1 number, and be at least 8 characters long.");
+                        break;
+                    default:
+                        break;
+                }
+                return results;
+            }
+
             try
             {
                 var miscPlugins = _pluginFinder.GetPlugins<MyLoginServicePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
@@ -202,6 +224,16 @@ namespace Nop.Services.Custom.Customers
                         {
                             _logger.Error("RegisterCustomer() Override", new Exception(responseString), null);
                         }
+                        switch (responseString.ToUpper())
+                        {
+                            case "ERROR_PASSWORD_NO_LETTER":
+                            case "ERROR_PASSWORD_NO_NUMBER":
+                            case "ERROR_PASSWORD_LENGTH":
+                                result.AddError("Passwords must contain at least 1 letter, 1 number, and be at least 8 characters long.");
+                                break;
+                            default:
+                                break;
+                        }
                         return result;
 
                     }
@@ -219,35 +251,57 @@ namespace Nop.Services.Custom.Customers
 
         public override ChangePasswordResult ChangePassword(ChangePasswordRequest request)
         {
-            ChangePasswordResult result = base.ChangePassword(request);
+            string errCode;
+            ChangePasswordResult result = null;
+            var results = new ChangePasswordResult();
+            if (IsValidPassword(request.NewPassword, out errCode))
+            {
+                result = base.ChangePassword(request);
+            }
+            else
+            {
+                switch (errCode.ToUpper())
+                {
+                    case "ERROR_PASSWORD_NO_LETTER":
+                    case "ERROR_PASSWORD_NO_NUMBER":
+                    case "ERROR_PASSWORD_LENGTH":
+                        results.AddError("Passwords must contain at least 1 letter, 1 number, and be at least 8 characters long.");
+                        break;
+
+                    default:
+                        break;
+                }
+                return results;
+
+            }
+            
             try
             {
                 var miscPlugins = _pluginFinder.GetPlugins<MyLoginServicePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
                 if (miscPlugins.Count > 0)
                 {
-                    
-               
-                        if (result.Errors.Count < 1)
-                        {
-                            WebClient client = new WebClient();
-                            client.Headers.Add("Content-Type", "application/json");
+
+
+                    if (result.Errors.Count < 1)
+                    {
+                        WebClient client = new WebClient();
+                        client.Headers.Add("Content-Type", "application/json");
                         client.Credentials = new NetworkCredential(_gbsLoginSettings.GBSCustomerWebServiceUserName, _gbsLoginSettings.GBSCustomerWebServicePassword);
                         UserModel model = new UserModel();
-                            model.currentEmailAddress = request.Email;
-                            model.emailAddress = request.Email;
-                            model.currentPassword = request.OldPassword;
-                            model.password = request.NewPassword;
-                            model.updateEmail = false;
-                            model.updatePassword = true;
+                        model.currentEmailAddress = request.Email;
+                        model.emailAddress = request.Email;
+                        model.currentPassword = request.OldPassword;
+                        model.password = request.NewPassword;
+                        model.updateEmail = false;
+                        model.updatePassword = true;
 
-                            string loginJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
-                            string responseString = client.UploadString(_gbsLoginSettings.GBSUpdateCustomerWebService, loginJSON);
+                        string loginJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
+                        string responseString = client.UploadString(_gbsLoginSettings.GBSUpdateCustomerWebService, loginJSON);
 
-                            if (responseString.ToUpper() != "SUCCESS")
-                            {
-                                _logger.Error("ChangePassword() Override", new Exception(responseString), null);
-                            }
-
+                        if (responseString.ToUpper() != "SUCCESS")
+                        {
+                            _logger.Error("ChangePassword() Override", new Exception(responseString), null);
+                        }
                         switch (responseString.ToUpper())
                         {
                             case "ERROR_PASSWORD_NO_LETTER":
@@ -255,11 +309,12 @@ namespace Nop.Services.Custom.Customers
                             case "ERROR_PASSWORD_LENGTH":
                                 result.AddError("Passwords must contain at least 1 letter, 1 number, and be at least 8 characters long.");
                                 break;
+                             
                             default:
                                 break;
                         }
 
-                        return result;
+                            return result;
                         }
                
                 }
@@ -333,6 +388,54 @@ namespace Nop.Services.Custom.Customers
                 _logger.Error("SetEmail() Override", ex, null);
             }
 
+        }
+
+        public bool IsValidPassword(string password, out string errCode)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                errCode = "ERROR_EMPTY_PASSWORD";
+                return false;
+            }
+
+            if (password.Length < 8)
+            {
+                errCode = "ERROR_PASSWORD_LENGTH";
+                return false;
+            }
+
+            bool hasNumber = false;
+            bool hasLetter = false;
+
+            foreach (char pwChar in password)
+            {
+                int asciiVal = (int)pwChar;
+
+                if ((asciiVal >= 65 && asciiVal <= 90) ||
+                   (asciiVal >= 97 && asciiVal <= 122))
+                {
+                    hasLetter = true;
+                }
+                else if (asciiVal >= 48 && asciiVal <= 57)
+                {
+                    hasNumber = true;
+                }
+            }
+
+            if (!hasNumber)
+            {
+                errCode = "ERROR_PASSWORD_NO_NUMBER";
+                return false;
+            }
+
+            if (!hasLetter)
+            {
+                errCode = "ERROR_PASSWORD_NO_LETTER";
+                return false;
+            }
+
+            errCode = "";
+            return true;
         }
     }
 }
