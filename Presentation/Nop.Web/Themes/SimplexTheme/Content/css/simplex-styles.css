@@ -10493,7 +10493,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     text-align: left;
 }
 
-.newmneu ul li a:hover {
+.newmenu ul li a:hover {
     color: #446769
 }
 
@@ -10568,11 +10568,11 @@ div#DigiCertClickID_EUn4Gw8WSeal {
                 color: #fff;
             }
 
-    .newmneu ul li a {
+    .newmenu ul li a {
         text-transform: inherit;
     }
 
-    .newmneu ul {
+    .newmenu ul {
         text-align: center;
     }
 
@@ -10598,31 +10598,31 @@ div#DigiCertClickID_EUn4Gw8WSeal {
         }
 }
 /* static menu css*/
-.newmneu {
+.newmenu {
     width: 100%;
     padding: 1px;
 }
 
-    .newmneu ul {
+    .newmenu ul {
         width: 100%;
         text-align: right;
     }
 
-        .newmneu ul li {
+        .newmenu ul li {
             display: inline-block;
             padding: 0px 10px;
         }
 
-            .newmneu ul li a {
+            .newmenu ul li a {
                 color: #333;
                 text-transform: uppercase;
                 font-size: 13px;
                 font-weight: bold;
             }
-    .newmneu > .container > .topic-html-content {
+    .newmenu > .container > .topic-html-content {
         border: none;
     }
-    .newmneu > .container > .topic-html-content > .topic-html-content {
+    .newmenu > .container > .topic-html-content > .topic-html-content {
           padding: 0px;
     }
     /*Mega menu CSS*/

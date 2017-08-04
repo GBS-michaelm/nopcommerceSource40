@@ -101,7 +101,9 @@
                                     <div>
                                         @if (order.IsReOrderAllowed)
                                         {
-                                            <input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />
+                                            @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
+                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })   ')" />
+
                                         }
                                     </div>
                                 </div>
