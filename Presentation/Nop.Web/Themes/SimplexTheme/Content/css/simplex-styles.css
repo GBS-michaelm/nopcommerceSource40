@@ -10674,6 +10674,10 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 .mega-menu .sublist li a {
     padding: 7px 15px 7px 15px !important;
 }
-.add-to-cart .product-by{
-    display : none;
+.add-to-cart .product-by {
+    display: none;
+}
+/*** hide Order, Payment and Shipping Status ***/
+.payment-method-status, .order-status, .shipping-status {
+    display: none;
 }
