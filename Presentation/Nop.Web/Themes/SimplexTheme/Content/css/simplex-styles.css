@@ -10671,3 +10671,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
         width: 100%;
     }
 }
+/*** hide Order, Payment and Shipping Status ***/
+.payment-method-status, .order-status, .shipping-status {
+    display: none;
+}
