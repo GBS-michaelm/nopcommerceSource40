@@ -241,9 +241,13 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget")
                 {
                     var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
+                    if (widgetZone == "product_details_widget")
+                    {
+                        sciPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId;
+                    }
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+                        ImageUrl = _pictureService.GetPictureUrl(sciPicture, 550, true),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
                     };
@@ -469,7 +473,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
             var pictureModel = new PictureModel
             {
-                ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+                ImageUrl = _pictureService.GetPictureUrl(sciPicture, 550, true),
                 Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
                 AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
             };

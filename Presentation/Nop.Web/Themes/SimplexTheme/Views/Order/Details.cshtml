@@ -1,11 +1,11 @@
 ﻿@model OrderDetailsModel
-@*@using Nop.Plugin.DataAccess.GBS;*@
+@using Nop.Plugin.DataAccess.GBS;
 @using Nop.Web.Models.Order
 
 @*@functions {
 
-        Nop.Plugin.DataAccess.GBS.DBManager manager = new DBManager();
-        //DataManager.getGBSOrderID()
+    Nop.Plugin.DataAccess.GBS.DBManager manager = new DBManager();
+    //DataManager.getGBSOrderID();
     }*@
 
 @{
@@ -52,8 +52,8 @@
         @Html.Widget("orderdetails_page_top", Model.Id)
         <div class="order-overview">
             <div class="order-number">
-                <h4>@T("Order.Order#")@Model.Id</h4>
-                @*<h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>*@   @*This need to put back, and above line need to commented            -----------   Naveed *@
+                @*<h4>@T("Order.Order#")@Model.Id</h4>*@
+                <h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>   
             </div>
             <ul class="order-details order-overview-content">
                 <li class="order-date">

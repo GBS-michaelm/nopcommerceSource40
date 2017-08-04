@@ -14,6 +14,9 @@ $(document).ready(function () {
         var navWidth = $("div.header").width();
 if(window.location.pathname.includes("Plugins/CcWidget/EditorPage"))
 {
+    $(".header-lower").hide();
+    $(".header-menu").css("display", "none !important");
+    $(".newmneu").css("display", "none !important");   
 }
 else{
         ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');}

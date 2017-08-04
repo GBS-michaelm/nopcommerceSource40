@@ -1,4 +1,5 @@
 ﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+@using Nop.Plugin.DataAccess.GBS;
 
 <div class="tab-headsection">
     <div class="head-left">
@@ -46,7 +47,8 @@
                     </div>
                 </div>
                 <div class="head-col4">
-                    <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>
+                    @*<div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>*@
+                    <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(order.Id)</div>
                     <div class="order-links">
                         <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })">Order Details</a> |
                         <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = order.Id })">Invoice</a>
