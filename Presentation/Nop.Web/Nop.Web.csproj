@@ -2915,6 +2915,7 @@
     <Content Include="Themes\TeamMagnet\Views\Topics\RequestQuote.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\GluonProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
