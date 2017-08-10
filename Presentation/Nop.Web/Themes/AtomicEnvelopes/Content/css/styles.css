@@ -7243,8 +7243,3 @@ pre {
     .item-box .product-title a:hover {
         color: #7c0000;
     }
-	
-/*** hide Order, Payment and Shipping Status ***/
-.payment-method-status, .order-status, .shipping-status {
-    display: none;
-}

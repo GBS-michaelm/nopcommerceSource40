@@ -10705,7 +10705,3 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 .add-to-cart .product-by {
     display: none;
 }
-/*** hide Order, Payment and Shipping Status ***/
-.payment-method-status, .order-status, .shipping-status {
-    display: none;
-}
