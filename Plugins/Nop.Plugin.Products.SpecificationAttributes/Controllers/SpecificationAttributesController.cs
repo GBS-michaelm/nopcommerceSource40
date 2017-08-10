@@ -64,6 +64,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly OrderSettings _orderSettings;
         private readonly IOrderService _orderService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         public SpecificationAttributesController(
             ICustomerService customerService,
@@ -93,7 +94,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             IProductModelFactory productModelFactory, 
             IOrderService orderService, 
             OrderSettings orderSettings,
-            IOrderProcessingService orderProcessingService)
+            IOrderProcessingService orderProcessingService,
+            IProductAttributeParser productAttributeParser)
         {
             _customerService = customerService;
             _languageService = languageService;
@@ -123,6 +125,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             _orderSettings = orderSettings;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
+            _productAttributeParser = productAttributeParser;
         }
 
         [AdminAuthorize]
@@ -371,7 +374,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         {
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
-                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, null /* _productAttributeParser*/),
+                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml,  _productAttributeParser),
                             ProductId = orderItem.Product.Id,
                             ProductName = orderItem.Product.GetLocalized(x => x.Name),
                             ProductSeName = orderItem.Product.GetSeName(),

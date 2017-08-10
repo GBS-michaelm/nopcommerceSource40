@@ -5179,8 +5179,7 @@ a.eu-cookie-privacyinfo-tag {
     margin-bottom: 0px;
 }
 
-.order-completed-page .section.order-completed, .order-completed-page .panel-heading h1 {
-    text-align: center;
+.order-completed-page .section.order-completed, .order-completed-page .panel-heading h1 { /*text-align:center;*/
 }
 
 
@@ -9086,6 +9085,10 @@ ul.info li label {
 .gbs-color-black {
     color: black;
 }
+
+.gbs-color-green {
+    color: #59BA41;
+}
 /* Cart/Checkout Custom CSS Alex Kang*/
 .cart.table.table-bordered tbody td {
     border: 1px solid #ccc !important;
@@ -9221,8 +9224,8 @@ ul.info li label {
 
 .shopping-cart-page #checkout {
     position: relative;
-    bottom: 65px;
-    left: 134px;
+    bottom: 79px;
+    left: 93px;
 }
 
 .cart .sku-info {
@@ -9263,6 +9266,31 @@ ul.info li label {
 .confirm-order .icon-remove {
     float: left
 }
+
+.empty-message-content {
+    font-weight: bold;
+}
+
+.no-data .topic-html-content {
+    border: none;
+}
+
+.order-success-msg-title {
+    font-size: 26px;
+}
+
+.order-completed-page .topic-html-content {
+    border: none;
+}
+
+.flyout-cart-button {
+    position: relative;
+    left: 56px;
+}
+.shopping-cart-page .subtotal .edit-item {
+    display: none;
+}
+
 /* Process Steps Custom CSS */
 .process-steps li:after, .process-steps li:before {
     top: 68px !important;
@@ -9611,10 +9639,10 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     font-weight: bold;
     font-size: 18px;
 }
-/*
-.owl-item.active {  
-	width: auto!important;
-}*/
+
+.owl-item.active {
+    width: auto !important;
+}
 
 
 /*-- GROUPED PRODUCT PAGE STYLES ---*/
