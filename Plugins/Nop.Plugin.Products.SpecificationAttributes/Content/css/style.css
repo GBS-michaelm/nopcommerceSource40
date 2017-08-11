@@ -603,3 +603,16 @@ table.orderdetails-list {
                 padding-right: 8px;
             }
     }
+
+.buyinagain {
+    display: none;
+}
+.orderstatus {
+    display: none;
+}
+.productlist-right ul li {
+    display: none;
+}
+.productlist-right ul li:nth-child(1) {
+        display: block;
+    }

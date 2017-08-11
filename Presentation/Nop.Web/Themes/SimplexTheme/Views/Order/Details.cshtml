@@ -539,43 +539,45 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-                                    <td class="name">
-                                        @if (!Model.PrintMode)
-                                        {
-                                            @*<em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>*@
-                                        }
-                                        else
-                                        {
-                                            @item.ProductName
-                                        }
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <div class="attributes">
-                                                @Html.Raw(item.AttributeInfo)
-                                            </div>
-                                        }
-                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                        {
-                                            <div class="rental-info">
-                                                @Html.Raw(item.RentalInfo)
-                                            </div>
-                                        }
-                                        @if (item.DownloadId > 0)
-                                        {
-                                            <div class="download">
-                                                <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
-                                            </div>
-                                        }
-                                        @if (item.LicenseId > 0)
-                                        {
-                                            <div class="download license">
-                                                <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
-                                            </div>
-                                        }
+                                    <td class="name">                                      
                                         @Html.Widget("orderdetails_product_line", item.Id)
                                     </td>
                                     <td class="a-left">
                                         <div class="product-tile"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
+                                        <div class="sku-number">
+                                            @if (!Model.PrintMode)
+                                            {
+                                                @*<em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>*@
+                                            }
+                                            else
+                                            {
+                                                @item.ProductName
+                                            }
+                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            {
+                                                <div class="attributes">
+                                                    @Html.Raw(item.AttributeInfo)
+                                                </div>
+                                            }
+                                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                            {
+                                                <div class="rental-info">
+                                                    @Html.Raw(item.RentalInfo)
+                                                </div>
+                                            }
+                                            @if (item.DownloadId > 0)
+                                            {
+                                                <div class="download">
+                                                    <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                </div>
+                                            }
+                                            @if (item.LicenseId > 0)
+                                            {
+                                                <div class="download license">
+                                                    <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                                </div>
+                                            }
+                                        </div>
                                         @if (Model.ShowSku)
                                         {
                                             <span class="sku-number">SKU: @item.Sku</span>

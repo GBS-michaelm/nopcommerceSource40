@@ -42,13 +42,13 @@
     </div>
     @if (Model.PictureModels.Count > 1)
     {
-        if (Model.PictureModels.Count <= 3)
+        if (Model.PictureModels.Count <= 5)
         {
             <div class="picture-thumbs">
                 @foreach (var picture in Model.PictureModels)
                 {
                     <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
-                        <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                     </a>
                 }
             </div>
@@ -59,7 +59,7 @@
                 @foreach (var picture in Model.PictureModels)
                 {
                     <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
-                        <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                     </a>
                 }
             </div>  

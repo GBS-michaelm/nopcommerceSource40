@@ -1,14 +1,9 @@
-﻿@using System.Text.RegularExpressions;
-@{
+﻿@{
     Layout = "";
     string artistName = ViewBag.ArtistName;
-    int artistId = ViewBag.ArtistId;
     string sename = ViewBag.seName;
-
-    //Regex.Replace(artistName, @"[^A-Za-z0-9_\.~]+", "-").ToLower();
 }
 
 <div class="product-by">
-    @*<a href="@Url.RouteUrl("Plugin.Products.SpecificationAttributes.DetailPage", new {specs = artistId })">@artistName</a>*@
     <a href="@Url.RouteUrl("Category", new { SeName = sename })">@artistName</a>
 </div>

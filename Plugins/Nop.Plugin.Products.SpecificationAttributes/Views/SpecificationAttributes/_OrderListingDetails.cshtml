@@ -76,25 +76,13 @@
                             string color = item.DefaultColor;
                             string className = item.ClassName;
 
-                            bool isImage = false;
-                            if (color != null)
-                            {
-                                if (color.Contains("#") && color.Length == 7)
-                                {
-                                    isImage = false;
-                                }
-                                else
-                                {
-                                    isImage = true;
-                                }
-                            }
-                            <div class="prdouctrow-list product-item" data-productid="@item.Id">
+                           <div class="prdouctrow-list product-item" data-productid="@item.Id">
 
-                                <div class="order-productimg picture">
-                                    <a href="" title="@item.ProductName">
-                                        <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
-                                    </a>
-                                </div>
+                               <div class="order-productimg picture" style="@color">
+                                   <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
+                                       <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
+                                   </a>
+                               </div>
                                 <div class="productname-price">
                                     <div class="order-productname"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
                                     <div class="product-unit-price">@item.UnitPrice</div>
@@ -106,28 +94,13 @@
                                     </div>
                                 </div>
                             </div>
-
-                                        <script type="text/javascript">
-                                            $(window).load(function () {
-                                                $("div").find("[data-productid='@item.Id'].product-item").find('.picture').find('a').addClass('@className');
-                                                if ('@isImage' == 'True') {
-                                                    $("div").find("[data-productid='@item.Id']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
-                                                    $("div").find("[data-productid='@item.Id'].product-item").find('.picture').css("background-image", "url('@color')");
-                                                }
-                                                else {
-                                                    $("div").find("[data-productid='@item.Id'].product-item").find('.picture').css("background-color", "@color");
-                                                }
-                                            });
-
-                                        </script>
-
-
-
-                        }
-
+                      }
                     </div>
                     <div class="productlist-right">
                         <ul>
+                            <li>
+                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })">Order Details</a>
+                            </li>
                             <li>
                                 <a href="#">Track Package</a>
                             </li>
@@ -151,6 +124,7 @@
     else
     {
         <div class="no-data">
+
             @T("Account.CustomerOrders.NoOrders")
         </div>
     }

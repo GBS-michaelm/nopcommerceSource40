@@ -117,50 +117,5 @@
             }
         }
         @Html.Widget("order_listing_widget", Model.Orders)
-        <div class="order-list row">
-            @if (Model.Orders.Count > 0)
-            {
-                foreach (var order in Model.Orders)
-                {
-                    
-                        <div class="col_half panel panel-default">
-                            <div class="panel-heading">
-                                @*<h2 class="panel-title">@T("Account.CustomerOrders.OrderNumber"): @order.Id</h2>*@
-                                <h2>@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(order.Id)</h2>
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav">
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>
-                                    </li>
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()
-                                    </li>
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
-                                    </li>
-                                </ul>
-                                <div>&nbsp;</div>
-                                <div class="buttons">
-                                    @if (order.IsReturnRequestAllowed)
-                                    {
-                                        @*<input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-default return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />*@
-    <a onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="icon-search"></i>@T("Account.CustomerOrders.ReturnItems")</a>
-                                    }
-                                    @*<input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-primary order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />*@
-                                    <a onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="fa fa-info" aria-hidden="true"></i>@T("Account.CustomerOrders.OrderDetails")</a>
-                                </div>
-                            </div>
-                        </div>
-
-                }
-            }
-            else
-            {
-                <div class="no-data">
-                    @T("Account.CustomerOrders.NoOrders")
-                </div>
-            }
-        </div>
     </div>
 </div>
