@@ -1769,6 +1769,7 @@
     <Content Include="Themes\SimplexTheme\Content\css\imports\typography.css" />
     <Content Include="Themes\SimplexTheme\Content\css\imports\widgets.css" />
     <Content Include="Themes\SimplexTheme\Content\css\magnific-popup.css" />
+    <Content Include="Themes\SimplexTheme\Content\css\ncc-editor-styles.css" />
     <Content Include="Themes\SimplexTheme\Content\css\print.css" />
     <Content Include="Themes\SimplexTheme\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\SimplexTheme\Content\css\simplex-styles.css" />

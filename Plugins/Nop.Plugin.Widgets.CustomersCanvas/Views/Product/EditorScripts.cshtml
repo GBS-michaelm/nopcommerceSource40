@@ -20,15 +20,10 @@
 
 @{ 
     Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/aurigma.css");
-   
-    // polyfills
-	Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/es6-shim.min.js");
-	Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/finally.js");
 }
 
 <script type="text/javascript">
-
-    $().ready(function () {
+    $(document).ready(function () {
 
         // When RequireJS-compatible modules are inserted through <script>, you have to add require.js reference only in the end. That's why we dynamically load it only when the page is loaded completely.
         var requireJsUrl = "@Url.Content("~/Plugins/Widgets.CustomersCanvas/Scripts/require.js")";

@@ -25,6 +25,15 @@
     background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
 }
 
+.Vertical {
+    background-size: 100%;
+    /*width: 250px;
+    height: 250px;*/
+    float: left;
+    position: relative;
+    background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
+}
+
 .gallery .Vertical {
     background-size: 100%;
     width: 250px;
@@ -384,6 +393,7 @@
 .orderstatus {
     width: 100%;
     padding-bottom: 22px;
+
 }
 
     .orderstatus h3 {
@@ -605,9 +615,6 @@ table.orderdetails-list {
     }
 
 .buyinagain {
-    display: none;
-}
-.orderstatus {
     display: none;
 }
 .productlist-right ul li {

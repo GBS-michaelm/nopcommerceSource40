@@ -66,9 +66,34 @@
                 <div class="panel panel-default order-productlist">
                     <div class="productlist-left">
                         <div class="orderstatus">
-                            <h3>@order.ShippingStatus</h3>
-                            @*<div class="onthaway">On tha way</div>*@
-                            <div class="ordertimeline"><span style="width:50%;"></span></div>
+                            @T("Account.CustomerOrders.OrderStatus"):
+                            @{ string cssClass = "-";}
+                            @if (@order.OrderStatus != "Cancelled")
+                            {
+                                
+                                <h3>@order.ShippingStatus</h3>
+                                @*<div class="onthaway">On tha way</div>*@
+
+                            if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
+                            {
+                                <div class="ordertimeline"><span style="width:70%;"></span></div>
+                            }
+                            else if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Delivered").ToString()))
+                            {
+                                <div class="ordertimeline"><span style="width:100%;"></span></div>
+
+                            }
+                            else
+                            {
+                                <div class="ordertimeline"><span style="width:15%;"></span></div>
+                                }
+
+                            }
+                            else
+                            {
+                                <span class="order-status @cssClass">@order.OrderStatus</span>
+                            }
+
                         </div>
 
                         @foreach (var item in order.Items)
@@ -76,25 +101,27 @@
                             string color = item.DefaultColor;
                             string className = item.ClassName;
 
-                           <div class="prdouctrow-list product-item" data-productid="@item.Id">
+                            <div class="prdouctrow-list product-item" data-productid="@item.Id">
 
-                               <div class="order-productimg picture" style="@color">
-                                   <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
-                                       <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
-                                   </a>
-                               </div>
+                                <div class="order-productimg picture" style="@color">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
+                                        <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
+                                    </a>
+                                </div>
                                 <div class="productname-price">
                                     <div class="order-productname"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
                                     <div class="product-unit-price">@item.UnitPrice</div>
                                     <div>
                                         @if (order.IsReOrderAllowed)
                                         {
-                                            <input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />
+                                            @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
+                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })   ')" />
+
                                         }
                                     </div>
                                 </div>
                             </div>
-                      }
+                        }
                     </div>
                     <div class="productlist-right">
                         <ul>

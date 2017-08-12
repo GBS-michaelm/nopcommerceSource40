@@ -11,8 +11,8 @@
 		background-image: none;
 	}
 	
-	.header-lower {
-		display: none;
+	.header-lower, .header-menu, .newmenu {
+		display: none !important;
 	}
 
 	.header-upper {
