@@ -623,3 +623,7 @@ table.orderdetails-list {
 .productlist-right ul li:nth-child(1) {
         display: block;
     }
+	
+.details-order-button {
+	color: #fff !important;
+}

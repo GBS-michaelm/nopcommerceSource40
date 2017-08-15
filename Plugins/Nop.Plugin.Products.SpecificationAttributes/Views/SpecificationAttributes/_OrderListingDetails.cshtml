@@ -31,20 +31,20 @@
                 {
             <div class="orderhead-section">
                 <div class="head-col1">
-                    <span class="order-label">Order Place</span>
-                    <div class="order-date">@T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
+                    <span class="order-label">@T("Account.CustomerOrders.OrderDate")</span>
+                    <div class="order-date">@order.CreatedOn.ToString()</div>
                 </div>
                 <div class="head-col2">
-                    <span class="order-label">Total</span>
-                    <div class="order-date">@T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal</div>
+                    <span class="order-label">@T("Account.CustomerOrders.OrderTotal")</span>
+                    <div class="order-date">@order.OrderTotal</div>
                 </div>
                 <div class="head-col3">
-                    <span class="order-label">ShipTo</span>
+                    @*<span class="order-label">ShipTo</span>
                     <div class="rachel">
                         <select>
                             <option>@order.ShipTo</option>
                         </select>
-                    </div>
+                    </div> *@ 
                 </div>
                 <div class="head-col4">
                     @*<div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>*@
@@ -126,7 +126,7 @@
                     <div class="productlist-right">
                         <ul>
                             <li>
-                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })">Order Details</a>
+                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })" class="btn btn-primary details-order-button">Order Details</a>
                             </li>
                             <li>
                                 <a href="#">Track Package</a>
