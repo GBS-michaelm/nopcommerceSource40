@@ -1,0 +1,8 @@
+﻿Group: Misc
+FriendlyName: GBS LOGGING SERVICE
+SystemName: LOGGING.GBS
+Version: 1.00
+SupportedVersions: 3.90
+Author: Joe Barrus
+DisplayOrder: 1
+FileName: Nop.Plugin.Logging.GBS.dll
