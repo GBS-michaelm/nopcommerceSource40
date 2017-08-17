@@ -11,8 +11,8 @@
 		background-image: none;
 	}
 	
-	.header-lower {
-		display: none;
+	.header-lower, .header-menu, .newmenu {
+		display: none !important;
 	}
 
 	.header-upper {
@@ -137,4 +137,11 @@
 	}
 ul.style-scope.au-editor-step-approve {
     margin-bottom: 20px;
+}
+/* -- Hide Mega Menu on Editor page*/
+div .header-menu {
+    display: none !important;
+}
+.newmneu{
+    display: none !important;
 }

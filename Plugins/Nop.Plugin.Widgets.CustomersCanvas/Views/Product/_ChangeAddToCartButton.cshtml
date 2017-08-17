@@ -15,9 +15,10 @@
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
-    $(document).ready(function() {
-    //    setTimeout(function() {
-            // убираем событие submit после нажатия кнопки enter в поле ввода количества
+    $(document).ready(function () {
+        // enable this setTemeout if your theme init Add to cart button by scripts
+        //setTimeout(function() {
+            // remove submit event after click 'Enter' in quantity input field
             $("#addtocart_" + @Model + "_EnteredQuantity").off("keydown");
 
             var btn = $("#add-to-cart-button-@Model");
@@ -27,7 +28,7 @@
                         btn[0].value = "@T("Plugins.Widgets.CustomersCanvas.DesignButton").Text";
                     }
                 } else if (btn[0].tagName.toLowerCase() === 'button') {
-                    if (btn[0].innerHTML.toLowerCase().includes("add to cart")) {
+                    if (btn[0].innerHTML.toLowerCase().indexOf("add to cart") > -1) {
                         btn[0].innerHTML = btn[0].innerHTML.toLowerCase().replace("add to cart", "@T("Plugins.Widgets.CustomersCanvas.DesignButton").Text");
                     }
                 }
@@ -60,7 +61,7 @@
                         window.location.href = link;
                     });
             }
-  //      }, 1000);
+        //}, 1000);
     });
 </script>
 

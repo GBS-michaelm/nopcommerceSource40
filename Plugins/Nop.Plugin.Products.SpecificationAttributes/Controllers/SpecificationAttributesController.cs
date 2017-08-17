@@ -64,6 +64,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly OrderSettings _orderSettings;
         private readonly IOrderService _orderService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         public SpecificationAttributesController(
             ICustomerService customerService,
@@ -89,11 +90,12 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             ITaxService taxService,
             IPictureService pictureService,
             IMeasureService measureService,
-            IUrlRecordService urlRecordService, 
-            IProductModelFactory productModelFactory, 
-            IOrderService orderService, 
+            IUrlRecordService urlRecordService,
+            IProductModelFactory productModelFactory,
+            IOrderService orderService,
             OrderSettings orderSettings,
-            IOrderProcessingService orderProcessingService)
+            IOrderProcessingService orderProcessingService,
+            IProductAttributeParser productAttributeParser)
         {
             _customerService = customerService;
             _languageService = languageService;
@@ -123,6 +125,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             _orderSettings = orderSettings;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
+            _productAttributeParser = productAttributeParser;
         }
 
         [AdminAuthorize]
@@ -221,7 +224,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             }
             else
             {
-
                 id = Convert.ToInt32(additionalData);
                 if (id <= 0)
                     return Content("");
@@ -229,37 +231,36 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 var product = _productService.GetProductById(id);
                 if (product == null)
                     return Content("");
-                if (widgetZone == "orderdetails_product_line")
-                {
-                    return OrderProductImage(product.Id);
-                }
+                //if (widgetZone == "orderdetails_product_line")
+                //{
+                //    return OrderProductImage(product.Id);
+                //}
                 if (widgetZone == "product_by_artist")
                 {
                     return ArtistProducts(product.Id);
                 }
-                //widgetZone == "productdetails_bottom" || widgetZone == "productbox_addinfo_after" || 
+             
                 if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget")
                 {
-                    var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
-                    var pictureModel = new PictureModel
-                    {
-                        ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-                    };
+                    var products = new List<Product>();
+                    products.Add(product);
+
                     ViewBag.ProductId = product.Id;
                     ViewBag.SeName = product.GetSeName();
+
                     var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
                     var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+
                     if (imageSpecAttrOption.Any())
                     {
                         var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
                         var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+
+                        // Background Image / Pic
                         if (defaultEnvelopType.Any())
                         {
                             string className = defaultEnvelopType.FirstOrDefault().Name;
                             ViewBag.ClassName = className;
-
                             if (defaultColorOption.Any())
                             {
                                 var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
@@ -277,28 +278,35 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             {
                                 ViewBag.DefaultColor = "";
                             }
+
+                            //Prodcut Detail
                             if (widgetZone == "product_details_widget")
                             {
-                                return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", pictureModel);
+                                var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+                                return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
                             }
-
-                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                            var productOverviewModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModel);
                         }
 
                     }
                     else
                     {
-                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                       var productOverviewModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModel);
                     }
 
+                    //Product Detail
                     if (widgetZone == "product_details_widget")
                     {
-                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", pictureModel);
+                        var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
                     }
-
-                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", pictureModel);
+                    var productOverviewModels = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModels);
                 }
 
+                //Product Category
                 if (widgetZone == "product_category_titles")
                 {
                     IEnumerable<ProductCategoryTitleModel> productCategoriesModel = new List<ProductCategoryTitleModel>();
@@ -311,22 +319,54 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             SeName = x.GetSeName()
                         };
                     });
-
                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PoductCategoriesTitles.cshtml", productCategoriesModel);
                 }
 
+                // Artist 
                 if (product.ProductSpecificationAttributes.Any())
                 {
                     var prodSpecAttriOptions = product.ProductSpecificationAttributes.Select(x => x.SpecificationAttributeOption);
-                    if (prodSpecAttriOptions.Any())
+                  
+                    var categories = product.ProductCategories.Select(x => x.Category);
+                    var storeId = _storeContext.CurrentStore.Id;
+                    var artistcategory = _categoryService.GetAllCategories("Artist", storeId).Where(x => x.Name == "Artist").FirstOrDefault();
+                    if (artistcategory != null)
                     {
-                        var specAttr = prodSpecAttriOptions.Where(x => x.SpecificationAttribute.Name == "Artist").FirstOrDefault();
-                        if (specAttr != null)
+                        if (prodSpecAttriOptions.Any())
                         {
-                            ViewBag.ArtistName = specAttr.Name;
-                            ViewBag.ArtistId = specAttr.Id;
-                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PublicInfo.cshtml");
+                            var seName = categories.Where(x => x.ParentCategoryId == artistcategory.Id);
+                            var specAttr = prodSpecAttriOptions.Where(x => x.SpecificationAttribute.Name == "Artist").FirstOrDefault();
+                            if (specAttr != null)
+                            {                               
+                                if (seName.Any())
+                                {
+                                    ViewBag.seName = seName.Select(a => a.GetSeName()).First();
+                                    ViewBag.ArtistName = specAttr.Name;
+                                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PublicInfo.cshtml");
+                                }
+                                else
+                                {
+                                    return Content("");
+                                }
+                            }
+                            else
+                            {
+                                if (seName.Any())
+                                {
+                                    ViewBag.seName = seName.Select(a => a.GetSeName()).First();
+                                    ViewBag.ArtistName = seName.Select(x => x.Name ).First();
+                                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/PublicInfo.cshtml");
+                                }
+                                else
+                                {
+                                    return Content("");
+                                }
+                            }
                         }
+                    }
+                    else
+                    {
+                        return Content("");
                     }
                 }
             }
@@ -359,22 +399,26 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
                         ShipTo = firstName + " " + lastName
                     };
-                    
+
                     foreach (var orderItem in proitems)
                     {
-                        var sciPicture = orderItem.Product.ProductPictures.FirstOrDefault().PictureId;
+                        var products = new List<Product>();
+                        products.Add(orderItem.Product);
+                        var Products = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                        var product = _productService.GetProductById(orderItem.ProductId);
+                        var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
                         var orderItemModel = new CustomerOrderListModel.OrderItemModel
                         {
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
-                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, null /* _productAttributeParser*/),
+                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml,  _productAttributeParser),
                             ProductId = orderItem.Product.Id,
                             ProductName = orderItem.Product.GetLocalized(x => x.Name),
                             ProductSeName = orderItem.Product.GetSeName(),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
                             UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
-                            ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
+                            ImageUrl = Products.DefaultPictureModel.ImageUrl
 
                         };
                         var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
@@ -392,17 +436,21 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 {
                                     var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
                                     orderItemModel.DefaultColor = optionValue;
+                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                    {
+                                        orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                    }
+                                    else
+                                    {
+                                        orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                    }
                                 }
                                 else
                                 {
                                     orderItemModel.DefaultColor = "";
                                 }
-                                //      ViewBag.ProductId = orderItem.Product.Id;
                             }
                         }
-
-
-
                         //rental info
                         if (orderItem.Product.IsRental)
                         {
@@ -414,10 +462,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         model.Items.Add(orderItemModel);
                     }
                     model1.Add(model);
-                    //model1.Add(l);
-
                 }
-
             }
             return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderListing.cshtml", model1.ToList());
         }
@@ -426,14 +471,15 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         public ActionResult OrderProductImage(int additionalData)
         {
             var id = Convert.ToInt32(additionalData);
+
             if (id <= 0)
                 return Content("");
+
             var orderitem = _orderService.GetOrderItemById(id);
             var product = _productService.GetProductById(orderitem.ProductId);
+
             if (product == null)
                 return Content("");
-
-
 
             var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
             var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
@@ -466,20 +512,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     ViewBag.ProductId = product.Id;
                 }
             }
-            var sciPicture = product.ProductPictures.FirstOrDefault().PictureId;
-            var pictureModel = new PictureModel
-            {
-                ImageUrl = _pictureService.GetPictureUrl(sciPicture, 415, true),
-                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-            };
-            //    return model;
-
+            var products = new List<Product>();
+            products.Add(product);
+            var productPicModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
             ViewBag.ProductId = product.Id;
-            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderProductImage.cshtml", pictureModel);
-
-
-            //  return Content("");
+            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderProductImage.cshtml", productPicModel);
         }
 
         public ActionResult ArtistProducts(int productId)
@@ -514,7 +551,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                    orderBy: ProductSortingEnum.Position,
                                    pageIndex: 0,
                                    pageSize: int.MaxValue);
-                    model.Products = PrepareProductOverviewModelsNew(products).ToList();
+                    model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
 
                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ArtistProducts.cshtml", model);
                 }
@@ -571,9 +608,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
-            model.Products = PrepareProductOverviewModelsNew(products).ToList();
+                model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
 
-            model.PagingFilteringContext.LoadPagedList(products);
+                model.PagingFilteringContext.LoadPagedList(products);
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
@@ -613,26 +650,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         }
 
         #region Utilities
-
-        [NonAction]
-        protected virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModelsNew(IEnumerable<Product> products,
-         bool preparePriceModel = true, bool preparePictureModel = true,
-         int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
-         bool forceRedirectionAfterAddingToCart = false)
-        {
-            return _productModelFactory.PrepareProductOverviewModels(products, preparePriceModel, preparePictureModel,
-                   productThumbPictureSize, prepareSpecificationAttributes, forceRedirectionAfterAddingToCart);
-            //return this.PrepareProductOverviewModels(_workContext,
-            //    _storeContext, _categoryService, _productService, _specificationAttributeService,
-            //    _priceCalculationService, _priceFormatter, _permissionService,
-            //    _localizationService, _taxService, _currencyService,
-            //    _pictureService, _measureService, _webHelper, _cacheManager,
-            //    _catalogSettings, _mediaSettings, products,
-            //    preparePriceModel, preparePictureModel,
-            //    productThumbPictureSize, prepareSpecificationAttributes,
-            //    forceRedirectionAfterAddingToCart);
-        }
-
+           
         [NonAction]
         protected virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {

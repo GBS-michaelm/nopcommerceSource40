@@ -1,5 +1,5 @@
-﻿@model Nop.Web.Models.Media.PictureModel
-@{
+﻿@model Nop.Web.Models.Catalog.ProductOverviewModel
+    @{
     Layout = "";
     string color = ViewBag.DefaultColor;
     string className = ViewBag.ClassName;
@@ -15,8 +15,8 @@
 </script>
 
 <div class="pictures" style="@color">
-    <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.Title" class="@className">
-        <img alt="" src="@Model.ImageUrl" title="@Model.Title" />
+    <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.DefaultPictureModel.Title" class="@className">
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
     </a>
 </div>
 

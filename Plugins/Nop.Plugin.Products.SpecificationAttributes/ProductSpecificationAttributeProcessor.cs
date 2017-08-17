@@ -63,7 +63,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes
         {
             return new List<string> { "product_artist_name","product_listing_widget","product_details_widget",
                 "productdetails_bottom", "product_category_titles", "product_by_artist",
-                "categorydetails_top","productbox_addinfo_after" ,"order_listing_widget","orderdetails_product_line"};
+                "categorydetails_top","productbox_addinfo_after" ,"order_listing_widget"};   /*,"orderdetails_product_line"*/
         }
 
         /// <summary>

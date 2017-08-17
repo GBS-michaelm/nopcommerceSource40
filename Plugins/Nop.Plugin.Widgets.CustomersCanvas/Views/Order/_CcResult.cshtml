@@ -12,12 +12,6 @@
     var ccService = EngineContext.Current.Resolve<ICcService>();
     var id = "ccResult" + Guid.NewGuid().ToString("N");
 
-    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.core.min.js");
-    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.userevents.min.js");
-    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.draganddrop.min.js");
-    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.window.min.js");
-    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/kendo/2014.1.318/kendo.button.min.js");
-
     Html.AddScriptParts(ResourceLocation.Head, @"~/Plugins/Widgets.CustomersCanvas/Scripts/turnjs/turn.js");
     Html.AddScriptParts(ResourceLocation.Head, @"~/Plugins/Widgets.CustomersCanvas/Scripts/Flipbook/ccFlipBook.js");
 
@@ -32,20 +26,11 @@
     if (typeof Promise !== "function") {
         @Html.Raw(ccService.JsWritePromisePolyfill())
     }
-
-    if (window["_CcResultsScriptsLoaded"] !== true) {
-        @Html.Raw(ccService.JsWriteScriptTags(new[]
-        {
-            @Url.Content(@"~/Administration/Scripts/HiResDownload/ccHiResDownload.js"),
-            @Url.Content(@"~/Administration/Scripts/Flipbook/ccFlipBook.js")
-        }))
-    }
-
     window["_CcResultsScriptsLoaded"] = true;
 </script>
 @if (Model != null)
 {
-    <br/>
+    <br />
     <div id="@id" class="ccResult">
         @if (!string.IsNullOrWhiteSpace(Model.ReturnToEditUrl))
         {
@@ -53,8 +38,8 @@
             <br>
             <br>
         }
-        
-        
+
+
         @if (Model.HiResUrls != null && Model.HiResUrls.Any())
         {
             for (var i = 0; i < Model.HiResUrls.Length; i++)
@@ -62,20 +47,19 @@
                 <a href="@Model.HiResUrls[i]">
                     download pdf
                 </a>
-                <br/>
+                <br />
             }
         }
-        
+
         @if (Model.ProofUrls != null && Model.ProofUrls.Any())
         {
             for (var i = 0; i < Model.ProofUrls.Length; i++)
             {
                 <a href="@Model.ProofUrls[i]">
-                    <img src="@Model.ProofUrls[i]" alt="Proof image @(i + 1)" style="max-width: 80px; max-height: 80px;"/>
+                    <img src="@Model.ProofUrls[i]" alt="Proof image @(i + 1)" style="max-width: 80px; max-height: 80px;" />
                 </a>
-                <br/>
+                <br />
             }
         }
-
     </div>
 }

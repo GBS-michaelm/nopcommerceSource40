@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.Media.PictureModel
+﻿@model Nop.Web.Models.Catalog.ProductDetailsModel
 @{
     Layout = "";
     string color = ViewBag.DefaultColor;
@@ -7,7 +7,7 @@
 }
 <div class="gallerys" style="@color">
     <div class="pictures @className">
-        <img alt="@Model.Title" src="@Model.ImageUrl" title="@Model.Title" itemprop="image" id="main-product-img-@productId" class="detailimg" />
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@productId" class="detailimg" />
     </div>
 </div>
 

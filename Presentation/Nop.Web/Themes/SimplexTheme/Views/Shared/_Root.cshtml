@@ -40,13 +40,12 @@
                     </div>
                 </div>
             </div>
-            <div class="master-column-wrapper">
+        <div class="master-column-wrapper">
                 <div class="container">
                      @RenderBody()
                 </div>
+                @Html.Widget("content_after")
             </div>
-            @Html.Widget("content_after")
-        </div>
         @Html.Action("Footer", "Common")
         @* Use this content for back to top page scrolling *@
         <div id="backTop"></div>

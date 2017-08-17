@@ -1,4 +1,5 @@
 ﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+@using Nop.Plugin.DataAccess.GBS;
 
 <div class="tab-headsection">
     <div class="head-left">
@@ -30,23 +31,24 @@
                 {
             <div class="orderhead-section">
                 <div class="head-col1">
-                    <span class="order-label">Order Place</span>
-                    <div class="order-date">@T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
+                    <span class="order-label">@T("Account.CustomerOrders.OrderDate")</span>
+                    <div class="order-date">@order.CreatedOn.ToString()</div>
                 </div>
                 <div class="head-col2">
-                    <span class="order-label">Total</span>
-                    <div class="order-date">@T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal</div>
+                    <span class="order-label">@T("Account.CustomerOrders.OrderTotal")</span>
+                    <div class="order-date">@order.OrderTotal</div>
                 </div>
                 <div class="head-col3">
-                    <span class="order-label">ShipTo</span>
+                    @*<span class="order-label">ShipTo</span>
                     <div class="rachel">
                         <select>
                             <option>@order.ShipTo</option>
                         </select>
-                    </div>
+                    </div> *@ 
                 </div>
                 <div class="head-col4">
-                    <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>
+                    @*<div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>*@
+                    <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(order.Id)</div>
                     <div class="order-links">
                         <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })">Order Details</a> |
                         <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = order.Id })">Invoice</a>
@@ -64,9 +66,34 @@
                 <div class="panel panel-default order-productlist">
                     <div class="productlist-left">
                         <div class="orderstatus">
-                            <h3>@order.ShippingStatus</h3>
-                            @*<div class="onthaway">On tha way</div>*@
-                            <div class="ordertimeline"><span style="width:50%;"></span></div>
+                            @T("Account.CustomerOrders.OrderStatus"):
+                            @{ string cssClass = "-";}
+                            @if (@order.OrderStatus != "Cancelled")
+                            {
+                                
+                                <h3>@order.ShippingStatus</h3>
+                                @*<div class="onthaway">On tha way</div>*@
+
+                            if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
+                            {
+                                <div class="ordertimeline"><span style="width:70%;"></span></div>
+                            }
+                            else if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Delivered").ToString()))
+                            {
+                                <div class="ordertimeline"><span style="width:100%;"></span></div>
+
+                            }
+                            else
+                            {
+                                <div class="ordertimeline"><span style="width:15%;"></span></div>
+                                }
+
+                            }
+                            else
+                            {
+                                <span class="order-status @cssClass">@order.OrderStatus</span>
+                            }
+
                         </div>
 
                         @foreach (var item in order.Items)
@@ -74,22 +101,10 @@
                             string color = item.DefaultColor;
                             string className = item.ClassName;
 
-                            bool isImage = false;
-                            if (color != null)
-                            {
-                                if (color.Contains("#") && color.Length == 7)
-                                {
-                                    isImage = false;
-                                }
-                                else
-                                {
-                                    isImage = true;
-                                }
-                            }
                             <div class="prdouctrow-list product-item" data-productid="@item.Id">
 
-                                <div class="order-productimg picture">
-                                    <a href="" title="@item.ProductName">
+                                <div class="order-productimg picture" style="@color">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
                                         <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
                                     </a>
                                 </div>
@@ -99,33 +114,20 @@
                                     <div>
                                         @if (order.IsReOrderAllowed)
                                         {
-                                            <input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />
+                                            @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
+                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })   ')" />
+
                                         }
                                     </div>
                                 </div>
                             </div>
-
-                                        <script type="text/javascript">
-                                            $(window).load(function () {
-                                                $("div").find("[data-productid='@item.Id'].product-item").find('.picture').find('a').addClass('@className');
-                                                if ('@isImage' == 'True') {
-                                                    $("div").find("[data-productid='@item.Id']").find('.gallery').find('.picture').parent().css("background-image", "url('@color')");
-                                                    $("div").find("[data-productid='@item.Id'].product-item").find('.picture').css("background-image", "url('@color')");
-                                                }
-                                                else {
-                                                    $("div").find("[data-productid='@item.Id'].product-item").find('.picture').css("background-color", "@color");
-                                                }
-                                            });
-
-                                        </script>
-
-
-
                         }
-
                     </div>
                     <div class="productlist-right">
                         <ul>
+                            <li>
+                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            </li>
                             <li>
                                 <a href="#">Track Package</a>
                             </li>
@@ -149,9 +151,11 @@
     else
     {
         <div class="no-data">
+
             @T("Account.CustomerOrders.NoOrders")
         </div>
     }
 
 
 </div>
+
