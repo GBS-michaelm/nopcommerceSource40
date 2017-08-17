@@ -1,0 +1,42 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Topics;
+@{
+    string page = string.Empty;
+    try
+    {
+        var type = Request.QueryString["type"];
+        var code = Request.QueryString["pageID"];
+        ViewData["cartID"] = Request.QueryString["cartID"];
+        ViewData["productID"] = Request.QueryString["productID"];
+        string url = "http://dev.houseofmagnets.com/";
+        Dictionary<string, string> pages = new Dictionary<string, string>();
+        pages.Add("BC", "nop/business-cards/bc.aspx?pageID=");
+
+        page = url + pages[type] + code;
+    }
+    catch(Exception ex)
+    {
+        page = string.Empty;
+    }
+}
+
+
+
+<div class="gluon-template" style="overflow:hidden; height:1200px;">
+    <iframe src="@page" style="height:1200px; width:100%;"></iframe>
+</div>
+<script type="text/javascript">
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+    var prodID =@Html.Raw(ViewData["productID"]);
+    var cID = @Html.Raw(ViewData["cartID"]);
+    console.log(prodID);
+    // Listen to message from child window
+    eventer(messageEvent, function (e) {
+        if (JSON.parse(e.data).success == true) {
+            AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = ViewData["productID"], shoppingCartTypeId = ViewData["cartID"] })', '#product-details-form');return false;
+       
+        }
+    }, false);
+</script>

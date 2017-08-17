@@ -2916,6 +2916,7 @@
     <Content Include="Themes\TeamMagnet\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\GluonProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

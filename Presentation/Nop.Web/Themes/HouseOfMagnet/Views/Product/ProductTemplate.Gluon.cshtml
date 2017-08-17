@@ -47,7 +47,6 @@
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
 <div class="page product-details-page">
-    <h1>TEST!!!!</h1>
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
@@ -120,7 +119,7 @@
                                         @{
                                             var dataDictAddToCart = new ViewDataDictionary();
                                             dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                                            @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)
+                                            @Html.Partial("_AddToCartGluon", Model, dataDictAddToCart)
                                         }
                                     </div>
                                     <div class="overview-buttons">
