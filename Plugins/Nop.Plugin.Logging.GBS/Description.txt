@@ -1,6 +1,6 @@
 ﻿Group: Misc
-FriendlyName: GBS LOGGING SERVICE
-SystemName: LOGGING.GBS
+FriendlyName: GBS LOGGER SERVICE
+SystemName: Logger.GBS
 Version: 1.00
 SupportedVersions: 3.90
 Author: Joe Barrus
