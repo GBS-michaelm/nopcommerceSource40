@@ -627,6 +627,11 @@ table.orderdetails-list {
 .productlist-right ul li:nth-child(1) {
         display: block;
     }
+	
+.details-order-button {
+	color: #fff !important;
+}
+    
 .red {
     color:red;
     padding-left: 25px;
@@ -634,4 +639,3 @@ table.orderdetails-list {
 .space {
     padding-left : 25px;
 }
-

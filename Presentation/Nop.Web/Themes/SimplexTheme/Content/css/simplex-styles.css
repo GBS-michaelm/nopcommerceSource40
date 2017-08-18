@@ -10717,3 +10717,7 @@ div .mega-menu {
 .add-to-cart .product-by {
     display: none;
 }
+
+.order-details-page .tabheading, .order-details-page .tab-headsection {
+    display: none;
+}
