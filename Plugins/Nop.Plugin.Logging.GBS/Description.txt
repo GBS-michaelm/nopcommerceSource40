@@ -1,5 +1,5 @@
 ﻿Group: Misc
-FriendlyName: GBS LOGGING SERVICE
+FriendlyName: GBS LOGGER SERVICE
 SystemName: LOGGING.GBS
 Version: 1.00
 SupportedVersions: 3.90
