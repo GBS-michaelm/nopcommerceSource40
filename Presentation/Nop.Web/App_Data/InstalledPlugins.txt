@@ -28,8 +28,7 @@ PriceCalculation.GBS
 Pickup.PickupInStore
 Widgets.CustomersCanvas
 Shipping.FixedOrByWeight
-Nop.Plugin.Shipping.GBS
 SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
-
+Nop.Plugin.Shipping.GBS

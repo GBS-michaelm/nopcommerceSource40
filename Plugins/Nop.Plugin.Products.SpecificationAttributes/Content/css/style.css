@@ -140,7 +140,7 @@
             margin-bottom: 0px;
             background-color: transparent;
         }
-
+    
 .tab-headsection {
     width: 100%;
     clear: both;
@@ -164,8 +164,12 @@
     width: 100%;
     padding: 0px;
 }
-
-.pastorder-select {
+.active {
+    display: block;
+}
+.hide {
+    display: none;
+}.pastorder-select {
     background: #eaebef url(../images/dropdown-arro.png) no-repeat right center;
     padding: 3px 7px;
     border: 1px #8e9295 solid;
@@ -401,10 +405,10 @@
         padding-bottom: 5px;
     }
 
-.onthaway {
+.ontheway {
     font-size: 12px;
     color: #008a01;
-    padding-bottom: 15px;
+    padding: 2px;
 }
 
 .ordertimeline {
@@ -623,3 +627,11 @@ table.orderdetails-list {
 .productlist-right ul li:nth-child(1) {
         display: block;
     }
+.red {
+    color:red;
+    padding-left: 25px;
+}
+.space {
+    padding-left : 25px;
+}
+
