@@ -649,8 +649,17 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/CategoryImage.cshtml", pictureModel);
         }
 
+        [HttpPost]
+        public ActionResult GoToOrderId(string selectedIds)
+        {
+            var order = _orderService.GetOrderById(Convert.ToInt32(selectedIds));
+            if (order == null)
+                return null;
+
+            return RedirectToAction("Details", "Order", new { orderId = order.Id });
+        }
         #region Utilities
-           
+
         [NonAction]
         protected virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {

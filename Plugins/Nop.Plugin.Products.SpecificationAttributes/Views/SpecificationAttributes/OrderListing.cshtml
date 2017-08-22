@@ -3,29 +3,58 @@
 <div class="tabcontainer order-details-page">
 
     <ul class="tabheading">
-        <li class="active" rel="tab1"><a href="javascript:return false;">Orders</a> </li>
-        <li rel="tab2"><a href="javascript:return false;">Open Orders</a> </li>
-        <li rel="tab3"><a href="javascript:return false;">Cancelled Orders</a> </li>
+        <li class="active"><a href="#tab1">Orders</a> </li>
+        <li><a href="#tab2">Open Orders</a> </li>
+        <li><a href="#tab3">Cancelled Orders</a> </li>
     </ul>
-
-
-
-    <div class="tabbody active" id="tab1" style="display: block;">
-        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
-
+    <div class="tab-headsection">
+        @*<div class="head-left">
+            <span class="orderplace">96 orders placed in</span>
+            <div class="pastorder-select">
+                <select>
+                    <option>Past 6 months</option>
+                    <option>Past 3 months</option>
+                </select>
+            </div>
+        </div>*@
+        @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="ordersearch">
+                <input type="text" placeholder="Search" class="ordersearch" id="GoDirectlyToNumber" />
+                <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+                <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="order-submit">
+                    Search orders
+                </button>
+            </div>
+        }
     </div>
-
-    <div class="tabbody" id="tab2" style="display: none;">
+    <div class="tabbody active" id="tab1">
         <div class="order-list padtop25">
             @if (Model.Count > 0)
             {
                 foreach (var order in Model)
                 {
-                    if (order.OrderStatus != "Complete")
+                    @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
+                </div>
+            }
+        </div>
+    </div>
+    <div class="tabbody hide" id="tab2">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
+                {
+                    if (order.OrderStatus == "Processing" || order.OrderStatus == "Pending")
                     {
-                       
-                            @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
-                     
+                        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
                     }
                 }
             }
@@ -36,9 +65,8 @@
                 </div>
             }
         </div>
-
     </div>
-    <div class="tabbody" id="tab3" style="display: none;">
+    <div class="tabbody hide" id="tab3">
         <div class="order-list padtop25">
             @if (Model.Count > 0)
             {
@@ -46,7 +74,7 @@
                 {
                     if (order.OrderStatus == "Cancelled")
                     {
-                        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", Model)
+                        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
                     }
                 }
             }
@@ -57,9 +85,9 @@
                 </div>
             }
         </div>
-
     </div>
 </div>
+
 <style>
     .Horizontal {
         background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
@@ -69,34 +97,51 @@
         background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
     }
 </style>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />
+
 <script>
     $(document).ready(function () {
-        //$("#GoDirectlyToNumber").keydown(function (event) {
-            //if (event.keyCode === 13) {
-             //   $("#go-to-order-by-number").click();
-                $('#go-to-order-by-number').click(function (e) {
-                    e.preventDefault();
-                    var ids = $('#GoDirectlyToNumber').val();
-                    alert(ids);
-                    $('#ordersearchsubmit #selectedIds').val(ids);
-                    $('#ordersearchsubmit').submit();
-                    return false;
-                });
-            //    return false;
-            //}
-        });
-   // });
-</script>
-<script>
-    $('.tabheading li').click(function () {
-        var tabid = $(this).attr("rel");
-        $(this).parents('.tabcontainer').find('.active').removeClass('active');
-        $('.tabbody').hide();
-        $('#' + tabid).show();
-        $(this).addClass('active');
 
-        return false;
+        $('#go-to-order-by-number').click(function (e) {
+           e.preventDefault();
+           var id = $('#GoDirectlyToNumber').val();
+           var gbsid =  $('#ordersearchsubmit #selectedIds').val(id);
+            var isnum = /^\d+$/.test(id);
+            if (isnum) {
+                $('#ordersearchsubmit #selectedIds').val(id);
+            }
+            else
+            {
+                id = document.getElementById(id).innerText;
+                $('#ordersearchsubmit #selectedIds').val(id);
+            }
+            $('#ordersearchsubmit').submit();
+            return false;
+        });
+
+        $('.tabheading > li > a').click(function (event) {
+
+            event.preventDefault();//stop browser to take action for clicked anchor
+
+            //get displaying tab content jQuery selector
+            var active_tab_selector = $('.tabheading > li.active > a').attr('href');
+
+            //find actived navigation and remove 'active' css
+            var actived_nav = $('.tabheading > li.active');
+            actived_nav.removeClass('active');
+
+            //add 'active' css into clicked navigation
+            $(this).parents('li').addClass('active');
+
+            //hide displaying tab content
+            $(active_tab_selector).removeClass('active');
+            $(active_tab_selector).addClass('hide');
+
+            //show target tab content
+            var target_tab_selector = $(this).attr('href');
+            $(target_tab_selector).removeClass('hide');
+            $(target_tab_selector).addClass('active');
+        });
+
     });
 </script>
-<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />
