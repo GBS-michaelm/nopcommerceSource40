@@ -59,40 +59,42 @@
                 }
             </div>
             @{
-                
-                string pageID = string.Empty;
-                string[] idArray = null;
-                string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
-                foreach (var item in Model.ProductSpecifications)
-                {
-                    if(item.SpecificationAttributeName == "HOM Business Card Page ID")
-                    {
-                        idArray = item.ValueRaw.Split('-');
-                        pageID = idArray[1];
-                    }
-                }
 
-                var addToCartText = "";
-                if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
-                {
-                    addToCartText = T("ShoppingCart.AddToCart.Update").Text;
-                }
-                else
-                {
-                    addToCartText = T("ShoppingCart.AddToCart").Text;
-                    if (Model.AddToCart.IsRental)
+                    string pageID = string.Empty;
+                    string[] idArray = null;
+                    string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
+                    foreach (var item in Model.ProductSpecifications)
                     {
-                        addToCartText = T("ShoppingCart.Rent").Text;
+                        if(item.SpecificationAttributeName == "HOM Business Card Page ID")
+                        {
+                            idArray = item.ValueRaw.Split('-');
+                            pageID = idArray[1];
+                        }
                     }
-                    if (Model.AddToCart.AvailableForPreOrder)
+
+                    var addToCartText = "";
+                    if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
                     {
-                        addToCartText = T("ShoppingCart.PreOrder").Text;
+                        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
                     }
-                }
+                    else
+                    {
+                        addToCartText = T("ShoppingCart.AddToCart").Text;
+                        if (Model.AddToCart.IsRental)
+                        {
+                            addToCartText = T("ShoppingCart.Rent").Text;
+                        }
+                        if (Model.AddToCart.AvailableForPreOrder)
+                        {
+                            addToCartText = T("ShoppingCart.PreOrder").Text;
+                        }
+                    }
+
+                   string url = "/gluon?type=BC" + "&pageID=" + pageID + "&productID=" + Model.AddToCart.ProductId + "&cartID=" + cartID + "&pcode=" + Model.Sku;
                 <div class="product-add-button">
                    @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
-                       <button id="add-to-cart-button-@pageID" type="button" class=" button button-rounded button-reveal button-small button-green tright"  data-productid="@Model.AddToCart.ProductId" onclick="window.location = '/gluon?type=BC' + '&pageID=' + @pageID + '&productID=' + @Model.AddToCart.ProductId + '&cartID=' + @cartID" >
+                       <button id="add-to-cart-button-@pageID" type="button" class=" button button-rounded button-reveal button-small button-green tright"  data-productid="@Model.AddToCart.ProductId" onclick="window.location = '@url'" >
 
                        <i class="icon-line-arrow-right"></i><span>Customize</span></button>
 

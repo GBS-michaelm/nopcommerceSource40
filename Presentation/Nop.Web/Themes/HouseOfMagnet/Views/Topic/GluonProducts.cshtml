@@ -5,14 +5,17 @@
     try
     {
         var type = Request.QueryString["type"];
-        var code = Request.QueryString["pageID"];
+        var id = Request.QueryString["pageID"];
+        var code = Request.QueryString["pcode"];
         ViewData["cartID"] = Request.QueryString["cartID"];
         ViewData["productID"] = Request.QueryString["productID"];
         string url = "http://dev.houseofmagnets.com/";
         Dictionary<string, string> pages = new Dictionary<string, string>();
         pages.Add("BC", "nop/business-cards/bc.aspx?pageID=");
+        string urlEnd = "&pcode=" + code;
 
-        page = url + pages[type] + code;
+        page = url + pages[type] + id + urlEnd;
+        page = page.Replace(" ", string.Empty);
     }
     catch(Exception ex)
     {
@@ -22,8 +25,8 @@
 
 
 
-<div class="gluon-template" style="overflow:hidden; height:1200px;">
-    <iframe src="@page" style="height:1200px; width:100%;"></iframe>
+<div class="gluon-template" style="overflow:hidden; height:1240px;">
+    <iframe src="@page" style="height:1240px; width:100%;"></iframe>
 </div>
 <script type="text/javascript">
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -40,3 +43,4 @@
         }
     }, false);
 </script>
+

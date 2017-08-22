@@ -1,19 +1,50 @@
 ﻿@model ShoppingCartModel
+@using Nop.Services.Catalog;
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart;
-@*@using Nop.Plugin.Widgets.CustomersCanvas.Services;
-@using Nop.Plugin.Checkout.GBS;*@
+@*@using Nop.Plugin.Widgets.CustomersCanvas.Services;*@
+@using Nop.Core.Domain.Orders
+@using Nop.Plugin.Checkout.GBS;
+
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 @{
 
-//var ccService = EngineContext.Current.Resolve<ICcService>();
-//GBSCheckout gbs = new GBSCheckout();
-//var helpers = gbs._helper;
-//Model.CustomProperties = helpers.GetNoteCardSetCount();
+
+
+
+
+    var parser = EngineContext.Current.Resolve<IProductAttributeService>();
+    var attributes = parser.GetProductAttributeById(624);
+    //var attributeValues = parser.ParseProductAttributeValues(SCI[0].AttributesXml);
+    //string customImgUrl = string.Empty;
+    //if (attributeValues != null)
+    //{
+    //    foreach (var attributeValue in attributeValues)
+    //    {
+    //        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Custom Image Url")
+    //        {
+
+    //            //customImgUrl = attributeValue.PriceAdjustment;
+
+    //        }
+
+    //        //if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "returnAddressMinimumSurcharge" && attributeValue.Name == "Yes")
+    //        //{
+    //        //    returnAddressMinimumSurchargeID = attributeValue.Id;
+    //        //    returnAddressMinimumSurchargeApplied = true;
+    //        //}else
+    //        //{
+    //        //    returnAddressMinimumSurchargeApplied = false;
+    //        //}
+    //    }
+    //}
+    //GBSCheckout gbs = new GBSCheckout();
+    //var helpers = gbs._helper;
+    //Model.CustomProperties = helpers.GetNoteCardSetCount();
 }
 
 <div class="order-summary-content">
@@ -104,7 +135,15 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        @if (item.AttributeInfo.Contains("Custom Image Url"))
+                                        {
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.AttributeInfo" title="@item.Picture.Title" /></a>
+                                        }
+                                        else
+                                        {
+                                           <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        }
+                                      
                                     </td>
                                 }
                                 <td class="product-info">
@@ -114,13 +153,20 @@
                                         <div class="attributes">
                                             @if (item.AttributeInfo.Contains("Add Return Address: Yes"))
                                             {
-                                                @Html.Raw(item.AttributeInfo)<br />
+
+                                                    @Html.Raw(item.AttributeInfo)<br />
+            
+
 
                                                 @Html.Raw("Add Return Address: $5.00 Minimum")
                                             }
                                             else
                                             {
-                                                @Html.Raw(item.AttributeInfo)
+
+                                                if (!item.AttributeInfo.Contains("Custom Image Url"))
+                                                {
+                                                    @Html.Raw(item.AttributeInfo)
+                                                }
                                             }
 
                                         </div>
@@ -275,7 +321,14 @@
                                                 @if (Model.ShowProductImages)
                                                 {
                                                     <div class="product-picture">
-                                                        <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                                      @if (item.AttributeInfo.Contains("Custom Image Url"))
+                                                      {
+                                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.AttributeInfo" title="@item.Picture.Title" /></a>
+                                                      }
+                                                      else
+                                                      {
+                                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                                      }
                                                     </div>
                                                 }
                                             </div>
