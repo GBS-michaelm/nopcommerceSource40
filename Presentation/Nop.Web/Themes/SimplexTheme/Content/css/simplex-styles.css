@@ -10002,7 +10002,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
     }
 }
 
-@media only screen and (max-width:767px) {
+@media only screen and (max-width:767px) {	
     .header-logo {
         width: 100%;
         text-align: center;
@@ -10237,6 +10237,10 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 
     .product-slider .owl-carousel {
         padding: 0px 15px;
+    }
+	
+	    .newmenu ul {        
+        text-align: center !important;
     }
 }
 
@@ -10651,7 +10655,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
             .newmenu ul li a {
                 color: #333;
                 text-transform: uppercase;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: bold;
             }
 
