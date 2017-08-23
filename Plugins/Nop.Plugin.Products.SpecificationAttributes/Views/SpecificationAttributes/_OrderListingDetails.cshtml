@@ -40,22 +40,17 @@
                         {
                             <strong class="space"> @Model.ShippingStatus  </strong>
                             if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
-                            {
-                                <div class="onthaway">On tha way</div>
-                                    <div class="ordertimeline"><span style="width:70%;"></span></div>
+                            {                                
+                                <div class="ordertimeline"><span style="width:70%;"></span></div>
                             }
                             else if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Delivered").ToString()))
-                            {
-                                <div class="onthaway">Your package was delivered</div>
-                                    <div class="ordertimeline"><span style="width:100%;"></span></div>
-
+                            {                                
+                                <div class="ordertimeline"><span style="width:100%;"></span></div>
                             }
                             else
-                            {
-                                <div class="onthaway">Your package is getting ready</div>
-                                    <div class="ordertimeline"><span style="width:15%;"></span></div>
+                            {                                
+                                 <div class="ordertimeline"><span style="width:15%;"></span></div>
                             }
-
                         }
                         else
                         {
