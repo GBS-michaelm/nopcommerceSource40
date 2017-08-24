@@ -1690,6 +1690,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         font-size: 14px;
         font-weight: 700;
         text-transform: capitalize;
+		display: inline;
     }
 
     .breadcrumb-wrapper .breadcrumb > li + li::before, .breadcrumb-wrapper .breadcrumb > ol + ol::before {
