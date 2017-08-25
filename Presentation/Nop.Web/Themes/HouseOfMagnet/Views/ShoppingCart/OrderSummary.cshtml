@@ -1,11 +1,11 @@
 ﻿@model ShoppingCartModel
 @using Nop.Services.Catalog;
-@using Nop.Core
-@using Nop.Core.Domain.Tax
-@using Nop.Core.Infrastructure
+@using Nop.Core;
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.ShoppingCart;
 @*@using Nop.Plugin.Widgets.CustomersCanvas.Services;*@
-@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Orders;
 @using Nop.Plugin.Checkout.GBS;
 
 @{
@@ -13,38 +13,35 @@
 }
 @{
 
+    /* This adds custom images to cart */
+    Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    var _workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var parser = EngineContext.Current.Resolve<IProductAttributeParser>();
+    IList<string> attrValues = null;
+    var cart = _workContext.CurrentCustomer.ShoppingCartItems
+    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
+    foreach (var item in cart)
+    {
+        if(item.StoreId == _storeContext.CurrentStore.Id)
+        {
+            
+            var productAttributeMappings = parser.ParseProductAttributeMappings(item.AttributesXml);
+            if (productAttributeMappings != null)
+            {
+                foreach (var productAttributeMapping in productAttributeMappings)
+                {
+                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                    {
+                        attrValues = parser.ParseValues(item.AttributesXml, productAttributeMapping.Id);
+                        imgUrlDict.Add(item.Id,attrValues[0]);
+                    }
 
-
-
-    var parser = EngineContext.Current.Resolve<IProductAttributeService>();
-    var attributes = parser.GetProductAttributeById(624);
-    //var attributeValues = parser.ParseProductAttributeValues(SCI[0].AttributesXml);
-    //string customImgUrl = string.Empty;
-    //if (attributeValues != null)
-    //{
-    //    foreach (var attributeValue in attributeValues)
-    //    {
-    //        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Custom Image Url")
-    //        {
-
-    //            //customImgUrl = attributeValue.PriceAdjustment;
-
-    //        }
-
-    //        //if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "returnAddressMinimumSurcharge" && attributeValue.Name == "Yes")
-    //        //{
-    //        //    returnAddressMinimumSurchargeID = attributeValue.Id;
-    //        //    returnAddressMinimumSurchargeApplied = true;
-    //        //}else
-    //        //{
-    //        //    returnAddressMinimumSurchargeApplied = false;
-    //        //}
-    //    }
-    //}
-    //GBSCheckout gbs = new GBSCheckout();
-    //var helpers = gbs._helper;
-    //Model.CustomProperties = helpers.GetNoteCardSetCount();
+                }
+            }
+        }
+    }
 }
 
 <div class="order-summary-content">
@@ -110,9 +107,6 @@
                             <th class="products-title">
                                 @T("ShoppingCart.Product(s)")
                             </th>
-                            @*<th>
-                                    @T("ShoppingCart.UnitPrice")
-                                </th>*@
                             <th>
                                 @T("ShoppingCart.Quantity")
                             </th>
@@ -135,9 +129,10 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        @if (item.AttributeInfo.Contains("Custom Image Url"))
+                                        @if (item.AttributeInfo.Contains("CustomImgUrl"))
                                         {
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.AttributeInfo" title="@item.Picture.Title" /></a>
+                                            string url = "//gluon.houseofmagnets.com" + imgUrlDict[item.Id];
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
                                         }
                                         else
                                         {
@@ -163,7 +158,7 @@
                                             else
                                             {
 
-                                                if (!item.AttributeInfo.Contains("Custom Image Url"))
+                                                if (!item.AttributeInfo.Contains("CustomImgUrl"))
                                                 {
                                                     @Html.Raw(item.AttributeInfo)
                                                 }
@@ -209,20 +204,6 @@
 
                                         </div>
                                     }
-
-                                    @*@if (ccService.IsProductForCc(item.ProductId))
-                                    {
-                                        //var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
-                                        //editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
-
-                                        var editCartItemUrl = Url.Action("EditorPage", "CcWidget", new { productId = item.ProductId });
-                                        editCartItemUrl += "&quantity=" + item.Quantity + "&updateCartItemId=" + item.Id;
-
-                                        <div class="edit-item">
-                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
-                                        </div>
-                                    }
-                                    else if*@ 
                                     @if (Model.IsEditable && item.AllowItemEditing)
                                     {
                                         var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
@@ -245,12 +226,6 @@
                                         </div>
                                     }
                                 </td>
-
-                                @*<td class="unit-price">
-                                        <label class="td-title">@T("ShoppingCart.UnitPrice"):</label>
-                                        <span class="product-unit-price">@item.UnitPrice</span>
-                                    </td>*@
-
                                 <td class="qty nobr">
                                     @if (Model.IsEditable)
                                     {

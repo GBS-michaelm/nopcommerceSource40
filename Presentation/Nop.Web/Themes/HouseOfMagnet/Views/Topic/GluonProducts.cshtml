@@ -1,6 +1,10 @@
 ﻿@model TopicModel
+@using Nop.Web.Models.Catalog;
 @using Nop.Web.Models.Topics;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Logging;
 @{
+
     string page = string.Empty;
     try
     {
@@ -17,29 +21,56 @@
         page = url + pages[type] + id + urlEnd;
         page = page.Replace(" ", string.Empty);
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         page = string.Empty;
     }
 }
+<form id="product-attributes-form">
+@{
+    try
+    {
+        int i = 0;
+        string value = string.Empty;
+        if (!string.IsNullOrEmpty(TempData.Peek("productAttributes").ToString()))
+        {
+            foreach (var item in (IList<ProductDetailsModel.ProductAttributeModel>)TempData.Peek("productAttributes"))
+            {
+                //value = item.Values[i].;
+                <input name="product_attribute_@item.Id" class="@item.Name" type="hidden" id="product_attribute_@item.Id" value="@value"/>
+                i++;
+            }
+        }
+            
+    }
+    catch(Exception ex)
+    {
 
+    }
+}
 
+</form>
 
 <div class="gluon-template" style="overflow:hidden; height:1240px;">
     <iframe src="@page" style="height:1240px; width:100%;"></iframe>
 </div>
+
+ <!--product attributes-->
+
 <script type="text/javascript">
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     var eventer = window[eventMethod];
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
     var prodID =@Html.Raw(ViewData["productID"]);
     var cID = @Html.Raw(ViewData["cartID"]);
+    var imageUrl = '';
     console.log(prodID);
     // Listen to message from child window
     eventer(messageEvent, function (e) {
         if (JSON.parse(e.data).success == true) {
-            AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = ViewData["productID"], shoppingCartTypeId = ViewData["cartID"] })', '#product-details-form');return false;
-       
+            $(".CustomImgUrl").val(JSON.parse(e.data).preview);
+            AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = ViewData["productID"], shoppingCartTypeId = ViewData["cartID"] })', '#product-attributes-form');return false;
+        
         }
     }, false);
 </script>
