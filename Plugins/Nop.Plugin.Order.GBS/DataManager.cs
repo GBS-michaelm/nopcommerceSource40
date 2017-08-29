@@ -169,7 +169,45 @@ namespace Nop.Plugin.DataAccess.GBS
 
 
         }
+        public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
 
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    SqlDataReader sqlReader = cmd.ExecuteReader();
+                    DataView dv = new DataView();
+                    DataTable dt = new DataTable();
+                    dt.Load(sqlReader);
+                    dv = dt.DefaultView;
+                    Close();
+
+                    return dv;
+                }
+
+
+
+
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+
+
+        }
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
         {
             try
@@ -200,6 +238,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
 
         }
+
 
         public void SetParameterizedQueryNoData(string query, Dictionary<string, Object> myDict)
         {

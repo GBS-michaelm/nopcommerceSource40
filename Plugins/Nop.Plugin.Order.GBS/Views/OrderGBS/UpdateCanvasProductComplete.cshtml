@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "";
+}
+@using Nop.Plugin.Order.GBS.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.Themes;
+@using Nop.Web.Framework.UI;
+@using System.Web.Mvc;
+@using Newtonsoft.Json;
+@using WebServices.Models.File;
+
+
+@{
+    var request = HttpContext.Current.Request;
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+
+}
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js">
+</script>
+<link href="/Themes/@themeName/Content/css/font-icons.css" rel="stylesheet" type="text/css">
+<link href="/Themes/@themeName/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="/Themes/@themeName/Content/css/canvas.css" rel="stylesheet" type="text/css">
+<style>
+    #bodywrapper {
+        padding: 10px 10%;
+    }
+
+</style>
+
+<div id="bodywrapper" class="h1">
+Successfully updated the product print files
+</div>
