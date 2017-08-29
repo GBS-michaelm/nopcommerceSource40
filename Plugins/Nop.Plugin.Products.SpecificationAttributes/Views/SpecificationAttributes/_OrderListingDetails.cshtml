@@ -1,161 +1,110 @@
-﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+﻿@model Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel
 @using Nop.Plugin.DataAccess.GBS;
 
-<div class="tab-headsection">
-    <div class="head-left">
-        <span class="orderplace">96 orders placed in</span>
-        <div class="pastorder-select">
-            <select>
-                <option>Past 6 months</option>
-                <option>Past 3 months</option>
-            </select>
-        </div>
-    </div>
-    @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
-    {
-        @Html.AntiForgeryToken()
-        <div class="ordersearch">
-            <input type="text" placeholder="Search" class="ordersearch" id="GoDirectlyToNumber" />
-            <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-            <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="order-submit">
-                Search orders
-            </button>
-            @*<input type="submit" value="Search orders" class="order-submit" />*@
-        </div>
-    }
-</div>
+
+
 <div class="order-list">
-    @if (Model.Count > 0)
-            {
-                foreach (var order in Model)
-                {
-            <div class="orderhead-section">
-                <div class="head-col1">
-                    <span class="order-label">@T("Account.CustomerOrders.OrderDate")</span>
-                    <div class="order-date">@order.CreatedOn.ToString()</div>
-                </div>
-                <div class="head-col2">
-                    <span class="order-label">@T("Account.CustomerOrders.OrderTotal")</span>
-                    <div class="order-date">@order.OrderTotal</div>
-                </div>
-                <div class="head-col3">
-                    @*<span class="order-label">ShipTo</span>
-                    <div class="rachel">
-                        <select>
-                            <option>@order.ShipTo</option>
-                        </select>
-                    </div> *@ 
-                </div>
-                <div class="head-col4">
-                    @*<div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @order.Id</div>*@
-                    <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(order.Id)</div>
-                    <div class="order-links">
-                        <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })">Order Details</a> |
-                        <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = order.Id })">Invoice</a>
-                    </div>
-                </div>
-                @*@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>*@
-                @*<a onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@T("Account.CustomerOrders.OrderDetails")</a>*@
-                @*@Html.Action("OrderProducts", "SpecificationAttributes", new { Id = order.Id })*@
-
-
+    @if (Model.Items.Count > 0)
+    {
+        <div class="orderhead-section">
+            <div class="head-col1">
+                <span class="order-label">@T("Account.CustomerOrders.OrderDate")</span>
+                <div class="order-date">@Model.CreatedOn.ToString()</div>
             </div>
-            if (order.Items.Count > 0)
-            {
+            <div class="head-col2">
+                <span class="order-label">@T("Account.CustomerOrders.OrderTotal")</span>
+                <div class="order-date">@Model.OrderTotal</div>
+            </div>
+            <div class="head-col3">
+                @*<span class="order-label">ShipTo</span>
+                <div class="rachel">
+                    <select>
+                        <option>@Model.ShipTo</option>
+                    </select>
+                </div>*@
+            </div>
+            <div class="head-col4">
+                <div class="order-label" >@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(@Model.Id)<span id="@DBManager.getGBSOrderID(@Model.Id)" class="hidden">@Model.Id</span></div>
+                <div class="order-links">
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })">Order Details</a> |
+                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })">Invoice</a>
+                </div>
+            </div>
+        </div>
 
-                <div class="panel panel-default order-productlist">
-                    <div class="productlist-left">
-                        <div class="orderstatus">
-                            @T("Account.CustomerOrders.OrderStatus"):
-                            @{ string cssClass = "-";}
-                            @if (@order.OrderStatus != "Cancelled")
-                            {
-                                
-                                <h3>@order.ShippingStatus</h3>
-                                @*<div class="onthaway">On tha way</div>*@
-
-                            if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
-                            {
+        <div class="panel panel-default order-productlist">
+            <div class="productlist-left">
+                    <div class="orderstatus">
+                        @T("Account.CustomerOrders.OrderStatus"):
+                        @if (@Model.OrderStatus != "Cancelled")
+                        {
+                            <strong class="space"> @Model.ShippingStatus  </strong>
+                            if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
+                            {                                
                                 <div class="ordertimeline"><span style="width:70%;"></span></div>
                             }
-                            else if (@order.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Delivered").ToString()))
-                            {
+                            else if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Delivered").ToString()))
+                            {                                
                                 <div class="ordertimeline"><span style="width:100%;"></span></div>
-
                             }
                             else
-                            {
-                                <div class="ordertimeline"><span style="width:15%;"></span></div>
-                                }
-
+                            {                                
+                                 <div class="ordertimeline"><span style="width:15%;"></span></div>
                             }
-                            else
-                            {
-                                <span class="order-status @cssClass">@order.OrderStatus</span>
-                            }
-
-                        </div>
-
-                        @foreach (var item in order.Items)
+                        }
+                        else
                         {
-                            string color = item.DefaultColor;
-                            string className = item.ClassName;
+                            <strong class="red">@Model.OrderStatus</strong>
+                        }
 
-                            <div class="prdouctrow-list product-item" data-productid="@item.Id">
+                    </div>
+                    @foreach (var item in Model.Items)
+                    {
+                        string color = item.DefaultColor;
+                        string className = item.ClassName;
 
-                                <div class="order-productimg picture" style="@color">
-                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
-                                        <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
-                                    </a>
-                                </div>
-                                <div class="productname-price">
-                                    <div class="order-productname"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
-                                    <div class="product-unit-price">@item.UnitPrice</div>
-                                    <div>
-                                        @if (order.IsReOrderAllowed)
+                        <div class="prdouctrow-list product-item" data-productid="@item.Id">
+
+                            <div class="order-productimg picture" style="@color">
+                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.ProductName" class="@className">
+                                    <img alt="@item.ProductName" src="@item.ImageUrl" title="@item.ProductName" />
+                                </a>
+                            </div>
+                            <div class="productname-price">
+                                <div class="order-productname"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
+                                <div class="product-unit-price">@item.UnitPrice</div>
+                                <div>
+                                    @if (Model.IsReOrderAllowed)
                                         {
-                                            @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
-                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })   ')" />
+                                        @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
+                                        <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })   ')" />
 
                                         }
-                                    </div>
                                 </div>
                             </div>
-                        }
-                    </div>
-                    <div class="productlist-right">
-                        <ul>
-                            <li>
-                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = order.Id })" class="btn btn-primary details-order-button">Order Details</a>
-                            </li>
-                            <li>
-                                <a href="#">Track Package</a>
-                            </li>
-                            <li>
-                                <a href="#">Cancel Order</a>
-                            </li>
-                            <li>
-                                @if (order.IsReturnRequestAllowed)
-                                {
-                                    <input type="button" value="Return Item" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })    ')" />
-                                }
-                            </li>
-                        </ul>
-                    </div>
-
-
+                        </div>
+                    }
                 </div>
-            }
-        }
+            <div class="productlist-right">
+                    <ul>
+                        <li>
+                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                        </li>
+                        <li>
+                            <a href="#">Track Package</a>
+                        </li>
+                        <li>
+                            <a href="#">Cancel Order</a>
+                        </li>
+                        <li>
+                            @if (Model.IsReturnRequestAllowed)
+                                {
+                                <input type="button" value="Return Item" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })    ')" />
+                                }
+                        </li>
+                    </ul>
+                </div>
+            </div>
     }
-    else
-    {
-        <div class="no-data">
-
-            @T("Account.CustomerOrders.NoOrders")
-        </div>
-    }
-
-
 </div>
 
