@@ -13,13 +13,13 @@
         var code = Request.QueryString["pcode"];
         ViewData["cartID"] = Request.QueryString["cartID"];
         ViewData["productID"] = Request.QueryString["productID"];
-        string url = "http://dev.houseofmagnets.com/";
+     
         Dictionary<string, string> pages = new Dictionary<string, string>();
         pages.Add("BC", "nop/business-cards/bc.aspx?pageID=");
         pages.Add("NP", "nop/name-plates/np.aspx?pageID=");
         string urlEnd = "&pcode=" + code;
 
-        page = url + pages[type] + id + urlEnd;
+        page = pages[type] + id + urlEnd;
         page = page.Replace(" ", string.Empty);
     }
     catch (Exception ex)
@@ -53,7 +53,7 @@
 </form>
 
 <div class="gluon-template" style="overflow:hidden; height:1240px;">
-    <iframe src="@page" style="height:1240px; width:100%;"></iframe>
+    <iframe src="@T("hom.url")@page" style="height:1240px; width:100%;"></iframe>
 </div>
 
  <!--product attributes-->

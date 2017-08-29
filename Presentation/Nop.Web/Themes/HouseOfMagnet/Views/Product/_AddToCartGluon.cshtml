@@ -1,10 +1,15 @@
 ﻿@model ProductDetailsModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
+@using Nop.Core.Infrastructure;
+@{ 
+//var category = EngineContext.Current.Resolve<CategoryModel>();
+}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
     string pageID = "42";
+   
 
 }
 @if (!Model.AddToCart.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)

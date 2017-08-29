@@ -2918,6 +2918,9 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\GluonProducts.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\ChiliProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

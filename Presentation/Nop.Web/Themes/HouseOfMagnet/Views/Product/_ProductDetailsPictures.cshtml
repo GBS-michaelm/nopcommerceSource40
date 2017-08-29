@@ -31,13 +31,10 @@
         }
         else
         {
-            @*/ ------------- Nav 7/27/17 ------------------ /*@
-        if (Model.Breadcrumb.CategoryBreadcrumb.FirstOrDefault().Name == "Sets")
-        {            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
-            }
-            else
-            {            @Html.Widget("product_details_widget", Model.Id)  
-            }
+
+
+         <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+
         }
     </div>
     @if (Model.PictureModels.Count > 1)
