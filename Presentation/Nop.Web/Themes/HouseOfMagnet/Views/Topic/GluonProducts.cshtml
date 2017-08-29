@@ -16,6 +16,7 @@
         string url = "http://dev.houseofmagnets.com/";
         Dictionary<string, string> pages = new Dictionary<string, string>();
         pages.Add("BC", "nop/business-cards/bc.aspx?pageID=");
+        pages.Add("NP", "nop/name-plates/np.aspx?pageID=");
         string urlEnd = "&pcode=" + code;
 
         page = url + pages[type] + id + urlEnd;
