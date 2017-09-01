@@ -272,6 +272,7 @@
     <div id="gateway-body" style="background-color : @backgroundColor;">
         <div id="gateway-body-inner">
            <input id="cssChange" type="hidden" value="" />
+           <input id="originalBodyHeight" type="hidden" value="" />
 
             @* background top text from db *@
             <p id="gatewayTopText">
@@ -358,12 +359,16 @@
                     $("#gatewayWYSIWYG").show();
                     $("#teamSelect").hide();
                     $("#selectTeamDiv").show();
+
+                    PageBodyResizeForMultipleProductRows("sports-wysiwyg");
+
                 })
 
                 $("#changeSelectedTeam").click(function () {
                     $("#gatewayWYSIWYG").hide();
                     $("#teamSelect").show();
                     $("#selectTeamDiv").hide();
+                    PageBodyResizeForMultipleProductRows("");
                 })
 
                 $("#cssChange").click(function() {
@@ -379,18 +384,10 @@
                             $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
                             $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
                             break;
-                        //case "Football Schedule Magnets":
-                        //    $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
-                        //    $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
-
-
-
-                        //    $("#gateway-body").attr("height")
-
-                        //    //***check height of wysiwyg then use that height for background and then add 50ish pixels to accoutn for bottom.*****
-
-
-                        //    break;
+                        case "Football Schedule Magnets":
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
+                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
+                            break;
                         default:
                             $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
                             $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
@@ -399,7 +396,7 @@
                 });
 
 
-
+                //handle background color stretch 
                 var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
                 CustomResize();
                 
@@ -431,6 +428,22 @@
                     });
                     $(window).resize();
                 }
+
+                function PageBodyResizeForMultipleProductRows(currentWYSIWYG) {
+                    if (currentWYSIWYG != null && currentWYSIWYG != "") {
+                        //save original height incase team is changed
+                        $("#originalBodyHeight").val($("#gateway-body").height());
+                        //change body height for multiple row products
+                        var newHeight = parseInt($("." + currentWYSIWYG).height() + 180) + "px";
+                        $("#gateway-body").height(newHeight);
+                        $("#gateway-inner").height(newHeight);
+                    } else {
+                        $("#gateway-body").height($("#originalBodyHeight").val());
+                        $("#gateway-inner").height($("#originalBodyHeight").val());
+                    }
+                    
+                }
+
                 
 
                 $("#gateway-inner").height($("#gateway-body").height());
