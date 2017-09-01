@@ -1,0 +1,386 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+body {
+}
+
+/*.container {
+    width: 100% !important;
+    padding: 0px !important;
+    
+}*/
+
+/*#gatewayPageTitle {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   width : 1510px;
+}*/
+
+/*#gatewayBreadcrumb {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   width : 1510px;
+}*/
+
+#selectTeamDiv {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 380px;
+    float: left;
+}
+
+#selectTeamDiv a {
+    color: #1767d6;
+    font-weight: bold;
+}
+
+#selectTeamDiv p {
+    float: left;
+}
+
+
+#gateway-body {
+    margin-bottom: 75px;
+    margin-top: 80px;
+    /*float: left;*/
+    z-index: 0;
+    height: 900px;
+    width: 100%;
+    background-repeat: repeat-x;
+}
+
+#gateway-body-inner {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+#gateway-inner {
+   /*height: 100%;*/
+   /*height: 835px;*/
+
+}
+
+.gateway-h1 {
+    padding-left: 0px !important;
+}
+
+.gateway-h2-wrap {
+    display: block;
+    width: 558px;
+    height: 62px;
+}
+
+.gateway-h2 {
+    line-height: 27px;
+    margin-bottom: -7px !important;
+    font-size: 17pt; color: #808080;
+}
+
+.gateway-title {
+    padding-top: 0px;
+}
+
+.gateway-title p {
+    margin-bottom: -7px;
+}
+
+.gateway-title h1 {
+    padding-left: 0px;
+}
+
+#gatewayLayersContainer {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
+#gatewayWYSIWYG {
+    /*position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+    top: -35%;
+    z-index: 4;*/
+}
+
+.regular-wysiwyg {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /*top: 11px;
+    left: 67px;*/
+    width: 85%;
+    top: 4%;
+    z-index: 4;
+}
+
+.sports-wysiwyg {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /*top: 11px;
+    left: 67px;*/
+    width: 85%;
+    /*top: -35%;*/
+    z-index: 5;
+}
+
+
+
+#gatewayTopText {
+    position: relative;
+    top: 29px;
+    left: 8%;
+    /*top: 43px;
+    left: 82px;*/
+    color: white;
+    font-size: 26pt;
+    font-weight: bold;
+    z-index: 3;
+}
+
+#gatewayBottomText {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    top: -170px;
+    /*left: -289px;*/
+    color: white;
+    font-size: 23pt;
+    font-weight: bold;
+    text-align: center;
+    z-index: 3;
+}
+
+#gatewayForegroundImage{
+    /*position: relative;
+    top: -916px;
+    left: 56%;
+    width: 45%;
+    max-width: 400px;
+    max-height : 998px;
+    z-index: 2;*/ 
+}
+
+.gateway-foreground-specialty {
+    position: relative;
+    top: -918px;
+    /* left: 628px; */
+    left: 57%;
+    width: 44%;
+    max-height: 860px;
+    z-index: 2;
+}
+
+.gateway-foreground-baseball {
+    position: relative;
+    top: -881px;
+    left: 785px;
+    z-index: 2;
+}
+
+#gatewayBackgroundImage {
+    position: absolute;
+    /* display: block; */
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    width: 100%;
+    height: 894px;
+    top: -81px;
+    left: 0px;
+    background-repeat: repeat-y;
+    z-index: 0;
+}
+
+.gateway-title {
+    border-left: 10px #012d5c solid !important;
+}
+
+.gateway-pricing {
+    font-size: 24px;
+    font-weight: bold;
+}
+.pricing-features li {
+	font-size:16px;
+    padding: 2px 0;
+}
+.button-blue{
+	background-color:#012d5c;
+}
+.button-3d.button-blue:hover, .button-border.button-blue.button-fill:before, .button-border.button-blue:hover, .button-reveal.button-blue:hover {
+    background-color: #6c8baa!important;
+}
+
+#chartWrap {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;  
+}
+
+#chartWrap .topic-html-content {
+    border: none;
+}
+
+.container #videoAndQuantityCalculatorWrap {
+    height: 480px;
+    padding-top: 28px;
+}
+
+#videoAndQuantityCalculatorWrap {
+    background-color: #ddd;
+}
+
+#videoAndQuantityCalculatorWrap .topic-html-content {
+    border: none;
+}
+
+#innerVidAndWQtyCalc {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* !!!!TABS CSS HERE!!!! */ 
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#teamSelect {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 702px;
+  font: 14px/1 'Open Sans', sans-serif;
+  top: 19px;
+  z-index: 5;
+}
+
+#teamSelect a {
+    color: #1767d6;
+    font-weight: bold;
+    text-decoration : underline !important;
+    margin-right: 50px;
+    
+}
+
+#teamSelect p {
+  margin: 0 0 20px;
+  line-height: 2.3;
+  float: left;
+}
+
+#teamSelect main {
+  min-width: 320px;
+  max-width: 1085px;
+  height: 315px;
+  padding: 38px;
+  padding-top: 0px;
+  margin: 0 auto;
+}
+
+#innerMain {
+    background-color: white;
+    height: 100%;
+    
+}
+
+#teamSelect #label1 {
+    margin-left: 50px;
+}
+
+#teamSelect section {
+  display: none;
+  padding: 20px 0 0;
+  background-color: white;
+  height : 100%;
+  padding-left: 60px;
+}
+
+#teamSelect input {
+  display: none;
+}
+
+label.gateway-label {
+  display: inline-block;
+  margin: 0 0 -1px;
+  padding: 12px 21px;
+  font-weight: 600;
+  text-align: center;
+  border:1px #bbb solid;
+  background-color : #F2F2F2;
+}
+
+label:before {
+  font-family: fontawesome;
+  font-weight: normal;
+  margin-right: 10px;
+  
+}
+
+/*label[for*='1']:before { content: '\f1cb'; }
+label[for*='2']:before { content: '\f17d'; }
+label[for*='3']:before { content: '\f16b'; }
+label[for*='4']:before { content: '\f1a9'; }*/
+
+label:hover {
+  color: #888;
+  cursor: pointer;
+}
+
+#teamSelect input:checked + label {
+  color: #555;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-right: 1px solid #fff;
+  background-color : white;
+}
+
+/*#content1,
+#content2,
+#content3,
+#content4 {
+    height : 180px;
+}*/
+
+
+
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3,
+#tab4:checked ~ #content4 {
+  display: block;
+  
+}
+
+@media screen and (max-width: 650px) {
+  label {
+    font-size: 0;
+  }
+  label:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  label {
+    padding: 15px;
+  }
+}

@@ -1,0 +1,547 @@
+﻿@using System.Data.Entity;
+@using Nop.Plugin.DataAccess.GBS;
+@using Nop.Core;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.Themes;
+@using System.Data;
+@using System.Text;
+@using Nop.Services.Catalog;
+
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+}
+@{
+
+    
+
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+
+    //current manufacturer ID
+    int currentManufacturerId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    }
+
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+}
+
+
+@{
+    string id = @Model.Id.ToString();
+}
+
+@{ 
+    //chart to load
+    string chart = "";
+
+    if (@Model.Name.Contains("Specialty"))
+    {
+        chart = "hom_specialty_magnets_product_options_chart";
+    }
+
+}
+
+@{
+
+    DBManager manager = new DBManager();
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+
+    Dictionary<string, string> categoryIdDic = new Dictionary<string, string>();
+    categoryIdDic.Add("@CategoryId", id);
+
+    string selectSpecAttrAndCategoryDataView = "EXEC usp_SelectGBSCustomCategoryAndSpecAttributesData @CategoryId";
+    DataView specAttrAndCategoryDataView = manager.GetParameterizedDataView(selectSpecAttrAndCategoryDataView, categoryIdDic);
+    DataView categoryDataView = null;
+
+    string h1 = Model.Name;
+    string h2 = "";
+    string topText = "Choose your magnet style to get started...";
+    string backgroundImage = "";
+    string foregroundImage = "";
+    string bottomText = "Can't decide? Let us help you...";
+    string backgroundColor = "";
+    bool hasTeams = false;
+
+
+    if (specAttrAndCategoryDataView.Count > 0)
+    {
+
+        h1 = !(string.IsNullOrEmpty(specAttrAndCategoryDataView[0]["H1"].ToString())) ? specAttrAndCategoryDataView[0]["H1"].ToString() : Model.Name;
+        h2 = specAttrAndCategoryDataView[0]["H2"].ToString();
+        topText = specAttrAndCategoryDataView[0]["UpperText"].ToString();
+        backgroundImage = "/Themes/" + @themeName + "/Content/images/" + specAttrAndCategoryDataView[0]["BackgroundPicturePath"].ToString();
+        foregroundImage = "/Themes/" + @themeName + "/Content/images/" + specAttrAndCategoryDataView[0]["ForegroundPicturePath"].ToString();
+        bottomText = specAttrAndCategoryDataView[0]["LowerText"].ToString();
+        backgroundColor = specAttrAndCategoryDataView[0]["BackgroundColor"].ToString();
+        hasTeams = true;
+
+    }
+    else
+    {
+        string selectCategoryData = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
+        categoryDataView = manager.GetParameterizedDataView(selectCategoryData, categoryIdDic);
+
+        if(categoryDataView.Count > 0)
+        {
+            h1 = !(string.IsNullOrEmpty(categoryDataView[0]["H1"].ToString())) ? categoryDataView[0]["H1"].ToString() : Model.Name;
+            h2 = categoryDataView[0]["H2"].ToString();
+            topText = categoryDataView[0]["UpperText"].ToString();
+            backgroundImage = "/Themes/" + @themeName + "/Content/images/" + categoryDataView[0]["BackgroundPicturePath"].ToString();
+            foregroundImage = "/Themes/" + @themeName + "/Content/images/" + categoryDataView[0]["ForegroundPicturePath"].ToString();
+            bottomText = categoryDataView[0]["LowerText"].ToString();
+            backgroundColor = categoryDataView[0]["BackgroundColor"].ToString();
+        }
+
+    }
+
+}
+
+
+
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+
+@if (Model.DisplayCategoryBreadcrumb)
+{
+    <div id="gatewayBreadcrumb" class="breadcrumb-wrapper">
+        <ul class="breadcrumb">
+            <li>
+                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")"><i class="fa fa-home"></i></a>
+                @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
+                @foreach (var cat in Model.CategoryBreadcrumb)
+                {
+                    var isLastCategory = cat.Id == Model.Id;
+                <li>
+                    @if (isLastCategory)
+                    {
+                        <strong class="current-item active">@cat.Name</strong>
+                    }
+                    else
+                    {
+                        <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                        @*<span class="delimiter">@breadcrumbDelimiter</span>*@
+                    }
+                </li>
+                }
+            </ul>
+        </div>
+}
+
+
+
+
+    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">
+                
+        @* h1 from db *@
+        <h1 id="gatewayH1" class="gateway-h1">@h1</h1>
+
+        <div class="gateway-h2-wrap">
+            @* h2 from db *@
+            <p class="gateway-h2"><span >@h2</span></p>
+        </div>
+
+    </div>
+
+
+ 
+
+
+    
+       
+        @*<p>team bod, hiya</p>*@
+    @{
+
+        StringBuilder teamHtml = new StringBuilder();
+        string rawTeam = "";
+
+        if (@hasTeams == true)
+        {
+            //get specification attr list with teams *@
+
+
+            //foreach specAttr, ex.professional team, college team, conference etc
+
+            var specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
+            teamHtml.Append("<main>");
+
+            //tabs
+            for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
+            {
+                IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
+                SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
+
+                //teamHtml.Append("<p id='gatewayLabels'>");
+                teamHtml.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
+                teamHtml.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + specificationAttr.Name + "</label>");
+                //teamHtml.Append("</p>");
+
+
+            }
+
+            //teamHtml.Append("<div id='innerMain'>");
+
+            //tab content
+            for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
+            {
+                IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
+                SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
+                ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;
+
+                //teamHtml.Append("<p>Tite of spec attr : " + specificationAttr.Name + "</p>");
+                //teamHtml.Append("<p> Teams </p>");
+
+                teamHtml.Append("<section id='content" + (i + 1) + "'><p>");
+
+
+                int cur = 1;
+                foreach (var option in optionList)
+                {
+                    //attr = option.Name;
+                    //teamHtml.Append("<a href='#'>" + option.Name + "</a><br />");
+
+                    if (cur % 8 == 0)
+                    {
+                        teamHtml.Append("<p class='inner-team-list'>");
+                    }
+                    else
+                    {
+                        teamHtml.Append("<a class='team-from-list' href='#'>" + option.Name + "</a><br />");
+                    }
+                    if(cur % 8 == 7)
+                    {
+                        teamHtml.Append("</p>");
+                    }
+
+                    cur++;
+
+                }
+
+
+                teamHtml.Append("</section>");
+                //teamHtml.Append("<br />");
+
+            }
+
+            teamHtml.Append("</main>"); //</div>
+
+
+            rawTeam = teamHtml.ToString();
+
+            //create tabs 
+
+
+
+        }
+    }
+    
+
+        @* cache team selection, session *@
+
+        @* determine if page has team list *@
+
+
+
+    <div id="selectTeamDiv" style="display: none">
+        <p id="selectedTeam"></p><a id="changeSelectedTeam">(Change)</a>
+    </div>
+    
+
+
+    <div id="gateway-body" style="background-color : @backgroundColor;">
+        <div id="gateway-body-inner">
+           <input id="cssChange" type="hidden" value="" />
+
+            @* background top text from db *@
+            <p id="gatewayTopText">
+
+                @topText
+
+            </p>
+
+            <div id="gateway-inner">
+
+           
+
+
+                <div id="gatewayLayersContainer">
+                    @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
+                    <div id="teamSelect">
+                        @Html.Raw(rawTeam);
+                    </div>
+                    <div id="gatewayWYSIWYG" class="">
+                        @if (!String.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            @*wysiwyg from nop*@
+                            <p id="" class="list-content">
+                                @Html.Raw(Model.Description)
+                            </p>
+                        }
+                    </div>
+                    @* foreground image from db *@
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                    @* background images from db *@
+                    @*<img id="gatewayBackgroundImage" src="@backgroundImage" />*@
+                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>
+                
+                </div>
+            
+                @* background bottom text from db *@
+            
+
+            </div>
+            <p id="gatewayBottomText">
+
+                @bottomText;
+
+            </p>
+        </div>
+    </div>
+
+
+    
+
+
+@{
+
+    if (@hasTeams == true)
+    {
+        //set something to true for js to check
+        <input id="hasTeam" type="hidden" value="true" />
+    }
+
+
+}
+        <script>
+            //login for hiding when is sprt team selection vs just prod type selection
+
+            $(document).ready(function () {
+
+            @* hide gateway body section, show team list section *@
+
+                
+                //hide gateway show team box
+                if ($("#hasTeam").val() == "true") {
+                    $("#gatewayWYSIWYG").hide();
+                    $("#teamSelect").show();
+                } else {
+                    $("#teamSelect").remove();
+                }
+
+                $(".team-from-list").click(function () {
+
+                    //console.log("team selected " + $(this).text());
+                    
+                    $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
+
+                    $("#gatewayWYSIWYG").show();
+                    $("#teamSelect").hide();
+                    $("#selectTeamDiv").show();
+                })
+
+                $("#changeSelectedTeam").click(function () {
+                    $("#gatewayWYSIWYG").hide();
+                    $("#teamSelect").show();
+                    $("#selectTeamDiv").hide();
+                })
+
+                $("#cssChange").click(function() {
+
+                    console.log("cur h1 test");
+
+                    var type = $("#gatewayH1").html();
+
+                    console.log(type);
+
+                    switch (type) {
+                        case "Baseball Magnets":
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
+                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
+                            break;
+                        case "Specialty Magnets":
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
+                            $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
+                            break;
+                        //case "Football Schedule Magnets":
+                        //    $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
+                        //    $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
+
+
+
+                        //    $("#gateway-body").attr("height")
+
+                        //    //***check height of wysiwyg then use that height for background and then add 50ish pixels to accoutn for bottom.*****
+
+
+                        //    break;
+                        default:
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
+                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
+                            break;
+                    }
+                });
+
+
+
+                var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
+                CustomResize();
+                
+                //obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+                //CustomResize();
+
+                function CustomResize() {
+                    $(window).resize(obj, function () {
+
+                        console.log(obj.outer);
+                        console.log(obj.inner);
+
+
+                        var $c = $('.container'),
+                            $w = $(obj.outer),
+                            totalWidth = $('.footer').outerWidth(),
+                            wellWidth = $c.outerWidth(),
+                            diff = totalWidth - wellWidth,
+                            marg = -Math.floor(diff / 2) + 'px';
+                        $w.each(function () {
+                            $(this).css({
+                                'margin-left': marg,
+                                'margin-right': marg
+                            });
+                        })
+
+                        $(obj.inner).width($(".container").width());
+
+                    });
+                    $(window).resize();
+                }
+
+
+
+
+                $("#gateway-inner").height($("#gateway-body").height());
+
+
+
+                $("#cssChange").click();
+                
+                //remove topic header
+                $("#chartWrap div.panel-heading").remove();
+                
+                $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
+
+            });
+
+            
+
+        </script>
+
+
+@{
+    //Loading extra topics
+    
+    if (!string.IsNullOrEmpty(@chart))
+    {
+        <div id="chartWrap">
+            <div id="chartSection">
+                @Html.Action("TopicBlock", "Topic", new { systemName = @chart.ToString() })
+            </div>
+        </div>
+    }
+
+    <div id="videoAndQuantityCalculatorWrap">
+        <div id="innerVidAndWQtyCalc">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
+        </div>
+    </div>
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
+    </div>
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })
+    </div>
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_testimonials" })
+    </div>
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })
+    </div>
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_opc_video" })
+    </div>
+
+
+}
+
+
+
+   
+@*<div class="category-section">
+    <div class="row">
+        @*<div class="col-sm-6">
+<img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
+</div>*@
+        @*<div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-6 small-category"><img src="/Themes/SimplexTheme/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6 small-category"><img src="/Themes/SimplexTheme/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6"><img src="/Themes/SimplexTheme/Content/images/categoryimg3.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6"><img src="/Themes/SimplexTheme/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
+            </div>
+        </div>*@
+    @*</div>*@
+@*</div>*@
+    
+@*<div class="listing-page">
+    <div class="sidebar col-md-3">
+        <div class=" sidebar-title">
+            <h3>Refine Your Choices</h3>
+            <a href="#">Clear</a>
+        </div>
+        @if (IsSectionDefined("left"))
+        {
+            @RenderSection("left")
+        }
+        else
+        {
+            @Html.Widget("left_side_column_before")
+			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
+            
+            @*@Html.Widget("left_side_column_after_category_navigation")
+            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+            @Html.Action("VendorNavigation", "Catalog")*@
+            @*@Html.Action("PopularProductTags", "Catalog")*@
+            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
+            @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+            @Html.Widget("left_side_column_after")
+        }
+    </div>*@
+    <div class="side-content col-md-9">
+        @Html.Widget("main_column_before")
+        @RenderBody()
+        @Html.Widget("main_column_after")
+    </div>
+@*</div>*@

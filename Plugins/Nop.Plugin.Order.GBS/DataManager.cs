@@ -157,9 +157,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
                     return dv;
                 }
-
-
-
+                
 
             }
             catch (SqlException ex)

@@ -1,0 +1,220 @@
+﻿#qty-calc * {
+	margin: 0;
+	padding: 0;
+}
+body #qty-calc {
+    float: right;
+	font: 14px Helvetica, Sans-Serif;
+}
+#qty-calc {
+	width: 500px;
+}
+#qty-calc .ui-tabs h2{
+    background-color: #e8e8e8;
+    padding: 10px;
+    font-size: 16px;
+	margin-bottom:10px;
+	font-weight:bold;
+}
+#qty-calc .ui-tabs {
+	zoom: 1;
+}
+#qty-calc .ui-tabs .ui-tabs-nav {
+	list-style: none;
+	position: relative;
+	padding: 2px 2px 0;
+	overflow: hidden;
+	top: 1px;
+	z-index: 1000;
+	display:none;
+}
+#qty-calc .ui-tabs .ui-tabs-nav li {
+	position: relative;
+	float: left;
+	border: 1px solid #ccc;
+	border-bottom-width: 0 !important;
+	margin: 0 2px -1px 0;
+	background: #ccc;
+}
+#qty-calc .ui-tabs .ui-tabs-nav li a {
+	float: left;
+	text-decoration: none;
+	padding: 5px 10px;
+	color: black;
+}
+#qty-calc .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+	padding-bottom: 1px;
+	border-bottom-width: 0;
+	background: white;
+}
+#qty-calc .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, #qty-calc .ui-tabs .ui-tabs-nav li.ui-state-disabled a, #qty-calc .ui-tabs .ui-tabs-nav li.ui-state-processing a {
+	cursor: text;
+}
+#qty-calc .ui-tabs .ui-tabs-nav li a, #qty-calc .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {
+	cursor: pointer;
+} /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
+#qty-calc .ui-tabs .ui-tabs-panel {
+	padding: 20px;
+	display: block;
+	border-width: 0;
+	background: none;
+	border: 1px solid #ccc;
+	position: relative;
+	min-height: 265px;
+	text-align: left;
+}
+#qty-calc .ui-tabs .ui-tabs-hide {
+	display: none !important;
+}
+#qty-calc .ui-tabs a{
+	color:#ff6f06;
+	font-weight:bold;
+	text-decoration:none;
+}
+#qty-calc .ui-tabs a:hover{
+	text-decoration:underline;
+}
+#qty-calc a.mover {
+	background: #ff6f06;
+    padding: 6px 12px;
+    position: absolute;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    height: 36px;
+    width: 104px;
+    text-align: center;
+    font-size: 21px;
+    font-family: "Droid Sans", Sans-Serif;
+}
+#qty-calc a.mover:hover{
+	text-decoration:none;
+	background-color:#f79046;
+}
+#qty-calc .next-tab {
+    bottom: 12px;
+    right: 12px;
+}
+#qty-calc .prev-tab {
+    bottom: 12px;
+    left: 12px;
+}
+#qty-calc div#sum {
+    position: relative;
+    top: -50px;
+    padding: 8px;
+    background-color: #ceecc9;
+    width: 250px;
+    color: #264e20;
+    left: 115px;
+    text-align: center;
+    height: 36px;
+    overflow: hidden;
+}
+#qty-calc #sum {
+    font-size: 18px;
+}
+#qty-calc span.hinttext {
+    font-size: 12px;
+    font-style: italic;
+	clear: left;
+    float: left;
+    width: 90%;
+}
+#qty-calc input.txt {
+    margin: 0px 0px 15px 0px;
+    float: left;
+}
+#qty-calc input[type=number]::-webkit-inner-spin-button, 
+#qty-calc input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0; 
+}
+#qty-calc input[type=number] {
+    -moz-appearance:textfield;
+}
+#qty-calc .single{
+	width:30px;
+}
+#qty-calc .col1 {
+    width: 50%;
+    float: left;
+    margin-left: 0px;
+}
+#qty-calc .col1 label{
+    width: 100px;
+    display: block;
+    float: left;
+    text-align: right;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: "Droid Sans", Sans-Serif;
+}
+#qty-calc p {
+    line-height: 16px;
+}
+/*--incrementing --*/
+#qty-calc label {
+  display: block;
+  float: left;
+  text-align: right;
+  padding: 5px 5px 0 0;
+  width: 140px;
+}
+#qty-calc input[type=text] {
+  float: left;
+  width: 40px;
+  padding: 3px 0 0 0;
+  text-align: center;
+}
+#qty-calc form div {
+  overflow: hidden;
+  margin: 0 0 5px 0;
+}
+#qty-calc .button {
+  margin: 0 0 0 5px;
+  text-indent: -9999px;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  float: left;
+  text-align: center;
+  background: url(//www.houseofmagnets.com/img/buttons/increment-buttons.png) no-repeat;
+}
+#qty-calc .dec {
+  background-position: 0 -22px;
+}
+
+#qty-calc .buttons {
+  padding: 20px 0 0 140px;
+}
+#qty-calc p.qty-disclaimer {
+    position: relative;
+    top: -25px;
+    font-style: italic;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+}
+#qty-calc h1 {
+    font: bold 24px/24px 'Droid Sans', sans-serif;
+    color: #333333;
+    margin: 0px 0px 5px 0px;
+    padding: 0px 0px 0px 0px;
+    text-align: left;
+}
+
+#qty-calc h2 
+{
+	font: normal 14px/24px 'Droid Sans', sans-serif;
+	color:#333333;
+	margin-bottom:10px;
+  	text-align: left;
+}
+
+.qty-width {
+    float: left;
+    width: 50%;
+}
