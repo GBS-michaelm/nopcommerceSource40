@@ -179,7 +179,7 @@ body {
     z-index: 2;
 }
 
-.gateway-foreground-baseball {
+.gateway-foreground-sports {
     position: relative;
     top: -881px;
     left: 785px;
@@ -306,6 +306,7 @@ body {
   background-color: white;
   height : 100%;
   padding-left: 60px;
+  overflow-y: auto;
 }
 
 #teamSelect input {

@@ -375,16 +375,12 @@
                     console.log(type);
 
                     switch (type) {
-                        case "Baseball Magnets":
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
-                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
-                            break;
                         case "Specialty Magnets":
                             $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
                             $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
                             break;
                         //case "Football Schedule Magnets":
-                        //    $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
+                        //    $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
                         //    $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
 
 
@@ -396,7 +392,7 @@
 
                         //    break;
                         default:
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-baseball");
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
                             $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
                             break;
                     }
@@ -435,14 +431,10 @@
                     });
                     $(window).resize();
                 }
-
-
-
+                
 
                 $("#gateway-inner").height($("#gateway-body").height());
-
-
-
+                
                 $("#cssChange").click();
                 
                 //remove topic header
