@@ -268,7 +268,7 @@
     </div>
     
 
-
+    <div>salewidgethere</div>
     <div id="gateway-body" style="background-color : @backgroundColor;">
         <div id="gateway-body-inner">
            <input id="cssChange" type="hidden" value="" />
@@ -407,8 +407,8 @@
                 var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
                 CustomResize();
                 
-                //obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
-                //CustomResize();
+                obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+                CustomResize();
 
                 function CustomResize() {
                     $(window).resize(obj, function () {

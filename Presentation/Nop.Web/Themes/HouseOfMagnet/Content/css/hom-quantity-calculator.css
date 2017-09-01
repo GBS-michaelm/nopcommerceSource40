@@ -62,6 +62,7 @@ body #qty-calc {
 	position: relative;
 	min-height: 265px;
 	text-align: left;
+    background-color: white !important;
 }
 #qty-calc .ui-tabs .ui-tabs-hide {
 	display: none !important;

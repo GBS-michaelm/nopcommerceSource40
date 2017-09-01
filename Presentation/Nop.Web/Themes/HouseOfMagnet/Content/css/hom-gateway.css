@@ -45,10 +45,8 @@ body {
 #gateway-body {
     margin-bottom: 75px;
     margin-top: 80px;
-    /*float: left;*/
     z-index: 0;
     height: 900px;
-    width: 100%;
     background-repeat: repeat-x;
 }
 
@@ -56,7 +54,6 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
 }
 
 #gateway-inner {
@@ -238,7 +235,7 @@ body {
 }
 
 #videoAndQuantityCalculatorWrap {
-    background-color: #ddd;
+    background-color: #F5F5F5;
 }
 
 #videoAndQuantityCalculatorWrap .topic-html-content {
