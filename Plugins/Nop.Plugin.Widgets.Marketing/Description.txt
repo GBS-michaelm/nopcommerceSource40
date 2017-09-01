@@ -1,0 +1,9 @@
+﻿Group: Widgets
+FriendlyName: Marketing
+SystemName: Widgets.Marketing
+Version: 1.0
+SupportedVersions: 3.90
+Author: Clint Treadway
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.Marketing.dll
+Description: This plugin allows you to use Marketing web forms.

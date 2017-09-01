@@ -32,4 +32,4 @@ Nop.Plugin.Shipping.GBS
 SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
-Logging.GBS
+Widgets.Marketing

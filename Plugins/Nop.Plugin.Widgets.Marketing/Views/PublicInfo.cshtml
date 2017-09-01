@@ -1,0 +1,454 @@
+﻿@model Nop.Plugin.Widgets.Marketing.EmailPref.Models.EmailPreferencesModel
+@using Nop.Web.Framework;
+@using System.Web.Mvc;
+
+@{
+    Layout = "";
+}
+
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>House Of Magnets Email Subscription Preferences</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+    <style type="text/css">
+        p {
+            margin: 0px;
+            padding: 5px 0px;
+        }
+
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+            input[type="checkbox"] + label {
+                color: #f2f2f2;
+            }
+
+                input[type="checkbox"] + label span {
+                    display: inline-block;
+                    width: 33px;
+                    height: 30px;
+                    margin: -0px 10px 0 0;
+                    vertical-align: middle;
+                    background: url(https://d1ok0qgebci2d3.cloudfront.net/130/156x30/prefs_sprites.jpg) 0px top no-repeat;
+                    cursor: pointer;
+                }
+
+            input[type="checkbox"]:checked + label span {
+                background: url(https://d1ok0qgebci2d3.cloudfront.net/130/156x30/prefs_sprites.jpg) -32px top no-repeat;
+            }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+            input[type="radio"] + label {
+                color: #f2f2f2;
+                font-family: Arial, sans-serif;
+            }
+
+                input[type="radio"] + label span {
+                    display: inline-block;
+                    width: 33px;
+                    height: 30px;
+                    margin: -0px 10px 0 0;
+                    vertical-align: middle;
+                    background: url(https://d1ok0qgebci2d3.cloudfront.net/130/156x30/prefs_sprites.jpg) -66px top no-repeat;
+                    cursor: pointer;
+                }
+
+            input[type="radio"]:checked + label span {
+                background: url(https://d1ok0qgebci2d3.cloudfront.net/130/156x30/prefs_sprites.jpg) -96px top no-repeat;
+            }
+
+            input[type="radio"]:active + label span {
+                background: url(https://d1ok0qgebci2d3.cloudfront.net/130/156x30/prefs_sprites.jpg) -96px top no-repeat;
+            }
+
+        .content {
+            padding: 15px 15px;
+        }
+
+            .content p {
+                font-family: 'Droid Sans', sans-serif;
+                font-weight: normal;
+                color: #333333;
+                line-height: 17px;
+                font-size: 14px;
+            }
+
+            .content h1 {
+                font-family: 'Droid Sans', sans-serif;
+                font-weight: normal;
+                padding-bottom: 0px;
+                text-align: center;
+                color: #01265b;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .content .headline {
+                padding-bottom: 0px;
+                font-family: 'Droid Sans', sans-serif;
+                font-size: 18px;
+                line-height: 20px;
+            }
+
+        .cb {
+            margin: 28px 0px 0px 7px;
+        }
+
+        .radio {
+            margin: 28px 0px 0px 7px;
+        }
+
+        .button-styler {
+            background-color: #ff6f06;
+            border: none;
+            color: #ffffff;
+            width: 200px;
+            height: 42px;
+            text-align: center; 
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+@using (Html.BeginForm("EmailPreferencesEdit", "EmailPref", FormMethod.Post))
+{
+    <input type="hidden" id="EmailAddress" name="EmailAddress" value="@Model.ContactPref.emailAddress" />
+
+    <table width="800" border="0" cellspacing="0" cellpadding="0" style="margin:0 auto;">
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <table width="100%" bgcolor="#01265b" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td bgcolor="#01265b" style="background-color: #01265b;">
+                                    <table bgcolor="#01265b" width="580" align="center" cellspacing="0" cellpadding="0" border="0" class="width320" style="margin: 0 auto;">
+                                        <tr>
+                                            <td>
+                                                <table width="540" align="center" cellspacing="0" cellpadding="0" border="0" class="width280">
+                                                    <tr>
+                                                        <td style="font-family: Helvetica, arial, sans-serif; font-size:12px; color: #FFFFFF; text-align:center; padding-top:5px; padding-bottom: 7px;">Please confirm your subscription changes from:</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td bgcolor="#ffffff" style="background-color:#ffffff;">
+                                    <table bgcolor="#ffffff" width="580" align="center" cellspacing="0" cellpadding="0" border="0" class="width320" style="margin: 0 auto;">
+                                        <tr>
+                                            <td style="padding-bottom:0px;">
+                                                <table width="540" align="center" cellspacing="0" cellpadding="0" border="0" class="width280">
+                                                    <tr>
+                                                        <td style="font-family: Helvetica, arial, sans-serif; font-size:12px; color: #FFFFFF; text-align:center;"><div><a href="http://www.houseofmagnets.com/default.asp?utm_source=cordial&utm_medium=email&utm_content=2017&utm_campaign=logo"> <img src="https://d1ok0qgebci2d3.cloudfront.net/130/320x65/logo_HOM.png" alt="House of Magnets" width="320" height="65" style="border:none; outline:none; text-decoration:none;"></a></div></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="content" style="padding-bottom:30px; text-align: center;">
+                    <h1>Change your subscriptions</h1>
+                    <p>Choose to only receive the types of emails you want to receive.</p>
+                    <table width="775" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td style="padding-bottom:10px; ">&nbsp;</td>
+                                <td style="padding:0 30px 30px 10px; ">&nbsp;</td>
+                                <td width="85" align="center" style="padding-bottom:0px; font-family: 'Droid Sans', sans-serif; font-weight: normal; font-size: 11px;  ">
+                                    SEND<br>
+                                    WEEKLY
+                                </td>
+                                <td width="85" align="center" style="padding-bottom:0px; font-family: 'Droid Sans', sans-serif; font-weight: normal; font-size: 11px;  ">
+                                    SEND<br>
+                                    MONTHLY
+                                </td>
+                                <td width="85" align="center" style="padding-bottom:0px; font-family: 'Droid Sans', sans-serif; font-weight: normal; font-size: 11px;  ">
+                                    <br>
+                                    UNSUBSCRIBE
+                                </td>
+                            </tr>
+
+                            @if (Model.ShowLists.Count > 0)
+                            {
+                                <input type="hidden" id="SubscribedMaster" name="SubscribedMaster" value="@Model.subscribeStatusMaster" />
+
+                                foreach (var item in Model.ShowLists)
+                                {
+                                    <tr>
+                                        <td width="75" style="padding:15px 0px;"><img src="@item.ListImage" width="75" height="68" alt="Sales & Promotions" /></td>
+                                        <td align="left" class="content" style="">
+                                            <p class="headline">
+                                                @item.ListHeader
+                                            </p>
+                                            <p>@item.ListDetails</p>
+                                        </td>
+
+                                        @if (item.SendWeekly == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (item.Master == true)
+                                                    {
+                                                        if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.listSubscribeStatus == true)
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" />
+                                                        }
+                                                    }
+                                                    <label for="@item.Id+SendWeekly"><span></span></label>
+                                                </div>
+                                            </td>
+                                        }
+                                        @if (item.SendMonthly == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
+                                                    {
+                                                    <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                    <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" />
+                                                    }
+                                                    <label for="@item.Id+SendMonthly"><span></span></label>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+
+                                                </div>
+                                            </td>
+                                        }
+                                        @if (item.Unsubscribe == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (item.Master == true)
+                                                    {
+                                                        if (Model.ContactPref.subscribeStatus == "unsubscribed")
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.listSubscribeStatus == false)
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" />
+                                                        }
+                                                    }
+                                                    <label for="@item.Id+Unsubscribe"><span></span></label>
+                                                </div>
+                                            </td>
+
+                                        }
+                                    </tr>
+
+                                    if (item.Master == true)
+                                    {
+                                        <input type="hidden" id="MasterID" name="MasterID" value="@item.Id" />
+                                        <input type="hidden" id="WebsiteMaster" name="WebsiteMaster" value="@item.ListWebsite" />
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" id="ChildID" name="ChildID" value="@item.Id" />
+                                    }
+
+                                    <input type="hidden" id="@item.Id+ListTag" name="@item.Id+ListTag" value="@item.ListTag" />
+                                }
+                            }
+
+
+                            <tr>
+                                <td colspan="7" align="center" style="padding:15px 0px; font-family: 'Droid Sans', sans-serif; font-weight: normal; color: #333333; line-height: 17px; font-size: 14px; border-bottom: 1px solid #d1d1d1; ">Signup For Our Partner Site</td>
+                            </tr>
+
+
+                            @if (Model.ShowPartnerLists.Count > 0)
+                            {
+                                <input type="hidden" id="SubscribedPartner" name="SubscribedPartner" value="@Model.subscribeStatusPartner" />
+
+                                foreach (var item in Model.ShowPartnerLists)
+                                {
+                                    <tr>
+                                        <td width="75" style="padding:15px 0px;"><img src="@item.ListImage" width="75" height="68" alt="Sales & Promotions" /></td>
+                                        <td align="left" class="content" style="">
+                                            <p class="headline">
+                                                @item.ListHeader
+                                            </p>
+                                            <p>@item.ListDetails</p>
+                                        </td>
+
+                                        @if (item.SendWeekly == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (item.Master == true)
+                                                    {
+                                                        if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.listSubscribeStatus == true)
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" />
+                                                        }
+                                                    }
+                                                    <label for="@item.Id+SendWeekly"><span></span></label>
+                                                </div>
+                                            </td>
+                                        }
+                                        @if (item.SendMonthly == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
+                                                    {
+                                                        <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" />
+                                                    }
+                                                    <label for="@item.Id+SendMonthly"><span></span></label>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+
+                                                </div>
+                                            </td>
+                                        }
+                                        @if (item.Unsubscribe == true)
+                                        {
+                                            <td width="85" align="center" valign="top" style="padding:0px;">
+                                                <div class="radio">
+                                                    @if (item.Master == true)
+                                                    {
+                                                        if (Model.ContactPref.subscribeStatus == "unsubscribed")
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.listSubscribeStatus == false)
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" />
+                                                        }
+                                                    }
+                                                    <label for="@item.Id+Unsubscribe"><span></span></label>
+                                                </div>
+                                            </td>
+
+                                        }
+                                    </tr>
+
+                                    if (item.Master == true)
+                                    {
+                                        <input type="hidden" id="MasterPartnerID" name="MasterPartnerID" value="@item.Id" />
+                                        <input type="hidden" id="WebsitePartner" name="WebsitePartner" value="@item.ListWebsite" />
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" id="ChildPartnerID" name="ChildPartnerID" value="@item.Id" />
+                                    }
+
+                                    <input type="hidden" id="@item.Id+ListTag" name="@item.Id+ListTag" value="@item.ListTag" />
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:30px">
+                    <table width="200" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                        <tbody>
+                            <tr>
+                                <td><input class="button-styler" id="submit" type="submit" value="SAVE MY PREFERENCES" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+</body>
+</html>

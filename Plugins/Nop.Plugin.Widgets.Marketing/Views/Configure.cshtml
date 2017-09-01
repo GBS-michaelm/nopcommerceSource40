@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Widgets.Marketing.Models;
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <b>@T("Plugins.Widgets.Marketing.Notes")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.LoginId_OverrideForStore, model => model.LoginId, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.LoginId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LoginId)
+                @Html.ValidationMessageFor(model => model.LoginId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Password_OverrideForStore, model => model.Password, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.Password):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSMarketingWebServiceAddress_OverrideForStore, model => model.GBSMarketingWebServiceAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSMarketingWebServiceAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSMarketingWebServiceAddress)
+                @Html.ValidationMessageFor(model => model.GBSMarketingWebServiceAddress)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+
+}
