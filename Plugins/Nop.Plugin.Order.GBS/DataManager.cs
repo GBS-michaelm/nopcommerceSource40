@@ -46,6 +46,18 @@ namespace Nop.Plugin.DataAccess.GBS
             this.dbConnection = new SqlConnection();
             dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
         }
+        public DBManager( string connectionString)
+        {
+            this.dbConnection = new SqlConnection();
+
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                dbConnection.ConnectionString = connectionString;
+            } else
+            {
+                dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
+            }
+        }
 
         public void Open()
         {

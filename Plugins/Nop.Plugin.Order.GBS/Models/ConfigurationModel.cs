@@ -32,5 +32,8 @@ namespace Nop.Plugin.Order.GBS.Models
         public string GBSStoreNamePrepend { get; set; }
         public bool GBSStoreNamePrepend_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.Order.GBS.Fields.HOMConnectionString")]
+        public string HOMConnectionString { get; set; }
+        public bool HOMConnectionString_OverrideForStore { get; set; }
     }
 }

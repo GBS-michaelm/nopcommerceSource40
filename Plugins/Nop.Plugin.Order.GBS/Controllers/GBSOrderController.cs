@@ -72,25 +72,24 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 {
                     model.orderItemID = Int32.Parse(request.QueryString["orderitemid"]);
                     var productType = request.QueryString["productType"];
+                    var webPlatform = request.QueryString["webPlatform"];
                     model.productType = productType;
+                    model.webPlatform = webPlatform;
 
                     IWorkContext _workContext = EngineContext.Current.Resolve<IWorkContext>();
 
                     var customerID = _workContext.CurrentCustomer.Id;
                     model.canvasServerBaseURL = _ccSettings.ServerHostUrl;
                     var tempModel = new CanvasProductModel();
-                    CcDesign ccDesign = GetCcDesign(model.orderItemID, out tempModel);
+                    string stateID = GetCcStateID(model.orderItemID, productType, out tempModel, webPlatform);
 
                     model.userID = tempModel.userID;
                     model.username = tempModel.username;
                     model.gbsOrderId = tempModel.gbsOrderId;
 
-                    dynamic designData = JsonConvert.DeserializeObject<Object>(ccDesign.Data);
-
-
-                    model.stateID = designData[productType + "-stateId"];
+                    model.stateID = stateID;
                     //get the product file names and put them in the model.
-                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID);
+                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID, webPlatform);
                     GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                     string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceBaseAddress;
                     model.productFileModels = FileService.populateProductFilesFromProductionFileName(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
@@ -119,6 +118,10 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                 string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
                 string response = FileService.CopyFilesToProduction(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
+                if (response.Contains("WebServices"))
+                {
+                    throw new Exception(response);
+                }
                 return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml");
             }
             catch (Exception ex)
@@ -128,61 +131,152 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 throw ex;
             }
         }
-
-        public List<ProductFileModel> GetProductFiles(int orderItemID)
+        public string getEnvironment()
         {
-            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-            paramDicEx.Add("@nopOrderItemID", orderItemID);
+            var canvaseBaseUrl = _ccSettings.ServerHostUrl;
 
-            DBManager manager = new DBManager();
-            string select = "EXEC usp_getTblNOPProductionFiles_byOrderItemId @nopOrderItemID";
-            DataView result = manager.GetParameterizedDataView(select, paramDicEx);
+            string env = "LIVE";
+            if (canvaseBaseUrl.Contains("canvasDev"))
+            {
+                env = "DEV";
+            }else if (canvaseBaseUrl.Contains("canvasTest"))
+            {
+                env = "TEST";
+            }
+            else if (canvaseBaseUrl.Contains("canvasStage"))
+            {
+                env = "STAGE";
+            }
+            return env;
+        }
+        public List<ProductFileModel> GetProductFiles(int orderItemID, string webPlatform = "NOP")
+        {
+            var environment = getEnvironment();
             List<ProductFileModel> productFiles = new List<ProductFileModel>();
-            if (result.Count > 0)
+            switch (webPlatform)
             {
-                foreach (DataRowView row in result)
-                {
-                    ProductFileModel file = new ProductFileModel();
-                    file.product.productType = (string)row["ProductType"];
-                    file.product.productionFileName = (string)row["FileName"];
-                    productFiles.Add(file);
-                }
+                case "NOP":
+                    {
+                        Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                        paramDicEx.Add("@nopOrderItemID", orderItemID);
 
-                return productFiles;
+                        DBManager manager = new DBManager();
+                        string select = "EXEC usp_getTblNOPProductionFiles_byOrderItemId @nopOrderItemID";
+                        DataView result = manager.GetParameterizedDataView(select, paramDicEx);
+
+                        if (result.Count > 0)
+                        {
+                            foreach (DataRowView row in result)
+                            {
+                                ProductFileModel file = new ProductFileModel();
+                                file.product.productType = (string)row["ProductType"];
+                                file.product.productionFileName = (string)row["FileName"];
+                                productFiles.Add(file);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Can't find production files for order item - " + orderItemID);
+                        }
+                        break;
+                    }
+
+                default:
+                    {
+                        Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                        paramDicEx.Add("@OPID", orderItemID);
+
+                        DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
+                        string select = "EXEC usp_getCanvasStateFileInfo @OPID";
+                        DataView orderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
+                        if (orderItemResult.Count > 0)
+                        {
+                            foreach (DataRowView row in orderItemResult)
+                            {
+                                ProductFileModel file = new ProductFileModel();
+                                file.product.productionFileName = (string)row["frontFile"];
+                                productFiles.Add(file);
+                                file = new ProductFileModel();
+                                file.product.productionFileName = (string)row["backFile"];
+                                productFiles.Add(file);
+                            }
+
+                        }
+                        else
+                        {
+                            throw new Exception("Can't find order item - " + orderItemID);
+                        }
+
+                        break;
+                    }
             }
-            else
-            {
-                throw new Exception("Can't find production files for order item - " + orderItemID);
-            }
+            return productFiles;
 
         }
-        public CcDesign GetCcDesign(int orderItemID, out CanvasProductModel designModel)
+        public string GetCcStateID(int orderItemID,  string productType, out CanvasProductModel designModel, string webPlatform = "NOP")
         {
-
-            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-            paramDicEx.Add("@nopOrderItemID", orderItemID);
-            designModel = new CanvasProductModel();
-
-            DBManager manager = new DBManager();
-            string select = "EXEC usp_getTblNOPOrderItem_byOrderItemId @nopOrderItemID";
-            DataView nopOrderItemResult =  manager.GetParameterizedDataView(select, paramDicEx);
-            int ccId = 0;
-            if (nopOrderItemResult.Count > 0)
+            var environment = getEnvironment();
+            string stateID = string.Empty;
+            switch (webPlatform)
             {
-                ccId = (int) nopOrderItemResult[0]["ccId"];
-                designModel.userID = (int) nopOrderItemResult[0]["CustomerId"];
-                designModel.username = (string)nopOrderItemResult[0]["Username"];
-                designModel.gbsOrderId = (string)nopOrderItemResult[0]["gbsOrderID"];
+                case "NOP":
+                    {
+                        Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                        paramDicEx.Add("@nopOrderItemID", orderItemID);
+                        designModel = new CanvasProductModel();
 
+                        DBManager manager = new DBManager();
+                        string select = "EXEC usp_getTblNOPOrderItem_byOrderItemId @nopOrderItemID";
+                        DataView nopOrderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
+                        int ccId = 0;
+                        if (nopOrderItemResult.Count > 0)
+                        {
+                            ccId = (int)nopOrderItemResult[0]["ccId"];
+                            designModel.userID = "nopcommerce_"+ nopOrderItemResult[0]["CustomerId"];
+                            designModel.username = (string)nopOrderItemResult[0]["Username"];
+                            designModel.gbsOrderId = (string)nopOrderItemResult[0]["gbsOrderID"];
+
+                        }
+                        else
+                        {
+                            throw new Exception("Can't find order item - " + orderItemID);
+                        }
+
+                        var design = _ccService.GetDesign(ccId);
+                        dynamic designData = JsonConvert.DeserializeObject<Object>(design.Data);
+
+                        stateID = designData[productType + "-stateId"];
+                        break;
+                    }
+
+                default:
+                    {
+                        Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                        paramDicEx.Add("@OPID", orderItemID);
+                        designModel = new CanvasProductModel();
+
+                        DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
+                        string select = "EXEC usp_getCanvasStateFileInfo @OPID";
+                        DataView orderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
+                        if (orderItemResult.Count > 0)
+                        {
+                            stateID = (string) orderItemResult[0]["stateID"];
+                            designModel.userID = (string) orderItemResult[0]["UserID"];
+                            designModel.username = (string) orderItemResult[0]["Username"];
+                            designModel.gbsOrderId = (string) orderItemResult[0]["gbsOrderID"];
+
+                        }
+                        else
+                        {
+                            throw new Exception("Can't find order item - " + orderItemID);
+                        }
+
+                        break;
+                    }
             }
-            else
-            {
-                throw new Exception("Can't find order item - " + orderItemID);
-            }
 
-            var design = _ccService.GetDesign(ccId);
 
-            return design;
+            return stateID;
         }
 
 

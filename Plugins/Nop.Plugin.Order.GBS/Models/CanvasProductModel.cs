@@ -14,9 +14,10 @@ namespace Nop.Plugin.Order.GBS.Models
         public string stateID { get; set; }
         public string productType { get; set; }
         public int orderItemID { get; set; }
-        public int userID { get; set; }
+        public string userID { get; set; }
         public string gbsOrderId { get; set; }
         public string username { get; set; }
+        public string webPlatform { get; set; }
         public IList<ProductFileModel> productFileModels { get; set; }
 
         public CanvasProductModel()

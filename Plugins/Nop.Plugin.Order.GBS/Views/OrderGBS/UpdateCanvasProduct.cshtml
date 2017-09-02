@@ -37,7 +37,7 @@
         configuration = { widgets: { FinishButton: { mode: "Disabled" } }, rendering: { hiResOutputToSeparateFiles: true } };
 
         var productType = "@productType";
-        configuration.userId = "nopcommerce_@Model.userID";
+        configuration.userId = "@Model.userID";
         var ccFiles = @Html.Raw(@ccFilesJSON);
 
         var editorFrame = $("#editorFrame");
@@ -166,11 +166,12 @@
             $("#finishOrderPage #hiResLinks").empty();
             $.each(renderData.hiResOutputUrls, function (i, val) {
                 $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + val + '">Download link #' + i + '</a>, ');
-                ccFiles.forEach(function(file) {
+                ccFiles.forEach(function(file,j) {
                     var endStr = val.slice(-7);
                     var index = endStr.substring(0,1);
                     switch(productType){
                         case "notecard":
+                            if (file.product.productType != "notecard"){delete ccFiles[j]; break;}
                             switch(file.product.surface){
                                 case "front":
                                     if (index == 0) {file.product.hiResPDFURL = val;}
@@ -185,6 +186,7 @@
                             }
                             break;
                         case "envelope":
+                            if (file.product.productType != "envelope"){delete ccFiles[j]; break;}
                             switch(file.product.surface){
                                 case "F":
                                     if (index == 0) {file.product.hiResPDFURL = val;}
@@ -196,6 +198,15 @@
                             }
                             break;
                         default:
+                            switch(file.product.surface){
+                                case "front":
+                                    if (index == 0) {file.product.hiResPDFURL = val;}
+                                    break;
+                                case "back":
+                                    if (index == 1) {file.product.hiResPDFURL = val;}
+                                    break;
+                                default:
+                            }
                     }
                 });
             });

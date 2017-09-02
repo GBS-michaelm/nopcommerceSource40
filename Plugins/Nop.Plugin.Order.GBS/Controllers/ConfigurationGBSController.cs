@@ -43,13 +43,14 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
             var model = new ConfigurationModel
             {
-                
+
                 LoginId = GBSOrderSettings.LoginId,
                 Password = GBSOrderSettings.Password,
                 GBSOrderWebServiceAddress = GBSOrderSettings.GBSOrderWebServiceAddress,
                 GBSPrintFileWebServiceAddress = GBSOrderSettings.GBSPrintFileWebServiceAddress,
                 GBSPrintFileWebServiceBaseAddress = GBSOrderSettings.GBSPrintFileWebServiceBaseAddress,
                 GBSStoreNamePrepend = GBSOrderSettings.GBSStoreNamePrepend,
+                HOMConnectionString = GBSOrderSettings.HOMConnectionString,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -62,7 +63,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 model.GBSPrintFileWebServiceAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSPrintFileWebServiceAddress, storeScope);
                 model.GBSPrintFileWebServiceBaseAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSPrintFileWebServiceBaseAddress, storeScope);
                 model.GBSStoreNamePrepend_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSStoreNamePrepend, storeScope);
-
+                model.HOMConnectionString_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.HOMConnectionString, storeScope);
             }
 
             return View("~/Plugins/Order.GBS/Views/OrderGBS/Configure.cshtml", model);
@@ -88,12 +89,13 @@ namespace Nop.Plugin.Order.GBS.Controllers
             GBSOrderSettings.GBSPrintFileWebServiceAddress = model.GBSPrintFileWebServiceAddress;
             GBSOrderSettings.GBSPrintFileWebServiceBaseAddress = model.GBSPrintFileWebServiceBaseAddress;
             GBSOrderSettings.GBSStoreNamePrepend = model.GBSStoreNamePrepend;
-            
+            GBSOrderSettings.HOMConnectionString = model.HOMConnectionString;
+
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            
+
             if (model.LoginId_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSOrderSettings, x => x.LoginId, storeScope, false);
             else if (storeScope > 0)
@@ -123,6 +125,11 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 _settingService.SaveSetting(GBSOrderSettings, x => x.GBSStoreNamePrepend, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSOrderSettings, x => x.GBSStoreNamePrepend, storeScope);
+
+            if (model.HOMConnectionString_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSOrderSettings, x => x.HOMConnectionString, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSOrderSettings, x => x.HOMConnectionString, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
