@@ -21,8 +21,14 @@ namespace Nop.Plugin.Logging.GBS.Logging
         }
         public override Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
-            HttpBrowserCapabilities bc = HttpContext.Current.Request.Browser;
-            fullMessage += "Browser attributes - User Agent: " + bc.Browser + "; Version: " + bc.Version + "; Type: " + bc.Type + "; IsMobileDevice: " + bc.IsMobileDevice + "; DeviceManufacturer: " + bc.MobileDeviceManufacturer + "; DeviceModel: " + bc.MobileDeviceModel + "; ScreenWidth: " + bc.ScreenPixelsWidth + "; ScreenHeight: " + bc.ScreenPixelsHeight;
+            try
+            {
+                HttpBrowserCapabilities bc = HttpContext.Current.Request.Browser;
+                fullMessage += "Browser attributes - User Agent: " + bc.Browser + "; Version: " + bc.Version + "; Type: " + bc.Type + "; IsMobileDevice: " + bc.IsMobileDevice + "; DeviceManufacturer: " + bc.MobileDeviceManufacturer + "; DeviceModel: " + bc.MobileDeviceModel + "; ScreenWidth: " + bc.ScreenPixelsWidth + "; ScreenHeight: " + bc.ScreenPixelsHeight;
+            }catch (Exception exx)
+            {
+
+            }
             return base.InsertLog(logLevel, shortMessage, fullMessage, customer);
 
         }
