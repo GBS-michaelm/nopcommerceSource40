@@ -10723,4 +10723,72 @@ div .mega-menu {
     display: none;
 }
 
+.Vertical {
+    background-size: 100%;
+    /*width: 250px;
+    height: 250px;*/
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
 
+.gallery .Vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
+
+.product-grid .Vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
+
+.product-grid .pictures .Vertical img {
+    height: 200px;
+    left: 36px;
+    position: absolute;
+    top: 40px;
+    width: 152px;
+}
+
+
+.Horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .Horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .pictures .Horizontal img {
+    height: 150px;
+    left: 41px;
+    position: absolute;
+    top: 36px;
+    width: 198px;
+}
+
+.product-details-page .gallery .Horizontal img {
+    height: 343px;
+    left: 92px;
+    position: absolute;
+    top: 80px;
+    width: 453px;
+}
