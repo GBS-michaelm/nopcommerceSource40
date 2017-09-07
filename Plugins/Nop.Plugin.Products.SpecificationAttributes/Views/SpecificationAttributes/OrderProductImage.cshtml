@@ -1,14 +1,14 @@
 ﻿@model Nop.Web.Models.Catalog.ProductOverviewModel
 @{
     Layout = "";
-    string color = ViewBag.DefaultColor;
+    string fill = ViewBag.fill;
     string className = ViewBag.ClassName;
     int productId = ViewBag.ProductId;
     string sename = ViewBag.seName;
 
 }
 <div class="product-item clearfix" data-productid="@productId">
-    <div class="picture" style="@color">
+    <div class="picture" style="@fill">
         <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.DefaultPictureModel.Title" class="@className">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>

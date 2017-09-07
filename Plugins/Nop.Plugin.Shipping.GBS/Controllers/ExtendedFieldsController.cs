@@ -17,9 +17,10 @@ using Antlr.Runtime.Misc;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Nop.Plugin.Shipping.GBS.Infrastructure;
+//using Nop.Plugin.Shipping.GBS.Infrastructure;
 using Nop.Services.Configuration;
 using Nop.Plugin.DataAccess.GBS;
+using System.Web.Services;
 
 namespace Nop.Plugin.Shipping.GBS.Controllers
 {
@@ -61,19 +62,20 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
         //    base.Initialize(requestContext);
         //}
 
-        public ActionResult ProductExtendedFields(int productId)
+        public string AdminTab(int id)
         {
+
             _TableName = _localizationService.GetLocaleStringResourceByName("Plugins.Shipping.GBS.Product.Table.Name").ResourceValue.ToString();
 
             ProductGBSModel model = new ProductGBSModel();
-
-            var product = _productService.GetProductById(productId);
+          
+            var product = _productService.GetProductById(id);
 
             // Get the value from Database using Web API
-            if (product != null)
+            if (product != null && _TableName != null)
             {
                 // Get values from GBS Product TBL in nop
-                model = DataManager.GetGBSShippingCategory(productId, _TableName);
+                model = DataManager.GetGBSShippingCategory(id, _TableName);
                 model.ShippingCategoryA = model.ShippingCategoryA == null ? "" : model.ShippingCategoryA.Trim();
                 model.ShippingCategoryB = model.ShippingCategoryB == null ? "" : model.ShippingCategoryB.Trim();
                 var _flag = model.ProductID == 0 ? "True" : "False";
@@ -81,13 +83,64 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
                 // Save value to the Nop Attribute for later use, so we don't have to make another call to DB
                 var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
                 genericAttributeService.SaveAttribute(product, "NewItemFlag", _flag);
-                
+
                 //Get value from NOP Arributes, which stored data in nop table   :: For furture reference
                 //product.GetAttribute<string>("ShippingClass");
             }
-
-            return View(model);
+            var contents = Utils.GetRazorViewAsString(model, "~/Plugins/Shipping.GBS/Views/ExtendedFields/ProductExtendedFields.cshtml");
+            return contents;
         }
+
+        [HttpGet]
+        public JsonResult SaveShippingCategories(string ShippingCategoryA, string ShippingCategoryB, string ProductID)
+        {
+            int productID = int.Parse(ProductID);
+            ProductGBSModel _nopProductModel = new ProductGBSModel
+            {
+                 ProductID = productID,
+                 ShippingCategoryA = ShippingCategoryA,
+                 ShippingCategoryB = ShippingCategoryB
+            };
+            string status = "";
+            var product = EngineContext.Current.Resolve<IProductService>().GetProductById(_nopProductModel.ProductID);
+            var Tproduct = EngineContext.Current.Resolve<IProductService>().GetProductById(1);
+            //Save value for the shipping class
+            if (product != null)
+            {
+                var _flag = product.GetAttribute<string>("NewItemFlag");
+                _TableName = Tproduct.GetAttribute<string>("TableName");
+                status = _flag == "True" ? Add(_nopProductModel) : Update(_nopProductModel);
+            }
+         return Json(status, JsonRequestBehavior.AllowGet);
+        }
+
+        //public ActionResult ProductExtendedFields(int productId)
+        //{
+        //    _TableName = _localizationService.GetLocaleStringResourceByName("Plugins.Shipping.GBS.Product.Table.Name").ResourceValue.ToString();
+
+        //    ProductGBSModel model = new ProductGBSModel();
+
+        //    var product = _productService.GetProductById(productId);
+
+        //    // Get the value from Database using Web API
+        //    if (product != null)
+        //    {
+        //        // Get values from GBS Product TBL in nop
+        //        model = DataManager.GetGBSShippingCategory(productId, _TableName);
+        //        model.ShippingCategoryA = model.ShippingCategoryA == null ? "" : model.ShippingCategoryA.Trim();
+        //        model.ShippingCategoryB = model.ShippingCategoryB == null ? "" : model.ShippingCategoryB.Trim();
+        //        var _flag = model.ProductID == 0 ? "True" : "False";
+
+        //        // Save value to the Nop Attribute for later use, so we don't have to make another call to DB
+        //        var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+        //        genericAttributeService.SaveAttribute(product, "NewItemFlag", _flag);
+                
+        //        //Get value from NOP Arributes, which stored data in nop table   :: For furture reference
+        //        //product.GetAttribute<string>("ShippingClass");
+        //    }
+
+        //    return View("~/Plugins/Shipping.GBS/Views/ExtendedFields/ProductExtendedFields.cshtml", model);
+        //}
 
         [AdminAuthorize]
         [ChildActionOnly]
@@ -229,5 +282,15 @@ namespace Nop.Plugin.Shipping.GBS.Controllers
             }
         }
 
+        #region Helper
+        public string Add(ProductGBSModel ProductgbsModel)
+        {
+           return DataManager.AddGBSShippingCategory(ProductgbsModel, _TableName);
+        }
+        public string Update(ProductGBSModel ProductgbsModel)
+        {
+           return  DataManager.UpdateGBSShippingCategory(ProductgbsModel, _TableName);
+        }
+        #endregion
     }
 }

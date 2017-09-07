@@ -7,4 +7,4 @@ Author: N.Anj
 DisplayOrder: 1
 FileName: Nop.Plugin.Products.SpecificationAttributes.dll
 Description: This plugin enables product specification attributes
-LimitedToStores: 6
+LimitedToStores: 7,6

@@ -14,7 +14,6 @@ Shipping.USPS
 Shipping.UPS
 Tickets.System
 Shipping.Director
-Payments.CheckMoneyOrder
 Payments.AuthorizeNet
 Order.GBS
 Payments.GBS
@@ -28,8 +27,8 @@ PriceCalculation.GBS
 Pickup.PickupInStore
 Widgets.CustomersCanvas
 Shipping.FixedOrByWeight
-Nop.Plugin.Shipping.GBS
 SevenSpikes.Nop.Plugins.MegaMenu
-Products.SpecificationAttributes
 Nop.Plugin.Api
 Logging.GBS
+Products.SpecificationAttributes
+Nop.Plugin.Shipping.GBS

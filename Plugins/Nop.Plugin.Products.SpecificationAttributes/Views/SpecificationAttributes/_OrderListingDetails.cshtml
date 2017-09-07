@@ -1,15 +1,14 @@
 ﻿@model Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel
 @using Nop.Plugin.DataAccess.GBS;
 
-
-
 <div class="order-list">
+    <span class="hidden"> @Model.Monthvalue</span>
     @if (Model.Items.Count > 0)
     {
         <div class="orderhead-section">
             <div class="head-col1">
                 <span class="order-label">Order Place</span>
-                <div class="order-date">@T("Account.CustomerOrders.OrderDate"): @Model.CreatedOn.ToString()</div>
+                <div  class="order-date">@T("Account.CustomerOrders.OrderDate"): @Model.CreatedOn.ToString()</div>
             </div>
             <div class="head-col2">
                 <span class="order-label">Total</span>

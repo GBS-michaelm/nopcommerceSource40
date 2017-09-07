@@ -95,7 +95,6 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="GBSOrderSettings.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
-    <Compile Include="Models\CanvasProductModel.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="MyOrderServicePlugin.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
@@ -121,9 +120,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Views\OrderGBS\UpdateCanvasProduct.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
