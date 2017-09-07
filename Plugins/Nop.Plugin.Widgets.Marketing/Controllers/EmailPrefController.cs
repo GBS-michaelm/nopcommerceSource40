@@ -74,7 +74,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
 
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
-            string select = "SELECT * FROM EmailLists WHERE ListWebsite='HOM' AND Active=1";
+            string select = "EXEC usp_getEmailLists 'HOM'";
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);
 
             if (dView.Count > 0)
@@ -123,7 +123,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
 
             DBManager dbmanager2 = new DBManager();
             Dictionary<string, string> paramDic2 = new Dictionary<string, string>();
-            string select2 = "SELECT * FROM EmailLists WHERE ListWebsite='NCC' AND Active=1";
+            string select2 = "EXEC usp_getEmailLists 'NCC'";
             DataView dView2 = dbmanager2.GetParameterizedDataView(select2, paramDic2);
 
             if (dView2.Count > 0)
