@@ -12,9 +12,7 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 }
 @{
-
     
-
     //current category ID
     int currentCategoryId = 0;
     if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
@@ -22,8 +20,7 @@
     {
         currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
     }
-
-
+    
     //current manufacturer ID
     int currentManufacturerId = 0;
     if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
@@ -31,8 +28,7 @@
     {
         currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
     }
-
-
+    
     //current product ID
     int currentProductId = 0;
     if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
@@ -41,7 +37,6 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-
 
 @{
     string id = @Model.Id.ToString();
@@ -78,8 +73,7 @@
     string bottomText = "Can't decide? Let us help you...";
     string backgroundColor = "";
     bool hasTeams = false;
-
-
+    
     if (specAttrAndCategoryDataView.Count > 0)
     {
 
@@ -98,7 +92,7 @@
         string selectCategoryData = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
         categoryDataView = manager.GetParameterizedDataView(selectCategoryData, categoryIdDic);
 
-        if(categoryDataView.Count > 0)
+        if (categoryDataView.Count > 0)
         {
             h1 = !(string.IsNullOrEmpty(categoryDataView[0]["H1"].ToString())) ? categoryDataView[0]["H1"].ToString() : Model.Name;
             h2 = categoryDataView[0]["H2"].ToString();
@@ -112,8 +106,6 @@
     }
 
 }
-
-
 
 @if (IsSectionDefined("Breadcrumb"))
 {
@@ -148,9 +140,6 @@
         </div>
 }
 
-
-
-
     <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">
                 
         @* h1 from db *@
@@ -162,26 +151,15 @@
         </div>
 
     </div>
-
-
- 
-
-
-    
-       
-        @*<p>team bod, hiya</p>*@
+   
     @{
-
         StringBuilder teamHtml = new StringBuilder();
         string rawTeam = "";
 
         if (@hasTeams == true)
         {
-            //get specification attr list with teams *@
-
-
+            //get specification attr list with teams
             //foreach specAttr, ex.professional team, college team, conference etc
-
             var specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
 
             teamHtml.Append("<main>");
@@ -191,36 +169,25 @@
             {
                 IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
                 SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-
-                //teamHtml.Append("<p id='gatewayLabels'>");
+                                
                 teamHtml.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
                 teamHtml.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + specificationAttr.Name + "</label>");
-                //teamHtml.Append("</p>");
-
-
+               
             }
-
-            //teamHtml.Append("<div id='innerMain'>");
 
             //tab content
             for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
             {
                 IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
                 SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-                ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;
-
-                //teamHtml.Append("<p>Tite of spec attr : " + specificationAttr.Name + "</p>");
-                //teamHtml.Append("<p> Teams </p>");
+                ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;                              
 
                 teamHtml.Append("<section id='content" + (i + 1) + "'><p>");
-
 
                 int cur = 1;
                 foreach (var option in optionList)
                 {
-                    //attr = option.Name;
-                    //teamHtml.Append("<a href='#'>" + option.Name + "</a><br />");
-
+                    
                     if (cur % 8 == 0)
                     {
                         teamHtml.Append("<p class='inner-team-list'>");
@@ -229,7 +196,7 @@
                     {
                         teamHtml.Append("<a class='team-from-list' href='#'>" + option.Name + "</a><br />");
                     }
-                    if(cur % 8 == 7)
+                    if (cur % 8 == 7)
                     {
                         teamHtml.Append("</p>");
                     }
@@ -237,37 +204,25 @@
                     cur++;
 
                 }
-
-
+                
                 teamHtml.Append("</section>");
                 //teamHtml.Append("<br />");
 
             }
 
-            teamHtml.Append("</main>"); //</div>
+            teamHtml.Append("</main>");
 
 
             rawTeam = teamHtml.ToString();
-
-            //create tabs 
-
-
-
+                        
         }
     }
+
     
-
-        @* cache team selection, session *@
-
-        @* determine if page has team list *@
-
-
-
     <div id="selectTeamDiv" style="display: none">
         <p id="selectedTeam"></p><a id="changeSelectedTeam">(Change)</a>
     </div>
     
-
     <div>salewidgethere</div>
     <div id="gateway-body" style="background-color : @backgroundColor;">
         <div id="gateway-body-inner">
@@ -276,85 +231,70 @@
 
             @* background top text from db *@
             <p id="gatewayTopText">
-
                 @topText
-
             </p>
 
-            <div id="gateway-inner">
-
-           
-
+            <div id="gateway-inner">          
 
                 <div id="gatewayLayersContainer">
                     @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
                     <div id="teamSelect">
                         @Html.Raw(rawTeam);
                     </div>
+
                     <div id="gatewayWYSIWYG" class="">
                         @if (!String.IsNullOrWhiteSpace(Model.Description))
                         {
-                            @*wysiwyg from nop*@
+                            @*wysiwyg from nop admin*@
                             <p id="" class="list-content">
                                 @Html.Raw(Model.Description)
                             </p>
                         }
                     </div>
+
                     @* foreground image from db *@
                     <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
                     @* background images from db *@
-                    @*<img id="gatewayBackgroundImage" src="@backgroundImage" />*@
-                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>
-                
+                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>               
                 </div>
             
-                @* background bottom text from db *@
-            
-
             </div>
             <p id="gatewayBottomText">
-
                 @bottomText;
-
             </p>
         </div>
     </div>
-
-
-    
-
 
 @{
 
     if (@hasTeams == true)
     {
-        //set something to true for js to check
+        //way for js to know gateway is a team page version
         <input id="hasTeam" type="hidden" value="true" />
     }
 
-
+        
 }
         <script>
-            //login for hiding when is sprt team selection vs just prod type selection
-
+            
             $(document).ready(function () {
-
-            @* hide gateway body section, show team list section *@
-
-                
+                            
                 //hide gateway show team box
                 if ($("#hasTeam").val() == "true") {
                     $("#gatewayWYSIWYG").hide();
                     $("#teamSelect").show();
+                    $("#label1").click();
                 } else {
                     $("#teamSelect").remove();
                 }
 
                 $(".team-from-list").click(function () {
-
-                    //console.log("team selected " + $(this).text());
                     
                     $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
+
+                    
+                    @* cache team selection, session *@
+                    SetTeam($(this).text());
 
                     $("#gatewayWYSIWYG").show();
                     $("#teamSelect").hide();
@@ -373,21 +313,21 @@
 
                 $("#cssChange").click(function() {
 
-                    console.log("cur h1 test");
+                    //console.log("cur h1 test");
 
                     var type = $("#gatewayH1").html();
 
-                    console.log(type);
+                    //console.log(type);
 
                     switch (type) {
                         case "Specialty Magnets":
                             $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
                             $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
                             break;
-                        case "Football Schedule Magnets":
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
-                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
-                            break;
+
+                            
+
+
                         default:
                             $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
                             $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
@@ -396,7 +336,7 @@
                 });
 
 
-                //handle background color stretch 
+               
                 var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
                 CustomResize();
                 
@@ -405,11 +345,7 @@
 
                 function CustomResize() {
                     $(window).resize(obj, function () {
-
-                        console.log(obj.outer);
-                        console.log(obj.inner);
-
-
+                                                                       
                         var $c = $('.container'),
                             $w = $(obj.outer),
                             totalWidth = $('.footer').outerWidth(),
@@ -426,6 +362,7 @@
                         $(obj.inner).width($(".container").width());
 
                     });
+
                     $(window).resize();
                 }
 
@@ -437,15 +374,41 @@
                         var newHeight = parseInt($("." + currentWYSIWYG).height() + 180) + "px";
                         $("#gateway-body").height(newHeight);
                         $("#gateway-inner").height(newHeight);
+
+
+                        if ($("#gateway-body").height() > 900) {
+                            //football foreground image adjust, check if wysiwyg height is greater than a single rows height.
+                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports-multirow");
+                        }
+                        
                     } else {
                         $("#gateway-body").height($("#originalBodyHeight").val());
                         $("#gateway-inner").height($("#originalBodyHeight").val());
+                        
+                        $("#gatewayForegroundImage").removeClass("gateway-foreground-sports-multirow");
                     }
                     
                 }
 
-                
+                function SetTeam(team) {                   
+                    $(".team-handle").each(function () {
+                        //replace space with dash
+                        var current = $(this).attr("href");
+                        var teamNoSpace = team.replace(/\s+/g, '-');
 
+                        if(current.indexOf("?") >= 0){
+                            var splitURL = current.split('?');
+                            $(this).attr("href", splitURL[0] + "?team=" + teamNoSpace);
+                            console.log("split ver: " + splitURL[0] + "?team=" + teamNoSpace);
+
+                        }else{
+                            $(this).attr("href", current + "?team=" + teamNoSpace);
+                            console.log("new ver: " + current + "?team=" + teamNoSpace);
+                        }
+                        
+                    })                    
+                }
+                
                 $("#gateway-inner").height($("#gateway-body").height());
                 
                 $("#cssChange").click();
@@ -455,16 +418,32 @@
                 
                 $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
 
+                function HeightHandle() {
+                    
+                    console.log("height handle called");
+
+                    var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
+                    
+                    $("#gateway-body").height(newHeight);
+                    $("#gateway-inner").height(newHeight);
+                }
+
+                $(window).resize(HeightHandle);
+
+
+
+                //992px switches to mobileish screen
+
             });
 
-            
+
 
         </script>
 
 
 @{
     //Loading extra topics
-    
+
     if (!string.IsNullOrEmpty(@chart))
     {
         <div id="chartWrap">
@@ -550,3 +529,7 @@
         @Html.Widget("main_column_after")
     </div>
 @*</div>*@
+
+
+
+
