@@ -2995,6 +2995,62 @@ body .container{width:100%; }
 
 /* Back Ground Shapes CSS and URL Folder for the images nop.web->Content->Images->gbsThumbnailShapes*/
 
+/* Calendar-Pad-Peel-And-Stick-Top */
+.Calendar-Pad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
+}
+
+.gallery .Calendar-Pad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
+}
+
+.product-grid .Calendar-Pad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
+}
+
+.product-grid .pictures .Calendar-Pad-Peel-And-Stick-Top img {    
+    left: 52.5px;
+    position: absolute;
+    top: 14px;
+    width: 114px;
+}
+
+.product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top {
+    width: 570px;
+    height: 570px;
+}
+
+.product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top img {
+        
+    left: 119px;
+    position: absolute;
+    top: 33px;
+    width: 261px;
+}
+
+.product-variant-list .variant-picture .Calendar-Pad-Peel-And-Stick-Top img {    
+    left: 52px;
+    position: absolute;
+    top: 14px;
+    width: 114px;
+}
+
+
 /* Thumbnail BG Full */
 .thumbnail-bg_full {
     background-size: 100%;
