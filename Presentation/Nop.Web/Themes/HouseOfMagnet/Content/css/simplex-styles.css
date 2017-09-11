@@ -3023,7 +3023,7 @@ body .container{width:100%; }
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
 }
 
-.product-grid .pictures .Calendar-Pad-Peel-And-Stick-Top img {    
+.product-grid .pictures .Calendar-Pad-Peel-And-Stick-Top img {
     left: 52.5px;
     position: absolute;
     top: 14px;
@@ -3036,17 +3036,148 @@ body .container{width:100%; }
 }
 
 .product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top img {
-        
     left: 119px;
     position: absolute;
     top: 33px;
     width: 261px;
 }
 
-.product-variant-list .variant-picture .Calendar-Pad-Peel-And-Stick-Top img {    
+.product-variant-list .variant-picture .Calendar-Pad-Peel-And-Stick-Top img {
     left: 52px;
     position: absolute;
     top: 14px;
+    width: 114px;
+}
+
+/* Calendar-Pad-Peel-And-Stick-Top-8-pack, Notepad-Peel-And-Stick-Top-3-pack */
+.Calendar-Pad-Peel-And-Stick-Top-8-pack,
+.Notepad-Peel-And-Stick-Top-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-800.png') !important;
+}
+
+
+.product-variant-list .variant-picture .Calendar-Pad-Peel-And-Stick-Top-8-pack img,
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-3-pack img {
+    left: 11px;
+    position: absolute;
+    top: 21.5px;
+    width: 114px;
+}
+
+/* Calendar-Partial-Peel-And-Stick, Notepad-Peel-And-Stick-Top, Specialty-QuickStix */
+.Calendar-Partial-Peel-And-Stick,
+.Notepad-Peel-And-Stick-Top,
+.Specialty-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.gallery .Calendar-Partial-Peel-And-Stick,
+.gallery .Notepad-Peel-And-Stick-Top,
+.gallery .Specialty-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.product-grid .Calendar-Partial-Peel-And-Stick,
+.product-grid .Notepad-Peel-And-Stick-Top,
+.product-grid .Specialty-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.product-grid .pictures .Calendar-Partial-Peel-And-Stick img,
+.product-grid .pictures .Notepad-Peel-And-Stick-Top img,
+.product-grid .pictures .Specialty-QuickStix img {
+    left: 64px;
+    position: absolute;
+    top: 14px;
+    width: 83px;
+}
+
+.product-details-page .gallery .Calendar-Partial-Peel-And-Stick,
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top,
+.product-details-page .gallery .Specialty-QuickStix {
+    width: 570px;
+    height: 570px;
+}
+
+.product-details-page .gallery .Calendar-Partial-Peel-And-Stick img,
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top img,
+.product-details-page .gallery .Specialty-QuickStix img {
+    left: 145px;
+    position: absolute;
+    top: 32px;
+    width: 190px;
+}
+
+.product-variant-list .variant-picture .Calendar-Partial-Peel-And-Stick img,
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top img,
+.product-variant-list .variant-picture .Specialty-QuickStix img {
+    left: 64px;
+    position: absolute;
+    top: 14px;
+    width: 83px;
+}
+
+/* Calendar-Partial-Peel-And-Stick-Case, Notepad-Peel-And-Stick-Top-Case, Specialty-QuickStix-Case */
+.Calendar-Partial-Peel-And-Stick-Case,
+.Notepad-Peel-And-Stick-Top-Case,
+.Specialty-QuickStix-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
+}
+
+
+.product-variant-list .variant-picture .Calendar-Partial-Peel-And-Stick-Case img,
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-Case img,
+.product-variant-list .variant-picture .Specialty-QuickStix-Case img {
+    left: 20px;
+    position: absolute;
+    top: 13.5px;
+    width: 84px;
+}
+
+/* Calendar-Partial-Peel-And-Stick-3-pack, Notepad-Peel-And-Stick-Top-3-pack, Specialty-QuickStix-3-pack */
+.Calendar-Partial-Peel-And-Stick-3-pack,
+.Notepad-Peel-And-Stick-Top-3-pack,
+.Specialty-QuickStix-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-800.png') !important;
+}
+
+
+.product-variant-list .variant-picture .Calendar-Partial-Peel-And-Stick-3-pack img,
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-3-pack img,
+.product-variant-list .variant-picture .Specialty-QuickStix-3-pack img {
+    left: 11px;
+    position: absolute;
+    top: 21.5px;
     width: 114px;
 }
 
@@ -3102,49 +3233,7 @@ body .container{width:100%; }
     width: 85px;
 }
 
-/*Thumbnail BG Envelop Horizontal */
-.thumbnail-bg_envelope-horizontal {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
-}
-.gallery .thumbnail-bg_envelope-horizontal {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
-}
-.product-grid .thumbnail-bg_envelope-horizontal {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
-}
-.product-grid .pictures .thumbnail-bg_envelope-horizontal img {
-    height: 150px;
-    left: 41px;
-    position: absolute;
-    top: 36px;
-    width: 198px;
-}
-.product-details-page .gallery .thumbnail-bg_envelope-horizontal {
-    width: 570px;
-    height: 570px;
-}
-.product-details-page .gallery .thumbnail-bg_envelope-horizontal img {
-    height: 490px;
-    left: 147px;
-    position: absolute;
-    top: 33px;
-    width: 188px;
-}
+
 
 /***** START OF JUMBO HORIZONTAL ******/
 .thumbnail-bg_jumbo-horizontal {
@@ -3531,6 +3620,60 @@ body .container{width:100%; }
 }
 
 /***** END OF SHORT FULL *******/
+
+
+/*Thumbnail BG Envelop Horizontal */
+.thumbnail-bg_envelope-horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.gallery .thumbnail-bg_envelope-horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .thumbnail-bg_envelope-horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .pictures .thumbnail-bg_envelope-horizontal img {
+    height: 150px;
+    left: 41px;
+    position: absolute;
+    top: 36px;
+    width: 198px;
+}
+
+.product-details-page .gallery .thumbnail-bg_envelope-horizontal {
+    width: 570px;
+    height: 570px;
+}
+
+.product-details-page .gallery .thumbnail-bg_envelope-horizontal img {
+    height: 490px;
+    left: 147px;
+    position: absolute;
+    top: 33px;
+    width: 188px;
+}
+
+
+
+
 
 .Vertical {
     background-size: 100%;
