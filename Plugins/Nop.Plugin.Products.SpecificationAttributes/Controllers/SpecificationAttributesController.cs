@@ -256,7 +256,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                     if (imageSpecAttrOption.Any())
                     {
-                        var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "ThumbnailBackground");
+                        var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                         if (thumbnailBackground.Any())
                         {
                             foreach (var thbackground in thumbnailBackground)
@@ -267,7 +267,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                     var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
                                     if (backGroundShape.Any())
                                     {
-                                        if (backGround == "GBSBackGroundShape")
+                                        if (backGround == "TreatmentImage")
                                         {
                                             ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
                                         }
@@ -469,7 +469,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
                         if (imageSpecAttrOption.Any())
                         {
-                            var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "ThumbnailBackground");
+                            var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                             if (thumbnailBackground.Any())
                             {
                                 foreach (var thbackground in thumbnailBackground)
@@ -480,7 +480,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                         var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
                                         if (backGroundShape.Any())
                                         {
-                                            if (backGround == "GBSBackGroundShape")
+                                            if (backGround == "TreatmentImage")
                                             {
                                                 ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
                                             }
@@ -568,7 +568,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
             if (imageSpecAttrOption.Any())
             {
-                var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "ThumbnailBackground");
+                var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                 if (thumbnailBackground.Any())
                 {
                     foreach (var thbackground in thumbnailBackground)
@@ -579,7 +579,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
                             if (backGroundShape.Any())
                             {
-                                if (backGround == "GBSBackGroundShape")
+                                if (backGround == "TreatmentImage")
                                 {
                                     ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
                                 }
