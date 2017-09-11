@@ -30,5 +30,5 @@ Shipping.FixedOrByWeight
 SevenSpikes.Nop.Plugins.MegaMenu
 Nop.Plugin.Api
 Logging.GBS
-Products.SpecificationAttributes
 Nop.Plugin.Shipping.GBS
+Products.SpecificationAttributes
