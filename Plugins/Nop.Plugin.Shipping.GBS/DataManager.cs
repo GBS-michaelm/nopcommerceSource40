@@ -54,7 +54,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
             if (dView != null)
             {
-                return "Success!";
+                return "Success";
             }
             else
             {                
@@ -74,7 +74,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
             if (dView != null)
             {
-                return "Success!";
+                return "Success";
             }
             else
             {

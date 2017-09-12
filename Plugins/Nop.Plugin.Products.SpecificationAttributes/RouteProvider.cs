@@ -22,7 +22,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes
               "artistdetail",
               new { controller = "SpecificationAttributes", action = "ArtistCategory" },
               new[] { "Nop.Plugin.Products.SpecificationAttributes.Controllers" });
-
+            
 
         }
         public int Priority

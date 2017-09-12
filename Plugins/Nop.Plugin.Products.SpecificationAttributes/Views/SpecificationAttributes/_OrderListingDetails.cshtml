@@ -1,9 +1,8 @@
 ﻿@model Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel
 @using Nop.Plugin.DataAccess.GBS;
 
-
-
 <div class="order-list">
+    <span class="hidden"> @Model.Monthvalue</span>
     @if (Model.Items.Count > 0)
     {
         <div class="orderhead-section">

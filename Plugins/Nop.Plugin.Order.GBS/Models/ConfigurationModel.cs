@@ -24,9 +24,16 @@ namespace Nop.Plugin.Order.GBS.Models
         public string GBSPrintFileWebServiceAddress { get; set; }
         public bool GBSPrintFileWebServiceAddress_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.Order.GBS.Fields.GBSPrintFileWebServiceBaseAddress")]
+        public string GBSPrintFileWebServiceBaseAddress { get; set; }
+        public bool GBSPrintFileWebServiceBaseAddress_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.Order.GBS.Fields.GBSStoreNamePrepend")]
         public string GBSStoreNamePrepend { get; set; }
         public bool GBSStoreNamePrepend_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.Order.GBS.Fields.HOMConnectionString")]
+        public string HOMConnectionString { get; set; }
+        public bool HOMConnectionString_OverrideForStore { get; set; }
     }
 }

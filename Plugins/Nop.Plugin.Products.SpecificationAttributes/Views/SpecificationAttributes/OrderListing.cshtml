@@ -8,15 +8,15 @@
         <li><a href="#tab3">Cancelled Orders</a> </li>
     </ul>
     <div class="tab-headsection">
-        @*<div class="head-left">
-            <span class="orderplace">96 orders placed in</span>
+        <div class="head-left">
+            <span class="orderplace"><strong id="numberoforders">@Model.Count</strong> orders placed in</span>
             <div class="pastorder-select">
-                <select>
-                    <option>Past 6 months</option>
-                    <option>Past 3 months</option>
+                <select id="pastorderddl">
+                    <option value="6">Past 6 months</option>
+                    <option value="3">Past 3 months</option>
                 </select>
             </div>
-        </div>*@
+        </div>
         @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
         {
             @Html.AntiForgeryToken()
@@ -102,6 +102,7 @@
 <script>
     $(document).ready(function () {
 
+        //Search Box
         $('#go-to-order-by-number').click(function (e) {
            e.preventDefault();
            var id = $('#GoDirectlyToNumber').val();
@@ -119,6 +120,7 @@
             return false;
         });
 
+        //Tabs
         $('.tabheading > li > a').click(function (event) {
 
             event.preventDefault();//stop browser to take action for clicked anchor
@@ -143,5 +145,17 @@
             $(target_tab_selector).addClass('active');
         });
 
+
+        //Drop down 3/6 months
+        $("#pastorderddl").change(function () {
+            var val = $(this).val();
+            $(".order-list > span:first-child").each(function () {
+                $(this).parent().removeClass("hidden");
+                var month = $(this).text();
+                if (val <= month) {
+                    $(this).parent().addClass("hidden");
+                }
+            });
+        });
     });
 </script>

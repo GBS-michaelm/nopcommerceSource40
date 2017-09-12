@@ -3,3 +3,6 @@ obj/
 /.vs
 /Presentation/Nop.Web/Plugins/
 /Presentation/Nop.Web/Content/Images/Thumbs
+Plugins/Nop.Plugin.Checkout.GBS/Nop.Plugin.Checkout.GBS.csproj
+Libraries/GBS/MarketingService.pdb
+Libraries/GBS/MarketingService.dll

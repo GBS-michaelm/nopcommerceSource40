@@ -16,7 +16,7 @@
     @{
         var leftColumnClass =  "col-md-4";
         var rightColumnClass = "col-md-7";
-    }
+     }
     <div class="form-group" >
         <div class="@leftColumnClass">
             @Html.NopLabelFor(model => model.ShippingCategoryA)         
@@ -27,7 +27,6 @@
         </div>
         </div>
     <div class="form-group">
-
         <div class="@leftColumnClass">
             @Html.NopLabelFor(model => model.ShippingCategoryB)
         </div>
@@ -35,6 +34,39 @@
             @Html.NopEditorFor(model => model.ShippingCategoryB)
             @Html.ValidationMessageFor(model => model.ShippingCategoryB)
         </div>
+       </div>
+<div class="panel-body">
+    
+    <button type="button" style="float:right" class="btn btn-primary" onclick="SaveShippingCategories();"> Apply </button>
+ 
 </div>
-
-
+<label id="succ-cc-label-PEF" style="color: green; display: none;"> Success! </label>
+<label id="err-cc-label-PEF" style="display:none; color:red;"> Error! </label>
+<script>
+    function SaveShippingCategories() {
+        
+        var full_url = document.URL; // Get current url
+        var url_array = full_url.split('/') // Split the string into an array with / as separator
+        var productID = url_array[url_array.length - 1];  // Get the last part of the array (-1)
+        
+        var ShippingCategoryA = document.getElementById("ShippingCategoryA");
+        var ShippingCategoryB = document.getElementById("ShippingCategoryB");
+        ShippingCategoryA = ShippingCategoryA.value;
+        ShippingCategoryB = ShippingCategoryB.value;
+        $.ajax({
+            type: "GET",
+            url: "/ExtendedFields/SaveShippingCategories",
+            contentType: "application/json; charset=utf-8",
+            data: { ShippingCategoryA: ShippingCategoryA, ShippingCategoryB: ShippingCategoryB, productID: productID } ,
+            async: false,
+            dataType: 'json',
+            timeout: 30000,            
+            error: function (data) {
+                $('#err-cc-label-PEF').show().delay(5000).fadeOut('slow');
+            },
+            success: function (data) {
+                $('#succ-cc-label-PEF').show().delay(5000).fadeOut('slow');
+            }
+        });
+    }
+</script>
