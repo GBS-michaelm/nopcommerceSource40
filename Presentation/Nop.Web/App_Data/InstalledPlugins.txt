@@ -31,5 +31,5 @@ SevenSpikes.Nop.Plugins.MegaMenu
 Nop.Plugin.Api
 Widgets.Marketing
 Logging.GBS
-Products.SpecificationAttributes
 Nop.Plugin.Shipping.GBS
+Products.SpecificationAttributes
