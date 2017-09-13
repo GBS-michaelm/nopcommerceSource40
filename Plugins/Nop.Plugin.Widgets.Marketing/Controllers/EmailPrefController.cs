@@ -199,6 +199,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             {
                 unsubscribeMaster = true;
             }
+            //----------------------------------//
 
             //--Setup Master Child-------------//
             string ChildID = form["ChildID"].ToString();
@@ -213,6 +214,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             {
                 unsubscribeChild = true;
             }
+            //----------------------------------//
 
             //--Setup Partner-------------//
             string MasterPartnerID = form["MasterPartnerID"].ToString();
@@ -227,20 +229,33 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             {
                 unsubscribePartner = true;
             }
+            //----------------------------------//
 
             //--Setup Partner Child-------------//
-
+            //string ChildPartnerID = form["ChildPartnerID"].ToString();
+            //string SelectedListChildPartner = form[ChildPartnerID].ToString();
+            //bool unsubscribeChildPartner = false;
+            //bool sendWeeklyChildPartner = false;
+            //if (SelectedListChildPartner == "sendweekly")
+            //{
+            //    sendWeeklyChildPartner = true;
+            //}
+            //else if (SelectedListChildPartner == "unsubscribe")
+            //{
+            //    unsubscribeChildPartner = true;
+            //}
+            //----------------------------------//
 
 
             GBSMarketingServiceClient marketingClient = new GBSMarketingServiceClient();
             MarketingContactModel marketingModel = new MarketingContactModel();
-            MarketingListModel marketingListModel = new MarketingListModel();
             dynamic json = null;
             marketingModel.emailAddress = EmailAddress.ToString();
             marketingModel.providerId = EmailAddress.ToString();
 
 
             //--Master Call------------------------//
+            MarketingListModel marketingListModel = new MarketingListModel();
             marketingModel.website = WebsiteMaster.ToString();
             if (unsubscribeMaster == true)
             {
@@ -256,9 +271,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             if (sendMonthlyMaster == true)
             {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "true";
-
                 marketingListModel = new MarketingListModel();
                 marketingListModel.name = "Exclude_optdowns";
                 marketingListModel.subscribeStatus = true;
@@ -266,9 +278,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             else
             {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "false";
-
                 marketingListModel = new MarketingListModel();
                 marketingListModel.name = "Exclude_optdowns";
                 marketingListModel.subscribeStatus = false;
@@ -276,8 +285,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             if (sendWeeklyChild == true)
             {
-                //marketingModel.listName = "Mad_Monday_subscribers_engaged";
-                //marketingModel.listNameStatus = "true";
                 marketingListModel = new MarketingListModel();
                 marketingListModel.name = "Mad_Monday_subscribers_engaged";
                 marketingListModel.subscribeStatus = true;
@@ -290,8 +297,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             else if (unsubscribeChild == true)
             {
-                //marketingModel.listName = "Exclude_Mad_Monday-bh";
-                //marketingModel.listNameStatus = "true";
                 marketingListModel = new MarketingListModel();
                 marketingListModel.name = "Mad_Monday_subscribers_engaged";
                 marketingListModel.subscribeStatus = false;
@@ -314,44 +319,10 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
 
 
-            //--Master Child Call------------------------//
-            //marketingModel.website = WebsiteMaster.ToString();
-            //if (unsubscribeMaster == true)
-            //{
-            //    marketingModel.subscribeStatus = "unsubscribed";
-            //    marketingModel.invalid = "true";
-            //    marketingModel.forceSubscribe = "false";
-            //}
-            //else
-            //{
-            //    marketingModel.subscribeStatus = "subscribed";
-            //    marketingModel.invalid = "false";
-            //    marketingModel.forceSubscribe = "true";
-            //}
-            //if (sendWeeklyChild == true)
-            //{
-            //    marketingModel.listName = "Mad_Monday_subscribers_engaged";
-            //    marketingModel.listNameStatus = "true";
-            //}
-            //else if (unsubscribeChild == true)
-            //{
-            //    marketingModel.listName = "Exclude_Mad_Monday-bh";
-            //    marketingModel.listNameStatus = "true";
-            //}
-            //var responseMasterChild = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
-
-            //json = JsonConvert.DeserializeObject<Object>(responseMasterChild);
-            //if (json.success != true)
-            //{
-            //    var modelError = new EmailPreferencesErrorModel();
-            //    modelError.ErrorMessage = "something went wrong with your submission";
-
-            //    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
-            //}
-
-
             //--Partner Call-----------------------//
+            MarketingListModel marketingListPartnerModel = new MarketingListModel();
             marketingModel.website = WebsitePartner.ToString();
+            marketingModel.marketingLists.Clear();
             if (unsubscribePartner == true)
             {
                 marketingModel.subscribeStatus = "unsubscribed";
@@ -366,20 +337,42 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             if (sendMonthlyPartner == true)
             {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "true";
-                marketingListModel.name = "Exclude_optdowns";
-                marketingListModel.subscribeStatus = true;
-                marketingModel.marketingLists.Add(marketingListModel);
+                marketingListPartnerModel = new MarketingListModel();
+                marketingListPartnerModel.name = "Exclude_optdowns";
+                marketingListPartnerModel.subscribeStatus = true;
+                marketingModel.marketingLists.Add(marketingListPartnerModel);
             }
             else
             {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "false";
-                marketingListModel.name = "Exclude_optdowns";
-                marketingListModel.subscribeStatus = false;
-                marketingModel.marketingLists.Add(marketingListModel);
+                marketingListPartnerModel = new MarketingListModel();
+                marketingListPartnerModel.name = "Exclude_optdowns";
+                marketingListPartnerModel.subscribeStatus = false;
+                marketingModel.marketingLists.Add(marketingListPartnerModel);
             }
+            //if (sendWeeklyChildPartner == true)
+            //{
+            //    marketingListPartnerModel = new MarketingListModel();
+            //    marketingListPartnerModel.name = "Mad_Monday_subscribers_engaged";
+            //    marketingListPartnerModel.subscribeStatus = true;
+            //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+
+            //    marketingListPartnerModel = new MarketingListModel();
+            //    marketingListPartnerModel.name = "Exclude_Mad_Monday-bh";
+            //    marketingListPartnerModel.subscribeStatus = false;
+            //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+            //}
+            //else if (unsubscribeChildPartner == true)
+            //{
+            //    marketingListPartnerModel = new MarketingListModel();
+            //    marketingListPartnerModel.name = "Mad_Monday_subscribers_engaged";
+            //    marketingListPartnerModel.subscribeStatus = false;
+            //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+
+            //    marketingListPartnerModel = new MarketingListModel();
+            //    marketingListPartnerModel.name = "Exclude_Mad_Monday-bh";
+            //    marketingListPartnerModel.subscribeStatus = true;
+            //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+            //}
             var responsePartner = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
 
             json = JsonConvert.DeserializeObject<Object>(responsePartner);
@@ -390,9 +383,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
 
                 return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
             }
-
-
-
 
 
             return View("~/Plugins/Widgets.Marketing/Views/EmailPrefThankyou.cshtml");
