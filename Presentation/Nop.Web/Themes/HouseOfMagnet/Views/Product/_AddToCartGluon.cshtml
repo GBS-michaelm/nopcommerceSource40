@@ -2,9 +2,6 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
-@{ 
-//var category = EngineContext.Current.Resolve<CategoryModel>();
-}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
@@ -70,10 +67,11 @@
                 string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
                 foreach (var item in Model.ProductSpecifications)
                 {
-                    if(item.SpecificationAttributeName == "HOM Page ID")
+                    if (item.SpecificationAttributeName.ToUpper().Trim() == "GLUONIFRAMEPAGEID")
                     {
                         idArray = item.ValueRaw.Split('-');
                         pageID = idArray[1];
+                        break;
                     }
                 }
 
@@ -98,9 +96,10 @@
                 string productType = string.Empty;
                 foreach (var item in data)
                 {
-                    if(item.SpecificationAttributeName == "HOM Product Type")
+                    if (item.SpecificationAttributeName.ToUpper().Trim() == "GLUONIFRAMEPRODUCTTYPE")
                     {
                         productType = item.ValueRaw;
+                        break;
                     }
                 }
                 string url = "/gluon?type=" + productType + "&pageID=" + pageID + "&productID=" + Model.AddToCart.ProductId + "&cartID=" + cartID + "&pcode=" + Model.Sku;

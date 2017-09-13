@@ -11,12 +11,16 @@
             @foreach (var attribute in Model)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
+               
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dl id="@string.Format("product_attribute_label_{0}", attribute.Id)" class="row">
                     <dt >
-                        <label class="text-prompt">
-                            @textPrompt
-                        </label>
+                        @if (attribute.Name.ToUpper() != "CUSTOMIMGURL")
+                        {
+                            <label class="text-prompt">
+                                @textPrompt
+                            </label>
+                        }
                         @if (attribute.IsRequired)
                         {
                             <span class="required">*</span>
@@ -88,7 +92,10 @@
                                 break;
                             case AttributeControlType.TextBox:
                                 {
-                                    <input name="@(controlId)" type="text" class="textbox form-control" id="@(controlId)" value="@attribute.DefaultValue" />
+                                    if (attribute.Name.ToUpper() != "CUSTOMIMGURL")
+                                    {
+                                        <input name="@(controlId)" type="text" class="textbox form-control" id="@(controlId)" value="@attribute.DefaultValue" />
+                                    }
                                 }
                                 break;
                             case AttributeControlType.MultilineTextbox:

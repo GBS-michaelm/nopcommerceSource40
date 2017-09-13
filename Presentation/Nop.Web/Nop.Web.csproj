@@ -2921,6 +2921,9 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\ChiliProducts.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\CanvasProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
