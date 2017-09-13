@@ -3160,8 +3160,8 @@ body .container{width:100%; }
 }
 
 /* Calendar-Partial-Peel-And-Stick-3-pack, Notepad-Peel-And-Stick-Top-3-pack, Specialty-QuickStix-3-pack */
-.Calendar-Partial-Peel-And-Stick-3-pack,
-.Notepad-Peel-And-Stick-Top-3-pack,
+.Calendar-Partial-Peel-And-Stick-3-pack, 
+.Notepad-Peel-And-Stick-Top-3-pack, 
 .Specialty-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
@@ -3170,7 +3170,6 @@ body .container{width:100%; }
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-800.png') !important;
 }
-
 
 .product-variant-list .variant-picture .Calendar-Partial-Peel-And-Stick-3-pack img,
 .product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-3-pack img,
@@ -3181,6 +3180,93 @@ body .container{width:100%; }
     width: 114px;
 }
 
+/* Whiteboard-Magnets-QuickStix */
+.Whiteboard-Magnets-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.gallery .Whiteboard-Magnets-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.product-grid .Whiteboard-Magnets-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+
+.product-grid .pictures .Whiteboard-Magnets-QuickStix img {
+    left: 59px;
+    position: absolute;
+    top: 14px;
+    width: 106px;
+}
+
+.product-details-page .gallery .Whiteboard-Magnets-QuickStix {
+    width: 570px;
+    height: 570px;
+}
+
+.product-details-page .gallery .Whiteboard-Magnets-QuickStix img {
+    left: 134px;
+    position: absolute;
+    top: 32px;
+    width: 242px;
+}
+
+.product-variant-list .variant-picture .Whiteboard-Magnets-QuickStix img {
+    left: 59px;
+    position: absolute;
+    top: 14px;
+    width: 107px;
+}
+
+/* Whiteboard-Magnets-QuickStix-Case */
+.Whiteboard-Magnets-QuickStix-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
+}
+
+.product-variant-list .variant-picture .Whiteboard-Magnets-QuickStix-Case img {
+    left: 20px;
+    position: absolute;
+    top: 13.5px;
+    width: 84px;
+}
+
+/* Whiteboard-Magnets-QuickStix-3-pack */
+.Whiteboard-Magnets-QuickStix-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-800.png') !important;
+}
+
+.product-variant-list .variant-picture .Whiteboard-Magnets-QuickStix-3-pack img {
+    left: 11px;
+    position: absolute;
+    top: 21.5px;
+    width: 114px;
+}
 
 /* Thumbnail BG Full */
 .thumbnail-bg_full {
