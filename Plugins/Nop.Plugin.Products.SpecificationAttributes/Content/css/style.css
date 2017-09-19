@@ -122,6 +122,7 @@
     float: right;
     position: relative;
     padding-right: 153px;
+    display: none;
 }
 
     .ordersearch .ordersearch {
