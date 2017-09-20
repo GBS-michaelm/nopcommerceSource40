@@ -280,8 +280,6 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-
-
                 ActionResult baseAR = _baseNopCheckoutController.Index();
                 return RedirectToRoute("CheckoutShippingAddress");
             }
@@ -326,6 +324,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
         public ActionResult SelectShippingAddress(int addressId, string shipType)
         {
+            TempData["ShippingAddressId"] = addressId;
+
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
@@ -396,6 +396,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, selectedPoint, _storeContext.CurrentStore.Id);
 
+                        TempData["ShippingAddressId"] = "LocalPickup";
+
                         return RedirectToRoute("CheckoutPaymentMethod");
                     }
 
@@ -435,6 +437,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     _workContext.CurrentCustomer.ShippingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     _baseNopCheckoutController.SelectShippingMethod(form["shipType"]);
+
+                    TempData["ShippingAddressId"] = address.Id;
 
                     return RedirectToRoute("CheckoutPaymentMethod");
                 }
