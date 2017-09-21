@@ -9250,8 +9250,7 @@ ul.info li label {
 .desktop-original .product-picture {
     width: 300px;
 }
-
-    .desktop-original .product-picture img {
+ .desktop-original .product-picture img {
         width: 130px;
     }
 
@@ -10366,6 +10365,30 @@ div#DigiCertClickID_EUn4Gw8WSeal {
                 top: 42px;
                 width: 238px;
             }
+        .product-details-page .gallery .thumbnail-bg_envelope-horizontal {
+            width: 300px;
+            height: 300px;
+        }
+
+            .product-details-page .gallery .thumbnail-bg_envelope-horizontal img {
+                height: 181px;
+                left: 18px;
+                position: relative;
+                top: 42px;
+                width: 238px;
+            }
+        .product-details-page .gallery .thumbnail-bg_envelope-vertical {
+            width: 300px;
+            height: 300px;
+        }
+
+            .product-details-page .gallery .thumbnail-bg_envelope-vertical img {
+                height: 238px;
+                left: 43px;
+                position: absolute;
+                top: 49px;
+                width: 179px;
+            }
 }
 
 @media only screen and (max-width:450px) {
@@ -10758,7 +10781,44 @@ div .mega-menu {
     width: 152px;
 }
 
+.thumbnail-bg_envelope-vertical {
+    background-size: 100%;
+    /*width: 250px;
+    height: 250px;*/
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
 
+.gallery .thumbnail-bg_envelope-vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
+
+.product-grid .thumbnail-bg_envelope-vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
+}
+
+.product-grid .pictures .thumbnail-bg_envelope-vertical img {
+    height: 200px;
+    left: 36px;
+    position: absolute;
+    top: 40px;
+    width: 152px;
+}
+.product-details-page .gallery .thumbnail-bg_envelope-vertical {
+    width: 570px;
+    height: 570px;
+}
 .Horizontal {
     background-size: 100%;
     width: 250px;
@@ -10791,4 +10851,69 @@ div .mega-menu {
     position: absolute;
     top: 80px;
     width: 453px;
+}
+.thumbnail-bg_envelope-horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .thumbnail-bg_envelope-horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
+}
+
+.product-grid .pictures .thumbnail-bg_envelope-horizontal img {
+    height: 150px;
+    left: 41px;
+    position: absolute;
+    top: 36px;
+    width: 198px;
+}
+
+.product-details-page .gallery .thumbnail-bg_envelope-horizontal img {
+    height: 343px;
+    left: 92px;
+    position: absolute;
+    top: 80px;
+    width: 453px;
+}
+.product-details-page .gallery .thumbnail-bg_envelope-horizontal {
+    width: 570px;
+    height: 570px;
+}
+.account-page .order-details-page .thumbnail-bg_envelope-horizontal img {
+    height: 72px;
+    left: 19px;
+    max-width: 100%;
+    position: absolute;
+    top: 17px;
+    width: 97px;
+}
+.account-page .order-details-page .thumbnail-bg_envelope-horizontal {
+    width: 120px;
+    height: 120px;
+}
+.items .item .picture .gallerys   {
+      margin-bottom: 40px;
+    float: left;
+    width: auto;
+    height: auto;
+    margin-top: 10px;
+    position: relative;
+}
+.product-picture .gallerys {
+    margin-bottom: 40px;
+    float: left;
+    width: auto;
+    height: auto;
+    margin-top: 10px;
+    position: relative;
 }

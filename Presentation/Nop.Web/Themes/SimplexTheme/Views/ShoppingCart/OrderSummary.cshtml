@@ -104,7 +104,8 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>*@
+                                        @Html.Widget("product_details_widget", item.ProductId)
                                     </td>
                                 }
                                 <td class="product-info">
@@ -274,7 +275,8 @@
                                                 @if (Model.ShowProductImages)
                                                 {
                                                     <div class="product-picture">
-                                                        <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                                        @*<img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />*@
+                                                        @Html.Widget("product_details_widget", item.ProductId)
                                                     </div>
                                                 }
                                             </div>

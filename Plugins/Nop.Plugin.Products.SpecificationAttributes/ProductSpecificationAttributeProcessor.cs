@@ -63,7 +63,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes
         {
             return new List<string> { "product_artist_name","product_listing_widget","product_details_widget",
                 "productdetails_bottom", "product_category_titles", "product_by_artist",
-                "categorydetails_top","productbox_addinfo_after" ,"order_listing_widget"};   /*,"orderdetails_product_line"*/
+                "categorydetails_top","productbox_addinfo_after" ,"order_listing_widget" };  /*,"orderdetails_product_line" };*/
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes
 
 
                 var _specificationOptionsThumbnailBackgroundE = new Core.Domain.Catalog.SpecificationAttributeOption();
-                _specificationOptionsThumbnailBackgroundE.Name = "GBSBackGroundfill";
+                _specificationOptionsThumbnailBackgroundE.Name = "GBSBackGroundFill";
                 ThumbnailBackground.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundE);
 
 
@@ -127,11 +127,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes
                 _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundShape);
             }
             
-            var GBSBackGroundfill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "GBSBackGroundfill").FirstOrDefault();
+            var GBSBackGroundfill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "GBSBackGroundFill").FirstOrDefault();
             if (GBSBackGroundfill == null)
             {
                 GBSBackGroundfill = new Core.Domain.Catalog.SpecificationAttribute();
-                GBSBackGroundfill.Name = "GBSBackGroundfill";
+                GBSBackGroundfill.Name = "GBSBackGroundFill";
 
                 var _specificationOptionsThumbnailBackgroundQS = new Core.Domain.Catalog.SpecificationAttributeOption();
                 _specificationOptionsThumbnailBackgroundQS.Name = "GBSBackGroundColor";

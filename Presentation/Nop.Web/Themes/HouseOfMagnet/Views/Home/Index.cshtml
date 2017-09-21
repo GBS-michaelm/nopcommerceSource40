@@ -7,30 +7,292 @@
 <div class="page home-page">
     <div class="page-body">
         <div class="container">
+            <div class="row sale-promo">
+                @Html.Action("TopicBlock", "Topic", new
+{
+    systemName = "abovebanner"
+})
+                @*<div class="col-sm-6">
+                        <h2>Football Schedule Flash Sale</h2>
+                        <p>Save an extra 10% off current sale prices today only!  <strong>Use code: Flash10</strong></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h2>Mad Monday Sale</h2>
+                        <p>One product at a deep discount each Monday.  <strong><a href="#">See This Week’s Offer ></a></strong></p>
+                    </div>*@
+            </div>
             <div class="banner-section">
                 <div class="main-banner">@Html.Widget("home_page_top")</div>
                 <div class="banner-right">
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_home-features" })
-				</div>
+                    @*@Html.Action("TopicBlock", "Topic", new { systemName = "ncc_home-features" })*@
+                    <div class="offer-porduct">
+                        <div class="offer-content">
+                            <h3>Berkshire Hathaway HomeServices Market Center</h3>
+                            <p>Shop a collection of products branded specifically for your company. just pick a design, fill in your info, and order!</p>
+                            <a href="#" class="shopnow">Shop Now</a>
+                        </div>
+                        <div class="product-img"><img title="" alt="Your store name" src="/Themes/HouseOfMagnet/Content/images/offer-img.png"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>
-		@Html.Action("TopicBlock", "Topic", new { systemName = "ncc_home-page-steps" })
+        @*@Html.Action("TopicBlock", "Topic", new
+   {
+       systemName = "ncc_home-page-steps"
+   })*@
         @*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
-        <div class="container">
-            @Html.Widget("home_page_before_categories")
-            @Html.Action("HomepageCategories", "Catalog")
+        @*<div class="container">
+                @Html.Widget("home_page_before_categories")
+                @Html.Action("HomepageCategories", "Catalog")
+            </div>*@
+        @*@Html.Action("TopicBlock", "Topic", new { systemName = "MeetOurArtist" })
+            @Html.Action("TopicBlock", "Topic", new { systemName = "GivingCard" })*@
+        @*@Html.Widget("home_page_before_products")*@
+        <div class="featured-product">
+            <div class="container">
+                <hr />
+                @Html.Action("HomepageProducts", "Product")
+            </div>
         </div>
-            @Html.Action("TopicBlock", "Topic", new { systemName = "MeetOurArtist" })
-            @Html.Action("TopicBlock", "Topic", new { systemName = "GivingCard" }) 
-            @Html.Widget("home_page_before_products")
-            @*@Html.Action("HomepageProducts", "Product")*@
-            @Html.Widget("home_page_before_best_sellers")
-            @*@Html.Action("HomepageBestSellers", "Product")*@
-            @Html.Widget("home_page_before_news")
-            @*@Html.Action("HomePageNews", "News")*@
-            @Html.Widget("home_page_before_poll")
-            @*@Html.Action("HomePagePolls", "Poll")*@
-            @*@Html.Widget("home_page_bottom")*@
+
+        <!--Security section-->
+        <div class="security-section">
+            @Html.Action("TopicBlock", "Topic", new
+{
+    systemName = "HereForYou"
+})
+            @*<div class="container">
+                    <div class="title sub-title">
+                        <strong>We’re Here For You</strong>
+                        <p>Some supporing headline copy that helps to convince users to trust us goes here</p>
+                    </div>
+                    <div class="security-list">
+                        <ul>
+                            <li>
+                                <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/shop-img.png">
+                                <h3>Shop with <br />confidence</h3>
+                                <p>since 1995, our mission has been to ake the highest quallity products at the best prices.</p>
+                            </li>
+                            <li>
+                                <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/phone-support.png">
+                                <h3>Live Phone <br />Support</h3>
+                                <p>since 1995, our mission has been to ake the highest quallity products at the best prices.</p>
+                            </li>
+                            <li>
+                                <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/california.png">
+                                <h3>Based in<br />Califonrnia</h3>
+                                <p>since 1995, our mission has been to ake the highest quallity products at the best prices.</p>
+                            </li>
+                            <li>
+                                <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/shipping.png">
+                                <h3>$8.95 flat Rate<br />Shipping</h3>
+                                <p>since 1995, our mission has been to ake the highest quallity products at the best prices.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>*@
         </div>
+        <!--Security section-->
+        <div class="tistimonials">
+            <div class="container">
+                @Html.Action("TopicBlock", "Topic", new
+           {
+               systemName = "Testimonials"
+           })
+                @*<div class="title sub-title">
+                        <strong>Why Choose House of Magnets?</strong>
+                        <p>Some supporting line of copy goes here</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="testimonial-item">
+                                <div class="testimonial-pic"><img src="/Themes/HouseOfMagnet/Content/images/scott.jpg" alt="" /></div>
+                                <em>“I am on a tight advertising budget, but believe that I am getting more bang for my buck with these magnets. I really believe that the calendars have helped my business or I wouldn’t keep buying them!"</em>
+                                <div class="testimonial-name">Scott Bradley<br /> Keller Willams Realty West</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="testimonial-item">
+                                <div class="testimonial-pic"><img src="/Themes/HouseOfMagnet/Content/images/linda.jpg" alt="" /></div>
+                                <em>“I give my calendar magnets to clients at closings and to new prospects. I believe of all my marketing, calendars are one of the most effective ways to keep my name in front of clients year after year."</em>
+                                <div class="testimonial-name">Linda Patrick <br />CENTURY 21 Town & Country Realty</div>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+        <div class="join-email-section">
+            <div class="container">
+                @*@Html.Action("TopicBlock", "Topic", new { systemName = "JoinEmailList" })*@
+
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="join-email-content">
+                            <div class="join-email-img"><img src="/Themes/HouseOfMagnet/Content/images/join-email-img.png" alt="" /></div>
+                            <h3>Join Our Email List</h3>
+                            <p>Get exclusive sales delivered straight to your inbox, and be the first to know when our products launch.  As a thank you for joining, <strong>we’ll send you a free whitepaper!</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-5">
+                        <div class="joinin-email">
+                            <div class="email-lable">Email Address:</div>
+                            @Html.Action("NewsletterBox", "Newsletter")
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--process of product-->
+        <div class="product-process">
+            @Html.Action("TopicBlock", "Topic", new
+{
+    systemName = "PersonalizeYourProductsOnline"
+})
+            @*<div class="container">
+                    <div class="title sub-title">
+                        <strong>Easily Personalize Your Products Online</strong>
+                        <p>Instant proofs, no waiting for busy art departments, no set up fees</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6 uplod-process">
+                                    <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/logo-icon.png">
+                                    <h4>Include your <br />Logo</h4>
+                                    <p>Lorem ipsum goes here to explain what this is</p>
+                                </div>
+                                <div class="col-sm-6 uplod-process">
+                                    <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/upload-icon.png">
+                                    <h4>Upload your <br />Photo</h4>
+                                    <p>Lorem ipsum goes here to explain what this is</p>
+                                </div>
+                                <div class="col-sm-6 uplod-process">
+                                    <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/ai-icon.png">
+                                    <h4>format your <br />text</h4>
+                                    <p>Lorem ipsum goes here to explain what this is</p>
+                                </div>
+                                <div class="col-sm-6 uplod-process">
+                                    <img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/proof-icon.png">
+                                    <h4>Instant online <br />Proof</h4>
+                                    <p>Lorem ipsum goes here to explain what this is</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/n-FrnHwQ1c4" frameborder="0" allowfullscreen></iframe>
+                            <h5>See How simple Our Tools Are to Use</h5>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                        </div>
+                    </div>
+
+                </div>*@
+        </div>
+        <!--process of product-->
+
+        <div class="award-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h3>New Product Spotlight: Awards</h3>
+                        <p>Starting at $17 each, no minimum</p>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                        <a href="#" class="shopnow">Shop Awards</a>
+                    </div>
+                    <div class="col-sm-7">
+                        <img title="" alt="" class="img-responsive" src="/Themes/HouseOfMagnet/Content/images/aword-img.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Greeting Cards from Note Card Cafe-->
+        <div class="greeting-wrapper">
+            <div class="container">
+                <div class="title sub-title">
+                    <strong>Greeting Cards from Note Card Cafe</strong>
+                    <p>Some supporting line of copy goes here. See them all at <a href="#">NoteCardCafe.com</a></p>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 greeting-item">
+                        <img title="" alt="" class="" src="/Themes/HouseOfMagnet/Content/images/greeting-card1.jpg">
+                        <h3>Real Estate Sets</h3>
+                        <p>72 Cards for $16.99</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3 greeting-item">
+                        <img title="" alt="" class="" src="/Themes/HouseOfMagnet/Content/images/greeting-card2.jpg">
+                        <h3>Logo Cards</h3>
+                        <p>26¢ each, includes envelope</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3 greeting-item">
+                        <img title="" alt="" class="" src="/Themes/HouseOfMagnet/Content/images/greeting-card3.jpg">
+                        <h3>Patriotic Cards</h3>
+                        <p>26¢ each, includes envelope</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3 greeting-item">
+                        <img title="" alt="" class="" src="/Themes/HouseOfMagnet/Content/images/greeting-card4.jpg">
+                        <h3>Thank You Cards</h3>
+                        <p>26¢ each, includes envelope</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Greeting Cards from Note Card Cafe-->
+
+        <div class="solutions-wrapper">
+            <div class="container">
+                <div class="col-sm-4 solution-content">
+                    <h3>Solutions for Your Industry</h3>
+                    <p>For many industries, we have customized templates for our products to specifically meet their unique needs.  Whether you have 10 or 10,000 employees, we have a solution for you.</p>
+                </div>
+                <div class="col-sm-8">
+                    <ul class="solution-list">
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img1.png"></div>
+                            <div class="solutions-label">Real <br />Estate ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img2.png"></div>
+                            <div class="solutions-label">Schools & <br />Universities ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img3.png"></div>
+                            <div class="solutions-label">Small <br />Businesses ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img4.png"></div>
+                            <div class="solutions-label">Enterprise <br />Companies ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img5.png"></div>
+                            <div class="solutions-label">Legal <br />& Insurance ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img1.png"></div>
+                            <div class="solutions-label">Restaurants <br />& Cafes ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img7.png"></div>
+                            <div class="solutions-label">Hospitality <br />& Travel ></div>
+                        </li>
+                        <li>
+                            <div class="solutions-icon"><img title="" alt="" src="/Themes/HouseOfMagnet/Content/images/solution-img8.png"></div>
+                            <div class="solutions-label">Automotive <br />& Dealers ></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @*@Html.Widget("home_page_before_best_sellers")
+            @Html.Action("HomepageBestSellers", "Product")
+            @Html.Widget("home_page_before_news")*@
+        @*@Html.Action("HomePageNews", "News")*@
+        @*@Html.Widget("home_page_before_poll")*@
+        @*@Html.Action("HomePagePolls", "Poll")*@
+        @*@Html.Widget("home_page_bottom")*@
+
+    </div>
 </div>
