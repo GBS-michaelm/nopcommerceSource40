@@ -195,11 +195,24 @@ namespace Nop.Plugin.Order.GBS.Controllers
                             {
                                 ProductFileModel file = new ProductFileModel();
                                 file.product.productionFileName = (string)row["frontFile"];
-                                productFiles.Add(file);
+                                if (row["hiResUrlFront"] != System.DBNull.Value)
+                                {
+                                    var ub = new UriBuilder(new Uri((string)row["hiResUrlFront"]));
+                                    ub.Scheme = "https";
+                                    file.product.hiResPDFURL = ub.Uri.AbsoluteUri;
+                                }
+                                if (file.product.productionFileName != "not saved") { productFiles.Add(file); };
                                 file = new ProductFileModel();
                                 file.product.productionFileName = (string)row["backFile"];
-                                productFiles.Add(file);
+                                if (row["hiResUrlBack"] != System.DBNull.Value)
+                                {
+                                    var ub = new UriBuilder(new Uri((string)row["hiResUrlBack"]));
+                                    ub.Scheme = "https";
+                                    file.product.hiResPDFURL = ub.Uri.AbsoluteUri;
+                                }
+                                if (file.product.productionFileName != "not saved") { productFiles.Add(file); };
                             }
+                            
 
                         }
                         else

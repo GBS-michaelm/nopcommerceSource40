@@ -34,7 +34,17 @@
         productDefinition = '@Model.stateID';//{surfaces: ["stamp"]};
 
         //Defining the editor configuration.
-        configuration = { widgets: { FinishButton: { mode: "Disabled" } }, rendering: { hiResOutputToSeparateFiles: true } };
+        configuration = {   
+            restoreProductOnReloadEnabled: false, 
+            widgets: { 
+                FinishButton: { 
+                    mode: "Disabled" 
+                } 
+            }, 
+            rendering: { 
+                hiResOutputToSeparateFiles: true 
+            } 
+        };
 
         var productType = "@productType";
         configuration.userId = "@Model.userID";
@@ -94,7 +104,7 @@
         $("#editorPage #nextButton").click(function () {
 
             //Saving a product.
-            editor.saveProduct()
+            editor.saveProduct(productDefinition)
                 //If the product has been successfully saved.
                 .then(function (result) {
                     //Saving product state info.
@@ -123,20 +133,22 @@
         //Completing product customization.
         $("#approvePage #approveButton").click(function () {
 
-            //Completing product customization.
-            editor.finishProductDesign()
-                //If product customization has been successfully completed.
-                .then(function (result) {
-                    //Saving hi-res output info.
-                    renderData = result;
+            ////Completing product customization.
+            //editor.finishProductDesign()
+            //    //If product customization has been successfully completed.
+            //    .then(function (result) {
+            //        //Saving hi-res output info.
+            //        renderData = result;
 
-                    //Go to the finish page.
-                    goToPage("finish");
-                })
-                //If there was an error thrown when completing product customization.
-                .catch(function (error) {
-                    renderData = handleError(error, "Product customization completion failed with exception: ");
-                });
+            //        //Go to the finish page.
+            //        goToPage("finish");
+            //    })
+            //    //If there was an error thrown when completing product customization.
+            //    .catch(function (error) {
+            //        renderData = handleError(error, "Product customization completion failed with exception: ");
+            //    });
+
+            goToPage("finish");
         });
 
         //Opening a new product in the designer.
@@ -146,7 +158,7 @@
 
         //Reopening the product in the designer.
         $(".lnkEditAgain").click(function () {
-            loadProduct(saveData.stateId);
+            loadProduct(productDefinition);
             goToPage("design");
         });
 
@@ -164,55 +176,58 @@
         function setFinishPageData() {
             //var ccChangedFiles = [];
             $("#finishOrderPage #hiResLinks").empty();
-            $.each(renderData.hiResOutputUrls, function (i, val) {
-                $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + val + '">Download link #' + i + '</a>, ');
-                ccFiles.forEach(function(file,j) {
-                    var endStr = val.slice(-7);
-                    var index = endStr.substring(0,1);
-                    switch(productType){
-                        case "notecard":
-                            if (file.product.productType != "notecard"){delete ccFiles[j]; break;}
-                            switch(file.product.surface){
-                                case "front":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "greeting":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "back":
-                                    if (index == 2) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                            break;
-                        case "envelope":
-                            if (file.product.productType != "envelope"){delete ccFiles[j]; break;}
-                            switch(file.product.surface){
-                                case "F":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "B":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                            break;
-                        default:
-                            switch(file.product.surface){
-                                case "front":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "back":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                    }
-                });
+            ccFiles.forEach(function(file,j) {
+                $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + file.product.hiResPDFURL  + '">Download link #' + j + '</a>, ');
             });
+            //$.each(renderData.hiResOutputUrls, function (i, val) {
+            //    $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + val + '">Download link #' + i + '</a>, ');
+            //    ccFiles.forEach(function(file,j) {
+            //        var endStr = val.slice(-7);
+            //        var index = endStr.substring(0,1);
+            //        switch(productType){
+            //            case "notecard":
+            //                if (file.product.productType != "notecard"){delete ccFiles[j]; break;}
+            //                switch(file.product.surface){
+            //                    case "front":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "greeting":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "back":
+            //                        if (index == 2) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //                break;
+            //            case "envelope":
+            //                if (file.product.productType != "envelope"){delete ccFiles[j]; break;}
+            //                switch(file.product.surface){
+            //                    case "F":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "B":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //                break;
+            //            default:
+            //                switch(file.product.surface){
+            //                    case "front":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "back":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //        }
+            //    });
+            //});
             $('#FilesToCopy').val(JSON.stringify(ccFiles));
             // $("#finishOrderPage #hiResLink").attr("href", renderData.hiResOutputUrls[0]);
-            $("#finishOrderPage #linkForFeatureEdit").attr("href", renderData.returnToEditUrl);
+            $("#finishOrderPage #linkForFeatureEdit").attr("href", saveData.returnToEditUrl);
         };
 
         function setEditorPageData() {
