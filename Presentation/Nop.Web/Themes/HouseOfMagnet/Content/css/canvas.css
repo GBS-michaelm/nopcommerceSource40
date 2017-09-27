@@ -5664,10 +5664,10 @@ body.no-superfish #primary-menu li:hover>.mega-menu-content, body.no-superfish #
 	padding-left: 18px;
 	color: #1ABC9C
 }
-#primary-menu ul ul>li.sub-menu:hover>a, #primary-menu ul ul>li.sub-menu>a {
-	background-image: url(/Themes/SimplexTheme/Content/images/submenu.png);
-	background-position: right center;
-	background-repeat: no-repeat
+#primary-menu ul ul > li.sub-menu:hover > a, #primary-menu ul ul > li.sub-menu > a {
+    background-image: url(/Themes/HouseOfMagnet/Content/images/submenu.png);
+    background-position: right center;
+    background-repeat: no-repeat
 }
 #primary-menu ul li .mega-menu-content, #primary-menu ul li.mega-menu-small .mega-menu-content {
 	width: 720px;
@@ -5856,9 +5856,9 @@ body:not(.device-sm):not(.device-xs):not(.device-xxs) #primary-menu.style-2.cent
 #primary-menu.style-6>div>ul>li.current>a:after, #primary-menu.style-6>div>ul>li:hover>a:after, #primary-menu.style-6>ul>li.current>a:after, #primary-menu.style-6>ul>li:hover>a:after {
 	width: 100%
 }
-#primary-menu.sub-title.style-2>div>ul>li, #primary-menu.sub-title>ul>li {
-	background: url(/Themes/SimplexTheme/Content/images/menu-divider.png) right center no-repeat;
-	margin-left: 1px
+#primary-menu.sub-title.style-2 > div > ul > li, #primary-menu.sub-title > ul > li {
+    background: url(/Themes/HouseOfMagnet/Content/images/menu-divider.png) right center no-repeat;
+    margin-left: 1px
 }
 #primary-menu.sub-title ul li:first-child {
 	padding-left: 0;
@@ -6946,7 +6946,7 @@ body.side-panel-open .body-overlay {
 	pointer-events: auto
 }
 body.side-panel-open:not(.device-xxs):not(.device-xs):not(.device-sm) .body-overlay:hover {
-	cursor: url(/Themes/SimplexTheme/Content/images/close.png) 15 15, default
+    cursor: url(/Themes/HouseOfMagnet/Content/images/close.png) 15 15, default
 }
 #slider {
 	width: 100%
@@ -7054,11 +7054,11 @@ body:not(.stretched) .slider-parallax .slider-parallax-inner {
 	height: auto
 }
 .swiper_wrapper .swiper-container {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	background: url(/Themes/SimplexTheme/Content/images/pattern2.png)
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: url(/Themes/HouseOfMagnet/Content/images/pattern2.png)
 }
 .swiper_wrapper .swiper-slide {
 	position: relative;
@@ -7132,7 +7132,7 @@ body:not(.stretched) .slider-parallax .slider-parallax-inner {
 	top: 0;
 	left: 0;
 	z-index: 5;
-	background: url(/Themes/SimplexTheme/Content/images/grid.png)
+	background: url(/Themes/HouseOfMagnet/Content/images/grid.png)
 }
 .video-placeholder {
 	z-index: 4;
@@ -7435,16 +7435,16 @@ body.stretched .container-fullwidth .breadcrumb {
 	margin: 20px 0 0!important
 }
 #page-title.page-title-pattern {
-	background-image: url(/Themes/SimplexTheme/Content/images/pattern.png);
-	background-repeat: repeat;
-	background-attachment: fixed
+    background-image: url(/Themes/HouseOfMagnet/Content/images/pattern.png);
+    background-repeat: repeat;
+    background-attachment: fixed
 }
 #page-title.page-title-parallax {
 	padding: 100px 0;
 	text-shadow: none;
 	border-bottom: none;
 	background-color: transparent;
-	background-image: url(/Themes/SimplexTheme/Content/images/bgpattern.png);
+	background-image: url(/Themes/HouseOfMagnet/Content/images/bgpattern.png);
 	background-attachment: fixed;
 	background-position: 50% 0;
 	background-repeat: no-repeat
@@ -11115,7 +11115,7 @@ body:not(.device-touch) .button.button-full strong {
 	padding: 2px;
 	z-index: -1;
 	box-shadow: none;
-	background-image: url(/Themes/SimplexTheme/Content/images/iconalt.svg);
+	background-image: url(/Themes/HouseOfMagnet/Content/images/iconalt.svg);
 	background-position: center center;
 	background-size: 100% 100%;
 	-webkit-transition: -webkit-transform .5s, opacity .5s, background-color .5s;
@@ -11399,7 +11399,7 @@ body:not(.device-touch) .i-bordered, body:not(.device-touch) .i-circled, body:no
 	box-shadow: inset 0 0 15px rgba(0,0,0,.2)
 }
 .i-alt {
-	background-image: url(/Themes/SimplexTheme/Content/images/iconalt.svg);
+	background-image: url(/Themes/HouseOfMagnet/Content/images/iconalt.svg);
 	background-position: center center;
 	background-size: 100% 100%
 }
@@ -11512,7 +11512,7 @@ body:not(.device-touch) .i-bordered, body:not(.device-touch) .i-circled, body:no
 	top: 0;
 	left: 0;
 	text-align: center;
-	background: url(/Themes/SimplexTheme/Content/images/grid.png) rgba(0,0,0,.2)
+	background: url(/Themes/HouseOfMagnet/Content/images/grid.png) rgba(0,0,0,.2)
 }
 .i-overlay a {
 	background: 0 0
@@ -13348,7 +13348,7 @@ blockquote.pull-right {
 }
 .owl-carousel.owl-loading {
 	min-height: 100px;
-	background: url(/Themes/SimplexTheme/Content/images/preloader.gif) center center no-repeat
+	background: url(/Themes/HouseOfMagnet/Content/images/preloader.gif) center center no-repeat
 }
 .owl-carousel .owl-refresh .owl-item {
 	display: none
@@ -13433,7 +13433,7 @@ blockquote.pull-right {
 	top: 50%;
 	margin-left: -32px;
 	margin-top: -32px;
-	background: url(/Themes/SimplexTheme/Content/images/play.png) no-repeat;
+	background: url(/Themes/HouseOfMagnet/Content/images/play.png) no-repeat;
 	cursor: pointer;
 	z-index: 1;
 	-webkit-transition: scale .1s ease;
@@ -13959,7 +13959,7 @@ label.error {
 	border-bottom: 2px solid #1ABC9C
 }
 .fancy-title.title-dotted-border {
-	background: url(/Themes/SimplexTheme/Content/images/dotted.png) center repeat-x
+	background: url(/Themes/HouseOfMagnet/Content/images/dotted.png) center repeat-x
 }
 .before-heading {
 	display: block;
@@ -14193,7 +14193,7 @@ body:not(.device-touch) #gotoTop {
 	display: block;
 	width: 100%;
 	height: 100%;
-	background: url(/Themes/SimplexTheme/Content/images/preloader.gif) center center no-repeat #FFF
+	background: url(/Themes/HouseOfMagnet/Content/images/preloader.gif) center center no-repeat #FFF
 }
 .preloader2 {
 	background-color: transparent
@@ -14482,11 +14482,11 @@ body:not(.device-touch) .tagcloud a {
 }
 .widget_recent_comments li {
 	display: block;
-	background: url(/Themes/SimplexTheme/Content/images/widget-comment.png) left top no-repeat;
+	background: url(/Themes/HouseOfMagnet/Content/images/widget-comment.png) left top no-repeat;
 	padding: 4px 0 4px 20px
 }
 .widget_archive li a, .widget_categories li a, .widget_links li a, .widget_meta li a, .widget_nav_menu li a, .widget_pages li a, .widget_recent_comments li a, .widget_recent_entries li a, .widget_rss li a {
-	background: url(/Themes/SimplexTheme/Content/images/widget-link.png) left top no-repeat;
+	background: url(/Themes/HouseOfMagnet/Content/images/widget-link.png) left top no-repeat;
 	border: none!important;
 	color: #444;
 	font-size: 14px
@@ -15815,7 +15815,7 @@ color:rgba(255,255,255,.6)
 	color: #CCC!important
 }
 #primary-menu.dark ul ul>li.sub-menu:hover>a, #primary-menu.dark ul ul>li.sub-menu>a, .dark #primary-menu:not(.not-dark) ul ul>li.sub-menu:hover>a, .dark #primary-menu:not(.not-dark) ul ul>li.sub-menu>a {
-	background-image: url(/Themes/SimplexTheme/Content/images/submenu-dark.png)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/submenu-dark.png)
 }
 #primary-menu.dark ul li .mega-menu-content.style-2 ul.mega-menu-column>li.mega-menu-title:hover>a, #primary-menu.dark ul li .mega-menu-content.style-2 ul.mega-menu-column>li.mega-menu-title>a, .dark #primary-menu:not(.not-dark) ul li .mega-menu-content.style-2 ul.mega-menu-column>li.mega-menu-title:hover>a, .dark #primary-menu:not(.not-dark) ul li .mega-menu-content.style-2 ul.mega-menu-column>li.mega-menu-title>a {
 	color: #BBB!important;
@@ -15924,7 +15924,7 @@ color:rgba(255,255,255,.6)
 	color: #EEE
 }
 .dark #page-title.page-title-pattern {
-	background-image: url(/Themes/SimplexTheme/Content/images/pattern2.png)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/pattern2.png)
 }
 .dark .portfolio-filter li a {
 	color: #999;
@@ -16045,7 +16045,7 @@ color:rgba(255,255,255,.6)
 	border-color: rgba(255,255,255,.1)
 }
 .dark .form-process, .dark .owl-carousel.owl-loading, .dark .preloader, .dark .preloader2 {
-	background-image: url(/Themes/SimplexTheme/Content/images/preloader-dark.gif)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/preloader-dark.gif)
 }
 .dark .comment-content .comment-author {
 	color: #CCC
@@ -16600,11 +16600,11 @@ body #side-panel.dark #side-panel-trigger-close a, body.dark #side-panel #side-p
 	border-color: rgba(255,255,255,.1)
 }
 .dark .widget_recent_comments li {
-	background-image: url(/Themes/SimplexTheme/Content/images/widget-comment-dark.png)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/widget-comment-dark.png)
 }
 .dark .widget_archive li a, .dark .widget_categories li a, .dark .widget_links li a, .dark .widget_meta li a, .dark .widget_nav_menu li a, .dark .widget_pages li a, .dark .widget_recent_comments li a, .dark .widget_recent_entries li a, .dark .widget_rss li a {
 	color: #CCC;
-	background-image: url(/Themes/SimplexTheme/Content/images/widget-link-dark.png)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/widget-link-dark.png)
 }
 .dark .widget_archive li a:hover, .dark .widget_categories li a:hover, .dark .widget_links li a:hover, .dark .widget_meta li a:hover, .dark .widget_nav_menu li a:hover, .dark .widget_pages li a:hover, .dark .widget_recent_comments li a:hover, .dark .widget_recent_entries li a:hover, .dark .widget_rss li a:hover {
 	color: #AAA
@@ -17079,7 +17079,7 @@ color:rgba(228,44,62,.6)
 	border-top-color: rgba(255,255,255,.1)!important
 }
 .dark #primary-menu:not(.not-dark)>.container>ul>li.sub-menu>a, .dark #primary-menu:not(.not-dark)>ul>li.sub-menu>a {
-	background-image: url(/Themes/SimplexTheme/Content/images/submenu-dark.png)
+	background-image: url(/Themes/HouseOfMagnet/Content/images/submenu-dark.png)
 }
 body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content ul ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content.col-2>ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content.col-3>ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content.col-4>ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content.col-5>ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul li .mega-menu-content.style-2 li, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul ul, body:not(.dark) #header:not(.dark) #header-wrap:not(.dark) #primary-menu ul ul li {
 	border-top-color: #EEE!important
@@ -22937,7 +22937,7 @@ transform:translate3d(0, -100%, 0)
 	left: 50%;
 	width: 24px;
 	height: 24px;
-	background: url(/Themes/SimplexTheme/Content/images/preloader-dark.gif) center center no-repeat;
+	background: url(/Themes/HouseOfMagnet/Content/images/preloader-dark.gif) center center no-repeat;
 	text-align: center;
 	margin-top: -12px;
 	margin-left: -12px;
@@ -23622,7 +23622,7 @@ body.side-push-panel #side-panel-trigger-close a {
 	display: none
 }
 #primary-menu>.container>ul>li.sub-menu>a, #primary-menu>ul>li.sub-menu>a {
-	background-image: url(/Themes/SimplexTheme/Content/images/submenu.png);
+	background-image: url(/Themes/HouseOfMagnet/Content/images/submenu.png);
 	background-position: right center;
 	background-repeat: no-repeat
 }
@@ -24774,25 +24774,25 @@ display:block
 display:inline-block
 }
 .form-process, .owl-carousel.owl-loading, .preloader, .preloader2 {
-background-image:url(/Themes/SimplexTheme/Content/images/preloader@2x.gif);
+background-image:url(/Themes/HouseOfMagnet/Content/images/preloader@2x.gif);
 background-size:24px 24px
 }
 .dark .form-process, .dark .owl-carousel.owl-loading, .dark .preloader, .dark .preloader2 {
-background-image:url(/Themes/SimplexTheme/Content/images/preloader-dark@2x.gif)
+background-image:url(/Themes/HouseOfMagnet/Content/images/preloader-dark@2x.gif)
 }
 .widget_recent_comments li {
-background-image:url(/Themes/SimplexTheme/Content/images/widget-comment@2x.png);
+background-image:url(/Themes/HouseOfMagnet/Content/images/widget-comment@2x.png);
 background-size:15px 26px
 }
 .widget_archive li a, .widget_categories li a, .widget_links li a, .widget_meta li a, .widget_nav_menu li a, .widget_pages li a, .widget_recent_comments li a, .widget_recent_entries li a, .widget_rss li a {
-background-image:url(/Themes/SimplexTheme/Content/images/widget-link@2x.png);
+background-image:url(/Themes/HouseOfMagnet/Content/images/widget-link@2x.png);
 background-size:4px 20px
 }
 .dark .widget_recent_comments li {
-background-image:url(/Themes/SimplexTheme/Content/images/widget-comment-dark@2x.png)
+background-image:url(/Themes/HouseOfMagnet/Content/images/widget-comment-dark@2x.png)
 }
 .dark .widget_archive li a, .dark .widget_categories li a, .dark .widget_links li a, .dark .widget_meta li a, .dark .widget_nav_menu li a, .dark .widget_pages li a, .dark .widget_recent_comments li a, .dark .widget_recent_entries li a, .dark .widget_rss li a {
-background-image:url(/Themes/SimplexTheme/Content/images/widget-link-dark@2x.png)
+background-image:url(/Themes/HouseOfMagnet/Content/images/widget-link-dark@2x.png)
 }
 }
 @media only screen and (-webkit-min-device-pixel-ratio:2) and (max-width:991px), only screen and (min--moz-device-pixel-ratio:2) and (max-width:991px), only screen and (-o-min-device-pixel-ratio:2/1) and (max-width:991px), only screen and (min-device-pixel-ratio:2) and (max-width:991px), only screen and (min-resolution:192dpi) and (max-width:991px), only screen and (min-resolution:2dppx) and (max-width:991px) {

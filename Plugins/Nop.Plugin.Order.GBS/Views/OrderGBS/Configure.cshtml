@@ -56,12 +56,32 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GBSPrintFileWebServiceBaseAddress_OverrideForStore, model => model.GBSPrintFileWebServiceBaseAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.GBSPrintFileWebServiceBaseAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GBSPrintFileWebServiceBaseAddress)
+                @Html.ValidationMessageFor(model => model.GBSPrintFileWebServiceBaseAddress)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.GBSStoreNamePrepend_OverrideForStore, model => model.GBSStoreNamePrepend, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.GBSStoreNamePrepend):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.GBSStoreNamePrepend)
                 @Html.ValidationMessageFor(model => model.GBSStoreNamePrepend)  
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.HOMConnectionString_OverrideForStore, model => model.HOMConnectionString, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.HOMConnectionString):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.HOMConnectionString)
+                @Html.ValidationMessageFor(model => model.HOMConnectionString)
             </td>
         </tr>
         <tr>

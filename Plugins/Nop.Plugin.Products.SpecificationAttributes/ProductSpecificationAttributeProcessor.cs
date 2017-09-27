@@ -78,32 +78,66 @@ namespace Nop.Plugin.Products.SpecificationAttributes
                 artistAttr.Name = "Artist";
                 _specificationAttributeService.InsertSpecificationAttribute(artistAttr);
             }
-            var DefaultEnvelopeColorAttr = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "DefaultEnvelopeColor").FirstOrDefault();
-            if (DefaultEnvelopeColorAttr == null)
-            {
-                DefaultEnvelopeColorAttr = new Core.Domain.Catalog.SpecificationAttribute();
-                DefaultEnvelopeColorAttr.Name = "DefaultEnvelopeColor";
+
+            //var ThumbnailBackground = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Treatment").FirstOrDefault();
+            //if (ThumbnailBackground == null)
+            //{
+            //    ThumbnailBackground = new Core.Domain.Catalog.SpecificationAttribute();
+            //    ThumbnailBackground.Name = "Treatment";
+
+            //    var _specificationOptionsThumbnailBackgroundQS = new Core.Domain.Catalog.SpecificationAttributeOption();
+            //    _specificationOptionsThumbnailBackgroundQS.Name = "TreatmentImage";
+            //    ThumbnailBackground.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundQS);
 
 
-                _specificationAttributeService.InsertSpecificationAttribute(DefaultEnvelopeColorAttr);
-            }
-            var OrientationAttr = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Orientation").FirstOrDefault();
-            if (OrientationAttr == null)
-            {
-                OrientationAttr = new Core.Domain.Catalog.SpecificationAttribute();
-                OrientationAttr.Name = "Orientation";
+            //    var _specificationOptionsThumbnailBackgroundE = new Core.Domain.Catalog.SpecificationAttributeOption();
+            //    _specificationOptionsThumbnailBackgroundE.Name = "TreatmentFill";
+            //    ThumbnailBackground.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundE);
 
-                var _specificationOptionsVertical = new Core.Domain.Catalog.SpecificationAttributeOption();
-                _specificationOptionsVertical.Name = "Vertical";
-                OrientationAttr.SpecificationAttributeOptions.Add(_specificationOptionsVertical);
 
-                var _specificationOptionsHorizontal = new Core.Domain.Catalog.SpecificationAttributeOption();
-                _specificationOptionsHorizontal.Name = "Horizontal";
-                OrientationAttr.SpecificationAttributeOptions.Add(_specificationOptionsHorizontal);
+            //    _specificationAttributeService.InsertSpecificationAttribute(ThumbnailBackground);
+            //}
+            //var GBSBackGroundShape = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentImage").FirstOrDefault();
+            //if (GBSBackGroundShape == null)
+            //{
+            //    GBSBackGroundShape = new Core.Domain.Catalog.SpecificationAttribute();
+            //    GBSBackGroundShape.Name = "TreatmentImage";
+            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundShape);
+            //}
 
-                _specificationAttributeService.InsertSpecificationAttribute(OrientationAttr);
-            }
+            //var GBSBackGroundfill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFill").FirstOrDefault();
+            //if (GBSBackGroundfill == null)
+            //{
+            //    GBSBackGroundfill = new Core.Domain.Catalog.SpecificationAttribute();
+            //    GBSBackGroundfill.Name = "TreatmentFill";
 
+            //    var _specificationOptionsThumbnailBackgroundQS = new Core.Domain.Catalog.SpecificationAttributeOption();
+            //    _specificationOptionsThumbnailBackgroundQS.Name = "TreatmentFillColor";
+            //    GBSBackGroundfill.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundQS);
+
+
+            //    var _specificationOptionsThumbnailBackgroundE = new Core.Domain.Catalog.SpecificationAttributeOption();
+            //    _specificationOptionsThumbnailBackgroundE.Name = "TreatmentFillPattern";
+            //    GBSBackGroundfill.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundE);
+
+            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundfill);
+
+            //}
+            //var GBSBackGroundColor = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillColor").FirstOrDefault();
+            //if (GBSBackGroundColor == null)
+            //{
+            //    GBSBackGroundColor = new Core.Domain.Catalog.SpecificationAttribute();
+            //    GBSBackGroundColor.Name = "TreatmentFillColor";
+            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundColor);
+            //}
+
+            //var GBSBackGroundImage = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillPattern").FirstOrDefault();
+            //if (GBSBackGroundImage == null)
+            //{
+            //    GBSBackGroundImage = new Core.Domain.Catalog.SpecificationAttribute();
+            //    GBSBackGroundImage.Name = "TreatmentFillPattern";
+            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundImage);
+            //}
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.ArtistName", "Artist");
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.ArtistName.Hint", "Artist");
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.Artist", "Artist");
