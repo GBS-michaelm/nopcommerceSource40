@@ -11,6 +11,7 @@ DiscountRequirement.MustBeAssignedToCustomerRole
 Tax.CountryStateZip
 Widgets.GoogleAnalytics
 Shipping.USPS
+Shipping.UPS
 Tickets.System
 Shipping.Director
 Payments.CheckMoneyOrder
@@ -30,7 +31,7 @@ Shipping.FixedOrByWeight
 SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
-LOGGING.GBS
+Logging.GBS
 Nop.Plugin.Shipping.GBS
 Catalogs.GBS
-Shipping.UPS
+Products.SpecificationAttributes

@@ -280,8 +280,6 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-
-
                 ActionResult baseAR = _baseNopCheckoutController.Index();
                 return RedirectToRoute("CheckoutShippingAddress");
             }
@@ -326,6 +324,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
         public ActionResult SelectShippingAddress(int addressId, string shipType)
         {
+            TempData["ShippingAddressId"] = addressId;
+
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
