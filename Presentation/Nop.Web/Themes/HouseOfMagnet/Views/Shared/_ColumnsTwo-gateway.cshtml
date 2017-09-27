@@ -73,15 +73,15 @@
     string bottomText = "Can't decide? Let us help you...";
     string backgroundColor = "";
     bool hasTeams = false;
-    
+
     if (specAttrAndCategoryDataView.Count > 0)
     {
 
         h1 = !(string.IsNullOrEmpty(specAttrAndCategoryDataView[0]["H1"].ToString())) ? specAttrAndCategoryDataView[0]["H1"].ToString() : Model.Name;
         h2 = specAttrAndCategoryDataView[0]["H2"].ToString();
         topText = specAttrAndCategoryDataView[0]["UpperText"].ToString();
-        backgroundImage = "/Themes/" + @themeName + "/Content/images/" + specAttrAndCategoryDataView[0]["BackgroundPicturePath"].ToString();
-        foregroundImage = "/Themes/" + @themeName + "/Content/images/" + specAttrAndCategoryDataView[0]["ForegroundPicturePath"].ToString();
+        backgroundImage = specAttrAndCategoryDataView[0]["BackgroundPicturePath"].ToString(); //"/Themes/" + @themeName + "/Content/images/" +  old ver, before full path in db
+        foregroundImage = specAttrAndCategoryDataView[0]["ForegroundPicturePath"].ToString();
         bottomText = specAttrAndCategoryDataView[0]["LowerText"].ToString();
         backgroundColor = specAttrAndCategoryDataView[0]["BackgroundColor"].ToString();
         hasTeams = true;
@@ -97,8 +97,8 @@
             h1 = !(string.IsNullOrEmpty(categoryDataView[0]["H1"].ToString())) ? categoryDataView[0]["H1"].ToString() : Model.Name;
             h2 = categoryDataView[0]["H2"].ToString();
             topText = categoryDataView[0]["UpperText"].ToString();
-            backgroundImage = "/Themes/" + @themeName + "/Content/images/" + categoryDataView[0]["BackgroundPicturePath"].ToString();
-            foregroundImage = "/Themes/" + @themeName + "/Content/images/" + categoryDataView[0]["ForegroundPicturePath"].ToString();
+            backgroundImage = categoryDataView[0]["BackgroundPicturePath"].ToString(); //Content/images/" + old ver, before full path in db
+            foregroundImage = categoryDataView[0]["ForegroundPicturePath"].ToString();
             bottomText = categoryDataView[0]["LowerText"].ToString();
             backgroundColor = categoryDataView[0]["BackgroundColor"].ToString();
         }
@@ -223,7 +223,7 @@
         <p id="selectedTeam"></p><a id="changeSelectedTeam">(Change)</a>
     </div>
     
-    <div>salewidgethere</div>
+    <div>@*salewidgethere*@</div>
     <div id="gateway-body" style="background-color : @backgroundColor;">
         <div id="gateway-body-inner">
            <input id="cssChange" type="hidden" value="" />

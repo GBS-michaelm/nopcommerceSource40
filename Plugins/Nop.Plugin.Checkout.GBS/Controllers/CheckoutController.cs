@@ -331,7 +331,15 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             {
 
                 ActionResult selectShipping = _baseNopCheckoutController.SelectShippingAddress(addressId);
-                ActionResult selectShippingBase = _baseNopCheckoutController.SelectShippingMethod(shipType);
+
+                if (!string.IsNullOrEmpty(shipType))
+                {
+                    ActionResult selectShippingBase = _baseNopCheckoutController.SelectShippingMethod(shipType);
+                }
+                else
+                {
+                    return RedirectToRoute("CheckoutShippingMethod");
+                }                
                 
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
@@ -346,106 +354,110 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-                //validation
+                ////validation
                 
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-                if (!cart.Any())
-                    return RedirectToRoute("ShoppingCart");
+                //var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                //.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                //.LimitPerStore(_storeContext.CurrentStore.Id)
+                //.ToList();
+                //if (!cart.Any())
+                //    return RedirectToRoute("ShoppingCart");
 
-                if (_orderSettings.OnePageCheckoutEnabled)
-                    return RedirectToRoute("CheckoutOnePage");
+                //if (_orderSettings.OnePageCheckoutEnabled)
+                //    return RedirectToRoute("CheckoutOnePage");
 
-                if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                    return new HttpUnauthorizedResult();
+                //if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+                //    return new HttpUnauthorizedResult();
 
-                if (!cart.RequiresShipping())
-                {
-                    _workContext.CurrentCustomer.ShippingAddress = null;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    return RedirectToRoute("CheckoutShippingMethod");
-                }
+                //if (!cart.RequiresShipping())
+                //{
+                //    _workContext.CurrentCustomer.ShippingAddress = null;
+                //    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                //    return RedirectToRoute("CheckoutShippingMethod");
+                //}
 
-                //pickup point
-                if (_shippingSettings.AllowPickUpInStore)
-                {
-                    if (model.PickUpInStore)
-                    {
-                        //no shipping address selected
-                        _workContext.CurrentCustomer.ShippingAddress = null;
-                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                        _httpContext.Session["PickUpInStore"] = model.PickUpInStore.ToString();
+                ////pickup point
+                //if (_shippingSettings.AllowPickUpInStore)
+                //{
+                //    if (model.PickUpInStore)
+                //    {
+                //        //no shipping address selected
+                //        _workContext.CurrentCustomer.ShippingAddress = null;
+                //        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                //        _httpContext.Session["PickUpInStore"] = model.PickUpInStore.ToString();
 
-                        var pickupPoint = form["pickup-points-id"].Split(new[] { "___" }, StringSplitOptions.None);
-                        var pickupPoints = _shippingService
-                            .GetPickupPoints(_workContext.CurrentCustomer.BillingAddress, _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
-                        var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
-                        if (selectedPoint == null)
-                            return RedirectToRoute("CheckoutShippingAddress");
+                //        var pickupPoint = form["pickup-points-id"].Split(new[] { "___" }, StringSplitOptions.None);
+                //        var pickupPoints = _shippingService
+                //            .GetPickupPoints(_workContext.CurrentCustomer.BillingAddress, _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
+                //        var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
+                //        if (selectedPoint == null)
+                //            return RedirectToRoute("CheckoutShippingAddress");
 
-                        var pickUpInStoreShippingOption = new ShippingOption
-                        {
-                            Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
-                            Rate = selectedPoint.PickupFee,
-                            Description = selectedPoint.Description,
-                            ShippingRateComputationMethodSystemName = selectedPoint.ProviderSystemName
-                        };
+                //        var pickUpInStoreShippingOption = new ShippingOption
+                //        {
+                //            Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
+                //            Rate = selectedPoint.PickupFee,
+                //            Description = selectedPoint.Description,
+                //            ShippingRateComputationMethodSystemName = selectedPoint.ProviderSystemName
+                //        };
 
-                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
-                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, selectedPoint, _storeContext.CurrentStore.Id);
+                //        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
+                //        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, selectedPoint, _storeContext.CurrentStore.Id);
 
-                        return RedirectToRoute("CheckoutPaymentMethod");
-                    }
+                //        return RedirectToRoute("CheckoutPaymentMethod");
+                //    }
 
-                    //set value indicating that "pick up in store" option has not been chosen
-                    _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, null, _storeContext.CurrentStore.Id);
-                }
+                //    //set value indicating that "pick up in store" option has not been chosen
+                //    _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, null, _storeContext.CurrentStore.Id);
+                //}
 
-                //custom address attributes
-                var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-                var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
-                foreach (var error in customAttributeWarnings)
-                {
-                    ModelState.AddModelError("", error);
-                }
+                ////custom address attributes
+                //var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+                //var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                //foreach (var error in customAttributeWarnings)
+                //{
+                //    ModelState.AddModelError("", error);
+                //}
 
-                if (ModelState.IsValid)
-                {
-                    //try to find an address with the same values (don't duplicate records)
-                    var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                        model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                        model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                        model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                        model.NewAddress.CountryId, customAttributes);
-                    if (address == null)
-                    {
-                        address = model.NewAddress.ToEntity();
-                        address.CustomAttributes = customAttributes;
-                        address.CreatedOnUtc = DateTime.UtcNow;
-                        //some validation
-                        if (address.CountryId == 0)
-                            address.CountryId = null;
-                        if (address.StateProvinceId == 0)
-                            address.StateProvinceId = null;
-                        _workContext.CurrentCustomer.Addresses.Add(address);
-                    }
-                    _workContext.CurrentCustomer.ShippingAddress = address;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    _baseNopCheckoutController.SelectShippingMethod(form["shipType"]);
+                //if (ModelState.IsValid)
+                //{
+                //    //try to find an address with the same values (don't duplicate records)
+                //    var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
+                //        model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
+                //        model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
+                //        model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
+                //        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                //        model.NewAddress.CountryId, customAttributes);
+                //    if (address == null)
+                //    {
+                //        address = model.NewAddress.ToEntity();
+                //        address.CustomAttributes = customAttributes;
+                //        address.CreatedOnUtc = DateTime.UtcNow;
+                //        //some validation
+                //        if (address.CountryId == 0)
+                //            address.CountryId = null;
+                //        if (address.StateProvinceId == 0)
+                //            address.StateProvinceId = null;
+                //        _workContext.CurrentCustomer.Addresses.Add(address);
+                //    }
+                //    _workContext.CurrentCustomer.ShippingAddress = address;
+                //    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                //    _baseNopCheckoutController.SelectShippingMethod(form["shipType"]);
 
-                    return RedirectToRoute("CheckoutPaymentMethod");
-                }
+                //    return RedirectToRoute("CheckoutShippingMethod");
+                //}
 
 
-                //If we got this far, something failed, redisplay form
+                ////If we got this far, something failed, redisplay form
 
-                model = PrepareShippingAddressModel(cart,
-                    selectedCountryId: model.NewAddress.CountryId,
-                    overrideAttributesXml: customAttributes);
-                return View(model);
+                //model = PrepareShippingAddressModel(cart,
+                //    selectedCountryId: model.NewAddress.CountryId,
+                //    overrideAttributesXml: customAttributes);
+                //return View(model);
+
+
+                return _baseNopCheckoutController.NewShippingAddress(model, form);
+
             }
             return _baseNopCheckoutController.NewShippingAddress(model, form);
 

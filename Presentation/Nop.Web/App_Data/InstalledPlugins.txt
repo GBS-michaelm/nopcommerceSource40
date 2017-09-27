@@ -11,7 +11,6 @@ DiscountRequirement.MustBeAssignedToCustomerRole
 Tax.CountryStateZip
 Widgets.GoogleAnalytics
 Shipping.USPS
-Shipping.UPS
 Tickets.System
 Shipping.Director
 Payments.CheckMoneyOrder
@@ -34,3 +33,4 @@ Nop.Plugin.Api
 LOGGING.GBS
 Nop.Plugin.Shipping.GBS
 Catalogs.GBS
+Shipping.UPS
