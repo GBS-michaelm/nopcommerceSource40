@@ -1,15 +1,12 @@
 ﻿using Autofac;
 using Nop.Core.Infrastructure.DependencyManagement;
-using System;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Services.Messages;
 using Nop.Core.Plugins;
-using Nop.Services.Common;
-using Nop.Plugin.PriceCalculation.GBS.Catalog;
-using Nop.Services.Catalog;
+using Nop.Web.Factories;
+using Nop.Plugin.BreadCrumb.GBS.Factories;
 
-namespace Nop.Services.PriceCalculation.GBS
+namespace Nop.Services.BreadCrumb.GBS
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
@@ -33,13 +30,13 @@ namespace Nop.Services.PriceCalculation.GBS
             var pluginFinder = new PluginFinder();
             pluginFinder.ReloadPlugins();
 
-            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("PriceCalculation.GBS");
+            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("BreadCrumb.GBS");
 
-
+            
 
             if (pluginDescriptor != null)  // pluginDescriptor.Installed == true
             {
-                builder.RegisterType<GBSPriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
             }
 
         }

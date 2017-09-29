@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nop.Plugin.PriceCalculation.GBS")]
+[assembly: AssemblyTitle("Nop.Plugin.BreadCrumb.GBS")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Nop.Plugin.PriceCalculation.GBS")]
+[assembly: AssemblyProduct("Nop.Plugin.BreadCrumb.GBS")]
 [assembly: AssemblyCopyright("Copyright © GBS")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
