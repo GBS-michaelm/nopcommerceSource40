@@ -1,6 +1,7 @@
 ﻿@model CheckoutShippingMethodModel
 @using Nop.Web.Models.Checkout;
 @{
+    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
@@ -8,8 +9,14 @@
     //page class
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-shipping-method-page");
+        
 }
+
+
+
 @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
+
+
 <div class="page checkout-page shipping-method-page">
     <div class="page-title panel-heading">
         <h1>@T("Checkout.SelectShippingMethod")</h1>

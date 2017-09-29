@@ -1,7 +1,6 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -604,6 +603,9 @@ Global
 		{6A13D01B-5B1A-4932-9A9D-4117AC27011F} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{55F4C8A6-E784-43BD-9C2D-1D416768C247} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{83326190-FBE7-4E41-9A77-A12FA03BE00D} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE149CF7-63BA-47B5-A6D0-85D344969A2C}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\NopCommerce.ndproj"

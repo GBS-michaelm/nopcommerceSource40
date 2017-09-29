@@ -1,0 +1,45 @@
+﻿@model TopicModel
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Topics;
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    }
+
+    if (!Model.IsPasswordProtected)
+    {
+        //title
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        //meta
+        Html.AddMetaDescriptionParts(Model.MetaDescription);
+        Html.AddMetaKeywordParts(Model.MetaKeywords);
+    }
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(topicUrl);
+    }
+
+    //page class
+    Html.AppendPageCssClassParts("html-topic-page");
+    //Html.AppendPageCssClassParts("html-category-page");
+
+}
+
+@*<div class="page topic-page" id="ph-topic">*@
+    @*<div id="ph-title">
+        <div class="page-title panel-heading">*@
+            @*<h1>@Model.Title</h1>*@
+    
+                
+        @*</div>
+    </div>*@
+    <div class="page-body">
+        @Html.Raw(Model.Body)
+    </div>
+@*</div>*@
