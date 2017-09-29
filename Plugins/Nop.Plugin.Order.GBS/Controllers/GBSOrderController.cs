@@ -89,7 +89,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
                     model.stateID = stateID;
                     //get the product file names and put them in the model.
-                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID, webPlatform);
+                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID, stateID, productType, tempModel.ccId, webPlatform);
                     GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                     string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceBaseAddress;
                     model.productFileModels = FileService.populateProductFilesFromProductionFileName(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
@@ -149,7 +149,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             }
             return env;
         }
-        public List<ProductFileModel> GetProductFiles(int orderItemID, string webPlatform = "NOP")
+        public List<ProductFileModel> GetProductFiles(int orderItemID, string stateId, string pType, int ccId, string webPlatform = "NOP")
         {
             var environment = getEnvironment();
             List<ProductFileModel> productFiles = new List<ProductFileModel>();
@@ -171,7 +171,74 @@ namespace Nop.Plugin.Order.GBS.Controllers
                                 ProductFileModel file = new ProductFileModel();
                                 file.product.productType = (string)row["ProductType"];
                                 file.product.productionFileName = (string)row["FileName"];
-                                productFiles.Add(file);
+                                if (pType == file.product.productType)
+                                {
+                                    productFiles.Add(file);
+                                }
+                            }
+                            var design = _ccService.GetDesign(ccId);
+                            dynamic hiResUrls = JsonConvert.DeserializeObject<Object>(design.DownloadUrlsJson);
+                            foreach (ProductFileModel productFile in productFiles.ToList())
+                            {
+                                //rules will change per product type
+                                switch(productFile.product.productType)
+                                {
+                                    case "notecard":
+                                        if (pType != "notecard") {
+                                            productFiles.Remove(productFile);
+                                            break; }
+                                        foreach (string url in hiResUrls)
+                                        {
+                                            var urlStateId = url.Split('/')[url.Split('/').Count()-2];
+                                            if (urlStateId != stateId) { continue; }
+                                            var index = url.Split('/').Last<string>().Split('_').First<string>();
+                                            var fileMiddle = productFile.product.productionFileName.Split('-')[1];
+                                            switch (index)
+                                            {
+                                                case "0":
+                                                    //front
+                                                    if (fileMiddle.StartsWith("CF")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "1":
+                                                    //greeting
+                                                    if (fileMiddle.StartsWith("G")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "2":
+                                                    //back
+                                                    if (fileMiddle.StartsWith("CB")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    case "envelope":
+                                        if (pType != "envelope") {
+                                            productFiles.Remove(productFile);
+                                            break; }
+                                        foreach (string url in hiResUrls)
+                                        {
+                                            var urlStateId = url.Split('/')[url.Split('/').Count() - 2];
+                                            if (urlStateId != stateId) { continue; }
+                                            var index = url.Split('/').Last<string>().Split('_').First<string>();
+                                            var fileMiddle = productFile.product.productionFileName.Split('-')[1];
+                                            if (fileMiddle[0] != 'E') { continue; }
+                                            switch (index)
+                                            {
+                                                case "0":
+                                                    //front
+                                                    if (fileMiddle[2] == 'F') {     productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "1":
+                                                    //back
+                                                    if (fileMiddle[2] == 'B') { productFile.product.hiResPDFURL = url; }
+                                                    break;
+
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+
                             }
                         }
                         else
@@ -245,6 +312,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                         if (nopOrderItemResult.Count > 0)
                         {
                             ccId = (int)nopOrderItemResult[0]["ccId"];
+                            designModel.ccId = ccId;
                             designModel.userID = "nopcommerce_"+ nopOrderItemResult[0]["CustomerId"];
                             designModel.username = (string)nopOrderItemResult[0]["Username"];
                             designModel.gbsOrderId = (string)nopOrderItemResult[0]["gbsOrderID"];

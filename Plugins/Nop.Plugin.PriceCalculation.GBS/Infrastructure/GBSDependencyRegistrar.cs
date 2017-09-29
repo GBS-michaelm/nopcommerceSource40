@@ -9,7 +9,7 @@ using Nop.Services.Common;
 using Nop.Plugin.PriceCalculation.GBS.Catalog;
 using Nop.Services.Catalog;
 
-namespace Nop.Services.Customers.GBS
+namespace Nop.Services.PriceCalculation.GBS
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
@@ -17,7 +17,7 @@ namespace Nop.Services.Customers.GBS
         {
             get
             {
-                return 1;
+                return 1000;
             }
         }
 
@@ -33,7 +33,7 @@ namespace Nop.Services.Customers.GBS
             var pluginFinder = new PluginFinder();
             pluginFinder.ReloadPlugins();
 
-            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("Login.GBS");
+            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("PriceCalculation.GBS");
 
             
 

@@ -32,3 +32,5 @@ Nop.Plugin.Api
 Logging.GBS
 Nop.Plugin.Shipping.GBS
 Products.SpecificationAttributes
+Payments.CheckMoneyOrder
+BreadCrumb.GBS
