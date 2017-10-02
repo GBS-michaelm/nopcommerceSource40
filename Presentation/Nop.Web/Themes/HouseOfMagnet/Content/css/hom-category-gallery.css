@@ -1,0 +1,209 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+body {
+}
+
+
+
+
+
+
+
+/* !!!TABS CSS!!! */
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#categoryGalleryWYSIWYG {
+  display: block;
+  font: 14px/1 'Open Sans', sans-serif;
+  color: #555;
+  /*background: #eee;*/
+  height: 450px;
+}
+
+#galleryTopLeft {
+    display: block;
+    width: 65%;
+    height: 448px;
+    float: left;
+    background-color: black;
+}
+
+#galleryTopImage {
+    
+}
+
+#galleryTopRight {
+    display: block;
+    width: 35%;
+    height: 100%;
+    float: right;
+    
+}
+
+#galleryPriceChart {
+  
+  /*width: 100%;*/
+  
+  
+}
+
+#galleryPriceChart table {
+  margin-left: auto;
+  margin-right: auto;
+    width: 69%;
+    height: 200px;
+    background: #fff;
+}
+
+#galleryPriceChart thead {
+  text-align: center;
+  margin: auto;
+  border:1px solid #dedede;
+  padding: 1rem;
+  width: 50%;
+}
+#galleryPriceChart  tbody {
+  text-align: center;
+  margin: auto;
+  border:1px solid #dedede;
+  padding: 1rem;
+  width: 50%;
+}
+#galleryPriceChart tr {
+  text-align: center;
+  margin: auto;
+  border:1px solid #dedede;
+  padding: 1rem;
+  width: 50%;
+}
+#galleryPriceChart td {
+  text-align: center;
+  margin: auto;
+  border:1px solid #dedede;
+  padding: 1rem;
+  width: 50%;
+}
+
+#galleryPriceChart th {
+    margin: auto;
+    border:1px solid #dedede;
+    padding: 1rem;
+    width: 50%;
+    padding: 1rem;
+    font-weight: 100;
+    text-align: center;
+}
+
+#galleryPriceChart td:nth-child(even) {
+    color: #3468b1;
+    font-weight: bold;
+    background: #F5F5F5;
+}
+
+#galleryPriceChart p {
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+#galleryPriceChart main {
+  min-width: 320px;
+  max-width: 800px;
+  height: 315px;
+  /*padding: 38px;*/
+  padding-left: 25px;
+  /*padding-top: 0px;*/
+  margin: 0 auto;
+  background: #fff;
+}
+
+#galleryPriceChart #label1 {
+    margin-left: 20px;
+}
+
+#galleryPriceChart section {
+  display: none;
+  padding: 20px 0 0;
+  background-color: white;
+  border: 1px solid #ddd;
+
+}
+
+#galleryPriceChart input {
+  display: none;
+}
+
+#priceChartShipInfo {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 60%;
+    text-align: center;
+}
+
+label.gallery-price-chart-label {
+  display: inline-block;
+  /*margin: 0 0 25px;*/
+  margin-bottom: -1px;
+  margin-left: -5px;
+  padding: 15px 9px;
+  font-weight: 600;
+  text-align: center;
+  border:1px #bbb solid transparent;
+  border-top : 1px #bbb solid;
+  border-right: 1px #bbb solid;
+  border-left: 1px #bbb solid;
+  background-color : #F2F2F2;
+  /*float: left;*/
+}
+
+label:before {
+  font-family: fontawesome;
+  font-weight: normal;
+  margin-right: 10px;
+}
+
+/*label[for*='1']:before { content: '\f1cb'; }
+label[for*='2']:before { content: '\f17d'; }
+label[for*='3']:before { content: '\f16b'; }
+label[for*='4']:before { content: '\f1a9'; }*/
+
+label:hover {
+  color: #888;
+  cursor: pointer;
+}
+
+#galleryPriceChart input:checked + label {
+  color: #555;
+  border: 1px solid #bbb;
+  border-bottom: 1px solid #fff;
+  background-color : white;
+}
+
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3,
+#tab4:checked ~ #content4 {
+  display: block;
+}
+
+@media screen and (max-width: 650px) {
+  label {
+    font-size: 0;
+  }
+  label:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  label {
+    padding: 15px;
+  }
+}

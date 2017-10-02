@@ -14,6 +14,7 @@ Shipping.USPS
 Shipping.UPS
 Tickets.System
 Shipping.Director
+Payments.CheckMoneyOrder
 Payments.AuthorizeNet
 Order.GBS
 Payments.GBS
@@ -28,9 +29,10 @@ Pickup.PickupInStore
 Widgets.CustomersCanvas
 Shipping.FixedOrByWeight
 SevenSpikes.Nop.Plugins.MegaMenu
+Products.SpecificationAttributes
 Nop.Plugin.Api
 Logging.GBS
 Nop.Plugin.Shipping.GBS
+Catalogs.GBS
 Products.SpecificationAttributes
-Payments.CheckMoneyOrder
 BreadCrumb.GBS

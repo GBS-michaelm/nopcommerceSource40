@@ -2458,6 +2458,8 @@ display: none;
 
 .group-product-item .variant-name{width:100%; clear:both; padding:0px 0px 10px 0px; display:block; font-size:20px; color:#000; margin:0px; }
 .product-variant-line {
+    display: flex;
+    margin-bottom: 30px;
     border-bottom: 1px solid #999;
 	padding: 10px 10px 25px 0px ;
 	float:left;
