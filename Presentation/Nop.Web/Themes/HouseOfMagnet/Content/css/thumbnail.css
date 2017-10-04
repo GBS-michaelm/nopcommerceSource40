@@ -1577,11 +1577,11 @@ width: 115px;
     height: 570px;
 }
 .product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top-Case img {
-    height: 492px;
-    left: 43px;
+    height: 447px;
+    left: 24px;
     position: absolute;
-    top: 32px;
-    width: 192px;
+    top: 47px;
+    width: 261px;
 }
 .product-variant-list .variant-picture .Calendar-Pad-Peel-And-Stick-Top-Case img {
     height: 197px;
@@ -1602,11 +1602,11 @@ width: 115px;
 
 .wishlist-page .Calendar-Pad-Peel-And-Stick-Top-Case img {
     border: 0 none;
-    height: 217px;
-    left: 19px;
+    height: 197px;
+    left: 10px;
     position: absolute;
-    top: 13px;
-    width: 85px;
+    top: 20px;
+    width: 115px;
 }
 .mini-shopping-cart .Calendar-Pad-Peel-And-Stick-Top-Case {
 	width:100%;
@@ -1636,10 +1636,10 @@ width: 115px;
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top-Case {width:300px; height:300px;}
 .product-details-page .gallery .Calendar-Pad-Peel-And-Stick-Top-Case img {
-     height: 258px;
-    left: 23px;
-    top: 17px;
-    width: 100px;
+     height: 235px;
+    left: 13px;
+    top: 25px;
+    width: 137px;
 }
 }
 
@@ -2049,11 +2049,11 @@ width: 115px;
 }
 
 .wishlist-page .Calendar-Pad-Peel-And-Stick-Top img{
-    height: 142px;
-    left: 62px;
+    height: 196px;
+    left: 52px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 13px;
+    width: 114px;
 }
 
 .mini-shopping-cart .Calendar-Pad-Peel-And-Stick-Top{
@@ -3380,10 +3380,10 @@ width: 136px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
 }
 .product-grid .pictures .Football-QuickStix img {
-    height: 214px;
-    left: 29px;
+    height: 216px;
+    left: 63px;
     position: absolute;
-    top: 15px;
+    top: 13px;
     width: 84px;
 }
 
@@ -3425,7 +3425,7 @@ width: 136px;
 .wishlist-page .Football-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;
@@ -4069,10 +4069,10 @@ width: 136px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
 }
 .product-grid .pictures .Golf-QuickStix img {
-    height: 214px;
-    left: 19px;
+    height: 216px;
+    left: 63px;
     position: absolute;
-    top: 15px;
+    top: 13px;
     width: 84px;
 }
 
@@ -4114,7 +4114,7 @@ width: 136px;
 .wishlist-page .Golf-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;
@@ -4788,7 +4788,7 @@ width: 136px;
 .wishlist-page .Hockey-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;
@@ -5462,7 +5462,7 @@ width: 136px;
 .wishlist-page .NASCAR-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;
@@ -6136,7 +6136,7 @@ width: 136px;
 .wishlist-page .Specialty-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;
@@ -6475,7 +6475,7 @@ width: 136px;
 .wishlist-page .Whiteboard-Magnets-QuickStix img {
     border: 0 none;
     height: 217px;
-    left: 19px;
+    left: 62px;
     position: absolute;
     top: 13px;
     width: 85px;

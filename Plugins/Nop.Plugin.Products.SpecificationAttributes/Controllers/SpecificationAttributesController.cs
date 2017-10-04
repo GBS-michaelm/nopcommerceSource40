@@ -294,6 +294,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             foreach (var thbackground in thumbnailBackground)
                             {
                                 var gbsBackGroundName = thbackground.Name;
+                                ViewBag.fill = "";
+                                ViewBag.ClassName = "";
                                 if (gbsBackGroundName.Any())
                                 {
                                     switch (gbsBackGroundName)
@@ -303,10 +305,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                             if (backGroundShapeName.Any())
                                             {
                                                 ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
-                                            }
-                                            else
-                                            {
-                                                ViewBag.ClassName = "";
                                             }
                                             break;
                                         case "TreatmentFill":
@@ -323,10 +321,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                             ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
 
                                                         }
-                                                        else
-                                                        {
-                                                            ViewBag.fill = "";
-                                                        }
                                                         break;
                                                     case "TreatmentFillColor":
                                                         var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
@@ -334,10 +328,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                         {
                                                             ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
 
-                                                        }
-                                                        else
-                                                        {
-                                                            ViewBag.fill = "";
                                                         }
                                                         break;
                                                 }
@@ -561,6 +551,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 foreach (var thbackground in thumbnailBackground)
                                 {
                                     var gbsBackGroundName = thbackground.Name;
+                                    ViewBag.fill = "";
+                                    ViewBag.ClassName = "";
                                     if (gbsBackGroundName.Any())
                                     {
                                         switch (gbsBackGroundName)
@@ -570,10 +562,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                 if (backGroundShapeName.Any())
                                                 {
                                                     ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
-                                                }
-                                                else
-                                                {
-                                                    ViewBag.ClassName = "";
                                                 }
                                                 break;
                                             case "TreatmentFill":
@@ -590,10 +578,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                                 ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
 
                                                             }
-                                                            else
-                                                            {
-                                                                ViewBag.fill = "";
-                                                            }
                                                             break;
                                                         case "TreatmentFillColor":
                                                             var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
@@ -602,10 +586,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                                 ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
 
                                                             }
-                                                            else
-                                                            {
-                                                                ViewBag.fill = "";
-                                                            }
                                                             break;
                                                     }
                                                 }
@@ -613,7 +593,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                         }
                                     }
                                 }
-
                             }
                         }
                         else
@@ -716,6 +695,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     foreach (var thbackground in thumbnailBackground)
                     {
                         var gbsBackGroundName = thbackground.Name;
+                        ViewBag.fill = "";
+                        ViewBag.ClassName = "";
                         if (gbsBackGroundName.Any())
                         {
                             switch (gbsBackGroundName)
@@ -725,10 +706,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                     if (backGroundShapeName.Any())
                                     {
                                         ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
-                                    }
-                                    else
-                                    {
-                                        ViewBag.ClassName = "";
                                     }
                                     break;
                                 case "TreatmentFill":
@@ -745,10 +722,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                     ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
 
                                                 }
-                                                else
-                                                {
-                                                    ViewBag.fill = "";
-                                                }
                                                 break;
                                             case "TreatmentFillColor":
                                                 var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
@@ -757,10 +730,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                     ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
 
                                                 }
-                                                else
-                                                {
-                                                    ViewBag.fill = "";
-                                                }
                                                 break;
                                         }
                                     }
@@ -768,7 +737,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             }
                         }
                     }
-
                 }
             }
             else
