@@ -337,6 +337,10 @@
                 $("#edit-saved-address").hide();
                 $(".page.checkout-page.shipping-method-page").show();
                 $("#PickUpInStore").prop("checked", false);
+
+                $("#shipping-method-dropdown").hide();
+
+
                 break;
             case "checkout.localpickup":
             case "Local Pickup":
@@ -356,6 +360,11 @@
                 $(".page.checkout-page.shipping-method-page").show();
                 $("#edit-saved-address").show();
                 $("#PickUpInStore").prop("checked", false);
+
+                
+                var url = $("#shipping-address-dropdown option:selected").attr("addressurl");
+                setLocation(url + "&shipType="); //leaving shiptype empty allows next step to work
+
                 break;
         }
     }

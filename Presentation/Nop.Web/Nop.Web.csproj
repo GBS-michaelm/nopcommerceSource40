@@ -1468,6 +1468,8 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.dev.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\gbscustom.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\content.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\events.css" />
@@ -1509,6 +1511,8 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\magnific-popup.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\ncc-editor-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\print.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-product-options-chart.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-quantity-calculator.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\style.css" />
@@ -1676,6 +1680,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\bootstrap.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
@@ -2931,6 +2936,13 @@
     <Content Include="Themes\TeamMagnet\Views\Shared\_Root.Head.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Topics\RequestQuote.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Web.config" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryGalleryTemplate.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-pricechart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\CompareProductsOptionsChart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneProductOptionsChart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\VideoAndQuantityChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

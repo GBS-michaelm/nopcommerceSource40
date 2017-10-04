@@ -31,6 +31,12 @@
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-awesome.min.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/bootstrap.min.css", themeName));
 
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-gateway.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-category-gallery.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-product-options-chart.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-quantity-calculator.css", themeName));
+        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/hom-quantity-calculator.js");
+
 
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/animate.css", themeName));
