@@ -259,40 +259,94 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                         if (thumbnailBackground.Any())
                         {
+                            //foreach (var thbackground in thumbnailBackground)
+                            //{
+                            //    var backGround = thbackground.Name;
+                            //    if (backGround.Any())
+                            //    {
+                            //        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
+                            //        if (backGroundShape.Any())
+                            //        {
+                            //            if (backGround == "TreatmentImage")
+                            //            {
+                            //                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
+                            //            }
+                            //            else
+                            //            {
+                            //                var optionValue = backGroundShape.FirstOrDefault().Name;
+                            //                if (optionValue.Any())
+                            //                {
+                            //                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
+                            //                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
+                            //                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                            //                    {
+                            //                        ViewBag.fill = "background-color:" + optionValue;
+                            //                    }
+                            //                    else
+                            //                    {
+                            //                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                            //                    }
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+                            //}
                             foreach (var thbackground in thumbnailBackground)
                             {
-                                var backGround = thbackground.Name;
-                                if (backGround.Any())
+                                var gbsBackGroundName = thbackground.Name;
+                                if (gbsBackGroundName.Any())
                                 {
-                                    var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
-                                    if (backGroundShape.Any())
+                                    switch (gbsBackGroundName)
                                     {
-                                        if (backGround == "TreatmentImage")
-                                        {
-                                            ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
-                                        }
-                                        else
-                                        {
-                                            var optionValue = backGroundShape.FirstOrDefault().Name;
-                                            if (optionValue.Any())
+                                        case "TreatmentImage":
+                                            var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                            if (backGroundShapeName.Any())
                                             {
-                                                var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
-                                                optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
-                                                if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
+                                            }
+                                            else
+                                            {
+                                                ViewBag.ClassName = "";
+                                            }
+                                            break;
+                                        case "TreatmentFill":
+                                            var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                            if (backGroundFillOption.Any())
+                                            {
+                                                var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
+                                                switch (fillOptionValue)
                                                 {
-                                                    ViewBag.fill = "background-color:" + optionValue;
-                                                }
-                                                else
-                                                {
-                                                    ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                                    case "TreatmentFillPattern":
+                                                        var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                        if (img.Any())
+                                                        {
+                                                            ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+
+                                                        }
+                                                        else
+                                                        {
+                                                            ViewBag.fill = "";
+                                                        }
+                                                        break;
+                                                    case "TreatmentFillColor":
+                                                        var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                        if (color.Any())
+                                                        {
+                                                            ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+
+                                                        }
+                                                        else
+                                                        {
+                                                            ViewBag.fill = "";
+                                                        }
+                                                        break;
                                                 }
                                             }
-                                        }
+                                            break;
                                     }
                                 }
                             }
                         }
-
                         else
                         {
                             var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
@@ -472,38 +526,94 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                             var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                             if (thumbnailBackground.Any())
                             {
+                                //foreach (var thbackground in thumbnailBackground)
+                                //{
+                                //    var backGround = thbackground.Name;
+                                //    if (backGround.Any())
+                                //    {
+                                //        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
+                                //        if (backGroundShape.Any())
+                                //        {
+                                //            if (backGround == "TreatmentImage")
+                                //            {
+                                //                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
+                                //            }
+                                //            else
+                                //            {
+                                //                var optionValue = backGroundShape.FirstOrDefault().Name;
+                                //                if (optionValue.Any())
+                                //                {
+                                //                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
+                                //                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
+                                //                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                //                    {
+                                //                        ViewBag.fill = "background-color:" + optionValue;
+                                //                    }
+                                //                    else
+                                //                    {
+                                //                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                //                    }
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
                                 foreach (var thbackground in thumbnailBackground)
                                 {
-                                    var backGround = thbackground.Name;
-                                    if (backGround.Any())
+                                    var gbsBackGroundName = thbackground.Name;
+                                    if (gbsBackGroundName.Any())
                                     {
-                                        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
-                                        if (backGroundShape.Any())
+                                        switch (gbsBackGroundName)
                                         {
-                                            if (backGround == "TreatmentImage")
-                                            {
-                                                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
-                                            }
-                                            else
-                                            {
-                                                var optionValue = backGroundShape.FirstOrDefault().Name;
-                                                if (optionValue.Any())
+                                            case "TreatmentImage":
+                                                var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                                if (backGroundShapeName.Any())
                                                 {
-                                                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
-                                                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
-                                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                    ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.ClassName = "";
+                                                }
+                                                break;
+                                            case "TreatmentFill":
+                                                var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                                if (backGroundFillOption.Any())
+                                                {
+                                                    var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
+                                                    switch (fillOptionValue)
                                                     {
-                                                        ViewBag.fill = "background-color:" + optionValue;
-                                                    }
-                                                    else
-                                                    {
-                                                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                                        case "TreatmentFillPattern":
+                                                            var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                            if (img.Any())
+                                                            {
+                                                                ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+
+                                                            }
+                                                            else
+                                                            {
+                                                                ViewBag.fill = "";
+                                                            }
+                                                            break;
+                                                        case "TreatmentFillColor":
+                                                            var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                            if (color.Any())
+                                                            {
+                                                                ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+
+                                                            }
+                                                            else
+                                                            {
+                                                                ViewBag.fill = "";
+                                                            }
+                                                            break;
                                                     }
                                                 }
-                                            }
+                                                break;
                                         }
                                     }
                                 }
+
                             }
                         }
                         else
@@ -571,38 +681,94 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
                 if (thumbnailBackground.Any())
                 {
+                    //foreach (var thbackground in thumbnailBackground)
+                    //{
+                    //    var backGround = thbackground.Name;
+                    //    if (backGround.Any())
+                    //    {
+                    //        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
+                    //        if (backGroundShape.Any())
+                    //        {
+                    //            if (backGround == "TreatmentImage")
+                    //            {
+                    //                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
+                    //            }
+                    //            else
+                    //            {
+                    //                var optionValue = backGroundShape.FirstOrDefault().Name;
+                    //                if (optionValue.Any())
+                    //                {
+                    //                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
+                    //                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
+                    //                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                    //                    {
+                    //                        ViewBag.fill = "background-color:" + optionValue;
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     foreach (var thbackground in thumbnailBackground)
                     {
-                        var backGround = thbackground.Name;
-                        if (backGround.Any())
+                        var gbsBackGroundName = thbackground.Name;
+                        if (gbsBackGroundName.Any())
                         {
-                            var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
-                            if (backGroundShape.Any())
+                            switch (gbsBackGroundName)
                             {
-                                if (backGround == "TreatmentImage")
-                                {
-                                    ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
-                                }
-                                else
-                                {
-                                    var optionValue = backGroundShape.FirstOrDefault().Name;
-                                    if (optionValue.Any())
+                                case "TreatmentImage":
+                                    var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                    if (backGroundShapeName.Any())
                                     {
-                                        var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
-                                        optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
-                                        if (optionValue.Contains("#") && optionValue.Length == 7)
+                                        ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
+                                    }
+                                    else
+                                    {
+                                        ViewBag.ClassName = "";
+                                    }
+                                    break;
+                                case "TreatmentFill":
+                                    var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                    if (backGroundFillOption.Any())
+                                    {
+                                        var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
+                                        switch (fillOptionValue)
                                         {
-                                            ViewBag.fill = "background-color:" + optionValue;
-                                        }
-                                        else
-                                        {
-                                            ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                            case "TreatmentFillPattern":
+                                                var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                if (img.Any())
+                                                {
+                                                    ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.fill = "";
+                                                }
+                                                break;
+                                            case "TreatmentFillColor":
+                                                var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                if (color.Any())
+                                                {
+                                                    ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.fill = "";
+                                                }
+                                                break;
                                         }
                                     }
-                                }
+                                    break;
                             }
                         }
                     }
+
                 }
             }
             else
