@@ -93,6 +93,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                     GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                     string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceBaseAddress;
                     model.productFileModels = FileService.populateProductFilesFromProductionFileName(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
+                    model.sessionID = System.Web.HttpContext.Current.Session.SessionID;
 
 
                     return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProduct.cshtml", model);
