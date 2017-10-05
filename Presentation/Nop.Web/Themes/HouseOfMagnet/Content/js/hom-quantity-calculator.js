@@ -14,7 +14,7 @@
 
     //iterate through each textboxes and add keyup
     //handler to trigger sum event
-    $(".txt").each(function () {
+    $("#videoQuantityCalculatorSection .txt").each(function () {
 
         $(this).keyup(function () {
             calculateSum();
@@ -22,12 +22,12 @@
     });
 
     //EVENT FUNCTIONS
-    $('.next-tab, .prev-tab').click(function () {
+    $('#videoQuantityCalculatorSection .next-tab, #videoQuantityCalculatorSection .prev-tab').click(function () {
         $tabs.tabs('select', $(this).attr("rel"));
         return false;
     });
 
-    $('input').bind('change keyup input', function (event) {
+    $('#videoQuantityCalculatorSection input').bind('change keyup input', function (event) {
         var currValue = $(this).val();
 
         if (currValue.search(/[^0-9]/) != -1) {
@@ -39,7 +39,7 @@
     });
 
     //$(".numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
-    $(".button").live("click", function () {
+    $("#videoQuantityCalculatorSection .button").live("click", function () {
 
         var $button = $(this);
         var oldValue = $button.parent().find("input").val();
@@ -68,7 +68,7 @@
         var sum = 0;
 
         //iterate through each textboxes and add the values
-        $("input.txt").each(function () {
+        $("#videoQuantityCalculatorSection input.txt").each(function () {
 
             
 
@@ -83,13 +83,13 @@
 
         });
         //.toFixed() method will roundoff the final sum to 2 decimal places
-        $("#sum").html("You'll need <strong>" + sum + " </strong> schedules");
+        $("#videoQuantityCalculatorSection #sum").html("You'll need <strong>" + sum + " </strong> schedules");
     }
 
     function LoadPlusAndMinus() {
 
         if (countPlus == 0) {
-            $(".numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
+            $("#videoQuantityCalculatorSection .numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
         }
         countPlus++;
 
@@ -97,9 +97,9 @@
 
     function ButtonsNextLoad() {
         if (buttonCount == 0) {
-            $(".ui-tabs-panel").each(function (i) {
+            $("#videoQuantityCalculatorSection .ui-tabs-panel").each(function (i) {
 
-                var totalSize = $(".ui-tabs-panel").size() - 1;
+                var totalSize = $("#videoQuantityCalculatorSection .ui-tabs-panel").size() - 1;
 
                 if (i != totalSize) {
                     next = i + 2;
