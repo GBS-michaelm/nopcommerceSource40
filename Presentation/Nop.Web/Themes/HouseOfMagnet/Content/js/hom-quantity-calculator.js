@@ -14,7 +14,7 @@
 
     //iterate through each textboxes and add keyup
     //handler to trigger sum event
-    $("#videoQuantityCalculatorSection .txt").each(function () {
+    $("#videoQuantityCalculatorSection .txt").each(function () {     
 
         $(this).keyup(function () {
             calculateSum();
