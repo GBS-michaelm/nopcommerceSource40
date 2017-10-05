@@ -925,7 +925,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             var product = _productService.GetProductById(productID);
             foreach (var price in product.TierPrices)
             {
-                if (quantity > price.Quantity)
+                if (quantity >= price.Quantity)
                     finalprice = price.Price;
             }
             return Json(finalprice.ToString("0.00"), JsonRequestBehavior.AllowGet);
