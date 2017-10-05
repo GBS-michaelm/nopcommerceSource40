@@ -1516,6 +1516,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\style.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail.css" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons-snapchat.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\fontawesome-webfont.svg" />

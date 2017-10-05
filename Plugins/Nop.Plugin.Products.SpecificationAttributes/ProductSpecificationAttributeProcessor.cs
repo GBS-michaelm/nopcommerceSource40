@@ -79,65 +79,66 @@ namespace Nop.Plugin.Products.SpecificationAttributes
                 _specificationAttributeService.InsertSpecificationAttribute(artistAttr);
             }
 
-            //var ThumbnailBackground = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Treatment").FirstOrDefault();
-            //if (ThumbnailBackground == null)
-            //{
-            //    ThumbnailBackground = new Core.Domain.Catalog.SpecificationAttribute();
-            //    ThumbnailBackground.Name = "Treatment";
+            var Treatment = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Treatment").FirstOrDefault();
+            if (Treatment == null)
+            {
+                Treatment = new Core.Domain.Catalog.SpecificationAttribute();
+                Treatment.Name = "Treatment";
 
-            //    var _specificationOptionsThumbnailBackgroundQS = new Core.Domain.Catalog.SpecificationAttributeOption();
-            //    _specificationOptionsThumbnailBackgroundQS.Name = "TreatmentImage";
-            //    ThumbnailBackground.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundQS);
-
-
-            //    var _specificationOptionsThumbnailBackgroundE = new Core.Domain.Catalog.SpecificationAttributeOption();
-            //    _specificationOptionsThumbnailBackgroundE.Name = "TreatmentFill";
-            //    ThumbnailBackground.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundE);
+                var _specificationOptionsTreatmentImage = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentImage.Name = "TreatmentImage";
+                Treatment.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentImage);
 
 
-            //    _specificationAttributeService.InsertSpecificationAttribute(ThumbnailBackground);
-            //}
-            //var GBSBackGroundShape = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentImage").FirstOrDefault();
-            //if (GBSBackGroundShape == null)
-            //{
-            //    GBSBackGroundShape = new Core.Domain.Catalog.SpecificationAttribute();
-            //    GBSBackGroundShape.Name = "TreatmentImage";
-            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundShape);
-            //}
-
-            //var GBSBackGroundfill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFill").FirstOrDefault();
-            //if (GBSBackGroundfill == null)
-            //{
-            //    GBSBackGroundfill = new Core.Domain.Catalog.SpecificationAttribute();
-            //    GBSBackGroundfill.Name = "TreatmentFill";
-
-            //    var _specificationOptionsThumbnailBackgroundQS = new Core.Domain.Catalog.SpecificationAttributeOption();
-            //    _specificationOptionsThumbnailBackgroundQS.Name = "TreatmentFillColor";
-            //    GBSBackGroundfill.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundQS);
+                var _specificationOptionsTreatmentFill = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFill.Name = "TreatmentFill";
+                Treatment.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFill);
 
 
-            //    var _specificationOptionsThumbnailBackgroundE = new Core.Domain.Catalog.SpecificationAttributeOption();
-            //    _specificationOptionsThumbnailBackgroundE.Name = "TreatmentFillPattern";
-            //    GBSBackGroundfill.SpecificationAttributeOptions.Add(_specificationOptionsThumbnailBackgroundE);
+                _specificationAttributeService.InsertSpecificationAttribute(Treatment);
+            }
+            var TreatmentImage = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentImage").FirstOrDefault();
+            if (TreatmentImage == null)
+            {
+                TreatmentImage = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentImage.Name = "TreatmentImage";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentImage);
+            }
 
-            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundfill);
+            var TreatmentFill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFill").FirstOrDefault();
+            if (TreatmentFill == null)
+            {
+                TreatmentFill = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFill.Name = "TreatmentFill";
 
-            //}
-            //var GBSBackGroundColor = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillColor").FirstOrDefault();
-            //if (GBSBackGroundColor == null)
-            //{
-            //    GBSBackGroundColor = new Core.Domain.Catalog.SpecificationAttribute();
-            //    GBSBackGroundColor.Name = "TreatmentFillColor";
-            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundColor);
-            //}
+                var _specificationOptionsTreatmentFillColor = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFillColor.Name = "TreatmentFillColor";
+                TreatmentFill.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFillColor);
 
-            //var GBSBackGroundImage = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillPattern").FirstOrDefault();
-            //if (GBSBackGroundImage == null)
-            //{
-            //    GBSBackGroundImage = new Core.Domain.Catalog.SpecificationAttribute();
-            //    GBSBackGroundImage.Name = "TreatmentFillPattern";
-            //    _specificationAttributeService.InsertSpecificationAttribute(GBSBackGroundImage);
-            //}
+
+                var _specificationOptionsTreatmentFillPattern = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFillPattern.Name = "TreatmentFillPattern";
+                TreatmentFill.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFillPattern);
+
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFill);
+
+            }
+            var TreatmentFillColor = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillColor").FirstOrDefault();
+            if (TreatmentFillColor == null)
+            {
+                TreatmentFillColor = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFillColor.Name = "TreatmentFillColor";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFillColor);
+            }
+
+            var TreatmentFillPattern = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillPattern").FirstOrDefault();
+            if (TreatmentFillPattern == null)
+            {
+                TreatmentFillPattern = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFillPattern.Name = "TreatmentFillPattern";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFillPattern);
+            }
+
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.ArtistName", "Artist");
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.ArtistName.Hint", "Artist");
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.Artist", "Artist");
