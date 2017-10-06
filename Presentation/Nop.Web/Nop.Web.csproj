@@ -1510,6 +1510,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\widgets.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\magnific-popup.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\ncc-editor-styles.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\parent-company-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\print.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-product-options-chart.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-quantity-calculator.css" />
@@ -2942,6 +2943,10 @@
     <Content Include="Themes\HouseOfMagnet\Views\Topic\CompareProductsOptionsChart.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneProductOptionsChart.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\VideoAndQuantityChart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\ParentCompanyGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-parent-company.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\TopicMarketCenterWorkPlace.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneSimple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
