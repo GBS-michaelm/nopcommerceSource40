@@ -23,8 +23,9 @@
 
     //EVENT FUNCTIONS
     $('#videoQuantityCalculatorSection .next-tab, #videoQuantityCalculatorSection .prev-tab').click(function () {
-        $tabs.tabs('select', $(this).attr("rel"));
-        return false;
+        //$tabs.tabs('select', $(this).attr("rel"));       
+        $tabs.tabs("option", "active", 2);
+        //return false;
     });
 
     $('#videoQuantityCalculatorSection input').bind('change keyup input', function (event) {
