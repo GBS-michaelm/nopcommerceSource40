@@ -355,7 +355,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             if (miscPlugins.Count > 0)
             {
                 ////validation
-                
+
                 //var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 //.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 //.LimitPerStore(_storeContext.CurrentStore.Id)
@@ -455,8 +455,19 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                 //    overrideAttributesXml: customAttributes);
                 //return View(model);
 
+                /* Save Shipping Address to Temp Data */
+                ActionResult baseResult = _baseNopCheckoutController.NewShippingAddress(model, form);
 
-                return _baseNopCheckoutController.NewShippingAddress(model, form);
+                if (_shippingSettings.AllowPickUpInStore && model.PickUpInStore)
+                {
+                    TempData["ShippingAddressId"] = "LocalPickup";
+                }
+                else
+                {
+                    TempData["ShippingAddressId"] = _workContext.CurrentCustomer.ShippingAddress.Id;
+                }
+
+                return baseResult;
 
             }
             return _baseNopCheckoutController.NewShippingAddress(model, form);
