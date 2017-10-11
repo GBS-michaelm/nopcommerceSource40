@@ -22,7 +22,6 @@ SevenSpikes.Core
 SevenSpikes.Nop.Plugins.AjaxFilters
 SevenSpikes.Nop.Plugins.AjaxFilters.Pro
 SevenSpikes.Nop.Plugins.NopQuickTabs
-Login.GBS
 Checkout.GBS
 PriceCalculation.GBS
 Pickup.PickupInStore
@@ -31,7 +30,6 @@ Shipping.FixedOrByWeight
 SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
-Logging.GBS
 Nop.Plugin.Shipping.GBS
 Catalogs.GBS
 Products.SpecificationAttributes
