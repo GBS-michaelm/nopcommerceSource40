@@ -9,14 +9,14 @@
 $(document).ready(function () {
     //Used js for Header Sticky Menu  
     //http://www.jqueryscript.net/menu/Sticky-Navigation-Bar-with-jQuery-Bootstrap.html
-    $(window).bind('scroll', function() {
+    $(window).bind('scroll', function () {
         var navHeight = $("div.header").height();
         var navWidth = $("div.header").width();
-if(window.location.pathname.includes("Plugins/CcWidget/EditorPage"))
-{
-}
-else{
-        ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');}
+        if (window.location.pathname.includes("Plugins/CcWidget/EditorPage")) {
+        }
+        else {
+            ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');
+        }
     });
 
     //Used js for Responsive Website Checker
@@ -26,7 +26,7 @@ else{
     });
 
     //Used js for Left Sliderbar Collapse(Responsive Devices)
-    $('.block .title').click(function() {
+    $('.block .title').click(function () {
         var e = window, a = 'inner';
         if (!('innerWidth' in window)) {
             a = 'client';
@@ -114,7 +114,7 @@ else{
             //Settings
             var position = settings['position'];
             var speed = settings['speed'];
-            
+
             backBtn.css({
                 'right': 40,
                 'bottom': 40,
@@ -136,9 +136,9 @@ else{
                 $("html, body").animate({
                     scrollTop: 0
                 },
-                {
-                    duration: 1200
-                });
+                    {
+                        duration: 1200
+                    });
             });
         }
     }(jQuery));
@@ -152,17 +152,19 @@ else{
 
 //Used js for Product Increase and Decrease Quantity Item
 function ChangeQuantity1(e) {
-
     var id = document.getElementById(e.id).value;
     // var pricechange = document.getElementById("pricescript").textContent;
     var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
-
- if (id <= 0)
+    if (id <= 0)
         return 0;
+
+    var isPriceChange = GetTierPrice(id , e.dataset.productid);
+    pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
+
     var qtyValue = parseInt(id);
-   // qtyValue = qtyValue + 1;
+    // qtyValue = qtyValue + 1;
     var final = parseFloat(qtyValue * pricechange).toFixed(2);
-   
+
     document.getElementById(e.id).value = qtyValue;
     //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
@@ -173,20 +175,27 @@ function ChangeQuantity1(e) {
 
 function IncreaseQuantity(e) {
     var id = document.getElementById(e.id).value;
-if (id <= 0)
-        id=0;
+      if (id <= 0)
+        id = 0;
     // var pricechange = document.getElementById("pricescript").textContent;
-    var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
+      var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
+
+      var quantity =  parseInt(id) + 1 ;
+      var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
+      pricechange = isPriceChange > 0 ? isPriceChange : pricechange;
+
 
     var qtyValue = parseInt(id);
     qtyValue = qtyValue + 1;
+
     var final = parseFloat(qtyValue * pricechange).toFixed(2);
     document.getElementById(e.id).value = qtyValue;
+
     //  document.getElementById("eachprice").textContent = "(Ea. $"+document.getElementById("pricescript").textContent+")";
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
     //document.getElementById("newprice").textContent = "$"+final;
-    $(".price-value-" + e.dataset.productid).text("$"+final);
+    $(".price-value-" + e.dataset.productid).text("$" + final);
     return true;
 }
 
@@ -194,28 +203,51 @@ function DecreaseQuantity(e) {
     var id = document.getElementById(e.id).value;
     // var pricechange = document.getElementById("pricescript").textContent;
     var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
-   
-    if (id <= 0 || id==1){
-        id=1;}
+    if (id <= 0 || id == 1) {
+        id = 1;
+    }
+    var quantity = parseInt(id) - 1;
+    var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
+    pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
+
 
     var qtyValue = parseInt(id);
-if (id <= 0 || id==1){
-    qtyValue = 1;
-}
-else{
-qtyValue = qtyValue - 1;
-}
+    if (id <= 0 || id == 1) {
+        qtyValue = 1;
+    }
+    else {
+        qtyValue = qtyValue - 1;
+    }
 
-var final = parseFloat(qtyValue * pricechange).toFixed(2);
+    var final = parseFloat(qtyValue * pricechange).toFixed(2);
     document.getElementById(e.id).value = qtyValue;
     //document.getElementById("newprice").textContent = "$" + final;
     //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
     $(".price-value-" + e.dataset.productid).text("$" + final);
-    
+
     return true;
 }
+
+function GetTierPrice(quantity, productID) {
+    var finalprice;
+    $.ajax({
+        url: '/SpecificationAttributes/GetTierPrice',
+        async: false,
+        timeout: 30000,
+        type: "GET",
+        data: { quantity: quantity, productID : productID },
+        error: function () {
+            return true;
+        },
+        success: function (price) {
+            finalprice =  price;
+        }
+    });
+    return finalprice;
+}
+
 
 //<script type="text/javascript">
 

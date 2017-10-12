@@ -31,13 +31,9 @@
         }
         else
         {
-            @*/ ------------- Nav 7/27/17 ------------------ /*@
-        if (Model.Breadcrumb.CategoryBreadcrumb.FirstOrDefault().Name == "Sets")
-        {            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
-            }
-            else
-            {            @Html.Widget("product_details_widget", Model.Id)  
-            }
+            @*/ ------------- Nav 7/27/17 updated on 8/22/17 removed if condition for sets or single cards------------------ /*@
+  
+                  @Html.Widget("product_details_widget", Model.Id)  
         }
     </div>
     @if (Model.PictureModels.Count > 1)

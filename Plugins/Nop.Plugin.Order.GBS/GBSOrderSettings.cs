@@ -9,7 +9,9 @@ namespace Nop.Plugin.Order.GBS
         public string Password { get; set; }
         public string GBSOrderWebServiceAddress { get; set; }
         public string GBSPrintFileWebServiceAddress { get; set; }
+        public string GBSPrintFileWebServiceBaseAddress { get; set; }
         public string GBSStoreNamePrepend { get; set; }
+        public string HOMConnectionString { get; set; }
 
 
     }

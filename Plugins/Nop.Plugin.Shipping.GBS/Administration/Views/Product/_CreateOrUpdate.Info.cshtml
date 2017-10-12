@@ -1754,12 +1754,12 @@
                             @Html.ValidationMessageFor(model => model.DeliveryDateId)
                         </div>
                     </div>
-                        @*////////////////////////////////////////////////////////////////*@
+                        @*////////////////////////////////////Naveed - Removed this and added same functionality under Shipping Tab on Admin ////////////////////////////*@
 
-                        @if (Model.Id != 0)
+                        @*@if (Model.Id != 0)
                         {
                             @Html.Action("ProductExtendedFields", "ExtendedFields", new { productId = Model.Id })
-                        }
+                        }*@
                             @*///////////////////////////////////////////////////////////*@
                 </div>
             </div>

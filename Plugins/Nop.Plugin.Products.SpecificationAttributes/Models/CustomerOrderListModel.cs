@@ -41,6 +41,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Models
             public string PaymentStatus { get; set; }
             public string ShippingStatus { get; set; }
             public DateTime CreatedOn { get; set; }
+            public int Monthvalue { get; set; }
         }
 
         public partial class RecurringOrderModel : BaseNopEntityModel

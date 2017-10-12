@@ -1,14 +1,14 @@
 ﻿@model Nop.Web.Models.Catalog.ProductOverviewModel
 @{
     Layout = "";
-    string color = ViewBag.DefaultColor;
+    string fill = ViewBag.fill;
     string className = ViewBag.ClassName;
     int productId = ViewBag.ProductId;
     string sename = ViewBag.seName;
 
 }
 <div class="product-item clearfix" data-productid="@productId">
-    <div class="picture" style="@color">
+    <div class="picture" style="@fill">
         <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.DefaultPictureModel.Title" class="@className">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
@@ -17,11 +17,11 @@
 
 <style>
     .Horizontal {
-        background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
+        background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
     }
 
     .Vertical {
-        background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
+        background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
     }
 </style>
 <link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />

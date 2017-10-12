@@ -103,6 +103,7 @@ else{
 
 
     /* Used js for BackTop Page Scrolling*/
+
     (function ($) {
         $.fn.backTop = function (options) {
             var backBtn = this;

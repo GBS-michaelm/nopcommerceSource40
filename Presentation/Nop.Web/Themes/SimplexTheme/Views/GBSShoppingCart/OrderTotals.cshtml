@@ -54,11 +54,13 @@
                 <tr>
                     <td class="cart-total-left">
                         <span class="">
-                            @T("ShoppingCart.Totals.Shipping")</span>
-                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+                        @T("ShoppingCart.Totals.Shipping")</span>
+                       
+                        @*@if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                         {
                             <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
-                        }
+                        }*@
+                        <a ref="#" data-toggle="tooltip" class="gbs-cursor-pointer gbs-color-black" title="@T("ShoppingCart.Totals.ShippingInfo")"><i class="icon-question"></i></a>
                     </td>
                   
                     <td class="cart-total-right">
@@ -123,7 +125,7 @@
                 {
                     <tr>
                         <td class="cart-total-left">
-                            <span class="">@T("ShoppingCart.Totals.Tax") </span><a ref="#" data-toggle="tooltip" class="gbs-cursor-pointer gbs-color-black" title="The California (CA) state tax base rate is currently 7.25%. However shipments delivered to zip codes 92019, 92020, and 92021 will incur the local tax rate of 8.25%."><i class="icon-question"></i></a>
+                            <span class="">@T("ShoppingCart.Totals.Tax") </span><a ref="#" data-toggle="tooltip" class="gbs-cursor-pointer gbs-color-black" title="@T("ShoppingCart.Totals.TaxInfo")"><i class="icon-question"></i></a>
                         </td>
                         <td class="cart-total-right">
                             <span class=""><span class="gbs-product-price">@Model.Tax</span> </span>

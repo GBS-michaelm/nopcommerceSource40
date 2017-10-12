@@ -78,30 +78,65 @@ namespace Nop.Plugin.Products.SpecificationAttributes
                 artistAttr.Name = "Artist";
                 _specificationAttributeService.InsertSpecificationAttribute(artistAttr);
             }
-            var DefaultEnvelopeColorAttr = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "DefaultEnvelopeColor").FirstOrDefault();
-            if (DefaultEnvelopeColorAttr == null)
+
+            var Treatment = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Treatment").FirstOrDefault();
+            if (Treatment == null)
             {
-                DefaultEnvelopeColorAttr = new Core.Domain.Catalog.SpecificationAttribute();
-                DefaultEnvelopeColorAttr.Name = "DefaultEnvelopeColor";
+                Treatment = new Core.Domain.Catalog.SpecificationAttribute();
+                Treatment.Name = "Treatment";
+
+                var _specificationOptionsTreatmentImage = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentImage.Name = "TreatmentImage";
+                Treatment.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentImage);
 
 
-                _specificationAttributeService.InsertSpecificationAttribute(DefaultEnvelopeColorAttr);
+                var _specificationOptionsTreatmentFill = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFill.Name = "TreatmentFill";
+                Treatment.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFill);
+
+
+                _specificationAttributeService.InsertSpecificationAttribute(Treatment);
             }
-            var OrientationAttr = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "Orientation").FirstOrDefault();
-            if (OrientationAttr == null)
+            var TreatmentImage = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentImage").FirstOrDefault();
+            if (TreatmentImage == null)
             {
-                OrientationAttr = new Core.Domain.Catalog.SpecificationAttribute();
-                OrientationAttr.Name = "Orientation";
+                TreatmentImage = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentImage.Name = "TreatmentImage";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentImage);
+            }
 
-                var _specificationOptionsVertical = new Core.Domain.Catalog.SpecificationAttributeOption();
-                _specificationOptionsVertical.Name = "Vertical";
-                OrientationAttr.SpecificationAttributeOptions.Add(_specificationOptionsVertical);
+            var TreatmentFill = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFill").FirstOrDefault();
+            if (TreatmentFill == null)
+            {
+                TreatmentFill = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFill.Name = "TreatmentFill";
 
-                var _specificationOptionsHorizontal = new Core.Domain.Catalog.SpecificationAttributeOption();
-                _specificationOptionsHorizontal.Name = "Horizontal";
-                OrientationAttr.SpecificationAttributeOptions.Add(_specificationOptionsHorizontal);
+                var _specificationOptionsTreatmentFillColor = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFillColor.Name = "TreatmentFillColor";
+                TreatmentFill.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFillColor);
 
-                _specificationAttributeService.InsertSpecificationAttribute(OrientationAttr);
+
+                var _specificationOptionsTreatmentFillPattern = new Core.Domain.Catalog.SpecificationAttributeOption();
+                _specificationOptionsTreatmentFillPattern.Name = "TreatmentFillPattern";
+                TreatmentFill.SpecificationAttributeOptions.Add(_specificationOptionsTreatmentFillPattern);
+
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFill);
+
+            }
+            var TreatmentFillColor = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillColor").FirstOrDefault();
+            if (TreatmentFillColor == null)
+            {
+                TreatmentFillColor = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFillColor.Name = "TreatmentFillColor";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFillColor);
+            }
+
+            var TreatmentFillPattern = _specificationAttributeService.GetSpecificationAttributes().Where(x => x.Name == "TreatmentFillPattern").FirstOrDefault();
+            if (TreatmentFillPattern == null)
+            {
+                TreatmentFillPattern = new Core.Domain.Catalog.SpecificationAttribute();
+                TreatmentFillPattern.Name = "TreatmentFillPattern";
+                _specificationAttributeService.InsertSpecificationAttribute(TreatmentFillPattern);
             }
 
             this.AddOrUpdatePluginLocaleResource("Plugin.Prodcuts.SpecificationAttributes.ArtistName", "Artist");

@@ -90,38 +90,51 @@
                             </ul>
                         </div>*@
 
-                <option value="@T("Checkout.ShipToThisAddress")" addressurl="@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id})">
-                    @item.FirstName @item.LastName,
-                    @if (item.StreetAddressEnabled)
-                    {
-                        @item.Address1<text>,</text>
-                    }
-                    @if (item.CityEnabled)
-                    {
-                        @item.City
-                    }
-                    @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
-                    {
-                        <text>,</text>
-                    }
-                    @if (item.StateProvinceEnabled)
-                    {
-                        @item.StateProvinceName
-                    }
-                    @if (item.ZipPostalCodeEnabled)
-                    {
-                        @item.ZipPostalCode
-                    }
+                <option value="@T("Checkout.ShipToThisAddress")" addressurl="@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id})" 
+                        
+                        @if( TempData.Peek("ShippingAddressId") != null && TempData.Peek("ShippingAddressId").ToString() == item.Id.ToString())
+                        {
+                            @: selected="selected" 
+                        }
+                        >
+
+                        @item.FirstName @item.LastName,
+                        @if (item.StreetAddressEnabled)
+                        {
+                            @item.Address1<text>,</text>
+                        }
+                        @if (item.CityEnabled)
+                        {
+                            @item.City
+                        }
+                        @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                        {
+                            <text>,</text>
+                        }
+                        @if (item.StateProvinceEnabled)
+                        {
+                            @item.StateProvinceName
+                        }
+                        @if (item.ZipPostalCodeEnabled)
+                        {
+                            @item.ZipPostalCode
+                        }
                 </option>
 
                 }
-
             }
             
             <option value="@T("checkout.newaddress")">New Address</option>
             @if (Model.PickupPoints.Count > 0)
             {
-            <option value="@T("checkout.localpickup")">Local Pickup - @Model.PickupPoints[0].Address @Model.PickupPoints[0].City, CA @Model.PickupPoints[0].ZipPostalCode </option>
+            <option value="@T("checkout.localpickup")"
+                        
+                @if( TempData.Peek("ShippingAddressId") != null && TempData.Peek("ShippingAddressId").ToString() == "LocalPickup")
+                {
+                    @: selected="selected" 
+                }
+                    
+                >Local Pickup - @Model.PickupPoints[0].Address @Model.PickupPoints[0].City, CA @Model.PickupPoints[0].ZipPostalCode </option>
             }
 
         </select>

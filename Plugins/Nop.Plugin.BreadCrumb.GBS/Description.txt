@@ -1,0 +1,9 @@
+Group: Misc
+FriendlyName: GBS BREADCRUMB SERVICE
+SystemName: BreadCrumb.GBS
+Version: 1.00
+SupportedVersions: 3.90
+Author: Joe Barrus
+DisplayOrder: 1
+FileName: Nop.Plugin.BreadCrumb.GBS.dll
+Description: 

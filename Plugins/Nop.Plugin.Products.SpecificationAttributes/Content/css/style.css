@@ -10,45 +10,10 @@
 .product-details-page .gallerys {
     margin-bottom: 40px;
     float: left;
-    width: 570px;
+    width: auto;
     height: auto;
     margin-top: 10px;
     position: relative;
-}
-
-.Horizontal {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
-}
-
-.Vertical {
-    background-size: 100%;
-    /*width: 250px;
-    height: 250px;*/
-    float: left;
-    position: relative;
-    background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
-}
-
-.gallery .Vertical {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
-}
-
-.product-details-page .gallery .Horizontal img {
-    height: 343px;
-    left: 92px;
-    position: absolute;
-    top: 80px;
-    width: 453px;
 }
 
 .product-item .picture {
@@ -69,39 +34,6 @@
     display: none !important;
 }
 
-.product-grid .Horizontal {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/plugins/Products.SpecificationAttributes/Content/horizontalenvelop.png') !important;
-}
-
-.product-grid .Vertical {
-    background-size: 100%;
-    width: 250px;
-    height: 250px;
-    float: left;
-    position: relative;
-    background-image: url('/plugins/Products.SpecificationAttributes/Content/verticalenvelop.png') !important;
-}
-
-.product-grid .pictures .Vertical img {
-    height: 200px;
-    left: 36px;
-    position: absolute;
-    top: 40px;
-    width: 152px;
-}
-
-.product-grid .pictures .Horizontal img {
-    height: 150px;
-    left: 41px;
-    position: absolute;
-    top: 36px;
-    width: 198px;
-}
 
 /****************ofer page css***********/
 
@@ -190,6 +122,7 @@
     float: right;
     position: relative;
     padding-right: 153px;
+    display: none;
 }
 
     .ordersearch .ordersearch {

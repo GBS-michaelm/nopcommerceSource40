@@ -129,6 +129,7 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
+
                                         @if (item.AttributeInfo.Contains("CustomImgUrl"))
                                         {
                                             string url =  imgUrlDict[item.Id];
@@ -139,6 +140,10 @@
                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                         }
                                       
+
+                                        @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>*@
+                                        @Html.Widget("product_details_widget", item.ProductId)
+
                                     </td>
                                 }
                                 <td class="product-info">
@@ -296,6 +301,7 @@
                                                 @if (Model.ShowProductImages)
                                                 {
                                                     <div class="product-picture">
+<<<<<<< HEAD
                                                       @if (item.AttributeInfo.Contains("Custom Image Url"))
                                                       {
                                                         <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.AttributeInfo" title="@item.Picture.Title" /></a>
@@ -304,6 +310,10 @@
                                                       {
                                                         <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                                       }
+=======
+                                                        @*<img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />*@
+                                                        @Html.Widget("product_details_widget", item.ProductId)
+>>>>>>> origin
                                                     </div>
                                                 }
                                             </div>

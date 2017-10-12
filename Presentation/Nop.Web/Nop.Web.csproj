@@ -532,6 +532,20 @@
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_cal-pad-house.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_cal-pad.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_case-1000.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_case-800.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_football.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_full-short.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_helmet.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_jumbo-horizontal.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_partial-postcard.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_partial-whiteboard.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_partial.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\ncc\envelop.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\ncc\thumbnail-bg_envelope-horizontal.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\ncc\thumbnail-bg_envelope-vertical.png" />
     <Content Include="Content\install\images\logo.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\animated-overlay.gif" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -1454,6 +1468,8 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.dev.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\gbscustom.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\content.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\events.css" />
@@ -1495,9 +1511,12 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\magnific-popup.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\ncc-editor-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\print.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-product-options-chart.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-quantity-calculator.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\style.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail.css" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons-snapchat.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\fontawesome-webfont.svg" />
@@ -1551,6 +1570,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\HouseOfMagnet\Content\images\giving-cards.png" />
     <Content Include="Themes\HouseOfMagnet\Content\images\grid.png" />
+    <Content Include="Content\Images\gbsThumbnailShapes\hom\thumbnail-bg_full.png" />
     <Content Include="Themes\HouseOfMagnet\Content\images\ico-close-notification-bar.png" />
     <Content Include="Themes\HouseOfMagnet\Content\images\ico-delete.gif" />
     <Content Include="Themes\HouseOfMagnet\Content\images\iconalt.svg" />
@@ -1660,6 +1680,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\bootstrap.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
@@ -2924,6 +2945,13 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\CanvasProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryGalleryTemplate.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-pricechart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\CompareProductsOptionsChart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneProductOptionsChart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\VideoAndQuantityChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

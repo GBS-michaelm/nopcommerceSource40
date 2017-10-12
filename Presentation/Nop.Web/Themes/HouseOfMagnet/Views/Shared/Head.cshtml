@@ -1,4 +1,5 @@
-﻿@using Nop.Core;
+
+@using Nop.Core;
 @using Nop.Core.Domain
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.Themes
@@ -19,26 +20,37 @@
     if (supportRtl)
     {
         //RTL is not supported by Simplex Theme
-        //Html.AppendCssFileParts("~/Themes/SimplexTheme/Content/styles.rtl.css");
+        //Html.AppendCssFileParts("~/Themes/HouseOfMagnet/Content/styles.rtl.css");
     }
     else
     {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/thumbnail.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles-responsive.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/canvas.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-awesome.min.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/bootstrap.min.css", themeName));
 
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-gateway.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-category-gallery.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-product-options-chart.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-quantity-calculator.css", themeName));
+
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
+
+        //Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/hom-quantity-calculator.js");
+
 
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/animate.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-icons.css", themeName));
-        Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/plugins.js");
+        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/plugins.js");
     }
     if (isIeEightOrLess)
     {
-        Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/selectivizr.min.js");
-        Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/respond.min.js");
+        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/selectivizr.min.js");
+        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/respond.min.js");
     }
+
 }

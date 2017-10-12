@@ -53,49 +53,38 @@
         {
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
-						<div class="row">
-				 			@Html.Partial("_Discontinued", Model)
-                                <div class="product-name panel-heading">
-                                    <h1 itemprop="name">
-                                        @Model.Name
-								@Html.Widget("product_artist_name", Model.Id)
-                                    </h1>
-                                </div>
-							</div>
-				
+                    @Html.Partial("_Discontinued", Model)
+                    <div class="product-name panel-heading">
+                        <h1 itemprop="name">
+                            @Model.Name
+                            @Html.Widget("product_artist_name", Model.Id)
+                        </h1>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             @Html.Widget("productdetails_before_pictures", Model.Id)
                             <!--product pictures-->
                             @Html.Partial("_ProductDetailsPictures", Model)
                             @Html.Widget("productdetails_after_pictures", Model.Id)
-							
-							 @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
-							   @Html.Widget("productdetails_bottom", Model.Id)
-							   	@Html.Widget("productdetails_before_collateral", Model.Id)
-								 
-								  @if (!String.IsNullOrEmpty(Model.ShortDescription))
-                                {
-                                    <div class="short-description">
-                                        @Html.Raw(Model.ShortDescription)
-                                    </div>
-                                }
-								@Html.Raw(Model.FullDescription)
-								
-								 @Html.Partial("_ProductTierPrices", Model.TierPrices)
-								
-							 
-							    
-					
-						
-						
-						
-						
-						
-                        
-						<div class="overview">
-                               
-                              
+
+                            @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                            @Html.Widget("productdetails_bottom", Model.Id)
+                            @Html.Widget("productdetails_before_collateral", Model.Id)
+
+                            @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                            {
+                                <div class="short-description">
+                                    @Html.Raw(Model.ShortDescription)
+                                </div>
+                            }
+                            @Html.Raw(Model.FullDescription)
+
+
+                            @Html.Partial("_ProductTierPrices", Model.TierPrices)  
+                           <div class="overview">
+
+
                                 @Html.Widget("productdetails_overview_top", Model.Id)
                                 <!--product reviews-->
                                 @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
@@ -110,131 +99,143 @@
                                 </div>
                                 <!--price breaks-->
                                 @Html.Partial("_ShareButton", Model)
-				 @Html.Widget("product_category_titles", Model.Id)
+                                @Html.Widget("product_category_titles", Model.Id)
                                 @Html.Widget("productdetails_overview_bottom", Model.Id)
                             </div>
-							
-						</div>
-                    
-					
-					
-					<div class="col-md-6">
-					
-                <div class="product-collateral">
-                    <!--associated products-->
-                    <div class="product-variant-list row">
-                        @foreach (var variant in Model.AssociatedProducts)
-                        {
-                            <div class="product-variant-line" data-productid="@variant.Id">
-                                <div class="product-variant-wrapper">
-                                    @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+                            <div class="product-collateral">
+                                <!--associated products-->
+                                <div class="product-variant-list">
+                                    @foreach (var variant in Model.AssociatedProducts)
                                     {
-                                        <div class="variant-picture">
-                                            <img alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
-                                                 title="@variant.DefaultPictureModel.Title" id="main-product-img-@variant.Id" />
+                                        <div class="product-variant-line group-product-item" data-productid="@variant.Id">
+                                            @if (!String.IsNullOrWhiteSpace(variant.Name))
+                                            {
+                                                <h4 class="variant-name">
+                                                    @variant.Name
+                                                </h4>
+                                            }
+                                            <div class="product-variant-wrapper">
+                                                @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+                                                {
+                                                    <div class="variant-picture">
+                                                        @Html.Widget("product_details_widget", variant.Id)
+                                                        @*<img alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
+                                                            title="@variant.DefaultPictureModel.Title" id="main-product-img-@variant.Id" />*@
+                                                    </div>
+                                                }
+                                                <div class="variant-overview">
+
+                                                    @*@if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                                                        {
+                                                            <div class="variant-description">
+                                                                @Html.Raw(variant.ShortDescription)
+                                                            </div>
+                                                        }*@
+                                                    <!--price & add to cart-->
+                                                    @{
+                                                        var dataDictPrice = new ViewDataDictionary();
+                                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                                        @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
+                                                    }
+                                                    <!--gift card-->
+                                                    @{
+                                                        var dataDictGiftCard = new ViewDataDictionary();
+                                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                                        @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
+                                                    }
+                                                    @{
+                                                        var dataDictAddToCart = new ViewDataDictionary();
+                                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                        @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                                    }
+                                                    <!--rental info-->
+                                                    @{
+                                                        var dataDictRental = new ViewDataDictionary();
+                                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                    }
+                                                    <!--attributes-->
+                                                    @{
+                                                        var dataDictAttributes = new ViewDataDictionary();
+                                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                    }
+
+                                                    <div class="form-group overview-buttons">
+                                                        <!--wishlist-->
+                                                        @{
+                                                            var dataDictAddToWishlist = new ViewDataDictionary();
+                                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                            @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
+                                                        }
+                                                    </div>
+
+
+
+                                                    <!--availability-->
+                                                    @*@Html.Partial("_Availability", variant)*@
+                                                    <!--SKU, MAN, GTIN, vendor-->
+                                                    @Html.Partial("_SKU_Man_GTIN_Ven", variant)
+                                                    <!--sample download-->
+                                                    @Html.Partial("_DownloadSample", variant)
+
+
+
+
+
+                                                    @if (Model.AssociatedProducts.Count == 0)
+                                                    {
+                                                        <div class="no-associated-products">
+                                                            @T("Products.NoAssociatedProducts")
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            <!--delivery-->
+                                            @Html.Partial("_ProductTierPrices", @variant.TierPrices)
+                                            @*@Html.Partial("_DeliveryInfo", variant)*@
                                         </div>
-                                    }
-                                     <div class="variant-overview">
-                                    @if (!String.IsNullOrWhiteSpace(variant.Name))
-                                    {
-                                        <div class="variant-name">
-                                            @variant.Name
-                                        </div>
-                                    }
-                                    @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
-                                    {
-                                        <div class="variant-description">
-                                            @Html.Raw(variant.ShortDescription)
-                                        </div>
-                                    }
-                                    <!--availability-->
-                                    @Html.Partial("_Availability", variant)
-                                    <!--SKU, MAN, GTIN, vendor-->
-                                    @Html.Partial("_SKU_Man_GTIN_Ven", variant)
-                                    <!--delivery-->
-                                    @Html.Partial("_DeliveryInfo", variant)
-                                    <!--sample download-->
-                                    @Html.Partial("_DownloadSample", variant)
-                                    <!--rental info-->
-                                    @{
-                                        var dataDictRental = new ViewDataDictionary();
-                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
-                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
-                                    }
-                                   
-                                    <!--attributes-->
-                                    @{
-                                        var dataDictAttributes = new ViewDataDictionary();
-                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
-                                    }
-                                    <!--price & add to cart-->
-                                    @{
-                                        var dataDictPrice = new ViewDataDictionary();
-                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
-                                        @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
-                                    }
-									 <!--gift card-->
-                                    @{
-                                        var dataDictGiftCard = new ViewDataDictionary();
-                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
-                                        @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
-                                    }
-                                    @{
-                                        var dataDictAddToCart = new ViewDataDictionary();
-                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                        @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
-                                    }
-                                    <div class="form-group overview-buttons">
-                                        <!--wishlist-->
-                                        @{
-                                            var dataDictAddToWishlist = new ViewDataDictionary();
-                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                            @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
-                                        }
-                                    </div>
-                                    @if (Model.AssociatedProducts.Count == 0)
-                                    {
-                                        <div class="no-associated-products">
-                                            @T("Products.NoAssociatedProducts")
-                                        </div>
-                                    }
-                                </div>
-                                   
-                                </div>
-                            </div>
-                        }
-                        @*we do not display "also purchased" for grouped products
-                        @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@			
-                        @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
-						
-						
+                                                            }
+                                    @*we do not display "also purchased" for grouped products
+                                        @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
+
+
+
                                     <div class="product-tags">
-									<h4>Keywords</h4>
+                                        <h4>Keywords</h4>
                                         @Html.Partial("_ProductTags", Model.ProductTags)
                                     </div>
-                              
-								
-						
+
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
-                  
-                </div>
-						</div>
-						
-						
-						
-                   
+                    <div class="product-slider">
+                        @Html.Action("RelatedProducts", "Product", new
+                   {
+                       productId = Model.Id
+                   })
                     </div>
-					
-					
-					
-						
-						
-						
+
+
+
+
+
                 </div>
-                
+
             </div>
-        }
+                                                            }
     </div>
 </div>
-
