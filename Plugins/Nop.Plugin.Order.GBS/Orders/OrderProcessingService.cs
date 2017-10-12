@@ -692,7 +692,12 @@ namespace Nop.Services.Custom.Orders
                 string CustomerIp = HttpContext.Current.Request.UserHostAddress != null ? HttpContext.Current.Request.UserHostAddress : String.Empty;
                 string CardType = paymentRequest.CreditCardType != null ? paymentRequest.CreditCardType : String.Empty;
                 string CardName = paymentRequest.CreditCardName != null ? paymentRequest.CreditCardName : String.Empty;
-                string MaskedCreditCardNumber = paymentRequest.CreditCardNumber != null ? string.Format("************{0}", paymentRequest.CreditCardNumber.Trim().Substring(12, 4)) : String.Empty;
+                string MaskedCreditCardNumber = String.Empty;
+                try
+                {
+                    MaskedCreditCardNumber = !String.IsNullOrEmpty(paymentRequest.CreditCardNumber) ? string.Format("************{0}", paymentRequest.CreditCardNumber.Trim().Substring(12, 4)) : String.Empty;
+                }
+                catch (Exception ex1) { }
                 string CardExpirationMonth = paymentRequest.CreditCardExpireMonth.ToString();
                 string CardExpirationYear = paymentRequest.CreditCardExpireYear.ToString();
                 string ShippingMethod = orderContainer.ShippingMethodName != null ? orderContainer.ShippingMethodName : String.Empty;
@@ -707,7 +712,7 @@ namespace Nop.Services.Custom.Orders
                 if (String.IsNullOrEmpty(CardType))
                 {
                     string firstDigit = paymentRequest.CreditCardNumber;
-                    firstDigit = firstDigit.Substring(0, firstDigit.Length - (firstDigit.Length - 1));
+                    firstDigit = !String.IsNullOrEmpty(firstDigit) ? firstDigit.Substring(0, firstDigit.Length - (firstDigit.Length - 1)) : "U";
                     switch (firstDigit)
                     {
                         case "4":
