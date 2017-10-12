@@ -67,10 +67,10 @@
                 string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
                 foreach (var item in Model.ProductSpecifications)
                 {
-                    if (item.SpecificationAttributeName.ToUpper().Trim() == "GLUONIFRAMEPAGEID")
+                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEPAGEID")
                     {
                         idArray = item.ValueRaw.Split('-');
-                        pageID = idArray[1];
+                        TempData["pageid"] = idArray[1];
                         break;
                     }
                 }
@@ -93,16 +93,27 @@
                     }
                 }
                 var data = Model.ProductSpecifications;
-                string productType = string.Empty;
                 foreach (var item in data)
                 {
-                    if (item.SpecificationAttributeName.ToUpper().Trim() == "GLUONIFRAMEPRODUCTTYPE")
+                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
                     {
-                        productType = item.ValueRaw;
+                        TempData["iframeurl"] = item.ValueRaw;
                         break;
                     }
                 }
-                string url = "/gluon?type=" + productType + "&pageID=" + pageID + "&productID=" + Model.AddToCart.ProductId + "&cartID=" + cartID + "&pcode=" + Model.Sku;
+
+                foreach (var item in data)
+                {
+                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
+                    {
+                        TempData["iframeheight"] = item.ValueRaw;
+                        break;
+                    }
+                }
+                TempData["pcode"] = Model.Sku;
+                TempData["cartid"] = cartID;
+                TempData["productid"] = Model.AddToCart.ProductId;
+                string url = "/gluon";
                 <div class="product-add-button">
                    @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 

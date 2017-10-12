@@ -131,7 +131,7 @@
                                     <td class="product-picture">
                                         @if (item.AttributeInfo.Contains("CustomImgUrl"))
                                         {
-                                            string url = "//gluon.houseofmagnets.com" + imgUrlDict[item.Id];
+                                            string url =  imgUrlDict[item.Id];
                                             <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
                                         }
                                         else
