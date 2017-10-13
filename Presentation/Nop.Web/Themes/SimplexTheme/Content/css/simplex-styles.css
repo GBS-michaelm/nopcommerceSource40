@@ -11082,13 +11082,16 @@ div .mega-menu {
 }
 
 
+
 /*********************mini shopping cart*********************/
-.shopping-cart-page .Horizontal {
+
+
+.shopping-cart-page .Horizontal, .order-summary-confirm .Horizontal {
     width: 200px;
     height: 200px;
 }
 
-    .shopping-cart-page .Horizontal img {
+    .shopping-cart-page .Horizontal img, .order-summary-confirm .Horizontal img {
         border: 0 none;
         height: 123px;
         left: 31px;
