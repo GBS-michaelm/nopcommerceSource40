@@ -8,9 +8,14 @@
 @using Nop.Services.Catalog;
 @using Nop.Services.Seo;
 @using Nop.Core.Domain.Seo;
+@*@using Nop.Plugin.BusinessLogic.GBS.Domain;*@
 
 @{
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+
+
     Layout = "~/Views/Shared/_Root.cshtml";
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
 @{
     //current category ID
@@ -46,6 +51,44 @@
     }
 }
 
+@{ 
+    string id = @Model.Id.ToString();
+}
+
+@{
+
+    //DBManager manager = new DBManager();
+
+    //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
+    //categoryDic.Add("@CategoryId", id);
+
+    //string categoryDataQuery = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
+    //DataView categoryDataView = manager.GetParameterizedDataView(categoryDataQuery, categoryDic);
+
+
+
+
+
+    //string categoryName = "";
+
+    //if(categoryDataView.Count > 0)
+    //{
+    //    categoryName = categoryDataView[0]["H1"].ToString();
+
+
+
+
+    //}
+
+    //Company company = new Company(id);
+
+
+    //string categoryName = !string.IsNullOrEmpty(company.h1) ? company.h1 : @Model.Name;
+    string categoryName = "";
+
+}
+
+
 @if (Model.DisplayCategoryBreadcrumb)
 {
     <div class="breadcrumb-wrapper">
@@ -73,10 +116,13 @@
 }
 
 
+
+
+
 <div id="parentTitleWrapDiv">
 
     <div class="page-title panel-heading categorytitle parent-gateway-name">
-        <h1>@Model.Name</h1>
+        <h1>@categoryName</h1>
     </div>
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
