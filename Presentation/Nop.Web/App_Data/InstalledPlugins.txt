@@ -36,3 +36,5 @@ Nop.Plugin.Shipping.GBS
 Catalogs.GBS
 Products.SpecificationAttributes
 BreadCrumb.GBS
+BusinessLogic.GBS
+BusinessLogic

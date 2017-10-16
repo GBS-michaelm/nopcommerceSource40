@@ -275,7 +275,10 @@
             <div class="style-msg infomsg" id="local-pickup-msg" style="display:none; margin-top: 20px;">
                 <div class="sb-msg"><i class="icon-info-sign"></i><strong>NOTE</strong> Local pickup availible 7am-5pm PT Monday through Friday</div>
             </div>
-            @Html.Partial("_ShippingMethod", ShippingMethod)
+            
+                @Html.Partial("_ShippingMethod", ShippingMethod)
+          
+            
 
             <div class="add-shipping-address-wrap @newShippingCheck" >
 
@@ -339,9 +342,9 @@
                 $("#PickUpInStore").prop("checked", false);
 
                 $("#shipping-method-dropdown").hide();
-
-
+                $("#shipping-method-dropdown").closest(".checkout-data").siblings(".small-heading").hide();
                 break;
+
             case "checkout.localpickup":
             case "Local Pickup":
                 $("#local-pickup-msg").show();
@@ -352,6 +355,7 @@
                 $(".page.checkout-page.shipping-method-page").hide();
                 $("#PickUpInStore").prop("checked", true);
                 break;
+
             default:
                 $("#local-pickup-msg").hide();
                 $(".new-shipping-address").hide();
