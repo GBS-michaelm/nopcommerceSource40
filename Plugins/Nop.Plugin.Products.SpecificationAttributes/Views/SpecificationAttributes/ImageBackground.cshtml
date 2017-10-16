@@ -6,13 +6,6 @@
         int productId = ViewBag.ProductId;
         string sename = ViewBag.SeName;
 }
-<script type="text/javascript">
-    $(document).on("nopAjaxFiltersFiltrationCompleteEvent", function () {
-        $("div").find("[data-productid='@productId']").find('.gallery').find('.picture').addClass('@className');
-        $("div").find("[data-productid='@productId'].product-item").find('.picture').find('a').addClass('@className');
-  });
-
-</script>
 
 <div class="pictures" style="@fill">
     <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.DefaultPictureModel.Title" class="@className">
