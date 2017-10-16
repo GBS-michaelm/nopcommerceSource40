@@ -6711,3 +6711,687 @@ width: 136px;
 }
 
 /***** END OF Whiteboard Magnets QuickStix Case *******/
+
+/***** START OF Notepad-Peel-And-Stick-Top-3-pack *******/
+.Notepad-Peel-And-Stick-Top-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png')!important;
+}
+.gallery .Notepad-Peel-And-Stick-Top-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png') !important;
+}
+.product-grid .Notepad-Peel-And-Stick-Top-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png') !important;
+}
+.product-grid .pictures .Notepad-Peel-And-Stick-Top-3-pack img {
+    height: 214px;
+    left: 19px;
+    position: absolute;
+    top: 15px;
+    width: 84px;
+}
+
+.order-productimg .Notepad-Peel-And-Stick-Top-3-pack img {
+    height: 104px;
+    left: 9px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
+    height: 492px;
+    left: 43px;
+    position: absolute;
+    top: 32px;
+    width: 192px;
+}
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-3-pack img {
+    height: 215px;
+    left: 20px;
+    position: absolute;
+    top: 14px;
+    width: 83px;
+}
+
+.shopping-cart-page .Notepad-Peel-And-Stick-Top-3-pack img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Notepad-Peel-And-Stick-Top-3-pack img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top-3-pack {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top-3-pack img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
+    height: 266px;
+    left: 118px;
+    top: 81px;
+    width: 158px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
+     height: 258px;
+    left: 23px;
+    top: 17px;
+    width: 100px;
+}
+}
+
+/***** END OF Notepad-Peel-And-Stick-Top-3-pack *******/
+
+/***** START OF Notepad-Peel-And-Stick-Top *******/
+.Notepad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png')!important;
+}
+.gallery .Notepad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png') !important;
+}
+.product-grid .Notepad-Peel-And-Stick-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png') !important;
+}
+.product-grid .pictures .Notepad-Peel-And-Stick-Top img {
+    height: 214px;
+    left: 63px;
+    position: absolute;
+    top: 15px;
+    width: 84px;
+}
+
+.order-productimg .Notepad-Peel-And-Stick-Top img {
+    height: 104px;
+    left: 29px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
+    height: 494px;
+    left: 143px;
+    position: absolute;
+    top: 30px;
+    width: 192px;
+}
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top img {
+    height: 216px;
+    left: 63px;
+    position: absolute;
+    top: 13px;
+    width: 84px;
+}
+
+.shopping-cart-page .Notepad-Peel-And-Stick-Top img {
+    border: 0 none;
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Notepad-Peel-And-Stick-Top img {
+    border: 0 none;
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top img {
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
+    height: 266px;
+    left: 118px;
+    top: 81px;
+    width: 158px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
+     height: 260px;
+    left: 76px;
+    top: 15px;
+    width: 100px;
+}
+}
+
+/***** END OF Notepad-Peel-And-Stick-Top *******/
+
+/***** START OF Notepad-Peel-And-Stick-Top-Case *******/
+.Notepad-Peel-And-Stick-Top-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png')!important;
+}
+.gallery .Notepad-Peel-And-Stick-Top-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png') !important;
+}
+.product-grid .Notepad-Peel-And-Stick-Top-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png') !important;
+}
+.product-grid .pictures .Notepad-Peel-And-Stick-Top-Case img {
+    height: 197px;
+left: 10px;
+position: absolute;
+top: 20px;
+width: 115px;
+}
+
+.order-productimg .Notepad-Peel-And-Stick-Top-Case img {
+    height: 94px;
+    left: 5px;
+    position: absolute;
+    top:10px;
+    width:55px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case img {
+    height: 447px;
+    left: 24px;
+    position: absolute;
+    top: 47px;
+    width: 261px;
+}
+.product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-Case img {
+    height: 197px;
+    left: 11px;
+    position: absolute;
+    top: 20px;
+    width: 114px;
+}
+
+.shopping-cart-page .Notepad-Peel-And-Stick-Top-Case img {
+    border: 0 none;
+    height: 197px;
+    left: 11px;
+    position: absolute;
+    top: 20px;
+    width: 114px;
+}
+
+.wishlist-page .Notepad-Peel-And-Stick-Top-Case img {
+    border: 0 none;
+    height: 197px;
+    left: 10px;
+    position: absolute;
+    top: 20px;
+    width: 115px;
+}
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top-Case {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Peel-And-Stick-Top-Case img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case img {
+    height: 266px;
+    left: 118px;
+    top: 81px;
+    width: 158px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case img {
+     height: 235px;
+    left: 13px;
+    top: 25px;
+    width: 137px;
+}
+}
+
+/***** END OF Notepad-Peel-And-Stick-Top-Case *******/
+
+/***** START OF Notepad-Personalized-Every-Page *******/
+.Notepad-Personalized-Every-Page {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png')!important;
+}
+.gallery .Notepad-Personalized-Every-Page {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png') !important;
+}
+.product-grid .Notepad-Personalized-Every-Page {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png') !important;
+}
+.product-grid .pictures .Notepad-Personalized-Every-Page img {
+    height: 197px;
+left: 10px;
+position: absolute;
+top: 20px;
+width: 115px;
+}
+
+.order-productimg .Notepad-Personalized-Every-Page img {
+    height: 94px;
+    left: 5px;
+    position: absolute;
+    top:10px;
+    width:55px;
+}
+.product-details-page .gallery .Notepad-Personalized-Every-Page {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Personalized-Every-Page img {
+    height: 447px;
+    left: 24px;
+    position: absolute;
+    top: 47px;
+    width: 261px;
+}
+.product-variant-list .variant-picture .Notepad-Personalized-Every-Page img {
+    height: 197px;
+    left: 11px;
+    position: absolute;
+    top: 20px;
+    width: 114px;
+}
+
+.shopping-cart-page .Notepad-Personalized-Every-Page img {
+    border: 0 none;
+    height: 197px;
+    left: 11px;
+    position: absolute;
+    top: 20px;
+    width: 114px;
+}
+
+.wishlist-page .Notepad-Personalized-Every-Page img {
+    border: 0 none;
+    height: 197px;
+    left: 10px;
+    position: absolute;
+    top: 20px;
+    width: 115px;
+}
+.mini-shopping-cart .Notepad-Personalized-Every-Page {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Personalized-Every-Page img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Personalized-Every-Page {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Personalized-Every-Page img {
+    height: 266px;
+    left: 118px;
+    top: 81px;
+    width: 158px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Personalized-Every-Page {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Personalized-Every-Page img {
+     height: 235px;
+    left: 13px;
+    top: 25px;
+    width: 137px;
+}
+}
+
+/***** END OF Notepad-Personalized-Every-Page *******/
+
+/***** START OF Notepad-Value-House-Top *******/
+.Notepad-Value-House-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png')!important;
+}
+.gallery .Notepad-Value-House-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
+}
+.product-grid .Notepad-Value-House-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
+}
+.product-grid .pictures .Notepad-Value-House-Top img {
+    height: 201px;
+left: 49px;
+position: absolute;
+top: 10px;
+width: 123px;
+}
+
+.order-productimg .Notepad-Value-House-Top img {
+    height: 94px;
+    left: 24px;
+    position: absolute;
+    top: 6px;
+    width:58px;
+}
+.product-details-page .gallery .Notepad-Value-House-Top {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Value-House-Top img {
+    height: 452px;
+    left: 108px;
+    position: absolute;
+    top: 25px;
+    width: 284px;   
+}
+.product-variant-list .variant-picture .Notepad-Value-House-Top img {
+    height: 199px;
+left: 48px;
+position: absolute;
+top: 10px;
+width: 123px;
+}
+
+.shopping-cart-page .Notepad-Value-House-Top img {
+    border: 0 none;
+    height: 198px;
+    left: 48px;
+    position: absolute;
+    top: 11px;
+    width: 124px;
+}
+
+.wishlist-page .Notepad-Value-House-Top {
+    border: 0 none;
+    height: 198px;
+    left: 48px;
+    position: absolute;
+    top: 11px;
+    width: 123px;
+}
+
+.mini-shopping-cart .Notepad-Value-House-Top{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Value-House-Top img{
+    height: 57px;
+    left: 13px;
+    margin: inherit;
+    position: absolute;
+    top: 2px;
+    width: 35px;
+}
+
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Value-House-Top {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Value-House-Top img {
+    height: 374px;
+    left: 89px;
+    top: 20px;
+    width: 235px;
+}
+
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Value-House-Top {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Value-House-Top img {
+    height: 238px;
+    left: 57px;
+    top: 13px;
+    width: 149px;
+}
+}
+
+/***** END OF Notepad-Value-House-Top *******/
+
+/***** START OF Notepad-Value-Top *******/
+.Notepad-Value-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png')!important;
+}
+.gallery .Notepad-Value-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png') !important;
+}
+.product-grid .Notepad-Value-Top {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png') !important;
+}
+.product-grid .pictures .Notepad-Value-Top img {
+    height: 201px;
+left: 49px;
+position: absolute;
+top: 10px;
+width: 123px;
+}
+
+.order-productimg .Notepad-Value-Top img {
+    height: 94px;
+    left: 24px;
+    position: absolute;
+    top: 6px;
+    width:58px;
+}
+.product-details-page .gallery .Notepad-Value-Top {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Notepad-Value-Top img {
+    height: 452px;
+    left: 108px;
+    position: absolute;
+    top: 25px;
+    width: 284px;   
+}
+.product-variant-list .variant-picture .Notepad-Value-Top img {
+    height: 199px;
+left: 48px;
+position: absolute;
+top: 10px;
+width: 123px;
+}
+
+.shopping-cart-page .Notepad-Value-Top img {
+    border: 0 none;
+    height: 198px;
+    left: 48px;
+    position: absolute;
+    top: 11px;
+    width: 124px;
+}
+
+.wishlist-page .Notepad-Value-Top {
+    border: 0 none;
+    height: 198px;
+    left: 48px;
+    position: absolute;
+    top: 11px;
+    width: 123px;
+}
+
+.mini-shopping-cart .Notepad-Value-Top{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Notepad-Value-Top img{
+    height: 57px;
+    left: 13px;
+    margin: inherit;
+    position: absolute;
+    top: 2px;
+    width: 35px;
+}
+
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Notepad-Value-Top {width:470px; height: 470px;}
+.product-details-page .gallery .Notepad-Value-Top img {
+    height: 374px;
+    left: 89px;
+    top: 20px;
+    width: 235px;
+}
+
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Notepad-Value-Top {width:300px; height:300px;}
+.product-details-page .gallery .Notepad-Value-Top img {
+    height: 238px;
+    left: 57px;
+    top: 13px;
+    width: 149px;
+}
+}
+
+/***** END OF Notepad-Value-Top *******/
