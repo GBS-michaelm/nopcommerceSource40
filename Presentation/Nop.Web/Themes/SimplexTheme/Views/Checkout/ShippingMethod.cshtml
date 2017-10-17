@@ -12,31 +12,10 @@
         
 }
 
-
-
-<<<<<<< HEAD
-@Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
-
-
 <div class="page checkout-page shipping-method-page">
-    <div class="page-title panel-heading">
-        <h1>@T("Checkout.SelectShippingMethod")</h1>
-    </div>
-    <div class="page-body checkout-data">
-        <div class="section shipping-method">
-            @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
-            {
-=======
-
-
-<div class="page checkout-page shipping-method-page">
-
 
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
-
-
-
-
+    
     <div class="shipping-address-title">
         <h3>@T("Checkout.SelectShippingMethod")</h3>
     </div>
@@ -46,7 +25,7 @@
     
             @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
         {
->>>>>>> vic_gatewaypage
+
                 @Html.Widget("checkout_shipping_method_top")
                 if (Model.Warnings.Count == 0)
                 {
@@ -101,17 +80,7 @@
                 @Html.Widget("checkout_shipping_method_bottom")
             }
         </div>
-<<<<<<< HEAD
-        @Html.Widget("checkout_shipping_method_bottom")
-        <div class="section order-summary-body">
-            <div class="title small-heading">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
-            @Html.Action("OrderSummary", "ShoppingCart")
-        </div>
-    </div>
-</div>
-=======
+
         @*@Html.Widget("checkout_shipping_method_bottom")*@
         @*<div class="section order-summary-body">
                 <div class="title small-heading">bottom
@@ -121,4 +90,4 @@
             </div>*@
     </div>
 </div>
->>>>>>> vic_gatewaypage
+
