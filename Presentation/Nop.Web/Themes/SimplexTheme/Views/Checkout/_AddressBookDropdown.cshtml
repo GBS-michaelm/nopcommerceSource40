@@ -90,13 +90,11 @@
                             </ul>
                         </div>*@
 
-                <option value="@T("Checkout.ShipToThisAddress")" addressurl="@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id})" 
-                        
-                        @if( TempData.Peek("ShippingAddressId") != null && TempData.Peek("ShippingAddressId").ToString() == item.Id.ToString())
-                        {
-                            @: selected="selected" 
-                        }
-                        >
+                    @*<option value="@T("Checkout.ShipToThisAddress")" addressurl="@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id})"*@
+                    <option value="@T("Checkout.ShipToThisAddress")" addressurl="@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id})" reloadurl="@Url.RouteUrl("CheckoutShippingAddress", new { addressid = item.Id})"
+                            
+                            @if (TempData.Peek("ShippingAddressId") != null && TempData.Peek("ShippingAddressId").ToString() == item.Id.ToString()) { @: selected="selected"
+                                                    }>
 
                         @item.FirstName @item.LastName,
                         @if (item.StreetAddressEnabled)
@@ -119,10 +117,10 @@
                         {
                             @item.ZipPostalCode
                         }
-                </option>
+                    </option>
 
-                }
-            }
+    }
+}
             
             <option value="@T("checkout.newaddress")">New Address</option>
             @if (Model.PickupPoints.Count > 0)
