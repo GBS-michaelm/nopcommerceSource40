@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nop.Plugin.DataAccess.GBS;
+using Nop.Plugin.BusinessDataAccess.GBS;
 using System.Data;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain

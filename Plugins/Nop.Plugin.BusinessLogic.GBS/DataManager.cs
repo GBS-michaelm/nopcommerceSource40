@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 /// Summary description for DBManager
 /// </summary>
 /// 
-namespace Nop.Plugin.DataAccess.GBS
+namespace Nop.Plugin.BusinessDataAccess.GBS
 {
     public class DBManager
     {
