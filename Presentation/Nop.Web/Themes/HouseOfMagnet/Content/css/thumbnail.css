@@ -1,4 +1,5 @@
 .cart .product-picture img{border:0px; }
+.product-slider .related-products-grid .sliderinner .item-box .thumbnail .pictures a{ background-repeat:no-repeat; width:100%; height:100%; }
 /***** START OF BASEBALL FULL MAGNETS FIRST CLASS *******/
 .Baseball-Full-Magnets-First-Class{
     background-size: 100%;
@@ -1137,7 +1138,7 @@ width: 114px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png')!important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png')!important;
 }
 .gallery .Calendar-Partial-QuickStix {
     background-size: 100%;
@@ -1145,7 +1146,7 @@ width: 114px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
 }
 .product-grid .Calendar-Partial-QuickStix {
     background-size: 100%;
@@ -1153,7 +1154,7 @@ width: 114px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
 }
 .product-grid .pictures .Calendar-Partial-QuickStix img {
     height: 229px;
@@ -6411,7 +6412,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png')!important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_whiteboard-peel-and-stick.png')!important;
 }
 .gallery .Whiteboard-Magnets-QuickStix {
     background-size: 100%;
@@ -6419,7 +6420,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_whiteboard-peel-and-stick.png') !important;
 }
 .product-grid .Whiteboard-Magnets-QuickStix {
     background-size: 100%;
@@ -6427,7 +6428,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_whiteboard-peel-and-stick.png') !important;
 }
 .product-grid .pictures .Whiteboard-Magnets-QuickStix img {
     height: 214px;
@@ -6738,55 +6739,65 @@ width: 136px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png') !important;
 }
 .product-grid .pictures .Notepad-Peel-And-Stick-Top-3-pack img {
-    height: 214px;
-    left: 19px;
-    position: absolute;
-    top: 15px;
-    width: 84px;
+    height: 197px;
+left: 11px;
+position: absolute;
+top: 20px;
+width: 114px;
+}
+
+.related-products-slider .pictures .Notepad-Peel-And-Stick-Top-3-pack img {
+	height: 158px;
+	left: 8px;
+	position: absolute;
+	top: 16px;
+	width: 92px;
 }
 
 .order-productimg .Notepad-Peel-And-Stick-Top-3-pack img {
-    height: 104px;
-    left: 9px;
-    position: absolute;
-    top: 6px;
-    width: 41px;
+	height: 94px;
+	left: 5px;
+	position: absolute;
+	top: 10px;
+	width: 55px;
 }
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {
     width: 570px;
     height: 570px;
 }
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
-    height: 492px;
-    left: 43px;
-    position: absolute;
-    top: 32px;
-    width: 192px;
+	height: 447px;
+	left: 24px;
+	position: absolute;
+	top: 47px;
+	width: 261px;
 }
 .product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top-3-pack img {
-    height: 215px;
-    left: 20px;
+    height: 197px;
+    left: 9px;
     position: absolute;
-    top: 14px;
-    width: 83px;
+    top: 20px;
+    width: 116px;
+
 }
 
 .shopping-cart-page .Notepad-Peel-And-Stick-Top-3-pack img {
     border: 0 none;
-    height: 217px;
-    left: 19px;
-    position: absolute;
-    top: 13px;
-    width: 85px;
+	height: 197px;
+	left: 10px;
+	position: absolute;
+	top: 20px;
+	width: 115px;
 }
 
 .wishlist-page .Notepad-Peel-And-Stick-Top-3-pack img {
     border: 0 none;
-    height: 217px;
-    left: 19px;
-    position: absolute;
-    top: 13px;
-    width: 85px;
+	height: 197px;
+	left: 10px;
+	position: absolute;
+	top: 20px;
+	width: 115px;
+
 }
 .mini-shopping-cart .Notepad-Peel-And-Stick-Top-3-pack {
 	width:100%;
@@ -6795,31 +6806,31 @@ width: 136px;
 }
 
 .mini-shopping-cart .Notepad-Peel-And-Stick-Top-3-pack img{
-    height: 62px;
-    left: 5px;
-    margin: inherit;
-    position: absolute;
-    top: 3px;
-    width: 24px;
+	height: 55px;
+	left: 3px;
+	margin: inherit;
+	position: absolute;
+	top: 6px;
+	width: 32px;
 }
 
 @media all and (max-width: 700px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {width:470px; height: 470px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
-    height: 266px;
-    left: 118px;
-    top: 81px;
-    width: 158px;
+	height: 369px;
+	left: 19px;
+	top: 39px;
+	width: 216px;
 }
 }
 
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack {width:300px; height:300px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-3-pack img {
-     height: 258px;
-    left: 23px;
-    top: 17px;
-    width: 100px;
+	height: 235px;
+	left: 12px;
+	top: 25px;
+	width: 138px;
 }
 }
 
@@ -6851,55 +6862,66 @@ width: 136px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png') !important;
 }
 .product-grid .pictures .Notepad-Peel-And-Stick-Top img {
-    height: 214px;
-    left: 63px;
-    position: absolute;
-    top: 15px;
-    width: 84px;
+    height: 196px;
+left: 52px;
+position: absolute;
+top: 13px;
+width: 114px;
 }
 
+.related-products-slider .product-grid .pictures .Notepad-Peel-And-Stick-Top img {
+	height: 157px;
+	left: 41px;
+	position: absolute;
+	top: 11px;
+	width: 92px;
+}
+
+
+
 .order-productimg .Notepad-Peel-And-Stick-Top img {
-    height: 104px;
-    left: 29px;
-    position: absolute;
-    top: 6px;
-    width: 41px;
+	height: 95px;
+	left: 24px;
+	position: absolute;
+	top: 6px;
+	width: 56px;
 }
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top {
     width: 570px;
     height: 570px;
 }
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
-    height: 494px;
-    left: 143px;
-    position: absolute;
-    top: 30px;
-    width: 192px;
+	height: 447px;
+	left: 118px;
+	position: absolute;
+	top: 30px;
+	width: 261px;
 }
 .product-variant-list .variant-picture .Notepad-Peel-And-Stick-Top img {
-    height: 216px;
-    left: 63px;
-    position: absolute;
-    top: 13px;
-    width: 84px;
+	height: 196px;
+	left: 51px;
+	position: absolute;
+	top: 13px;
+	width: 116px;
+
 }
 
 .shopping-cart-page .Notepad-Peel-And-Stick-Top img {
     border: 0 none;
-    height: 217px;
-    left: 62px;
-    position: absolute;
-    top: 13px;
-    width: 85px;
+	height: 196px;
+	left: 51px;
+	position: absolute;
+	top: 13px;
+	width: 115px;
 }
-
+.wishlist-page .pictures{border:0px; }
 .wishlist-page .Notepad-Peel-And-Stick-Top img {
     border: 0 none;
-    height: 217px;
-    left: 62px;
-    position: absolute;
-    top: 13px;
-    width: 85px;
+	height: 196px;
+	left: 51px;
+	position: absolute;
+	top: 13px;
+	width: 115px;
 }
 .mini-shopping-cart .Notepad-Peel-And-Stick-Top {
 	width:100%;
@@ -6908,31 +6930,32 @@ width: 136px;
 }
 
 .mini-shopping-cart .Notepad-Peel-And-Stick-Top img {
-    height: 62px;
-    left: 5px;
-    margin: inherit;
-    position: absolute;
-    top: 3px;
-    width: 24px;
+	height: 55px;
+	left: 14px;
+	margin: inherit;
+	position: absolute;
+	top: 4px;
+	width: 33px;
 }
 
 @media all and (max-width: 700px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top {width:470px; height: 470px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
-    height: 266px;
-    left: 118px;
-    top: 81px;
-    width: 158px;
+	height: 368px;
+	left: 97px;
+	top: 25px;
+	width: 216px;
 }
+
 }
 
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top {width:300px; height:300px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top img {
-     height: 260px;
-    left: 76px;
-    top: 15px;
-    width: 100px;
+	height: 235px;
+	left: 62px;
+	top: 16px;
+	width: 138px;
 }
 }
 
@@ -6945,7 +6968,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png')!important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-1000.png')!important;
 }
 .gallery .Notepad-Peel-And-Stick-Top-Case {
     background-size: 100%;
@@ -6953,7 +6976,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-1000.png') !important;
 }
 .product-grid .Notepad-Peel-And-Stick-Top-Case {
     background-size: 100%;
@@ -6961,7 +6984,7 @@ width: 136px;
     height: 250px;
     float: left;
     position: relative;
-    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-800.png') !important;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-1000.png') !important;
 }
 .product-grid .pictures .Notepad-Peel-And-Stick-Top-Case img {
     height: 197px;
@@ -6969,6 +6992,14 @@ left: 10px;
 position: absolute;
 top: 20px;
 width: 115px;
+}
+
+.related-products-slider .pictures .Notepad-Peel-And-Stick-Top-Case img {
+	height: 158px;
+	left: 8px;
+	position: absolute;
+	top: 16px;
+	width: 92px;
 }
 
 .order-productimg .Notepad-Peel-And-Stick-Top-Case img {
@@ -7021,31 +7052,32 @@ width: 115px;
 }
 
 .mini-shopping-cart .Notepad-Peel-And-Stick-Top-Case img{
-    height: 62px;
-    left: 5px;
+    height: 55px;
+    left: 3px;
     margin: inherit;
     position: absolute;
-    top: 3px;
-    width: 24px;
+    top: 6px;
+    width: 32px;
+
 }
 
 @media all and (max-width: 700px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case {width:470px; height: 470px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case img {
-    height: 266px;
-    left: 118px;
-    top: 81px;
-    width: 158px;
+	height: 369px;
+	left: 19px;
+	top: 39px;
+	width: 216px;
 }
 }
 
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case {width:300px; height:300px;}
 .product-details-page .gallery .Notepad-Peel-And-Stick-Top-Case img {
-     height: 235px;
-    left: 13px;
-    top: 25px;
-    width: 137px;
+	height: 236px;
+	left: 12px;
+	top: 24px;
+	width: 138px;
 }
 }
 
@@ -7077,55 +7109,63 @@ width: 115px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png') !important;
 }
 .product-grid .pictures .Notepad-Personalized-Every-Page img {
-    height: 197px;
-left: 10px;
+    height: 195px;
+left: 52px;
 position: absolute;
-top: 20px;
-width: 115px;
+top: 15px;
+width: 114px;
+}
+
+.related-products-slider .pictures .Notepad-Personalized-Every-Page img {
+	height: 157px;
+	left: 41px;
+	position: absolute;
+	top: 11px;
+	width: 92px;
 }
 
 .order-productimg .Notepad-Personalized-Every-Page img {
-    height: 94px;
-    left: 5px;
-    position: absolute;
-    top:10px;
-    width:55px;
+	height: 95px;
+	left: 25px;
+	position: absolute;
+	top: 6px;
+	width: 55px;
 }
 .product-details-page .gallery .Notepad-Personalized-Every-Page {
     width: 570px;
     height: 570px;
 }
 .product-details-page .gallery .Notepad-Personalized-Every-Page img {
-    height: 447px;
-    left: 24px;
-    position: absolute;
-    top: 47px;
-    width: 261px;
+	height: 447px;
+	left: 118px;
+	position: absolute;
+	top: 31px;
+	width: 261px;
 }
 .product-variant-list .variant-picture .Notepad-Personalized-Every-Page img {
-    height: 197px;
-    left: 11px;
-    position: absolute;
-    top: 20px;
-    width: 114px;
+	height: 197px;
+	left: 52px;
+	position: absolute;
+	top: 13px;
+	width: 114px;
 }
 
 .shopping-cart-page .Notepad-Personalized-Every-Page img {
     border: 0 none;
-    height: 197px;
-    left: 11px;
-    position: absolute;
-    top: 20px;
-    width: 114px;
+	height: 197px;
+	left: 52px;
+	position: absolute;
+	top: 13px;
+	width: 115px;
 }
 
 .wishlist-page .Notepad-Personalized-Every-Page img {
     border: 0 none;
-    height: 197px;
-    left: 10px;
-    position: absolute;
-    top: 20px;
-    width: 115px;
+	height: 197px;
+	left: 52px;
+	position: absolute;
+	top: 13px;
+	width: 115px;
 }
 .mini-shopping-cart .Notepad-Personalized-Every-Page {
 	width:100%;
@@ -7134,31 +7174,31 @@ width: 115px;
 }
 
 .mini-shopping-cart .Notepad-Personalized-Every-Page img{
-    height: 62px;
-    left: 5px;
-    margin: inherit;
-    position: absolute;
-    top: 3px;
-    width: 24px;
+	height: 56px;
+	left: 14px;
+	margin: inherit;
+	position: absolute;
+	top: 3px;
+	width: 33px;
 }
 
 @media all and (max-width: 700px) { 
 .product-details-page .gallery .Notepad-Personalized-Every-Page {width:470px; height: 470px;}
 .product-details-page .gallery .Notepad-Personalized-Every-Page img {
-    height: 266px;
-    left: 118px;
-    top: 81px;
-    width: 158px;
+	height: 368px;
+	left: 97px;
+	top: 26px;
+	width: 216px;
 }
 }
 
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Notepad-Personalized-Every-Page {width:300px; height:300px;}
 .product-details-page .gallery .Notepad-Personalized-Every-Page img {
-     height: 235px;
-    left: 13px;
-    top: 25px;
-    width: 137px;
+	height: 236px;
+	left: 62px;
+	top: 16px;
+	width: 138px;
 }
 }
 
@@ -7191,10 +7231,18 @@ width: 115px;
 }
 .product-grid .pictures .Notepad-Value-House-Top img {
     height: 201px;
-left: 49px;
-position: absolute;
-top: 10px;
-width: 123px;
+	left: 49px;
+	position: absolute;
+	top: 10px;
+	width: 123px;
+}
+
+.related-products-slider .product-grid .pictures .Notepad-Value-House-Top img {
+	height: 160px;
+	left: 37px;
+	position: absolute;
+	top: 7px;
+	width: 101px;
 }
 
 .order-productimg .Notepad-Value-House-Top img {
@@ -7232,14 +7280,6 @@ width: 123px;
     width: 124px;
 }
 
-.wishlist-page .Notepad-Value-House-Top {
-    border: 0 none;
-    height: 198px;
-    left: 48px;
-    position: absolute;
-    top: 11px;
-    width: 123px;
-}
 
 .mini-shopping-cart .Notepad-Value-House-Top{
 	width:100%;
@@ -7255,6 +7295,23 @@ width: 123px;
     top: 2px;
     width: 35px;
 }
+.wishlist-page .Notepad-Value-House-Top {
+	border:0px;
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
+}
+
+.wishlist-page .Notepad-Value-House-Top img{ 
+	position: absolute;
+	left: 48px;
+	top: 9px;
+	height: 200px;
+	width: 124px;
+}
 
 
 @media all and (max-width: 700px) { 
@@ -7265,6 +7322,7 @@ width: 123px;
     top: 20px;
     width: 235px;
 }
+
 
 }
 
@@ -7306,11 +7364,19 @@ width: 123px;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png') !important;
 }
 .product-grid .pictures .Notepad-Value-Top img {
-    height: 201px;
-left: 49px;
+    height: 195px;
+left: 52px;
 position: absolute;
-top: 10px;
-width: 123px;
+top: 14px;
+width: 114px;
+}
+
+.related-products-slider .pictures .Notepad-Value-Top img {
+	height: 157px;
+	left: 41px;
+	position: absolute;
+	top: 11px;
+	width: 92px;
 }
 
 .order-productimg .Notepad-Value-Top img {
@@ -7325,11 +7391,11 @@ width: 123px;
     height: 570px;
 }
 .product-details-page .gallery .Notepad-Value-Top img {
-    height: 452px;
-    left: 108px;
-    position: absolute;
-    top: 25px;
-    width: 284px;   
+	height: 446px;
+	left: 118px;
+	position: absolute;
+	top: 31px;
+	width: 261px;
 }
 .product-variant-list .variant-picture .Notepad-Value-Top img {
     height: 199px;
@@ -7341,20 +7407,20 @@ width: 123px;
 
 .shopping-cart-page .Notepad-Value-Top img {
     border: 0 none;
-    height: 198px;
-    left: 48px;
-    position: absolute;
-    top: 11px;
-    width: 124px;
+	height: 196px;
+	left: 51px;
+	position: absolute;
+	top: 13px;
+	width: 116px;
 }
 
-.wishlist-page .Notepad-Value-Top {
+.wishlist-page .Notepad-Value-Top img{
     border: 0 none;
-    height: 198px;
-    left: 48px;
-    position: absolute;
-    top: 11px;
-    width: 123px;
+	height: 196px;
+	left: 51px;
+	position: absolute;
+	top: 13px;
+	width: 116px;
 }
 
 .mini-shopping-cart .Notepad-Value-Top{
@@ -7376,10 +7442,10 @@ width: 123px;
 @media all and (max-width: 700px) { 
 .product-details-page .gallery .Notepad-Value-Top {width:470px; height: 470px;}
 .product-details-page .gallery .Notepad-Value-Top img {
-    height: 374px;
-    left: 89px;
-    top: 20px;
-    width: 235px;
+	height: 368px;
+	left: 97px;
+	top: 25px;
+	width: 216px;
 }
 
 }
@@ -7387,11 +7453,1344 @@ width: 123px;
 @media all and (max-width: 500px) { 
 .product-details-page .gallery .Notepad-Value-Top {width:300px; height:300px;}
 .product-details-page .gallery .Notepad-Value-Top img {
-    height: 238px;
-    left: 57px;
-    top: 13px;
-    width: 149px;
+	height: 235px;
+	left: 62px;
+	top: 16px;
+	width: 138px;
 }
 }
 
 /***** END OF Notepad-Value-Top *******/
+
+/***** START OF BASKET FULL MAGNETS FIRST CLASS *******/
+.Basketball-Full-Magnets-First-Class{
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png')!important;
+}
+.gallery .Basketball-Full-Magnets-First-Class {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
+}
+.product-grid .Basketball-Full-Magnets-First-Class {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
+}
+.product-grid .pictures .Basketball-Full-Magnets-First-Class img {
+    height: 139px;
+    left: 63px;
+    position: absolute;
+    top: 45px;
+    width: 84px;
+}
+.order-productimg .Basketball-Full-Magnets-First-Class img {
+    height: 69px;
+    left: 30px;
+    position: absolute;
+    top: 20px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class img {
+    height: 320px;
+left: 146px;
+position: absolute;
+top: 101px;
+width: 189px;
+}
+.product-variant-list .variant-picture .Basketball-Full-Magnets-First-Class img {
+    height: 138px;
+    left: 64px;
+    position: absolute;
+    top: 46px;
+    width: 83px;
+}
+
+.shopping-cart-page .Basketball-Full-Magnets-First-Class img{
+    height: 142px;
+    left: 62px;
+    position: absolute;
+    top: 43px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-Full-Magnets-First-Class img{
+    height: 142px;
+    left: 62px;
+    position: absolute;
+    top: 43px;
+    width: 85px!important;
+}
+
+.mini-shopping-cart .Basketball-Full-Magnets-First-Class{
+	width:100%;
+	height:65px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Basketball-Full-Magnets-First-Class img{
+    height: 40px;
+    left: 17px;
+    margin: inherit;
+    position: absolute;
+    top: 12px;
+    width: 24px;
+}
+.related-products-slider .product-grid .pictures .Basketball-Full-Magnets-First-Class img {
+	height: 114px;
+	left: 50px;
+	position: absolute;
+	top: 34px;
+	width: 68px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class {width:470px; height: 470px;}
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class img {
+    height: 266px;
+    left: 118px;
+    top: 81px;
+    width: 158px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class {width:300px; height:300px;}
+.product-details-page .gallery .Basketball-Full-Magnets-First-Class img {
+    height: 168px;
+left: 76px;
+top: 54px;
+width: 100px;
+}
+}
+
+/***** END OF BASKET FULL MAGNETS FIRST CLASS *******/
+
+/***** START OF Basketball-Full-Magnets-Quick-Magnet *******/
+.Basketball-Full-Magnets-Quick-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
+}
+.gallery .Basketball-Full-Magnets-Quick-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
+}
+.product-grid .Basketball-Full-Magnets-Quick-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
+}
+.product-grid .pictures .Basketball-Full-Magnets-Quick-Magnet img {
+    height: 216px;
+    left: 60px;
+    position: absolute;
+    top: 15px;
+    width: 88px;
+}
+
+.related-products-slider .pictures .Basketball-Full-Magnets-Quick-Magnet img{
+	height: 173px;
+	left: 50px;
+	position: absolute;
+	top: 10px;
+	width: 68px;	
+	
+}
+
+.order-productimg .Basketball-Full-Magnets-Quick-Magnet img {
+    height: 104px;
+    left: 30px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet img {
+	height: 493px;
+	left: 143px;
+	position: absolute;
+	top: 30px;
+	width: 192px;
+    }
+.product-variant-list .variant-picture .Basketball-Full-Magnets-Quick-Magnet img {
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.shopping-cart-page .Basketball-Full-Magnets-Quick-Magnet img{
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-Full-Magnets-Quick-Magnet img{
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px!important;
+}
+
+.mini-shopping-cart .Basketball-Full-Magnets-Quick-Magnet{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}  
+
+.mini-shopping-cart .Basketball-Full-Magnets-Quick-Magnet img{   
+   height: 61px;
+    left: 17px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet {width: 470px;height: 470px;}
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet img {
+    height: 406px;
+    left: 118px;
+    position: absolute;
+    top: 25px;
+    width: 158px;
+}
+
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet{width:300px; height:300px; }
+.product-details-page .gallery .Basketball-Full-Magnets-Quick-Magnet img {
+    height: 257px;
+    left: 76px;
+    position: absolute;
+    top: 18px;
+    width: 100px;
+}
+}
+
+/***** END OF Basketball-Full-Magnets-Quick-Magnet  *********/
+
+/***** START OF BASKET BALL QUICKCARD *******/
+.Basketball-QuickCard {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png')!important;
+}
+.gallery .Basketball-QuickCard {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+.product-grid .Basketball-QuickCard {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
+}
+.product-grid .pictures .Basketball-QuickCard img {
+    height: 229px;
+    left: 63px;
+    position: absolute;
+    width: 85px;
+}
+
+.related-products-slider .pictures .Basketball-QuickCard img {
+	height: 174px;
+	left: 50px;
+	position: absolute;
+	width: 68px;
+	top: 10px;
+}
+
+.order-productimg .Basketball-QuickCard img {
+    height: 104px;
+    left: 30px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-QuickCard {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-QuickCard img {
+height: 493px;
+left: 143px;
+position: absolute;
+top: 30px;
+width: 192px;
+}
+.product-variant-list .variant-picture .Basketball-QuickCard img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.shopping-cart-page .Basketball-QuickCard img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-QuickCard img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px!important;
+}
+
+.mini-shopping-cart .Basketball-QuickCard{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Basketball-QuickCard img{   
+    height: 62px;
+    left: 17px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 25px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-QuickCard{width:470px; height:470px }
+.product-details-page .gallery .Basketball-QuickCard img {
+    height: 407px;
+    left: 118px;
+    top: 24px;
+    width: 159px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-QuickCard{width:300px; height:300px }
+.product-details-page .gallery .Basketball-QuickCard img {
+    height: 261px;
+    left: 75px;
+    top: 15px;
+    width: 102px;
+}
+}
+/****** END OF BASKETBALL QUICKCARD *******/
+
+/***** START OF BASKETBALL QUICKSTIX CASE *******/
+.Basketball-QuickStix-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png')!important;
+}
+.gallery .Basketball-QuickStix-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
+}
+.product-grid .Basketball-QuickStix-Case {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
+}
+.product-grid .pictures .Basketball-QuickStix-Case img {
+    height: 214px;
+    left: 19px;
+    position: absolute;
+    top: 15px;
+    width: 84px;
+}
+
+.related-products-slider .pictures .Basketball-QuickStix-Case img {
+	height: 174px;
+	left: 15px;
+	position: absolute;
+	top: 10px;
+	width: 68px;
+}
+
+.order-productimg .Basketball-QuickStix-Case img {
+    height: 104px;
+    left: 9px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-QuickStix-Case {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-QuickStix-Case img {
+    height: 492px;
+    left: 43px;
+    position: absolute;
+    top: 32px;
+    width: 192px;
+}
+.product-variant-list .variant-picture .Basketball-QuickStix-Case img {
+    height: 215px;
+    left: 20px;
+    position: absolute;
+    top: 14px;
+    width: 83px;
+}
+
+.shopping-cart-page .Basketball-QuickStix-Case img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-QuickStix-Case img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+.mini-shopping-cart .Basketball-QuickStix-Case{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Basketball-QuickStix-Case img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-QuickStix-Case {width:470px; height: 470px;}
+.product-details-page .gallery .Basketball-QuickStix-Case img {
+    height: 407px;
+    left: 35px;
+    top: 24px;
+    width: 159px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-QuickStix-Case {width:300px; height:300px;}
+.product-details-page .gallery .Basketball-QuickStix-Case img {
+     height: 258px;
+    left: 23px;
+    top: 17px;
+    width: 100px;
+}
+}
+
+/***** END OF BASKETBALL QUICKSTIX CASE *******/
+
+/***** START OF BASKETBALL QUICKSTIX *******/
+.Basketball-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png')!important;
+}
+.gallery .Basketball-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
+}
+.product-grid .Basketball-QuickStix {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
+}
+.product-grid .pictures .Basketball-QuickStix img {
+    height: 229px;
+    left: 63px;
+    position: absolute;
+    width: 85px;
+}
+
+.related-products-slider .pictures .Basketball-QuickStix img {
+	height: 174px;
+	left: 50px;
+	position: absolute;
+	width: 68px;
+	top: 10px;
+}
+
+.order-productimg .Basketball-QuickStix img {
+    height: 104px;
+    left: 30px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-QuickStix {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-QuickStix img {
+   height: 493px;
+    left: 143px;
+    position: absolute;
+    top: 30px;
+    width: 192px;
+}
+.product-variant-list .variant-picture .Basketball-QuickStix img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.shopping-cart-page .Basketball-QuickStix img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-QuickStix img{  
+    height: 217px;
+    left: 62px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.mini-shopping-cart .Basketball-QuickStix{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Basketball-QuickStix img{   
+    height: 62px;
+    left: 17px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 25px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-QuickStix{width:470px; height:470px }
+.product-details-page .gallery .Basketball-QuickStix img {
+    height: 407px;
+    left: 118px;
+    top: 24px;
+    width: 159px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-QuickStix{width:300px; height:300px }
+.product-details-page .gallery .Basketball-QuickStix img {
+    height: 261px;
+    left: 75px;
+    top: 15px;
+    width: 102px;
+}
+}
+
+/***** END OF BASKETBALL QUICKSTIX *******/
+
+/***** START OF BASKETBALL QUICKSTIX CASE 300 *******/
+.Basketball-QuickStix-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png')!important;
+}
+.gallery .Basketball-QuickStix-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
+}
+.product-grid .Basketball-QuickStix-3-pack {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
+}
+.product-grid .pictures .Basketball-QuickStix-3-pack img {
+    height: 214px;
+    left: 19px;
+    position: absolute;
+    top: 15px;
+    width: 84px;
+}
+
+.related-products-slider .pictures .Basketball-QuickStix-3-pack img {
+    height: 174px;
+    left: 15px;
+    position: absolute;
+    top: 10px;
+    width: 68px;
+}
+
+.order-productimg .Basketball-QuickStix-3-pack img {
+    height: 104px;
+    left: 9px;
+    position: absolute;
+    top: 6px;
+    width: 41px;
+}
+.product-details-page .gallery .Basketball-QuickStix-3-pack {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Basketball-QuickStix-3-pack img {
+    height: 492px;
+    left: 43px;
+    position: absolute;
+    top: 32px;
+    width: 192px;
+}
+.product-variant-list .variant-picture .Basketball-QuickStix-3-pack img {
+    height: 215px;
+    left: 20px;
+    position: absolute;
+    top: 14px;
+    width: 83px;
+}
+
+.shopping-cart-page .Basketball-QuickStix-3-pack img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+
+.wishlist-page .Basketball-QuickStix-3-pack img {
+    border: 0 none;
+    height: 217px;
+    left: 19px;
+    position: absolute;
+    top: 13px;
+    width: 85px;
+}
+.mini-shopping-cart .Basketball-QuickStix-3-pack {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Basketball-QuickStix-3-pack img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Basketball-QuickStix-3-pack {width:470px; height: 470px;}
+.product-details-page .gallery .Basketball-QuickStix-3-pack img {
+height: 407px;
+left: 35px;
+top: 24px;
+width: 159px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Basketball-QuickStix-3-pack {width:300px; height:300px;}
+.product-details-page .gallery .Basketball-QuickStix-3-pack img {
+     height: 258px;
+    left: 23px;
+    top: 17px;
+    width: 100px;
+}
+}
+
+/***** END OF BASKETBALL QUICKSTIX CASE 300 *******/
+
+/***** START OF Business-Card-Magnet-3-PacK *******/
+.Business-Card-Magnet-3-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-300.png')!important;
+}
+.gallery .Business-Card-Magnet-3-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-300.png') !important;
+}
+.product-grid .Business-Card-Magnet-3-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-300.png') !important;
+}
+.product-grid .pictures .Business-Card-Magnet-3-PacK img {
+    height: 90px;
+    left: 48px;
+    position: absolute;
+    top: 47px;
+    width: 153px;
+}
+
+.related-products-slider .pictures .Business-Card-Magnet-3-PacK img {
+	height: 73px;
+	left: 38px;
+	position: absolute;
+	top: 37px;
+	width: 123px;
+}
+
+
+.order-productimg .Business-Card-Magnet-3-PacK img {
+	height: 44px;
+	left: 23px;
+	position: absolute;
+	top: 22px;
+	width: 73px;
+}
+.product-details-page .gallery .Business-Card-Magnet-3-PacK {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Business-Card-Magnet-3-PacK img {
+    height: 205px;
+	left: 109px;
+	position: absolute;
+	top: 107px;
+	width: 349px;
+}
+.product-variant-list .variant-picture .Business-Card-Magnet-3-PacK img {
+	height: 90px;
+	left: 47px;
+	position: absolute;
+	top: 47px;
+	width: 154px;
+}
+
+.shopping-cart-page .Business-Card-Magnet-3-PacK img {
+    border: 0 none;
+	height: 90px;
+	left: 48px;
+	position: absolute;
+	top: 47px;
+	width: 153px;
+}
+
+.wishlist-page .Business-Card-Magnet-3-PacK img {
+    border: 0 none;
+	height: 90px;
+	left: 48px;
+	position: absolute;
+	top: 47px;
+	width: 153px;
+}
+.mini-shopping-cart .Business-Card-Magnet-3-PacK {
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Business-Card-Magnet-3-PacK img{
+	height: 26px;
+	left: 13px;
+	margin: inherit;
+	position: absolute;
+	top: 13px;
+	width: 43px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Business-Card-Magnet-3-PacK {width:470px; height: 470px;}
+.product-details-page .gallery .Business-Card-Magnet-3-PacK img {
+	height: 169px;
+	left: 90px;
+	top: 88px;
+	width: 287px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Business-Card-Magnet-3-PacK {width:300px; height:300px;}
+.product-details-page .gallery .Business-Card-Magnet-3-PacK img {
+   height: 107px;
+left: 57px;
+top: 57px;
+width: 184px;
+}
+}
+
+/***** END OF Business-Card-Magnet-3-PacK *******/
+
+/***** START OF Business-Card-Magnet *******/
+.Business-Card-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet.png')!important;
+}
+.gallery .Business-Card-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet.png') !important;
+}
+.product-grid .Business-Card-Magnet {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet.png') !important;
+}
+
+
+
+.product-grid .pictures .Business-Card-Magnet img {
+    height: 90px;
+	left: 49px;
+	position: absolute;
+	top: 80px;
+	width: 152px;
+}
+
+.related-products-slider .product-grid .pictures .Business-Card-Magnet img {
+	height: 72px;
+	left: 38px;
+	position: absolute;
+	top: 64px;
+	width: 123px;
+}
+
+.order-productimg .Business-Card-Magnet img {
+	height: 43px;
+	left: 23px;
+	position: absolute;
+	top: 38px;
+	width: 74px;
+}
+.product-details-page .gallery .Business-Card-Magnet {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Business-Card-Magnet img {
+    height: 204px;
+	left: 111px;
+	position: absolute;
+	top: 183px;
+	width: 348px;
+}
+
+.product-variant-list .variant-picture .Business-Card-Magnet img {
+	height: 91px;
+	left: 48px;
+	position: absolute;
+	top: 79px;
+	width: 154px;
+}
+
+.shopping-cart-page .Business-Card-Magnet img {
+    border: 0 none;
+	height: 91px;
+	left: 48px;
+	position: absolute;
+	top: 79px;
+	width: 153px;
+}
+
+.wishlist-page .Business-Card-Magnet img {
+    border: 0 none;
+	height: 91px;
+	left: 48px;
+	position: absolute;
+	top: 79px;
+	width: 153px;
+}
+.mini-shopping-cart .Business-Card-Magnet{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Business-Card-Magnet img{
+    height: 62px;
+    left: 5px;
+    margin: inherit;
+    position: absolute;
+    top: 3px;
+    width: 24px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Business-Card-Magnet {width:470px; height: 470px;}
+.product-details-page .gallery .Business-Card-Magnet img {
+	height: 169px;
+	left: 90px;
+	top: 150px;
+	width: 289px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Business-Card-Magnet {width:300px; height:300px;}
+.product-details-page .gallery .Business-Card-Magnet img {
+     height: 107px;
+left: 59px;
+top: 97px;
+width: 182px;
+}
+}
+
+/***** END OF Business-Card-Magnet *******/
+
+/***** START OF Business-Card-Magnet-20-PacK *******/
+.Business-Card-Magnet-20-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png')!important;
+}
+.gallery .Business-Card-Magnet-20-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
+}
+.product-grid .Business-Card-Magnet-20-PacK {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
+}
+.product-grid .pictures .Business-Card-Magnet-20-PacK img {
+    height: 90px;
+    left: 48px;
+    position: absolute;
+    top: 47px;
+    width: 153px;
+}
+
+.related-products-slider .product-grid .pictures .Business-Card-Magnet-20-PacK img {
+	height: 73px;
+	left: 38px;
+	position: absolute;
+	top: 37px;
+	width: 123px;
+}
+
+
+.order-productimg .Business-Card-Magnet-20-PacK img {
+	height: 44px;
+	left: 23px;
+	position: absolute;
+	top: 22px;
+	width: 74px;
+}
+.product-details-page .gallery .Business-Card-Magnet-20-PacK {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
+    height: 205px;
+left: 109px;
+position: absolute;
+top: 107px;
+width: 349px;
+}
+.product-variant-list .variant-picture .Business-Card-Magnet-20-PacK img {
+	height: 90px;
+	left: 47px;
+	position: absolute;
+	top: 47px;
+	width: 154px;
+}
+
+.shopping-cart-page .Business-Card-Magnet-20-PacK img {
+    border: 0 none;
+	height: 90px;
+	left: 47px;
+	position: absolute;
+	top: 47px;
+	width: 154px;
+}
+
+.wishlist-page .Business-Card-Magnet-20-PacK img {
+    border: 0 none;
+	height: 90px;
+	left: 47px;
+	position: absolute;
+	top: 47px;
+	width: 154px;
+}
+.mini-shopping-cart .Business-Card-Magnet-20-PacK{
+	width:100%;
+	height:70px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Business-Card-Magnet-20-PacK img{
+	height: 26px;
+	left: 13px;
+	margin: inherit;
+	position: absolute;
+	top: 13px;
+	width: 43px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Business-Card-Magnet-20-PacK {width:470px; height: 470px;}
+.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
+	height: 169px;
+	left: 90px;
+	top: 88px;
+	width: 287px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Business-Card-Magnet-20-PacK {width:300px; height:300px;}
+.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
+     height: 107px;
+left: 57px;
+top: 57px;
+width: 184px;
+}
+}
+
+/***** END OF Business-Card-Magnet-20-PacK *******/
+
+/***** START OF CALENDAR FULL MAGNETS BUDGET HORIZONTAL *******/
+.Calendar-Full-Magnets-Budget-Horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget-horizontal.png')!important;
+}
+.gallery .Calendar-Full-Magnets-Budget-Horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget-horizontal.png') !important;
+}
+.product-grid .Calendar-Full-Magnets-Budget-Horizontal {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget-horizontal.png') !important;
+}
+.product-grid .pictures .Calendar-Full-Magnets-Budget-Horizontal img {
+    height: 120px;
+    left: 57px;
+    position: absolute;
+    top: 66px;
+    width: 137px;
+}
+
+.related-products-slider .pictures .Calendar-Full-Magnets-Budget-Horizontal img {
+	height: 98px;
+	left: 44px;
+	position: absolute;
+	top: 51px;
+	width: 112px;
+}
+
+
+.order-productimg .Calendar-Full-Magnets-Budget-Horizontal img {
+	height: 59px;
+	left: 26px;
+	position: absolute;
+	top: 30px;
+}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal img {
+    height: 279px;
+left: 129px;
+position: absolute;
+top: 145px;
+width: 313px;
+}
+.product-variant-list .variant-picture .Calendar-Full-Magnets-Budget-Horizontal img {
+	height: 123px;
+	left: 55px;
+	position: absolute;
+	top: 63px;
+	width: 139px;
+}
+
+.shopping-cart-page .Calendar-Full-Magnets-Budget-Horizontal img{
+	height: 123px;
+	left: 55px;
+	position: absolute;
+	top: 63px;
+	width: 139px;
+}
+
+.wishlist-page .Calendar-Full-Magnets-Budget-Horizontal img{
+	height: 123px;
+	left: 55px;
+	position: absolute;
+	top: 63px;
+	width: 139px;
+}
+
+.mini-shopping-cart .Calendar-Full-Magnets-Budget-Horizontal{
+	width:100%;
+	height:65px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Calendar-Full-Magnets-Budget-Horizontal img{
+	height: 34px;
+	left: 15px;
+	margin: inherit;
+	position: absolute;
+	top: 18px;
+	width: 39px;
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal {width:470px; height: 470px;}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal img {
+	height: 231px;
+	left: 104px;
+	top: 119px;
+	width: 261px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal {width:300px; height:300px;}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Horizontal img {
+    height: 146px;
+left: 69px;
+top: 77px;
+width: 164px;
+}
+}
+
+/***** END OF CALENDAR FULL MAGNETS BUDGET HORIZONTAL *******/
+
+/***** START OF CALENDAR FULL MAGNET BUDGET VERTICAL *******/
+.Calendar-Full-Magnets-Budget-Vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png')!important;
+}
+.gallery .Calendar-Full-Magnets-Budget-Vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
+}
+.product-grid .Calendar-Full-Magnets-Budget-Vertical {
+    background-size: 100%;
+    width: 250px;
+    height: 250px;
+    float: left;
+    position: relative;
+    background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
+}
+.product-grid .pictures .Calendar-Full-Magnets-Budget-Vertical img {
+    height: 136px;
+    left: 53px;
+    position: absolute;
+    top: 52px;
+    width: 121px;
+}
+
+.related-products-slider .pictures .Calendar-Full-Magnets-Budget-Vertical img {
+	height: 112px;
+	left: 41px;
+	position: absolute;
+	top: 39px;
+	width: 98px;
+}
+
+
+.order-productimg .Calendar-Full-Magnets-Budget-Vertical img {
+	height: 66px;
+	left: 25px;
+	position: absolute;
+	top: 24px;
+	width: 59px;
+}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical {
+    width: 570px;
+    height: 570px;
+}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical img {
+    height: 314px;
+	left: 119px;
+	position: absolute;
+	top: 114px;
+	width: 278px;
+}
+.product-variant-list .variant-picture .Calendar-Full-Magnets-Budget-Vertical img {
+	height: 139px;
+	left: 52px;
+	position: absolute;
+	top: 49px;
+	width: 122px;
+}
+
+.shopping-cart-page .Calendar-Full-Magnets-Budget-Vertical img{
+	height: 139px;
+	left: 52px;
+	position: absolute;
+	top: 49px;
+	width: 122px;
+}
+
+.wishlist-page .Calendar-Full-Magnets-Budget-Vertical img{
+	height: 139px;
+	left: 52px;
+	position: absolute;
+	top: 49px;
+	width: 122px;
+}
+
+.mini-shopping-cart .Calendar-Full-Magnets-Budget-Vertical{
+	width:100%;
+	height:65px;
+	background-repeat:no-repeat;
+}
+
+.mini-shopping-cart .Calendar-Full-Magnets-Budget-Vertical img{
+    height: 39px;
+    left: 14px;
+    margin: inherit;
+    position: absolute;
+    top: 14px;
+    width: 35px;
+
+}
+
+@media all and (max-width: 700px) { 
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical {width:470px; height: 470px;}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical img {
+	height: 260px;
+	left: 97px;
+	top: 93px;
+	width: 231px;
+}
+}
+
+@media all and (max-width: 500px) { 
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical {width:300px; height:300px;}
+.product-details-page .gallery .Calendar-Full-Magnets-Budget-Vertical img {
+height: 163px;
+left: 63px;
+top: 62px;
+width: 146px;
+}
+}
+
+/***** END OF CALENDAR FULL MAGNET BUDGET VERTICAL *******/
+
