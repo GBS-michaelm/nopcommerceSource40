@@ -19,6 +19,7 @@ using Nop.Plugin.DataAccess.GBS;
 using System.Data;
 using Nop.Plugin.Widgets.CustomersCanvas.Domain;
 using WebServices.Models.File;
+using System.Net;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
@@ -115,7 +116,29 @@ namespace Nop.Plugin.Order.GBS.Controllers
             try
             {
                 List<ProductFileModel> productFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(ccFiles["FilesToCopy"]);
-                //pass to the file service
+                List<ProductFileModel> filesToRemove = new List<ProductFileModel>(); 
+                foreach (ProductFileModel product in productFiles)
+                {
+                    if (!ccFiles["surfaces"].Contains(product.product.surface)) {
+                        filesToRemove.Add(product);
+                    }
+                }
+                foreach (ProductFileModel removeMe in filesToRemove)
+                {
+                    productFiles.Remove(removeMe);
+                }
+
+                var surfaces = "";
+                var fileNames = "";
+                foreach (ProductFileModel product in productFiles)
+                {
+                    surfaces += "," + product.product.surface;
+                    fileNames += "," + product.product.productionFileName;
+                }
+                surfaces = surfaces.Substring(1);
+                fileNames = fileNames.Substring(1);
+
+                    //pass to the file service
                 GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                 string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
                 string response = FileService.CopyFilesToProduction(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
@@ -123,6 +146,15 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 {
                     throw new Exception(response);
                 }
+
+                //call Intranet to update product options in order
+                WebClient client = new WebClient();
+                client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                var address = "http://intranet/gbsdev/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames;
+                string responseString = client.DownloadString(address);
+                if (responseString != "Success!") { throw new Exception("Error updating Intranet - address = " +address ); }
+
+
                 return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml");
             }
             catch (Exception ex)
