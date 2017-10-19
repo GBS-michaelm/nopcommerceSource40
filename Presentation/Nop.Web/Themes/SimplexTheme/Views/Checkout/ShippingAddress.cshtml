@@ -272,7 +272,7 @@
                 @Html.Widget("checkout_shipping_address_bottom")
             </div>
             }
-            <div id="sh_phone_number" style="display:none; padding-top:30px; padding-bottom:40px;" class="form-group">
+            @*<div id="sh_phone_number" style="display:none; padding-top:30px; padding-bottom:40px;" class="form-group">
                                     <strong>Contact Information :</strong>
                 <div style="padding-top: 15px;">
                                         @Html.LabelFor(model => model.NewAddress.PhoneNumber, new { @class = "control-label col-sm-2 col-md-2" })
@@ -285,11 +285,14 @@
                                             @Html.ValidationMessageFor(model => model.NewAddress.PhoneNumber)
                                     </div>
                 </div>
-                                </div>
+            </div>*@
             <div class="style-msg infomsg" id="local-pickup-msg" style="display:none;">
                 <div class="sb-msg"><i class="icon-info-sign"></i><strong>NOTE</strong> Local pickup availible 7am-5pm PT Monday through Friday</div>
             </div>
-            @Html.Partial("_ShippingMethod", ShippingMethod)
+            
+                @Html.Partial("_ShippingMethod", ShippingMethod)
+          
+            
 
             <div class="add-shipping-address-wrap @newShippingCheck" >
 
@@ -326,6 +329,26 @@
         $("#shipping-address-dropdown").change(function () { ShippingAddressDropdownChange($(this)); });
         $("#shipping-method-dropdown").change(function () { SetShippingMethod($(this));})
         $("#btn-next-step-to-payment").click(function () { NextStepToPayment(); });
+
+
+        if($("#shipping-address-dropdown").val() == "Local Pickup"){
+            //var val = "Local Pickup";
+            //ShippingAddressDropdownChange(val);
+
+            $("#local-pickup-msg").show();
+            $("#sh_phone_number").show();
+            $(".new-shipping-address").hide();
+            $(".add-shipping-address-wrap").show();
+            $("#btn-next-step-to-payment").hide();
+            $("#edit-saved-address").hide();
+            $(".page.checkout-page.shipping-method-page").hide();
+            $("#PickUpInStore").prop("checked", true);
+
+        }else if($("#shipping-address-dropdown").val() == "New Address"){
+            $("#shipping-method-dropdown").hide();
+            $("#shipping-method-dropdown").closest(".checkout-data").siblings(".small-heading").hide();
+        }
+        
     });
     function NextStepToPayment() {
 
@@ -354,9 +377,9 @@
                 $("#PickUpInStore").prop("checked", false);
 
                 $("#shipping-method-dropdown").hide();
-
-
+                $("#shipping-method-dropdown").closest(".checkout-data").siblings(".small-heading").hide();
                 break;
+
             case "checkout.localpickup":
             case "Local Pickup":
                 $("#local-pickup-msg").show();
@@ -368,6 +391,7 @@
                 $(".page.checkout-page.shipping-method-page").hide();
                 $("#PickUpInStore").prop("checked", true);
                 break;
+
             default:
                 $("#local-pickup-msg").hide();
                 $("#sh_phone_number").hide();
@@ -379,8 +403,8 @@
                 $("#PickUpInStore").prop("checked", false);
 
                 
-                var url = $("#shipping-address-dropdown option:selected").attr("addressurl");
-                setLocation(url + "&shipType="); //leaving shiptype empty allows next step to work
+                var url = $("#shipping-address-dropdown option:selected").attr("reloadurl");
+                setLocation(url); //leaving shiptype empty allows next step to work
 
                 break;
         }

@@ -1,0 +1,106 @@
+﻿body {
+}
+
+#workPlace div.topic-html-content {
+    border: none;
+
+}
+
+#workPlace button.button {
+    background-color: #012D5C;
+}
+
+#agentPacks {
+    margin-top: 60px;
+}
+
+#agentPacks div.topic-html-content {
+    border: none;
+}
+
+#agentPacks div.topic-html-content a {
+    color: #012d5c;
+    text-decoration : underline !important;
+    cursor : pointer;
+}
+
+#marketCenterAbout {
+    margin-top: 60px;
+}
+
+#marketCenterAbout div.topic-html-content {
+    border: none;
+}
+
+#parentTitleWrapDiv {
+    display: block;
+
+}
+
+.parent-gateway-name {
+    float: left;
+    width: 560px;
+    border-left : 90px solid !important;
+}
+
+.parent-gateway-description {
+    margin-top : 10px;
+    float: right;
+    width: 400px;
+    text-align : right;
+}
+
+.parent-gateway-description h4 {
+    margin-bottom : 5px;
+}
+
+#searchArea {
+    float: left;
+    background-color: #F5F5F5;
+    display: block;
+    clear : both;
+    width: 100%;
+    height : 75px;
+}
+
+#searchArea p {
+    margin-bottom : 0px;
+}
+
+#searchAreaLeft {
+    margin-top: 7px;
+    margin-left : 10px;
+    float: left;
+    width : 45%;
+
+}
+
+#marketCenterDropDown {
+    margin-top : 3px;
+    height: 31px;
+    background-color: white;
+}
+
+#searchAreaRight {
+    margin-top: 7px;
+    margin-right : 10px;
+    float : right;
+    text-align : right;
+    width : 45%;
+}
+
+#searchAreaRight a {
+    cursor : pointer;
+}
+
+.right-column-title {
+    width: 100%;
+    border-top: 1px #bababa solid;
+    padding-top: 30px;
+    clear: both;
+    margin-top: 25px;
+    float: left;
+    padding-bottom: 15px;
+}
+
+
