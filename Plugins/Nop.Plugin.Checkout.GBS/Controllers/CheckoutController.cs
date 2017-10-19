@@ -326,6 +326,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         public ActionResult SelectShippingAddress(int addressId, string shipType)
         {
             TempData["ShippingAddressId"] = addressId;
+            TempData["ShippingType"] = shipType;
 
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
@@ -422,18 +423,24 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     ModelState.AddModelError("", error);
                 }
 
-                Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
-                Match match = regex.Match(model.NewAddress.ZipPostalCode);
-                if (!match.Success)
+                Match match = null;
+
+                if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
                 {
-                    ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
+                    Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
+                    match = regex.Match(model.NewAddress.ZipPostalCode);
+                    if (!match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
+                    }
                 }
+                
 
                 if (ModelState.IsValid)
                 {
-
+                    
                     model.NewAddress.ZipPostalCode = match.ToString();
-
+                                   
                     //try to find an address with the same values (don't duplicate records)
                     var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
                         model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
