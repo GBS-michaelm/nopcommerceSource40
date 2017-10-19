@@ -1780,7 +1780,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
     .item-box .product-item .product-title {
         overflow: hidden;
         margin: 0px;
-        height: 21px;
+        /*height: 21px;*/
         line-height: 18px;
         font-size: 14px;
         text-align: center;
@@ -11209,3 +11209,30 @@ div .mega-menu {
         top: 31px;
         width: 121px;
     }
+@media all and (max-width: 500px) {
+    .order-summary-confirm .Vertical img, .order-summary-confirm .thumbnail-bg_envelope-vertical img, .shopping-cart-page .thumbnail-bg_envelope-vertical img, .shopping-cart-page .Vertical img {
+        height: 97px;
+        left: 12px;
+        max-width: 100%;
+        position: absolute;
+        top: 19px;
+        width: 77px;
+    }
+    .order-summary-confirm .Vertical, .order-summary-confirm .thumbnail-bg_envelope-vertical, .shopping-cart-page .thumbnail-bg_envelope-vertical, .shopping-cart-page .Vertical {
+        width: 120px;
+        height: 120px;
+    }
+    .order-summary-confirm .Horizontal, .order-summary-confirm .thumbnail-bg_envelope-horizontal, .shopping-cart-page .thumbnail-bg_envelope-horizontal, .shopping-cart-page .Horizontal {
+        width: 120px;
+        height: 120px;
+    }
+
+        .order-summary-confirm .Horizontal img, .order-summary-confirm .thumbnail-bg_envelope-horizontal img, .shopping-cart-page .thumbnail-bg_envelope-horizontal img, .shopping-cart-page .Horizontal img{
+            height: 72px;
+            left: 19px;
+            max-width: 100%;
+            position: absolute;
+            top: 17px;
+            width: 97px;
+        }
+}
