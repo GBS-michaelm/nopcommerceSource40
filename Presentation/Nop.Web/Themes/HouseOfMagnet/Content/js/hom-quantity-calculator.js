@@ -1,7 +1,9 @@
 ﻿$(document).ready(function () {
 
     //init load stuff
-    var $tabs = $('#tabs').tabs();
+    var $tabs = $('#qty-calc > #tabs').tabs();
+    //var active = $tabs.tabs("option", "active");
+    //$tabs.tabs("option", "active", 0);
     var countPlus = 0;
     var buttonCount = 0;
 
@@ -14,7 +16,7 @@
 
     //iterate through each textboxes and add keyup
     //handler to trigger sum event
-    $(".txt").each(function () {
+    $("#qty-calc .txt").each(function () {
 
         $(this).keyup(function () {
             calculateSum();
@@ -22,12 +24,43 @@
     });
 
     //EVENT FUNCTIONS
-    $('.next-tab, .prev-tab').click(function () {
-        $tabs.tabs('select', $(this).attr("rel"));
+    $('#qty-calc .next-tab').click(function () {
+        //$tabs.tabs('select', $(this).attr("rel"));       
+        //$tabs.tabs('option', 'active', $(this).attr("rel"));
+
+        var nextFrag = $(this).attr("rel");
+        var curNextFrag = parseInt(nextFrag - 1).toString();
+
+        $("#fragment-" + nextFrag).removeClass("ui-tabs-hide");
+        $("#fragment-" + nextFrag).show();
+
+        $("#fragment-" + curNextFrag).addClass("ui-tabs-hide");
+        $("#fragment-" + curNextFrag).hide();
+
+
+        //console.log("next button clicked")
+        return true;
+    });
+
+    $("#qty-calc .prev-tab").click(function () {
+        //$tabs.tabs('select', $(this).attr("rel"));       
+       
+        var prevFrag = $(this).attr("rel");
+        var curPrevFrag = 1 + parseInt(prevFrag);
+
+        $("#fragment-" + prevFrag).removeClass("ui-tabs-hide");
+        $("#fragment-" + prevFrag).show();
+
+        $("#fragment-" + curPrevFrag).addClass("ui-tabs-hide");
+        $("#fragment-" + curPrevFrag).hide();
+
+        //console.log("prev button clicked")
+
         return false;
     });
 
-    $('input').bind('change keyup input', function (event) {
+
+    $('#qty-calc input').bind('change keyup input', function (event) {
         var currValue = $(this).val();
 
         if (currValue.search(/[^0-9]/) != -1) {
@@ -39,7 +72,7 @@
     });
 
     //$(".numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
-    $(".button").live("click", function () {
+    $("#qty-calc .button").live("click", function () {
 
         var $button = $(this);
         var oldValue = $button.parent().find("input").val();
@@ -68,7 +101,7 @@
         var sum = 0;
 
         //iterate through each textboxes and add the values
-        $("input.txt").each(function () {
+        $("#qty-calc input.txt").each(function () {
 
             
 
@@ -83,13 +116,13 @@
 
         });
         //.toFixed() method will roundoff the final sum to 2 decimal places
-        $("#sum").html("You'll need <strong>" + sum + " </strong> schedules");
+        $("#qty-calc > #sum").html("You'll need <strong>" + sum + " </strong> schedules");
     }
 
     function LoadPlusAndMinus() {
 
         if (countPlus == 0) {
-            $(".numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
+            $("#qty-calc .numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
         }
         countPlus++;
 
@@ -97,9 +130,9 @@
 
     function ButtonsNextLoad() {
         if (buttonCount == 0) {
-            $(".ui-tabs-panel").each(function (i) {
+            $("#qty-calc .ui-tabs-panel").each(function (i) {
 
-                var totalSize = $(".ui-tabs-panel").size() - 1;
+                var totalSize = $("#qty-calc .ui-tabs-panel").size() - 1;
 
                 if (i != totalSize) {
                     next = i + 2;

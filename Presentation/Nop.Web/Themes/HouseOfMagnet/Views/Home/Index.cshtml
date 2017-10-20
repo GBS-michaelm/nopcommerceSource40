@@ -7,30 +7,78 @@
 <div class="page home-page">
     <div class="page-body">
         <div class="container">
+            <div class="row sale-promo">
+                @Html.Action("TopicBlock", "Topic", new { systemName = "abovebanner" })
+            </div>
             <div class="banner-section">
                 <div class="main-banner">@Html.Widget("home_page_top")</div>
                 <div class="banner-right">
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_home-features" })
-				</div>
+                    @Html.Action("TopicBlock", "Topic", new { systemName = "offer-products" })
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>
-		@Html.Action("TopicBlock", "Topic", new { systemName = "ncc_home-page-steps" })
         @*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
         <div class="container">
-            @Html.Widget("home_page_before_categories")
-            @Html.Action("HomepageCategories", "Catalog")
+                @Html.Widget("home_page_before_categories")
+                @Html.Action("HomepageCategories", "Catalog")
+            </div>
+        @*@Html.Widget("home_page_before_products")*@
+        @*<div class="featured-product">
+            <div class="container">
+                <hr />
+                @Html.Action("HomepageProducts", "Product")
+            </div>
+        </div>*@
+
+        <!--Security section-->
+        <div class="security-section">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "HereForYou" })
         </div>
-            @Html.Action("TopicBlock", "Topic", new { systemName = "MeetOurArtist" })
-            @Html.Action("TopicBlock", "Topic", new { systemName = "GivingCard" }) 
-            @Html.Widget("home_page_before_products")
-            @*@Html.Action("HomepageProducts", "Product")*@
-            @Html.Widget("home_page_before_best_sellers")
-            @*@Html.Action("HomepageBestSellers", "Product")*@
-            @Html.Widget("home_page_before_news")
-            @*@Html.Action("HomePageNews", "News")*@
-            @Html.Widget("home_page_before_poll")
-            @*@Html.Action("HomePagePolls", "Poll")*@
-            @*@Html.Widget("home_page_bottom")*@
+        <!--Security section-->
+        <div class="tistimonials">
+            <div class="container">
+                @Html.Action("TopicBlock", "Topic", new { systemName = "Testimonials" })
+            </div>
         </div>
+        <div class="join-email-section">
+            <div class="container">
+                <div class="row">
+		    @Html.Action("TopicBlock", "Topic", new { systemName = "JoinEmailList" })
+                    <div class="col-sm-5">
+                        <div class="joinin-email">
+                            <div class="email-lable">Email Address:</div>
+                            @Html.Action("NewsletterBox", "Newsletter")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--process of product-->
+        <div class="product-process">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "PersonalizeYourProductsOnline" })           
+        </div>
+        <!--process of product-->
+
+        <div class="award-section">
+           @Html.Action("TopicBlock", "Topic", new { systemName = "Awards" })
+        </div>
+
+        <!--Greeting Cards from Note Card Cafe-->
+        <div class="greeting-wrapper">
+	@Html.Action("TopicBlock", "Topic", new { systemName = "GreetingCardsfromNoteCardCafe" })
+        </div>
+        <!--Greeting Cards from Note Card Cafe-->
+
+        <div class="solutions-wrapper">
+	@Html.Action("TopicBlock", "Topic", new { systemName = "SolutionsforYourIndustry" })
+        </div>
+        @*@Html.Widget("home_page_before_best_sellers")
+        @Html.Action("HomepageBestSellers", "Product")
+        @Html.Widget("home_page_before_news")*@
+        @*@Html.Action("HomePageNews", "News")*@
+        @*@Html.Widget("home_page_before_poll")*@
+        @*@Html.Action("HomePagePolls", "Poll")*@
+        @*@Html.Widget("home_page_bottom")*@
+    </div>
 </div>
