@@ -116,7 +116,9 @@ namespace Nop.Plugin.Order.GBS.Controllers
             try
             {
                 List<ProductFileModel> productFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(ccFiles["FilesToCopy"]);
-                List<ProductFileModel> filesToRemove = new List<ProductFileModel>(); 
+                List<ProductFileModel> filesToRemove = new List<ProductFileModel>();
+                List<ProductFileModel> filesToUpdate = new List<ProductFileModel>();
+
                 foreach (ProductFileModel product in productFiles)
                 {
                     if (!ccFiles["surfaces"].Contains(product.product.surface)) {
@@ -127,18 +129,16 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 {
                     productFiles.Remove(removeMe);
                 }
-
-                var surfaces = "";
-                var fileNames = "";
                 foreach (ProductFileModel product in productFiles)
                 {
-                    surfaces += "," + product.product.surface;
-                    fileNames += "," + product.product.productionFileName;
+                    if (string.IsNullOrEmpty(product.product.productionFileName))
+                    {
+                        filesToUpdate.Add(product);
+                    }
                 }
-                surfaces = surfaces.Substring(1);
-                fileNames = fileNames.Substring(1);
 
-                    //pass to the file service
+
+                //pass to the file service
                 GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                 string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
                 string response = FileService.CopyFilesToProduction(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
@@ -146,16 +146,54 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 {
                     throw new Exception(response);
                 }
+                List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
+
+                var surfaces = "";
+                var fileNames = "";
+                foreach (ProductFileModel product in responseFiles)
+                {
+                    surfaces += "," + (product.product.surface == "F" ? "front" : product.product.surface == "B" ? "back" : product.product.surface);
+                    fileNames += "," + product.product.productionFileName;
+                }
+                surfaces = surfaces.Substring(1);
+                fileNames = fileNames.Substring(1);
+
+                //update NOP DB with new production filenames
+                DBManager manager = new DBManager();
+                foreach (ProductFileModel product in responseFiles)
+                {
+                    if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception") && filesToUpdate.Where(x => x.product.surface == product.product.surface).Any())
+                    {
+                        Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
+                        paramDicEx.Add("@nopOrderItemID", ccFiles["OPID"]);
+                        paramDicEx.Add("@ProductType", ccFiles["productType"]);
+                        paramDicEx.Add("@FileName", product.product.productionFileName);
+                        var insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName";
+                        manager.SetParameterizedQueryNoData(insert, paramDicEx);
+                    }
+
+                }
+
+                var msg = new Message();
+                msg.message = "Successfully updated the product print files";
 
                 //call Intranet to update product options in order
+                string intranetBaseAddress = _gbsOrderSettings.IntranetBaseAddress;
                 WebClient client = new WebClient();
                 client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                var address = "http://intranet/gbsdev/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames;
-                string responseString = client.DownloadString(address);
-                if (responseString != "Success!") { throw new Exception("Error updating Intranet - address = " +address ); }
+                if (!string.IsNullOrEmpty(intranetBaseAddress))
+                {
+                    var address = intranetBaseAddress + "/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames;
+                    string responseString = client.DownloadString(address);
+                    if (responseString != "Success!") { throw new Exception("Error updating Intranet - address = " + address); }
+                } else
+                {
+                    msg.message = "Intranet Base Address not configured in plugin, please configure and try again";
+                }
 
 
-                return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml");
+
+                return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml", msg);
             }
             catch (Exception ex)
             {

@@ -221,6 +221,8 @@
                         newfile.product.surface = "greeting";
                         newfile.product.productType = productType;
                         newfile.product.imprintColor = "1";
+                        newfile.requestSessionID = sessionID;
+                        newfile.product.productionFileName = "";
                         newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/1_-1.pdf";
                         ccFiles.splice(1, 0, newfile);
                     }
@@ -233,6 +235,7 @@
                             newfile.product.productType = productType;
                             newfile.product.imprintColor = "1";
                             newfile.requestSessionID = sessionID;
+                            newfile.product.productionFileName = "";
                             newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/0_-1.pdf";
                             ccFiles.splice(0, 0, newfile);
                         }
@@ -242,6 +245,7 @@
                             newfile.product.productType = productType;
                             newfile.product.imprintColor = "1";
                             newfile.requestSessionID = sessionID;
+                            newfile.product.productionFileName = "";
                             newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/1_-1.pdf";
                             ccFiles.splice(1, 0, newfile);
                         }
