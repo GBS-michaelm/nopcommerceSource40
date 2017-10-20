@@ -8430,8 +8430,8 @@ width: 182px;
 
 /***** END OF Business-Card-Magnet *******/
 
-/***** START OF Business-Card-Magnet-20-PacK *******/
-.Business-Card-Magnet-20-PacK {
+/***** START OF Business-Card-Magnet-20-Pack *******/
+.Business-Card-Magnet-20-Pack {
     background-size: 100%;
     width: 250px;
     height: 250px;
@@ -8439,7 +8439,7 @@ width: 182px;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png')!important;
 }
-.gallery .Business-Card-Magnet-20-PacK {
+.gallery .Business-Card-Magnet-20-Pack {
     background-size: 100%;
     width: 250px;
     height: 250px;
@@ -8447,7 +8447,7 @@ width: 182px;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
 }
-.product-grid .Business-Card-Magnet-20-PacK {
+.product-grid .Business-Card-Magnet-20-Pack {
     background-size: 100%;
     width: 250px;
     height: 250px;
@@ -8455,7 +8455,7 @@ width: 182px;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
 }
-.product-grid .pictures .Business-Card-Magnet-20-PacK img {
+.product-grid .pictures .Business-Card-Magnet-20-Pack img {
     height: 90px;
     left: 48px;
     position: absolute;
@@ -8463,7 +8463,7 @@ width: 182px;
     width: 153px;
 }
 
-.related-products-slider .product-grid .pictures .Business-Card-Magnet-20-PacK img {
+.related-products-slider .product-grid .pictures .Business-Card-Magnet-20-Pack img {
 	height: 73px;
 	left: 38px;
 	position: absolute;
@@ -8472,85 +8472,91 @@ width: 182px;
 }
 
 
-.order-productimg .Business-Card-Magnet-20-PacK img {
+.order-productimg .Business-Card-Magnet-20-Pack img {
 	height: 44px;
 	left: 23px;
 	position: absolute;
 	top: 22px;
 	width: 74px;
 }
-.product-details-page .gallery .Business-Card-Magnet-20-PacK {
+.product-details-page .gallery .Business-Card-Magnet-20-Pack {
     width: 570px;
     height: 570px;
 }
-.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
-    height: 205px;
-left: 109px;
-position: absolute;
-top: 107px;
-width: 349px;
-}
-.product-variant-list .variant-picture .Business-Card-Magnet-20-PacK img {
-	height: 90px;
-	left: 47px;
-	position: absolute;
-	top: 47px;
-	width: 154px;
+    .product-details-page .gallery .Business-Card-Magnet-20-Pack img {
+        height: 205px;
+        left: 109px;
+        position: absolute;
+        top: 107px;
+        width: 349px;
+    }
+.product-variant-list .variant-picture .Business-Card-Magnet-20-Pack img {
+    height: 90px;
+    left: 47px;
+    position: absolute;
+    top: 47px;
+    width: 154px;
 }
 
-.shopping-cart-page .Business-Card-Magnet-20-PacK img {
+.shopping-cart-page .Business-Card-Magnet-20-Pack img {
     border: 0 none;
-	height: 90px;
-	left: 47px;
-	position: absolute;
-	top: 47px;
-	width: 154px;
+    height: 90px;
+    left: 47px;
+    position: absolute;
+    top: 47px;
+    width: 154px;
 }
 
-.wishlist-page .Business-Card-Magnet-20-PacK img {
+.wishlist-page .Business-Card-Magnet-20-Pack img {
     border: 0 none;
-	height: 90px;
-	left: 47px;
-	position: absolute;
-	top: 47px;
-	width: 154px;
+    height: 90px;
+    left: 47px;
+    position: absolute;
+    top: 47px;
+    width: 154px;
 }
-.mini-shopping-cart .Business-Card-Magnet-20-PacK{
-	width:100%;
-	height:70px;
-	background-repeat:no-repeat;
-}
-
-.mini-shopping-cart .Business-Card-Magnet-20-PacK img{
-	height: 26px;
-	left: 13px;
-	margin: inherit;
-	position: absolute;
-	top: 13px;
-	width: 43px;
+.mini-shopping-cart .Business-Card-Magnet-20-Pack {
+    width: 100%;
+    height: 70px;
+    background-repeat: no-repeat;
 }
 
-@media all and (max-width: 700px) { 
-.product-details-page .gallery .Business-Card-Magnet-20-PacK {width:470px; height: 470px;}
-.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
-	height: 169px;
-	left: 90px;
-	top: 88px;
-	width: 287px;
-}
+    .mini-shopping-cart .Business-Card-Magnet-20-Pack img {
+        height: 26px;
+        left: 13px;
+        margin: inherit;
+        position: absolute;
+        top: 13px;
+        width: 43px;
+    }
+
+@media all and (max-width: 700px) {
+    .product-details-page .gallery .Business-Card-Magnet-20-Pack {
+        width: 470px;
+        height: 470px;
+    }
+        .product-details-page .gallery .Business-Card-Magnet-20-Pack img {
+            height: 169px;
+            left: 90px;
+            top: 88px;
+            width: 287px;
+        }
 }
 
-@media all and (max-width: 500px) { 
-.product-details-page .gallery .Business-Card-Magnet-20-PacK {width:300px; height:300px;}
-.product-details-page .gallery .Business-Card-Magnet-20-PacK img {
-     height: 107px;
-left: 57px;
-top: 57px;
-width: 184px;
-}
+@media all and (max-width: 500px) {
+    .product-details-page .gallery .Business-Card-Magnet-20-Pack {
+        width: 300px;
+        height: 300px;
+    }
+        .product-details-page .gallery .Business-Card-Magnet-20-Pack img {
+            height: 107px;
+            left: 57px;
+            top: 57px;
+            width: 184px;
+        }
 }
 
-/***** END OF Business-Card-Magnet-20-PacK *******/
+/***** END OF Business-Card-Magnet-20-Pack *******/
 
 /***** START OF CALENDAR FULL MAGNETS BUDGET HORIZONTAL *******/
 .Calendar-Full-Magnets-Budget-Horizontal {
