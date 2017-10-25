@@ -183,7 +183,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
                 if (!string.IsNullOrEmpty(intranetBaseAddress))
                 {
-                    var address = intranetBaseAddress + "/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames;
+                    var address = intranetBaseAddress + "/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames + "&webPlatform=" + ccFiles["webPlatform"];
                     string responseString = client.DownloadString(address);
                     if (responseString != "Success!") { throw new Exception("Error updating Intranet - address = " + address); }
                 } else
