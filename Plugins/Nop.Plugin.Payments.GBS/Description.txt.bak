@@ -1,8 +1,0 @@
-﻿Group: Payment methods
-FriendlyName: Credit Card
-SystemName: Payments.GBS
-Version: 1.00
-SupportedVersions: 3.80
-Author: GBS
-DisplayOrder: 1
-FileName: Nop.Plugin.Payments.GBS.dll

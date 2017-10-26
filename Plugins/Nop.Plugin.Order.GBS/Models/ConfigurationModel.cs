@@ -35,5 +35,9 @@ namespace Nop.Plugin.Order.GBS.Models
         [NopResourceDisplayName("Plugins.Order.GBS.Fields.HOMConnectionString")]
         public string HOMConnectionString { get; set; }
         public bool HOMConnectionString_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Order.GBS.Fields.IntranetBaseAddress")]
+        public string IntranetBaseAddress { get; set; }
+        public bool IntranetBaseAddress_OverrideForStore { get; set; }
     }
 }

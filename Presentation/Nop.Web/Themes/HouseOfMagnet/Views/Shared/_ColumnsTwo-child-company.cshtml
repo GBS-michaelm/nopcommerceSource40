@@ -1,0 +1,278 @@
+﻿@using Nop.Plugin.DataAccess.GBS;
+@using Nop.Core;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.Themes;
+@using System.Data;
+@using System.Text;
+@using Nop.Services.Catalog;
+@using Nop.Services.Seo;
+@using Nop.Core.Domain.Seo;
+@using Nop.Plugin.BusinessLogic.GBS.Domain;
+
+@{
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+
+
+    Layout = "~/Views/Shared/_Root.cshtml";
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
+}
+@{
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+
+    //current manufacturer ID
+    int currentManufacturerId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    }
+
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+}
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+
+@{ 
+    string id = @Model.Id.ToString();
+}
+
+@{
+
+    //DBManager manager = new DBManager();
+
+    //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
+    //categoryDic.Add("@CategoryId", id);
+
+    //string categoryDataQuery = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
+    //DataView categoryDataView = manager.GetParameterizedDataView(categoryDataQuery, categoryDic);
+
+    //if(categoryDataView.Count > 0)
+    //{
+    //    categoryName = categoryDataView[0]["H1"].ToString();
+
+    //}
+
+    Company company = new Company(id);
+    string categoryName = "";
+    string categoryh2 = "";
+    string fontColor = "";
+    string aboutYourMarketCenter = "";
+
+    categoryName = !string.IsNullOrEmpty(company.h1) ? company.h1 : @Model.Name;
+    categoryh2 = !string.IsNullOrEmpty(company.h2) ? company.h2 : @Model.Name;
+    fontColor = company.foregroundColor; //will never be empty, base val of black set in constructor
+    aboutYourMarketCenter = !string.IsNullOrEmpty(company.aboutYourMarketCenter) ? company.aboutYourMarketCenter : "Market Center Info Goes Here";
+
+}
+
+
+@if (Model.DisplayCategoryBreadcrumb)
+{
+    <div class="breadcrumb-wrapper">
+        <ul class="breadcrumb">
+            <li>
+                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")"><i class="fa fa-home"></i></a>
+                @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
+                @foreach (var cat in Model.CategoryBreadcrumb)
+                {
+                    var isLastCategory = cat.Id == Model.Id;
+                <li>
+                    @if (isLastCategory)
+                    {
+                        <strong class="current-item active">@cat.Name</strong>
+                    }
+                    else
+                    {
+                        <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                        @*<span class="delimiter">@breadcrumbDelimiter</span>*@
+                    }
+                </li>
+                }
+        </ul>
+    </div>
+}
+
+
+
+
+
+<div id="parentTitleWrapDiv">
+
+    <div class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
+        <h1 style="color : @fontColor;">@categoryName</h1>
+    </div>
+    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="parent-gateway-description">
+            @*<p class="list-content">*@
+                 <h2>@categoryh2</h2>@Html.Raw(Model.Description)
+            @*</p>*@
+        </div>
+
+    }
+
+</div>
+
+
+
+
+
+@*<div class="category-section">
+    <div class="row">
+        @*<div class="col-sm-6">
+<img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
+</div>*@
+        @*<div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
+            <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
+            <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg3.jpg" width="269" height="173" alt="" /></div>
+            <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
+        </div>
+    </div>*@
+    @*</div>*@
+@*</div>*@
+
+<div id="searchArea">
+    <div id="searchAreaLeft">
+        <p>Find Your Office: </p>
+
+        @{ 
+            StringBuilder sb = new StringBuilder();
+
+            //category stuff
+            var catService = EngineContext.Current.Resolve<ICategoryService>();
+            IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
+            //for testing
+            //int catCount = marketCenterByNameList.Count();
+            //int storeId = marketCenterByNameList[0].Id;
+            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
+
+            IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
+
+            var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
+
+            foreach (var item in companiesInOrder)
+            {
+                sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+            }
+
+            string allString = sb.ToString();
+
+        }
+        
+            <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
+                <option value="">Select Office</option>
+                @Html.Raw(@allString)
+            </select>
+       
+    </div>
+
+    <div id="searchAreaRight">
+        <p><b>Can't find your office?</b></p>
+        <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
+    </div>
+</div>
+
+<div class="listing-page">
+    <div id="leftColumn" class="sidebar col-md-3">
+        <div class="sidebar-title">
+            @*<h3>Refine Your Choices</h3>
+            <a href="#">Clear</a>*@
+        </div>
+
+        <div id="workPlace">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
+        </div>
+        <div id="agentPacks">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })
+        </div>
+        <div id="marketCenterAbout">
+            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@
+            <h3>About Your Market Center</h3>
+            @aboutYourMarketCenter
+        </div>
+
+        @*Stuff on the left*@
+
+        @*@if (IsSectionDefined("left"))
+        {
+            @RenderSection("left")
+        }
+        else
+        {
+            @Html.Widget("left_side_column_before")
+			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
+
+            @*@Html.Widget("left_side_column_after_category_navigation")
+            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+            @Html.Action("VendorNavigation", "Catalog")*@
+            @*@Html.Action("PopularProductTags", "Catalog")*@
+            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
+            @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+            @Html.Widget("left_side_column_after")
+        }*@
+    </div>
+    <div id="rightColumn" class="side-content col-md-9">
+        @*<div class="right-column-title">
+
+        </div>*@
+
+
+
+        @Html.Widget("main_column_before")
+        @RenderBody()
+        @Html.Widget("main_column_after")
+
+
+        @*Stuff on the Right*@
+ 
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
+
+            $("#myWorkPlace").click(SetAsMyWorkPlace);
+
+
+
+        });
+
+
+
+        function SetAsMyWorkPlace() {
+            //some db update ajax?
+
+            $("#myWorkPlace").html("<i class='fa fa-check'></i> I Work Here");
+
+        }
+
+
+        </script>
+
+
+
+    
+
+
+</div>

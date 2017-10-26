@@ -19,6 +19,7 @@ using Nop.Plugin.DataAccess.GBS;
 using System.Data;
 using Nop.Plugin.Widgets.CustomersCanvas.Domain;
 using WebServices.Models.File;
+using System.Net;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
@@ -89,10 +90,11 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
                     model.stateID = stateID;
                     //get the product file names and put them in the model.
-                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID, webPlatform);
+                    List<ProductFileModel> productFiles = GetProductFiles(model.orderItemID, stateID, productType, tempModel.ccId, webPlatform);
                     GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                     string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceBaseAddress;
                     model.productFileModels = FileService.populateProductFilesFromProductionFileName(productFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
+                    model.sessionID = System.Web.HttpContext.Current.Session.SessionID;
 
 
                     return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProduct.cshtml", model);
@@ -114,6 +116,28 @@ namespace Nop.Plugin.Order.GBS.Controllers
             try
             {
                 List<ProductFileModel> productFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(ccFiles["FilesToCopy"]);
+                List<ProductFileModel> filesToRemove = new List<ProductFileModel>();
+                List<ProductFileModel> filesToUpdate = new List<ProductFileModel>();
+
+                foreach (ProductFileModel product in productFiles)
+                {
+                    if (!ccFiles["surfaces"].Contains(product.product.surface)) {
+                        filesToRemove.Add(product);
+                    }
+                }
+                foreach (ProductFileModel removeMe in filesToRemove)
+                {
+                    productFiles.Remove(removeMe);
+                }
+                foreach (ProductFileModel product in productFiles)
+                {
+                    if (string.IsNullOrEmpty(product.product.productionFileName))
+                    {
+                        filesToUpdate.Add(product);
+                    }
+                }
+
+
                 //pass to the file service
                 GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                 string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
@@ -122,7 +146,54 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 {
                     throw new Exception(response);
                 }
-                return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml");
+                List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
+
+                var surfaces = "";
+                var fileNames = "";
+                foreach (ProductFileModel product in responseFiles)
+                {
+                    surfaces += "," + (product.product.surface == "F" ? "front" : product.product.surface == "B" ? "back" : product.product.surface);
+                    fileNames += "," + product.product.productionFileName;
+                }
+                surfaces = surfaces.Substring(1);
+                fileNames = fileNames.Substring(1);
+
+                //update NOP DB with new production filenames
+                DBManager manager = new DBManager();
+                foreach (ProductFileModel product in responseFiles)
+                {
+                    if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception") && filesToUpdate.Where(x => x.product.surface == product.product.surface).Any())
+                    {
+                        Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
+                        paramDicEx.Add("@nopOrderItemID", ccFiles["OPID"]);
+                        paramDicEx.Add("@ProductType", ccFiles["productType"]);
+                        paramDicEx.Add("@FileName", product.product.productionFileName);
+                        var insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName";
+                        manager.SetParameterizedQueryNoData(insert, paramDicEx);
+                    }
+
+                }
+
+                var msg = new Message();
+                msg.message = "Successfully updated the product print files";
+
+                //call Intranet to update product options in order
+                string intranetBaseAddress = _gbsOrderSettings.IntranetBaseAddress;
+                WebClient client = new WebClient();
+                client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                if (!string.IsNullOrEmpty(intranetBaseAddress))
+                {
+                    var address = intranetBaseAddress + "/admin/inc/updateCanvasProduct.asp?OPID=" + ccFiles["OPID"] + "&productType=" + ccFiles["productType"] + "&surfaces=" + surfaces + "&fileNames=" + fileNames;
+                    string responseString = client.DownloadString(address);
+                    if (responseString != "Success!") { throw new Exception("Error updating Intranet - address = " + address); }
+                } else
+                {
+                    msg.message = "Intranet Base Address not configured in plugin, please configure and try again";
+                }
+
+
+
+                return View("~/Plugins/Order.GBS/Views/OrderGBS/UpdateCanvasProductComplete.cshtml", msg);
             }
             catch (Exception ex)
             {
@@ -149,7 +220,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             }
             return env;
         }
-        public List<ProductFileModel> GetProductFiles(int orderItemID, string webPlatform = "NOP")
+        public List<ProductFileModel> GetProductFiles(int orderItemID, string stateId, string pType, int ccId, string webPlatform = "NOP")
         {
             var environment = getEnvironment();
             List<ProductFileModel> productFiles = new List<ProductFileModel>();
@@ -171,7 +242,74 @@ namespace Nop.Plugin.Order.GBS.Controllers
                                 ProductFileModel file = new ProductFileModel();
                                 file.product.productType = (string)row["ProductType"];
                                 file.product.productionFileName = (string)row["FileName"];
-                                productFiles.Add(file);
+                                if (pType == file.product.productType)
+                                {
+                                    productFiles.Add(file);
+                                }
+                            }
+                            var design = _ccService.GetDesign(ccId);
+                            dynamic hiResUrls = JsonConvert.DeserializeObject<Object>(design.DownloadUrlsJson);
+                            foreach (ProductFileModel productFile in productFiles.ToList())
+                            {
+                                //rules will change per product type
+                                switch(productFile.product.productType)
+                                {
+                                    case "notecard":
+                                        if (pType != "notecard") {
+                                            productFiles.Remove(productFile);
+                                            break; }
+                                        foreach (string url in hiResUrls)
+                                        {
+                                            var urlStateId = url.Split('/')[url.Split('/').Count()-2];
+                                            if (urlStateId != stateId) { continue; }
+                                            var index = url.Split('/').Last<string>().Split('_').First<string>();
+                                            var fileMiddle = productFile.product.productionFileName.Split('-')[1];
+                                            switch (index)
+                                            {
+                                                case "0":
+                                                    //front
+                                                    if (fileMiddle.StartsWith("CF")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "1":
+                                                    //greeting
+                                                    if (fileMiddle.StartsWith("G")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "2":
+                                                    //back
+                                                    if (fileMiddle.StartsWith("CB")) { productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    case "envelope":
+                                        if (pType != "envelope") {
+                                            productFiles.Remove(productFile);
+                                            break; }
+                                        foreach (string url in hiResUrls)
+                                        {
+                                            var urlStateId = url.Split('/')[url.Split('/').Count() - 2];
+                                            if (urlStateId != stateId) { continue; }
+                                            var index = url.Split('/').Last<string>().Split('_').First<string>();
+                                            var fileMiddle = productFile.product.productionFileName.Split('-')[1];
+                                            if (fileMiddle[0] != 'E') { continue; }
+                                            switch (index)
+                                            {
+                                                case "0":
+                                                    //front
+                                                    if (fileMiddle[2] == 'F') {     productFile.product.hiResPDFURL = url; }
+                                                    break;
+                                                case "1":
+                                                    //back
+                                                    if (fileMiddle[2] == 'B') { productFile.product.hiResPDFURL = url; }
+                                                    break;
+
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+
                             }
                         }
                         else
@@ -195,11 +333,24 @@ namespace Nop.Plugin.Order.GBS.Controllers
                             {
                                 ProductFileModel file = new ProductFileModel();
                                 file.product.productionFileName = (string)row["frontFile"];
-                                productFiles.Add(file);
+                                if (row["hiResUrlFront"] != System.DBNull.Value)
+                                {
+                                    var ub = new UriBuilder(new Uri((string)row["hiResUrlFront"]));
+                                    ub.Scheme = "https";
+                                    file.product.hiResPDFURL = ub.Uri.AbsoluteUri;
+                                }
+                                if (file.product.productionFileName != "not saved") { productFiles.Add(file); };
                                 file = new ProductFileModel();
                                 file.product.productionFileName = (string)row["backFile"];
-                                productFiles.Add(file);
+                                if (row["hiResUrlBack"] != System.DBNull.Value)
+                                {
+                                    var ub = new UriBuilder(new Uri((string)row["hiResUrlBack"]));
+                                    ub.Scheme = "https";
+                                    file.product.hiResPDFURL = ub.Uri.AbsoluteUri;
+                                }
+                                if (file.product.productionFileName != "not saved") { productFiles.Add(file); };
                             }
+                            
 
                         }
                         else
@@ -232,6 +383,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                         if (nopOrderItemResult.Count > 0)
                         {
                             ccId = (int)nopOrderItemResult[0]["ccId"];
+                            designModel.ccId = ccId;
                             designModel.userID = "nopcommerce_"+ nopOrderItemResult[0]["CustomerId"];
                             designModel.username = (string)nopOrderItemResult[0]["Username"];
                             designModel.gbsOrderId = (string)nopOrderItemResult[0]["gbsOrderID"];

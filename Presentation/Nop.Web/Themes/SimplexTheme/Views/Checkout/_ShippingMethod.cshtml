@@ -33,7 +33,14 @@
                                 </div>
 
                             </li>*@
-                        <option value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)">@shippingMethod.Name (@shippingMethod.Fee)</option>
+                        <option value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" @if (TempData.Peek("ShippingType") != null && TempData.Peek("ShippingType").ToString() == Model.ShippingMethods[i].Name.ToString() + "___" + Model.ShippingMethods[i].ShippingRateComputationMethodSystemName)
+                            {
+                                @: selected="selected"
+                            }>@shippingMethod.Name (@shippingMethod.Fee)
+                    
+                            
+
+                        </option>
                     }
                 </select>
                 if (Model.NotifyCustomerAboutShippingFromMultipleLocations)

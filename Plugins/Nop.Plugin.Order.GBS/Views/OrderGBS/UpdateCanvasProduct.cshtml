@@ -24,21 +24,55 @@
 <link href="/Themes/@themeName/Content/css/font-icons.css" rel="stylesheet" type="text/css">
 <link href="/Themes/@themeName/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="/Themes/@themeName/Content/css/canvas.css" rel="stylesheet" type="text/css">
+<script id="jquery_validate_plugin" type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+
 <!-- The IFrame API script. IMPORTANT! Do not remove or change the ID. -->
 <script id="CcIframeApiScript" type="text/javascript" src="@Model.canvasServerBaseURL/Resources/SPEditor/Scripts/IFrame/IframeApi.js">
 </script>
 
+<script>
+     $(document).ready(function() {
+
+         $("#CopyFilesToProduction_Form").validate({
+             rules: {
+                 surfaces: "required",
+             },
+             messages: {
+                 surfaces: "* You must select at least one surface.",
+             },
+             errorContainer: "#messageBox1",
+             errorLabelContainer: "#messageBox1 ul",
+             wrapper: "li"   
+         });
+
+});
+
+
+</script>
 <script>
     $(function () {
         //Defining the product.
         productDefinition = '@Model.stateID';//{surfaces: ["stamp"]};
 
         //Defining the editor configuration.
-        configuration = { widgets: { FinishButton: { mode: "Disabled" } }, rendering: { hiResOutputToSeparateFiles: true } };
+        configuration = {
+            restoreProductOnReloadEnabled: false,
+            widgets: {
+                FinishButton: {
+                    mode: "Disabled"
+                }
+            },
+            rendering: {
+                hiResOutputToSeparateFiles: true
+            }
+        };
 
         var productType = "@productType";
         configuration.userId = "@Model.userID";
         var ccFiles = @Html.Raw(@ccFilesJSON);
+        var ccFilesOriginal = @Html.Raw(@ccFilesJSON);
+        var canvasBaseUrl = "@Model.canvasServerBaseURL";
+        var sessionID = "@Model.sessionID";
 
         var editorFrame = $("#editorFrame");
 
@@ -94,7 +128,7 @@
         $("#editorPage #nextButton").click(function () {
 
             //Saving a product.
-            editor.saveProduct()
+            editor.saveProduct(productDefinition)
                 //If the product has been successfully saved.
                 .then(function (result) {
                     //Saving product state info.
@@ -123,20 +157,22 @@
         //Completing product customization.
         $("#approvePage #approveButton").click(function () {
 
-            //Completing product customization.
-            editor.finishProductDesign()
-                //If product customization has been successfully completed.
-                .then(function (result) {
-                    //Saving hi-res output info.
-                    renderData = result;
+            ////Completing product customization.
+            //editor.finishProductDesign()
+            //    //If product customization has been successfully completed.
+            //    .then(function (result) {
+            //        //Saving hi-res output info.
+            //        renderData = result;
 
-                    //Go to the finish page.
-                    goToPage("finish");
-                })
-                //If there was an error thrown when completing product customization.
-                .catch(function (error) {
-                    renderData = handleError(error, "Product customization completion failed with exception: ");
-                });
+            //        //Go to the finish page.
+            //        goToPage("finish");
+            //    })
+            //    //If there was an error thrown when completing product customization.
+            //    .catch(function (error) {
+            //        renderData = handleError(error, "Product customization completion failed with exception: ");
+            //    });
+
+            goToPage("finish");
         });
 
         //Opening a new product in the designer.
@@ -146,7 +182,7 @@
 
         //Reopening the product in the designer.
         $(".lnkEditAgain").click(function () {
-            loadProduct(saveData.stateId);
+            loadProduct(productDefinition);
             goToPage("design");
         });
 
@@ -160,59 +196,133 @@
             }
         };
 
+        function getSurfaceDisplayValue(surface) {
+            if (surface == "B") { return "Back"; }
+            if (surface == "F") { return "Front"; }
+            return surface;
+        }
+
+        function arrayLookup(array, prop1, prop2, val) {
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (!prop2 && array[i].hasOwnProperty(prop1) && array[i][prop1] === val) {
+                    return array[i];
+                } else if (prop2 && array[i].hasOwnProperty(prop1) && array[i][prop1].hasOwnProperty(prop2) && array[i][prop1][prop2] === val) {
+                    return array[i];
+                }
+            }
+            return null;
+        }
+
+        function completeCCFilesList(ccFiles) {
+            switch(productType){
+                case "notecard":
+                    if (arrayLookup(ccFiles, "product", "surface", "greeting") == null) {
+                        var newfile = $.extend(true, {}, ccFiles[0]);
+                        newfile.product.surface = "greeting";
+                        newfile.product.productType = productType;
+                        newfile.product.imprintColor = "1";
+                        newfile.requestSessionID = sessionID;
+                        newfile.product.productionFileName = "";
+                        newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/1_-1.pdf";
+                        ccFiles.splice(1, 0, newfile);
+                    }
+                    break;
+                case "envelope":
+                    if (ccFiles.length > 0) {
+                        if (arrayLookup(ccFiles, "product", "surface", "F") == null) {
+                            var newfile = $.extend(true, {}, ccFiles[0]);
+                            newfile.product.surface = "F";
+                            newfile.product.productType = productType;
+                            newfile.product.imprintColor = "1";
+                            newfile.requestSessionID = sessionID;
+                            newfile.product.productionFileName = "";
+                            newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/0_-1.pdf";
+                            ccFiles.splice(0, 0, newfile);
+                        }
+                        if (arrayLookup(ccFiles, "product", "surface", "B") == null) {
+                            var newfile = $.extend(true, {}, ccFiles[0]);
+                            newfile.product.surface = "B"; 
+                            newfile.product.productType = productType;
+                            newfile.product.imprintColor = "1";
+                            newfile.requestSessionID = sessionID;
+                            newfile.product.productionFileName = "";
+                            newfile.product.hiResPDFURL = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/1_-1.pdf";
+                            ccFiles.splice(1, 0, newfile);
+                        }
+                    } else {
+                        //create new surfaces
+                        var hiResUrl = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/0_-1.pdf";
+                        var newfile = { product: { surface: "F", imprintColor: "1", hiResPDFURL: hiResUrl, productType: productType }, requestSessionID: sessionID };
+                        ccFiles.splice(0, 0, newfile);
+                        var hiResUrl = canvasBaseUrl + "/api/rendering/GetHiResOutput/" + configuration.userId + "/" + productDefinition + "/1_-1.pdf";
+                        var newfile = { product: { surface: "B", imprintColor: "1", hiResPDFURL: hiResUrl, productType: productType }, requestSessionID: sessionID };
+                        ccFiles.splice(1, 0, newfile);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         //Initializing the finish page with the print-ready output URL and a link for reopening the product in the designer for further editing.
         function setFinishPageData() {
             //var ccChangedFiles = [];
             $("#finishOrderPage #hiResLinks").empty();
-            $.each(renderData.hiResOutputUrls, function (i, val) {
-                $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + val + '">Download link #' + i + '</a>, ');
-                ccFiles.forEach(function(file,j) {
-                    var endStr = val.slice(-7);
-                    var index = endStr.substring(0,1);
-                    switch(productType){
-                        case "notecard":
-                            if (file.product.productType != "notecard"){delete ccFiles[j]; break;}
-                            switch(file.product.surface){
-                                case "front":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "greeting":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "back":
-                                    if (index == 2) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                            break;
-                        case "envelope":
-                            if (file.product.productType != "envelope"){delete ccFiles[j]; break;}
-                            switch(file.product.surface){
-                                case "F":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "B":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                            break;
-                        default:
-                            switch(file.product.surface){
-                                case "front":
-                                    if (index == 0) {file.product.hiResPDFURL = val;}
-                                    break;
-                                case "back":
-                                    if (index == 1) {file.product.hiResPDFURL = val;}
-                                    break;
-                                default:
-                            }
-                    }
-                });
+            $("#finishOrderPage #surfaces").empty();
+            completeCCFilesList(ccFiles);
+            ccFiles.forEach(function(file,j) {
+                $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + file.product.hiResPDFURL + '">Download link #' + j + '</a>, ');
+                $("#finishOrderPage #surfaces").html($("#finishOrderPage #surfaces").html() + '<input class = "surfaces" type="checkbox" id="' + getSurfaceDisplayValue(file.product.surface) + '" name="surfaces" value="' + getSurfaceDisplayValue(file.product.surface) + '">' + '<label for="' + getSurfaceDisplayValue(file.product.surface) + '" > ' + getSurfaceDisplayValue(file.product.surface) +'</label> ');
             });
+            //$.each(renderData.hiResOutputUrls, function (i, val) {
+            //    $("#finishOrderPage #hiResLinks").html($("#finishOrderPage #hiResLinks").html() + '<a href="' + val + '">Download link #' + i + '</a>, ');
+            //    ccFiles.forEach(function(file,j) {
+            //        var endStr = val.slice(-7);
+            //        var index = endStr.substring(0,1);
+            //        switch(productType){
+            //            case "notecard":
+            //                if (file.product.productType != "notecard"){delete ccFiles[j]; break;}
+            //                switch(file.product.surface){
+            //                    case "front":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "greeting":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "back":
+            //                        if (index == 2) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //                break;
+            //            case "envelope":
+            //                if (file.product.productType != "envelope"){delete ccFiles[j]; break;}
+            //                switch(file.product.surface){
+            //                    case "F":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "B":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //                break;
+            //            default:
+            //                switch(file.product.surface){
+            //                    case "front":
+            //                        if (index == 0) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    case "back":
+            //                        if (index == 1) {file.product.hiResPDFURL = val;}
+            //                        break;
+            //                    default:
+            //                }
+            //        }
+            //    });
+            //});
             $('#FilesToCopy').val(JSON.stringify(ccFiles));
             // $("#finishOrderPage #hiResLink").attr("href", renderData.hiResOutputUrls[0]);
-            $("#finishOrderPage #linkForFeatureEdit").attr("href", renderData.returnToEditUrl);
+            $("#finishOrderPage #linkForFeatureEdit").attr("href", saveData.returnToEditUrl);
         };
 
         function setEditorPageData() {
@@ -262,7 +372,13 @@
     #content {
         height: 110%;
     }
-
+    .surfaces {
+        margin-left: 1% !important;
+        margin-right: 5px !important;
+    }
+    #messageBox1 label.error {
+        display: inline-block !important;
+    }
 </style>
 
 <div id="bodywrapper">
@@ -313,8 +429,16 @@
                 @using (Html.BeginRouteForm("CopyFilesToProduction", FormMethod.Post, new { id = "CopyFilesToProduction_Form" }))
                 {
                     @Html.Hidden("FilesToCopy","[]", new { id = "FilesToCopy" })
+                    @Html.Hidden("OPID", request.QueryString["orderitemid"], new { id = "OPID" })
+                    @Html.Hidden("productType", request.QueryString["productType"], new { id = "productType" })
                     <input id="replaceIntranet" type="submit" class="btn btn-info btn-lg" value="Replace Production Files" />
+                    <span id="surfaces"></span>
                 }
+                <div id="messageBox1">
+                    <!- errorContainer ->
+                    <ul>
+                    </ul>
+                </div>
 
             </div>
         </div>
