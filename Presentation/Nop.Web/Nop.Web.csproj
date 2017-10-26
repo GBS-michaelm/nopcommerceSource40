@@ -2982,6 +2982,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneSimple.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-child-company.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
