@@ -75,8 +75,8 @@
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
-    string aboutYourMarketCenter = company.aboutYourMarketCenter;   
-    
+    string aboutYourMarketCenter = company.aboutYourMarketCenter;
+
 }
 
 
@@ -111,22 +111,20 @@
 
 
 <div id="parentTitleWrapDiv">
-    
-    <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
-        <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
-    </div>
-    
 
-   
+    <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
+        <h1 style="color : @fontColor;">@categoryName</h1>
+    </div>
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="parent-gateway-description">
             @*<p class="list-content">*@
-            <h2>@categoryh2</h2>@Html.Raw(Model.Description)
+                 <h2>@categoryh2</h2>@Html.Raw(Model.Description)
             @*</p>*@
         </div>
+
     }
-  
+
 </div>
 
 
@@ -253,16 +251,15 @@
 
             var length = $('#marketCenterDropDown > option').length;
             console.log("length: " + length);
-            if (length <= 1) {               
+            if (length <= 1) {
                 $("#searchAreaLeft").hide();
             }
-
+        
             if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
                 $(".parent-gateway-description").height($(".parent-gateway-name").height());
             } else {
                 $(".parent-gateway-name").height($(".parent-gateway-description").height());
             }
-
 
         });
 
