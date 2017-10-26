@@ -35,8 +35,6 @@ namespace Nop.Services.PriceCalculation.GBS
 
             var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("PriceCalculation.GBS");
 
-
-
             if (pluginDescriptor != null)  // pluginDescriptor.Installed == true
             {
                 builder.RegisterType<GBSPriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();

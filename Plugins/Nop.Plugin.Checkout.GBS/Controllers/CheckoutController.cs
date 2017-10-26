@@ -1383,8 +1383,11 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             }
             else
             {
-                TempData["ShippingAddressId"] = addresses[0].Id;
-                _baseNopCheckoutController.SelectShippingAddress(addresses[0].Id);
+                if (addresses.Count > 0)
+                {
+                    TempData["ShippingAddressId"] = addresses[0].Id;
+                    _baseNopCheckoutController.SelectShippingAddress(addresses[0].Id);
+                }
             }
 
             ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);

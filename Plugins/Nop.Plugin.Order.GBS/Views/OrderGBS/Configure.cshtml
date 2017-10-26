@@ -85,6 +85,17 @@
             </td>
         </tr>
         <tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IntranetBaseAddress_OverrideForStore, model => model.IntranetBaseAddress, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IntranetBaseAddress):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IntranetBaseAddress)
+                @Html.ValidationMessageFor(model => model.IntranetBaseAddress)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             </td>

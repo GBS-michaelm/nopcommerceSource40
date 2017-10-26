@@ -51,6 +51,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 GBSPrintFileWebServiceBaseAddress = GBSOrderSettings.GBSPrintFileWebServiceBaseAddress,
                 GBSStoreNamePrepend = GBSOrderSettings.GBSStoreNamePrepend,
                 HOMConnectionString = GBSOrderSettings.HOMConnectionString,
+                IntranetBaseAddress = GBSOrderSettings.IntranetBaseAddress,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -64,6 +65,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 model.GBSPrintFileWebServiceBaseAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSPrintFileWebServiceBaseAddress, storeScope);
                 model.GBSStoreNamePrepend_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSStoreNamePrepend, storeScope);
                 model.HOMConnectionString_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.HOMConnectionString, storeScope);
+                model.IntranetBaseAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope);
             }
 
             return View("~/Plugins/Order.GBS/Views/OrderGBS/Configure.cshtml", model);
@@ -90,6 +92,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             GBSOrderSettings.GBSPrintFileWebServiceBaseAddress = model.GBSPrintFileWebServiceBaseAddress;
             GBSOrderSettings.GBSStoreNamePrepend = model.GBSStoreNamePrepend;
             GBSOrderSettings.HOMConnectionString = model.HOMConnectionString;
+            GBSOrderSettings.IntranetBaseAddress = model.IntranetBaseAddress;
 
 
             /* We do not clear cache after each setting update.
@@ -130,6 +133,11 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 _settingService.SaveSetting(GBSOrderSettings, x => x.HOMConnectionString, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSOrderSettings, x => x.HOMConnectionString, storeScope);
+
+            if (model.IntranetBaseAddress_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

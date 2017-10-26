@@ -12,7 +12,7 @@ namespace Nop.Plugin.Order.GBS
         public string GBSPrintFileWebServiceBaseAddress { get; set; }
         public string GBSStoreNamePrepend { get; set; }
         public string HOMConnectionString { get; set; }
-
+        public string IntranetBaseAddress { get; set; }
 
     }
 }
