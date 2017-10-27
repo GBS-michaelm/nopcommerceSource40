@@ -33,7 +33,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private int _id = 0;
         private int _parentCategoryId = 0;    
         private string _h1 = "";
-        private string _h2 = "";         
+        private string _h2 = "";
+        private bool _isVisible = false;
+        private bool _isDisplayLogo = false;      
         private string _logoPicturePath = "";
         private string _aboutYourMarketCenter = "";       
         private string _forgroundColor = "#000000";
@@ -79,7 +81,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 
                 this.parentCategoryId = category.ParentCategoryId;               
                 this.h1 = !string.IsNullOrEmpty(companyDataView[0]["H1"].ToString()) ? companyDataView[0]["H1"].ToString() : this.Name;
-                this.h2 = !string.IsNullOrEmpty(companyDataView[0]["H2"].ToString()) ? companyDataView[0]["H2"].ToString() : _h2;                
+                this.h2 = !string.IsNullOrEmpty(companyDataView[0]["H2"].ToString()) ? companyDataView[0]["H2"].ToString() : _h2;
+                this.isVisible = (bool)companyDataView[0]["IsVisible"];
+                this.isDisplayLogo = (bool)companyDataView[0]["IsDisplayLogo"];
                 this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
                 this.aboutYourMarketCenter = !string.IsNullOrEmpty(companyDataView[0]["aboutYourMarketCenter"].ToString()) ? companyDataView[0]["aboutYourMarketCenter"].ToString() : _aboutYourMarketCenter;               
                 this.foregroundColor = !string.IsNullOrEmpty(companyDataView[0]["ForegroundColor"].ToString()) ? companyDataView[0]["ForegroundColor"].ToString() : _forgroundColor;
@@ -97,6 +101,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }     
         public string h1 { get { return _h1; } set { _h1 = value; } }
         public string h2 { get { return _h2; } set { _h2 = value; } }   
+        public bool isVisible { get { return _isVisible; } set { _isVisible = value; } }
+        public bool isDisplayLogo { get { return _isDisplayLogo; } set { _isDisplayLogo = value; } }
         public string logoPicturePath { get { return _logoPicturePath; } set { _logoPicturePath = value; } }
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
