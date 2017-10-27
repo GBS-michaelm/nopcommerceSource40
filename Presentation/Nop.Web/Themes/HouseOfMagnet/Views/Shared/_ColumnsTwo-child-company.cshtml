@@ -52,7 +52,7 @@
 }
 
 @{ 
-    string id = @Model.Id.ToString();
+    int id = @Model.Id;
 }
 
 @{
@@ -78,7 +78,6 @@
     string aboutYourMarketCenter = company.aboutYourMarketCenter;
 
 }
-
 
 @if (Model.DisplayCategoryBreadcrumb)
 {
@@ -113,13 +112,13 @@
 <div id="parentTitleWrapDiv">
 
     <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
-        <h1 style="color : @fontColor;">@categoryName</h1>
+        <h2 style="color : @fontColor;">@categoryName</h2>
     </div>
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="parent-gateway-description">
             @*<p class="list-content">*@
-                 <h2>@categoryh2</h2>@Html.Raw(Model.Description)
+                 <h3>@categoryh2</h3>@Html.Raw(Model.Description)
             @*</p>*@
         </div>
 

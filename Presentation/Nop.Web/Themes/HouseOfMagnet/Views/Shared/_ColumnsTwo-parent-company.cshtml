@@ -52,7 +52,7 @@
 }
 
 @{ 
-    string id = @Model.Id.ToString();
+    int id = @Model.Id;
 }
 
 @{
@@ -122,7 +122,7 @@
     {
         <div class="parent-gateway-description">
             @*<p class="list-content">*@
-            <h2>@categoryh2</h2>@Html.Raw(Model.Description)
+            <h3>@categoryh2</h3>@Html.Raw(Model.Description)
             @*</p>*@
         </div>
     }
@@ -151,7 +151,7 @@
 
 <div id="searchArea">
     <div id="searchAreaLeft">
-        <p>Find Your Office: </p>
+        <p>Find Your Company: </p>
 
         @{ 
             StringBuilder sb = new StringBuilder();
@@ -178,14 +178,14 @@
         }
         
             <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
-                <option value="">Select Office</option>
+                <option value="">Select Company</option>
                 @Html.Raw(@allString)
             </select>
        
     </div>
 
     <div id="searchAreaRight">
-        <p><b>Can't find your office?</b></p>
+        <p><b>Can't find your company?</b></p>
         <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
     </div>
 </div>
