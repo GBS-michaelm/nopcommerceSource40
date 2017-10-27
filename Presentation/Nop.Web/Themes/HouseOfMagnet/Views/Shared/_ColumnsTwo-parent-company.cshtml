@@ -151,7 +151,7 @@
 
 <div id="searchArea">
     <div id="searchAreaLeft">
-        <p>Find Your Company: </p>
+        <p>Find Your Office: </p>
 
         @{ 
             StringBuilder sb = new StringBuilder();
@@ -178,14 +178,14 @@
         }
         
             <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
-                <option value="">Select Company</option>
+                <option value="">Select Office</option>
                 @Html.Raw(@allString)
             </select>
        
     </div>
 
     <div id="searchAreaRight">
-        <p><b>Can't find your company?</b></p>
+        <p><b>Can't find your office?</b></p>
         <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
     </div>
 </div>
