@@ -175,7 +175,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 }
 
                 var msg = new Message();
-                msg.message = "Successfully updated the product print files";
+                msg.message = "Successfully updated the product print files. Please wait a few minutes for updated/new files to be synced to the Intranet before applying any further action that may be intended for this update";
 
                 //call Intranet to update product options in order
                 string intranetBaseAddress = _gbsOrderSettings.IntranetBaseAddress;
