@@ -1,10 +1,12 @@
 ﻿/*.gallery .picture img {display:none;   }*/
 .gallery .pictures img {
-    display: block !important;
+    /*display: block !important;*/
+    z-index: -1;
 }
 
 .gallery .picture img.detailimg {
-    display: block !important;
+    /*display: block !important;*/
+    z-index: -1;
 }
 
 .product-details-page .gallerys {
@@ -14,6 +16,7 @@
     height: auto;
     margin-top: 10px;
     position: relative;
+    z-index: 1;
 }
 
 .product-item .picture {
@@ -21,6 +24,7 @@
     height: 250px;
     margin: auto;
     position: relative;
+    z-index: 1;
 }
 /*********list page**********/
 .product-grid .pictures {
@@ -28,10 +32,12 @@
     height: 250px;
     margin: auto;
     position: relative;
+    z-index: 1;
 }
 
 .product-grid .picture {
-    display: none !important;
+    /*display: none !important;*/
+    z-index: 1;
 }
 
 
