@@ -100,10 +100,7 @@
                             break;
                         }
                     }
-                    TempData["pcode"] = Model.Sku;
-                    TempData["cartid"] = cartID;
-                    TempData["productid"] = Model.AddToCart.ProductId;
-                    string url = "/chili";
+                    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID;
                     <div class="product-add-button">
                         @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
