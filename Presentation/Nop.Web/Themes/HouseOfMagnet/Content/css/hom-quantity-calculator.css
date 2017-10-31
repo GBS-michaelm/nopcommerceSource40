@@ -130,7 +130,7 @@ body #qty-calc {
 #qty-calc input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   -moz-appearance: none;
-  appearance: none;
+  /*appearance: none;*/
   margin: 0; 
 }
 #qty-calc input[type=number] {

@@ -592,37 +592,39 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                 break;
                                         }
                                     }
+
                                 }
                             }
-                        }
-                        else
-                        {
-                            var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
-                            var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
-                            if (defaultEnvelopType.Any())
+                            else
                             {
-                                string className = defaultEnvelopType.FirstOrDefault().Name;
-                                orderItemModel.ClassName = className;
-
-                                if (defaultColorOption.Any())
+                                var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                                var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                                if (defaultEnvelopType.Any())
                                 {
-                                    var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
-                                    orderItemModel.DefaultColor = optionValue;
-                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                    string className = defaultEnvelopType.FirstOrDefault().Name;
+                                    orderItemModel.ClassName = className;
+
+                                    if (defaultColorOption.Any())
                                     {
-                                        orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                        var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                                        orderItemModel.DefaultColor = optionValue;
+                                        if (optionValue.Contains("#") && optionValue.Length == 7)
+                                        {
+                                            orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                        }
+                                        else
+                                        {
+                                            orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                        }
                                     }
                                     else
                                     {
-                                        orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                        orderItemModel.DefaultColor = "";
                                     }
-                                }
-                                else
-                                {
-                                    orderItemModel.DefaultColor = "";
                                 }
                             }
                         }
+
                         //rental info
                         if (orderItem.Product.IsRental)
                         {
@@ -738,35 +740,36 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         }
                     }
                 }
-            }
-            else
-            {
-                var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
-                var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
-                if (defaultEnvelopType.Any())
+                else
                 {
-                    string className = defaultEnvelopType.FirstOrDefault().Name;
-                    ViewBag.ClassName = className;
-
-                    if (defaultColorOption.Any())
+                    var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                    var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                    if (defaultEnvelopType.Any())
                     {
-                        var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
-                        ViewBag.fill = optionValue;
-                        if (optionValue.Contains("#") && optionValue.Length == 7)
+                        string className = defaultEnvelopType.FirstOrDefault().Name;
+                        ViewBag.ClassName = className;
+
+                        if (defaultColorOption.Any())
                         {
-                            ViewBag.fill = "background-color:" + optionValue;
+                            var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                            ViewBag.fill = optionValue;
+                            if (optionValue.Contains("#") && optionValue.Length == 7)
+                            {
+                                ViewBag.fill = "background-color:" + optionValue;
+                            }
+                            else
+                            {
+                                ViewBag.fill = "background-image:url('" + optionValue + "')";
+                            }
                         }
                         else
                         {
-                            ViewBag.fill = "background-image:url('" + optionValue + "')";
+                            ViewBag.fill = "";
                         }
+                        ViewBag.ProductId = product.Id;
                     }
-                    else
-                    {
-                        ViewBag.fill = "";
-                    }
-                    ViewBag.ProductId = product.Id;
                 }
+
             }
             var products = new List<Product>();
             products.Add(product);

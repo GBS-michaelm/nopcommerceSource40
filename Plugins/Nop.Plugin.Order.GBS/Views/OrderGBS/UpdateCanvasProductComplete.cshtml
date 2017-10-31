@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "";
 }
+@model Message
 @using Nop.Plugin.Order.GBS.Models;
 @using Nop.Web.Framework;
 @using Nop.Core;
@@ -30,5 +31,5 @@
 </style>
 
 <div id="bodywrapper" class="h1">
-Successfully updated the product print files
+@Model.message
 </div>
