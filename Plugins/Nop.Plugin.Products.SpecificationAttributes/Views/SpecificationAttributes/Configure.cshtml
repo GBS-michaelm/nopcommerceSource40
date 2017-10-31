@@ -14,4 +14,22 @@
             </div>            
         </div>
     </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ArtistCategoryID_OverrideForStore, model => model.ArtistCategoryID, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ArtistCategoryID):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ArtistCategoryID)
+                @Html.ValidationMessageFor(model => model.ArtistCategoryID)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+    @Html.HiddenFor(model => model.Id, new { Value = 0 })
 }

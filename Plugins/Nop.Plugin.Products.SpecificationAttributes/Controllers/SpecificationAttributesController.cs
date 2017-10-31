@@ -65,8 +65,10 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly IOrderService _orderService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly SpecificationAttributesSettings _specificationAttributesSettings;
 
         public SpecificationAttributesController(
+            SpecificationAttributesSettings specificationAttributesSettings,
             ICustomerService customerService,
             ILanguageService languageService,
             ISettingService settingService,
@@ -97,6 +99,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             IOrderProcessingService orderProcessingService,
             IProductAttributeParser productAttributeParser)
         {
+            _specificationAttributesSettings = specificationAttributesSettings;
             _customerService = customerService;
             _languageService = languageService;
             _settingService = settingService;
@@ -132,8 +135,60 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            ConfigureModel model = new ConfigureModel();
+            //load settings for a chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var specificationAttributesSettings = _settingService.LoadSetting<SpecificationAttributesSettings>(storeScope);
+
+            var model = new ConfigureModel
+            {
+                Id = 0,
+                ArtistCategoryID = specificationAttributesSettings.ArtistCategoryID,
+
+            };
+
+            if (storeScope > 0)
+            {
+
+                model.ArtistCategoryID_OverrideForStore = _settingService.SettingExists(specificationAttributesSettings, x => x.ArtistCategoryID, storeScope);
+            }
+
             return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/Configure.cshtml", model);
+        }
+
+        [HttpPost]
+        [AdminAuthorize]
+        [ChildActionOnly]
+        public ActionResult Configure(ConfigureModel model)
+        {
+            if (!ModelState.IsValid)
+                return Configure();
+
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var specificationAttributesSettings = _settingService.LoadSetting<SpecificationAttributesSettings>(storeScope);
+
+            //save settings
+
+            specificationAttributesSettings.ArtistCategoryID = model.ArtistCategoryID;
+
+
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+
+            if (model.ArtistCategoryID_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(specificationAttributesSettings, x => x.ArtistCategoryID, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(specificationAttributesSettings, x => x.ArtistCategoryID, storeScope);
+
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
+            return Configure();
         }
 
         [AdminAuthorize]
@@ -416,12 +471,14 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                     var categories = product.ProductCategories.Select(x => x.Category);
                     var storeId = _storeContext.CurrentStore.Id;
-                    var artistcategory = _categoryService.GetAllCategories("Artist", storeId).Where(x => x.Name == "Artist").FirstOrDefault();
+                    //var artistcategory = _categoryService.GetAllCategories("Artist", storeId).Where(x => x.Name == "Artist").FirstOrDefault();
+                    var artistcategory = "";  //changed this to input ID from settings instead of lookup by name for performance reasons.
                     if (artistcategory != null)
                     {
                         if (prodSpecAttriOptions.Any())
                         {
-                            var seName = categories.Where(x => x.ParentCategoryId == artistcategory.Id);
+                            var seName = categories.Where(x => x.ParentCategoryId == _specificationAttributesSettings.ArtistCategoryID);
+                            // var seName = categories.Where(x => x.ParentCategoryId == artistcategory.Id);
                             var specAttr = prodSpecAttriOptions.Where(x => x.SpecificationAttribute.Name == "Artist").FirstOrDefault();
                             if (specAttr != null)
                             {

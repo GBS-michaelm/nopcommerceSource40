@@ -8,8 +8,14 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Models
 {
     public class ConfigureModel : BaseNopEntityModel
     {
+        public int ActiveStoreScopeConfiguration { get; set; }
+
         [NopResourceDisplayName("Plugin.ProductArtist.ArtistName")]
         public string ArtistName { get; set; }
+
+        [NopResourceDisplayName("Plugin.SpecificationAttributes.ArtistCategoryID")]
+        public int ArtistCategoryID { get; set; }
+        public bool ArtistCategoryID_OverrideForStore { get; set; }
     }
 
     public class ProductCategoryTitleModel : BaseNopEntityModel
