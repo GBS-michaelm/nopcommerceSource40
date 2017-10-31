@@ -18,7 +18,6 @@ namespace Nop.Plugin.Widgets.Marketing.EmailPref.Models
         public bool Unsubscribe { get; set; }
         public string ListWebsite { get; set; }
         public bool Master { get; set; }
-        public bool Active { get; set; }
         public bool listSubscribeStatus
         {
             get { return _listSubscribeStatus; }
