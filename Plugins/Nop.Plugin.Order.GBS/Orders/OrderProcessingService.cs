@@ -178,8 +178,8 @@ namespace Nop.Services.Custom.Orders
             CustomTokenProvider orderProv = null;
             string gbsOrderId = null;
 
-            string addPhoneNum = _httpContext.Session["customerPhoneNumber"].ToString() == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
-            _httpContext.Session.Remove("customerPhoneNumber");
+       
+
             var customer = _workContext.CurrentCustomer;
             try
             {
@@ -218,6 +218,9 @@ namespace Nop.Services.Custom.Orders
 
                     if (myResult.PlacedOrder != null)
                     {
+                        string addPhoneNum = _httpContext.Session["customerPhoneNumber"].ToString() == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                        _httpContext.Session.Remove("customerPhoneNumber");
+
                         Dictionary<string, string> paramDic = new Dictionary<string, string>();
                         paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
                         paramDic.Add("@gbsOrderID", gbsOrderId);
