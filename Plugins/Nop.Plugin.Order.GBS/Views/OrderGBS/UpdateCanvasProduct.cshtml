@@ -431,6 +431,7 @@
                     @Html.Hidden("FilesToCopy","[]", new { id = "FilesToCopy" })
                     @Html.Hidden("OPID", request.QueryString["orderitemid"], new { id = "OPID" })
                     @Html.Hidden("productType", request.QueryString["productType"], new { id = "productType" })
+                    @Html.Hidden("webPlatform", request.QueryString["webPlatform"], new { id = "webPlatform" })
                     <input id="replaceIntranet" type="submit" class="btn btn-info btn-lg" value="Replace Production Files" />
                     <span id="surfaces"></span>
                 }
