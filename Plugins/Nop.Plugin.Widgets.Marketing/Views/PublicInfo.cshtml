@@ -15,95 +15,94 @@
     <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
     <style type="text/css">
         p {
-            margin: 0px;
-            padding: 5px 0px;
-        }
-
-
+	        margin: 0px;
+	        padding: 5px 0px;
+	        }
+	
+	
         input[type="checkbox"] {
-            display: none;
+	        display: none;
         }
-
-            input[type="checkbox"] + label {
-                color: #f2f2f2;
-            }
-
-                input[type="checkbox"] + label span {
-                    display: inline-block;
-                    width: 33px;
-                    height: 30px;
-                    margin: -0px 10px 0 0;
-                    vertical-align: middle;
-                    background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) 0px top no-repeat;
-                    cursor: pointer;
-                }
-
-            input[type="checkbox"]:checked + label span {
-                background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -32px top no-repeat;
-            }
-
+        input[type="checkbox"] + label {
+	        color: #f2f2f2;
+        }
+        input[type="checkbox"] + label span {
+	        display: inline-block;
+	        width: 33px;
+	        height: 30px;
+	        margin: -0px 10px 0 0;
+	        vertical-align: middle;
+	        background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) 0px top no-repeat;
+	        cursor: pointer;
+        }
+        input[type="checkbox"]:checked + label span {
+	        background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -32px top no-repeat;
+        }
         input[type="radio"] {
-            display: none;
+	        display: none;
         }
-
-            input[type="radio"] + label {
-                color: #f2f2f2;
-                font-family: Arial, sans-serif;
-            }
-
-                input[type="radio"] + label span {
-                    display: inline-block;
-                    width: 33px;
-                    height: 30px;
-                    margin: -0px 10px 0 0;
-                    vertical-align: middle;
-                    background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -66px top no-repeat;
-                    cursor: pointer;
-                }
-
-            input[type="radio"]:checked + label span {
-                background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -96px top no-repeat;
-            }
-
-            input[type="radio"]:active + label span {
-                background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -96px top no-repeat;
-            }
-
+        input[type="radio"] + label {
+	        color: #f2f2f2;
+	        font-family: Arial, sans-serif;
+        }
+        input[type="radio"] + label span {
+	        display: inline-block;
+	        width: 33px;
+	        height: 30px;
+	        margin: -0px 10px 0 0;
+	        vertical-align: middle;
+	        background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -66px top no-repeat;
+	        cursor: pointer;
+        }
+        input[type="radio"]:checked + label span {
+	        background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -96px top no-repeat;
+        }
+        input[type="radio"]:active + label span {
+	        background: url(/Themes/HouseOfMagnet/Content/images/prefs_sprites.jpg) -96px top no-repeat;
+        }
         .content {
-            padding: 15px 15px;
+	        padding: 15px 15px;
         }
-
-            .content p {
-                font-family: 'Droid Sans', sans-serif;
-                font-weight: normal;
-                color: #333333;
-                line-height: 17px;
-                font-size: 14px;
-            }
-
-            .content h1 {
-                font-family: 'Droid Sans', sans-serif;
-                font-weight: normal;
-                padding-bottom: 0px;
-                text-align: center;
-                color: #01265b;
-                padding: 0px;
-                margin: 0px;
-            }
-
-            .content .headline {
-                padding-bottom: 0px;
-                font-family: 'Droid Sans', sans-serif;
-                font-size: 18px;
-                line-height: 20px;
-            }
-
+        .content p {
+	        font-family: 'Droid Sans', sans-serif;
+	        font-weight: normal;
+	        color: #333333;
+	        line-height: 17px;
+	        font-size: 14px;
+        }
+        .content h1 {
+	        font-family: 'Droid Sans', sans-serif;
+	        font-weight: normal;
+	        padding-bottom: 0px;
+	        text-align: center;
+	        color: #01265b;
+	        padding: 0px;
+	        margin: 0px;
+        }
+	        .content h2 {
+	        font-family: 'Droid Sans', sans-serif;
+	        font-weight: normal;
+	        color: #333333;
+	        line-height: 21px;
+	        font-size: 16px;
+	        padding: 11px 0px;
+	        text-align: center;
+        }
+	        .content h2 span {
+	        font-weight: bold;
+	        color: #000000;
+        }
+        .content .headline {
+	        padding-bottom: 0px;
+	        font-family: 'Droid Sans', sans-serif;
+	        font-size: 18px;
+	        line-height: 20px;
+        }
         .cb {
-            margin: 28px 0px 0px 7px;
+	        margin: 28px 0px 0px 7px;
         }
-
         .radio {
-            margin: 28px 0px 0px 7px;
+	        margin: 28px 0px 0px 7px;
         }
 
         .button-styler {
@@ -173,7 +172,10 @@
             <tr>
                 <td class="content" style="padding-bottom:30px; text-align: center;">
                     <h1>Change your subscriptions</h1>
-                    <p>Choose to only receive the types of emails you want to receive.</p>
+                    <h2>
+                        You are subscribed as <span>@Model.ContactPref.emailAddress</span>. <br>
+                        Choose to only receive the types of emails you want to receive.
+                    </h2>
                     <table width="775" border="0" align="center" cellpadding="0" cellspacing="0">
                         <tbody>
                             <tr>
