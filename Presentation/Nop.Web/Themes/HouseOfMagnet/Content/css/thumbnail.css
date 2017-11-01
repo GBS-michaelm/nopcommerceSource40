@@ -1,9 +1,4 @@
-.cart .product-picture img {
-    border: 0px;
-    z-index: -1;
-    margin-left: auto;
-    margin-right: auto;
-}
+.cart .product-picture img {border: 0px;}
 .product-slider .related-products-grid .sliderinner .item-box .thumbnail .pictures a{background-repeat: no-repeat;    width: 100%;    height: 100%;}
 /***** START OF BASEBALL FULL MAGNETS FIRST CLASS *******/
 .Baseball-Full-Magnets-First-Class {
@@ -17,7 +12,7 @@
 .gallery .Baseball-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -25,7 +20,7 @@
 .product-grid .Baseball-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -110,7 +105,7 @@
 .gallery .Baseball-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -118,7 +113,7 @@
 .product-grid .Baseball-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -205,7 +200,7 @@
 .gallery .Baseball-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -214,7 +209,7 @@
 .product-grid .Baseball-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -307,7 +302,7 @@
 .gallery .Baseball-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -316,7 +311,7 @@
 .product-grid .Baseball-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -412,7 +407,7 @@
 .gallery .Calendar-Full-Magnets-Jumbo-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-horizontal.png') !important;
@@ -421,7 +416,7 @@
 .product-grid .Calendar-Full-Magnets-Jumbo-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-horizontal.png') !important;
@@ -529,7 +524,7 @@
 .gallery .Calendar-Full-Magnets-First-Class-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -538,7 +533,7 @@
 .product-grid .Calendar-Full-Magnets-First-Class-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -632,7 +627,7 @@
 .gallery .Calendar-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -641,7 +636,7 @@
 .product-grid .Calendar-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -735,7 +730,7 @@
 .gallery .Calendar-Pad-House-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad-house.png') !important;
@@ -744,7 +739,7 @@
 .product-grid .Calendar-Pad-House-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad-house.png') !important;
@@ -840,7 +835,7 @@
 .gallery .Calendar-Pad-Square-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
@@ -849,7 +844,7 @@
 .product-grid .Calendar-Pad-Square-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad.png') !important;
@@ -944,7 +939,7 @@
 .gallery .Calendar-Partial-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -953,7 +948,7 @@
 .product-grid .Calendar-Partial-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -1046,7 +1041,7 @@
 .gallery .Calendar-Partial-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -1055,7 +1050,7 @@
 .product-grid .Calendar-Partial-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -1148,7 +1143,7 @@
 .product-grid .Envelope-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-horizontal.png') !important;
@@ -1220,7 +1215,7 @@
 .gallery .Baseball-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1229,7 +1224,7 @@
 .product-grid .Baseball-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1325,7 +1320,7 @@
 .gallery .Calendar-Pad-Peel-And-Stick-Top-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1334,7 +1329,7 @@
 .product-grid .Calendar-Pad-Peel-And-Stick-Top-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1430,7 +1425,7 @@
 .gallery .Calendar-Pad-Peel-And-Stick-Top-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-case-800.png') !important;
@@ -1439,7 +1434,7 @@
 .product-grid .Calendar-Pad-Peel-And-Stick-Top-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-case-800.png') !important;
@@ -1535,7 +1530,7 @@
 .gallery .Calendar-Partial-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1544,7 +1539,7 @@
 .product-grid .Calendar-Partial-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -1640,7 +1635,7 @@
 .gallery .Calendar-Partial-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -1649,7 +1644,7 @@
 .product-grid .Calendar-Partial-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -1745,7 +1740,7 @@
 .gallery .Baseball-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -1754,7 +1749,7 @@
 .product-grid .Baseball-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -1847,7 +1842,7 @@
 .gallery .Calendar-Pad-Peel-And-Stick-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad-peel-and-stick.png') !important;
@@ -1856,7 +1851,7 @@
 .product-grid .Calendar-Pad-Peel-And-Stick-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_cal-pad-peel-and-stick.png') !important;
@@ -1941,8 +1936,8 @@
 
 .Envelope-Vertical {
     background-size: 100%;
-    /*width: 250px;
-    height: 250px;*/
+    width: 250px;
+    height: 250px;
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
@@ -1951,7 +1946,7 @@
 .gallery .Envelope-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
@@ -1960,7 +1955,7 @@
 .product-grid .Envelope-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/ncc/thumbnail-bg_envelope-vertical.png') !important;
@@ -1989,7 +1984,7 @@
 .gallery .Football-Full-Magnets-Ball {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_football.png') !important;
@@ -1998,7 +1993,7 @@
 .product-grid .Football-Full-Magnets-Ball {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_football.png') !important;
@@ -2098,7 +2093,7 @@
 .gallery .Football-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -2107,7 +2102,7 @@
 .product-grid .Football-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -2201,7 +2196,7 @@
 .gallery .Calendar-Full-Magnets-Budget {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
@@ -2210,7 +2205,7 @@
 .product-grid .Calendar-Full-Magnets-Budget {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
@@ -2304,7 +2299,7 @@
 .gallery .Calendar-Full-Magnets-Executive-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_executive-horizontal.png') !important;
@@ -2313,7 +2308,7 @@
 .product-grid .Calendar-Full-Magnets-Executive-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_executive-horizontal.png') !important;
@@ -2407,7 +2402,7 @@
 .gallery .Calendar-Full-Magnets-First-Class-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_first-class-horizontal.png') !important;
@@ -2416,7 +2411,7 @@
 .product-grid .Calendar-Full-Magnets-First-Class-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_first-class-horizontal.png') !important;
@@ -2510,7 +2505,7 @@
 .gallery .Calendar-Full-Magnets-Executive-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_executive-vertical.png') !important;
@@ -2519,7 +2514,7 @@
 .product-grid .Calendar-Full-Magnets-Executive-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_executive-vertical.png') !important;
@@ -2613,7 +2608,7 @@
 .gallery .Calendar-Full-Magnets-Jumbo-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-vertical.png') !important;
@@ -2622,7 +2617,7 @@
 .product-grid .Calendar-Full-Magnets-Jumbo-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-vertical.png') !important;
@@ -2715,7 +2710,7 @@
 .gallery .Football-Full-Magnets-Helmet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_helmet.png') !important;
@@ -2724,7 +2719,7 @@
 .product-grid .Football-Full-Magnets-Helmet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_helmet.png') !important;
@@ -2811,7 +2806,7 @@
 .gallery .Football-Full-Magnets-Jumbo {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-horizontal.png') !important;
@@ -2820,7 +2815,7 @@
 .product-grid .Football-Full-Magnets-Jumbo {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_jumbo-horizontal.png') !important;
@@ -2914,7 +2909,7 @@
 .gallery .Football-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -2923,7 +2918,7 @@
 .product-grid .Football-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -3017,7 +3012,7 @@
 .gallery .Football-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -3026,7 +3021,7 @@
 .product-grid .Football-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -3119,7 +3114,7 @@
 .gallery .Football-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -3128,7 +3123,7 @@
 .product-grid .Football-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -3224,7 +3219,7 @@
 .gallery .Football-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -3233,7 +3228,7 @@
 .product-grid .Football-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -3329,7 +3324,7 @@
 .gallery .Football-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -3338,7 +3333,7 @@
 .product-grid .Football-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -3452,7 +3447,7 @@
 .product-grid .Golf-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -3555,7 +3550,7 @@
 .gallery .Golf-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -3564,7 +3559,7 @@
 .product-grid .Golf-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -3658,7 +3653,7 @@
 .gallery .Golf-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -3667,7 +3662,7 @@
 .product-grid .Golf-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -3760,7 +3755,7 @@
 .gallery .Golf-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -3769,7 +3764,7 @@
 .product-grid .Golf-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -3865,7 +3860,7 @@
 .gallery .Golf-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -3874,7 +3869,7 @@
 .product-grid .Golf-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -3970,7 +3965,7 @@
 .gallery .Golf-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -3979,7 +3974,7 @@
 .product-grid .Golf-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -4075,7 +4070,7 @@
 .gallery .Hockey-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -4084,7 +4079,7 @@
 .product-grid .Hockey-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -4178,7 +4173,7 @@
 .gallery .Hockey-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -4187,7 +4182,7 @@
 .product-grid .Hockey-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -4281,7 +4276,7 @@
 .gallery .Hockey-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -4290,7 +4285,7 @@
 .product-grid .Hockey-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -4384,7 +4379,7 @@
 .gallery .Hockey-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -4393,7 +4388,7 @@
 .product-grid .Hockey-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -4490,7 +4485,7 @@
 .gallery .Hockey-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -4499,7 +4494,7 @@
 .product-grid .Hockey-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -4596,7 +4591,7 @@
 .gallery .Hockey-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -4605,7 +4600,7 @@
 .product-grid .Hockey-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -4702,7 +4697,7 @@
 .gallery .NASCAR-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -4711,7 +4706,7 @@
 .product-grid .NASCAR-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -4806,7 +4801,7 @@
 .gallery .NASCAR-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -4815,7 +4810,7 @@
 .product-grid .NASCAR-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -4910,7 +4905,7 @@
 .gallery .NASCAR-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -4919,7 +4914,7 @@
 .product-grid .NASCAR-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -5012,7 +5007,7 @@
 .gallery .NASCAR-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -5021,7 +5016,7 @@
 .product-grid .NASCAR-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -5118,7 +5113,7 @@
 .gallery .NASCAR-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -5127,7 +5122,7 @@
 .product-grid .NASCAR-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -5224,7 +5219,7 @@
 .gallery .NASCAR-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -5233,7 +5228,7 @@
 .product-grid .NASCAR-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -5330,7 +5325,7 @@
 .gallery .Specialty-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -5339,7 +5334,7 @@
 .product-grid .Specialty-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -5434,7 +5429,7 @@
 .gallery .Specialty-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -5443,7 +5438,7 @@
 .product-grid .Specialty-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -5538,7 +5533,7 @@
 .gallery .Specialty-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -5547,7 +5542,7 @@
 .product-grid .Specialty-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -5641,7 +5636,7 @@
 .gallery .Specialty-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -5650,7 +5645,7 @@
 .product-grid .Specialty-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -5750,7 +5745,7 @@
 .gallery .Specialty-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -5759,7 +5754,7 @@
 .product-grid .Specialty-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -5856,7 +5851,7 @@
 .gallery .Specialty-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -5865,7 +5860,7 @@
 .product-grid .Specialty-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -5962,7 +5957,7 @@
 .gallery .Whiteboard-Magnets-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_whiteboard-peel-and-stick.png') !important;
@@ -5971,7 +5966,7 @@
 .product-grid .Whiteboard-Magnets-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_whiteboard-peel-and-stick.png') !important;
@@ -6068,7 +6063,7 @@
 .listing-page .Whiteboard-Magnets-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -6123,7 +6118,7 @@
 .gallery .Whiteboard-Magnets-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -6132,7 +6127,7 @@
 .product-grid .Whiteboard-Magnets-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -6229,7 +6224,7 @@
 .gallery .Notepad-Peel-And-Stick-Top-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png') !important;
@@ -6238,7 +6233,7 @@
 .product-grid .Notepad-Peel-And-Stick-Top-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-300.png') !important;
@@ -6344,7 +6339,7 @@
 .gallery .Notepad-Peel-And-Stick-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png') !important;
@@ -6353,7 +6348,7 @@
 .product-grid .Notepad-Peel-And-Stick-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-peel-and-stick.png') !important;
@@ -6461,7 +6456,7 @@
 .gallery .Notepad-Peel-And-Stick-Top-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-1000.png') !important;
@@ -6470,7 +6465,7 @@
 .product-grid .Notepad-Peel-And-Stick-Top-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-case-1000.png') !important;
@@ -6576,7 +6571,7 @@
 .gallery .Notepad-Personalized-Every-Page {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png') !important;
@@ -6585,7 +6580,7 @@
 .product-grid .Notepad-Personalized-Every-Page {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-every-page.png') !important;
@@ -6691,7 +6686,7 @@
 .gallery .Notepad-Value-House-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
@@ -6700,7 +6695,7 @@
 .product-grid .Notepad-Value-House-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
@@ -6758,10 +6753,9 @@
 
 .shopping-cart-page .Notepad-Value-House-Top img {
     border: 0px none;
-    height: 198px;
-    left: 45px;
+    left: 48px;
     position: absolute;
-    top: 2px;
+    top: 3px;
     width: 122px
 }
 
@@ -6786,17 +6780,16 @@
     border: 0px;
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-house-top.png') !important;
 }
 
     .wishlist-page .Notepad-Value-House-Top img {
-        position: absolute;
-        left: 45px;
-        top: 0px;
-        height: 200px;
+        /*position: absolute;*/
+        /*left: 45px;
+        top: 0px;*/
         width: 124px;
     }
 
@@ -6815,7 +6808,7 @@
 .gallery .Notepad-Value-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png') !important;
@@ -6824,7 +6817,7 @@
 .product-grid .Notepad-Value-Top {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_notepad-value-top.png') !important;
@@ -6930,7 +6923,7 @@
 .gallery .Basketball-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -6939,7 +6932,7 @@
 .product-grid .Basketball-Full-Magnets-First-Class {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full-short.png') !important;
@@ -7043,7 +7036,7 @@
 .gallery .Basketball-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -7052,7 +7045,7 @@
 .product-grid .Basketball-Full-Magnets-Quick-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_full.png') !important;
@@ -7156,7 +7149,7 @@
 .gallery .Basketball-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -7165,7 +7158,7 @@
 .product-grid .Basketball-QuickCard {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_partial.png') !important;
@@ -7268,7 +7261,7 @@
 .gallery .Basketball-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -7277,7 +7270,7 @@
 .product-grid .Basketball-QuickStix-Case {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-1000.png') !important;
@@ -7383,7 +7376,7 @@
 .gallery .Basketball-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -7392,7 +7385,7 @@
 .product-grid .Basketball-QuickStix {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_peel-and-stick.png') !important;
@@ -7495,7 +7488,7 @@
 .gallery .Basketball-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -7504,7 +7497,7 @@
 .product-grid .Basketball-QuickStix-3-pack {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_case-300.png') !important;
@@ -7610,7 +7603,7 @@
 .gallery .Business-Card-Magnet-3-PacK {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-300.png') !important;
@@ -7619,7 +7612,7 @@
 .product-grid .Business-Card-Magnet-3-PacK {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*/*height: 250px;*/*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-300.png') !important;
@@ -7726,7 +7719,7 @@
 .gallery .Business-Card-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet.png') !important;
@@ -7735,7 +7728,7 @@
 .product-grid .Business-Card-Magnet {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet.png') !important;
@@ -7841,7 +7834,7 @@
 .gallery .Business-Card-Magnet-20-PacK {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
@@ -7850,7 +7843,7 @@
 .product-grid .Business-Card-Magnet-20-PacK {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_business-card-magnet_case-2000.png') !important;
@@ -7957,7 +7950,7 @@
 .gallery .Calendar-Full-Magnets-Budget-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget-horizontal.png') !important;
@@ -7966,7 +7959,7 @@
 .product-grid .Calendar-Full-Magnets-Budget-Horizontal {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget-horizontal.png') !important;
@@ -8070,7 +8063,7 @@
 .gallery .Calendar-Full-Magnets-Budget-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
@@ -8079,7 +8072,7 @@
 .product-grid .Calendar-Full-Magnets-Budget-Vertical {
     background-size: 100%;
     width: 250px;
-    height: 250px;
+    /*height: 250px;*/
     float: left;
     position: relative;
     background-image: url('/Content/Images/gbsThumbnailShapes/hom/thumbnail-bg_budget.png') !important;
@@ -8171,7 +8164,7 @@
 
 /***** END OF CALENDAR FULL MAGNET BUDGET VERTICAL *******/
 
-.cart-item-table .product-picture .gallerys .pictures{
+/*.cart-item-table .product-picture .gallerys .pictures{
     z-index: 1;
 }
 .wishlist-page .product-picture .gallerys .pictures {
@@ -8183,4 +8176,5 @@
 }
 .product-grid .pictures img{
     z-index: -1;
-}
+}*/
+
