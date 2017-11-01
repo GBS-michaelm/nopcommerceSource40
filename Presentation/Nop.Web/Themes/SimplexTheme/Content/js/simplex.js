@@ -124,7 +124,7 @@ else{
 
             $(document).scroll(function () {
                 var pos = $(window).scrollTop();
-                console.log(pos);
+                //console.log(pos);
 
                 if (pos >= position) {
                     backBtn.fadeIn(speed);

@@ -727,28 +727,38 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (!cart.Any())
-                return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
-                return RedirectToRoute("CheckoutOnePage");
+                if (!cart.Any())
+                    return RedirectToRoute("ShoppingCart");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new HttpUnauthorizedResult();
+                if (_orderSettings.OnePageCheckoutEnabled)
+                    return RedirectToRoute("CheckoutOnePage");
 
-            //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
-            foreach (var error in customAttributeWarnings)
-            {
-                ModelState.AddModelError("", error);
-            }
+                if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+                    return new HttpUnauthorizedResult();
+
+                //custom address attributes
+                var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+                var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                foreach (var error in customAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
+
+                if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
+                {
+                    Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
+                    Match match = regex.Match(model.NewAddress.ZipPostalCode);
+                    if (!match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code Format");
+                    }
+                }
 
                 if (ModelState.IsValid)
                 {
@@ -788,9 +798,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     }
 
                     return RedirectToRoute("CheckoutConfirm");
-
                 }
-
 
                 //If we got this far, something failed, redisplay form
                 model = PrepareBillingAddressModel(cart,
