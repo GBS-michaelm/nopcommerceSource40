@@ -1549,6 +1549,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\style.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail.css" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons-snapchat.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons.svg" />
@@ -2982,6 +2983,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOneSimple.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-child-company.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

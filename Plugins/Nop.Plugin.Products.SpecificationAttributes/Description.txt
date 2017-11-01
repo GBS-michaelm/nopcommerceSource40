@@ -1,5 +1,5 @@
 Group: Misc
-FriendlyName: Poduct Specification Attributes
+FriendlyName: Product Specification Attributes
 SystemName: Products.SpecificationAttributes
 Version: 1.0
 SupportedVersions: 3.90
