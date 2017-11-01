@@ -41,17 +41,26 @@
     float: left;
     width: 560px;
     border-left : 90px solid !important;
+    height: 100%;
+    
+    margin-bottom: 10px;
 }
 
 .parent-gateway-description {
-    margin-top : 10px;
+   
     float: right;
-    width: 400px;
+    width: 559px;
     text-align : right;
+    margin-bottom: 10px;
 }
 
 .parent-gateway-description h4 {
     margin-bottom : 5px;
+}
+
+#leftTitleWrap {
+    display: flex;
+    align-items: center
 }
 
 #searchArea {

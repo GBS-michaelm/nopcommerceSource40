@@ -52,7 +52,7 @@
 }
 
 @{ 
-    string id = @Model.Id.ToString();
+    int id = @Model.Id;
 }
 
 @{
@@ -72,16 +72,11 @@
     //}
 
     Company company = new Company(id);
-    string categoryName = "";
-    string categoryh2 = "";
-    string fontColor = "";
-    string aboutYourMarketCenter = "";
-
-    categoryName = !string.IsNullOrEmpty(company.h1) ? company.h1 : @Model.Name;
-    categoryh2 = !string.IsNullOrEmpty(company.h2) ? company.h2 : @Model.Name;
-    fontColor = company.foregroundColor; //will never be empty, base val of black set in constructor
-    aboutYourMarketCenter = !string.IsNullOrEmpty(company.aboutYourMarketCenter) ? company.aboutYourMarketCenter : "Market Center Info Goes Here";
-
+    string categoryName = company.h1;
+    string categoryh2 = company.h2;
+    string fontColor = company.foregroundColor;
+    string aboutYourMarketCenter = company.aboutYourMarketCenter;   
+    
 }
 
 
@@ -116,20 +111,22 @@
 
 
 <div id="parentTitleWrapDiv">
-
-    <div class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
-        <h1 style="color : @fontColor;">@categoryName</h1>
+    
+    <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
+        <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
     </div>
+    
+
+   
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="parent-gateway-description">
             @*<p class="list-content">*@
-                 <h2>@categoryh2</h2>@Html.Raw(Model.Description)
+            <h3>@categoryh2</h3>@Html.Raw(Model.Description)
             @*</p>*@
         </div>
-
     }
-
+  
 </div>
 
 
@@ -254,6 +251,17 @@
 
             $("#myWorkPlace").click(SetAsMyWorkPlace);
 
+            var length = $('#marketCenterDropDown > option').length;
+            console.log("length: " + length);
+            if (length <= 1) {               
+                $("#searchAreaLeft").hide();
+            }
+
+            if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
+                $(".parent-gateway-description").height($(".parent-gateway-name").height());
+            } else {
+                $(".parent-gateway-name").height($(".parent-gateway-description").height());
+            }
 
 
         });
