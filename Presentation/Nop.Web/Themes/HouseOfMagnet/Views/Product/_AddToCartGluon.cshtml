@@ -62,66 +62,57 @@
             </div>
             @{
 
-                string pageID = string.Empty;
-                string[] idArray = null;
-                string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
-                foreach (var item in Model.ProductSpecifications)
-                {
-                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEPAGEID")
-                    {
-                        idArray = item.ValueRaw.Split('-');
-                        TempData["pageid"] = idArray[1];
-                        break;
-                    }
-                }
+                
+                    string[] idArray = null;
+                    string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
 
-                var addToCartText = "";
-                if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
-                {
-                    addToCartText = T("ShoppingCart.AddToCart.Update").Text;
-                }
-                else
-                {
-                    addToCartText = T("ShoppingCart.AddToCart").Text;
-                    if (Model.AddToCart.IsRental)
-                    {
-                        addToCartText = T("ShoppingCart.Rent").Text;
-                    }
-                    if (Model.AddToCart.AvailableForPreOrder)
-                    {
-                        addToCartText = T("ShoppingCart.PreOrder").Text;
-                    }
-                }
-                var data = Model.ProductSpecifications;
-                foreach (var item in data)
-                {
-                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
-                    {
-                        TempData["iframeurl"] = item.ValueRaw;
-                        break;
-                    }
-                }
 
-                foreach (var item in data)
-                {
-                    if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
+                    var addToCartText = "";
+                    if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
                     {
-                        TempData["iframeheight"] = item.ValueRaw;
-                        break;
+                        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
                     }
-                }
-                TempData["pcode"] = Model.Sku;
-                TempData["cartid"] = cartID;
-                TempData["productid"] = Model.AddToCart.ProductId;
-                string url = "/gluon";
+                    else
+                    {
+                        addToCartText = T("ShoppingCart.AddToCart").Text;
+                        if (Model.AddToCart.IsRental)
+                        {
+                            addToCartText = T("ShoppingCart.Rent").Text;
+                        }
+                        if (Model.AddToCart.AvailableForPreOrder)
+                        {
+                            addToCartText = T("ShoppingCart.PreOrder").Text;
+                        }
+                    }
+                    var data = Model.ProductSpecifications;
+                    string productType = string.Empty;
+                    foreach (var item in data)
+                    {
+                        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
+                        {
+                            TempData["iframeurl"] = item.ValueRaw;
+                            break;
+                        }
+                    }
+                    foreach (var item in data)
+                    {
+                        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
+                        {
+                            TempData["iframeheight"] = item.ValueRaw;
+                            break;
+                        }
+                    }
+                    string url = "/gluon?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID;
+
                 <div class="product-add-button">
-                   @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
+                    @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
-                       <button id="add-to-cart-button-@pageID" type="button" class=" button button-rounded button-reveal button-small button-green tright"  data-productid="@Model.AddToCart.ProductId" onclick="window.location = '@url'" >
+                    <button id="add-to-cart-button" type="button" class=" button button-rounded button-reveal button-small button-green tright" data-productid="@Model.AddToCart.ProductId" onclick="window.location = '@url'">
 
-                       <i class="icon-line-arrow-right"></i><span>Customize</span></button>
+                        <i class="icon-line-arrow-right"></i><span>Customize</span>
+                    </button>
 
-    @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
+                    @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
                 </div>
             }
 	    </div>

@@ -2984,6 +2984,9 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

@@ -5,6 +5,9 @@
 @using Nop.Web.Models.ShoppingCart;
 @*@using Nop.Plugin.Widgets.CustomersCanvas.Services;
 @using Nop.Plugin.Checkout.GBS;*@
+@using Nop.Core.Domain.Orders;
+@using Nop.Services.Catalog;
+@using Nop.Plugin.Checkout.GBS;
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
@@ -14,6 +17,38 @@
 //GBSCheckout gbs = new GBSCheckout();
 //var helpers = gbs._helper;
 //Model.CustomProperties = helpers.GetNoteCardSetCount();
+}
+@{
+
+    /* This adds custom images to cart */
+    Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    var _workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var parser = EngineContext.Current.Resolve<IProductAttributeParser>();
+    IList<string> attrValues = null;
+    var cart = _workContext.CurrentCustomer.ShoppingCartItems
+    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+    foreach (var item in cart)
+    {
+        if (item.StoreId == _storeContext.CurrentStore.Id)
+        {
+
+            var productAttributeMappings = parser.ParseProductAttributeMappings(item.AttributesXml);
+            if (productAttributeMappings != null)
+            {
+                foreach (var productAttributeMapping in productAttributeMappings)
+                {
+                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                    {
+                        attrValues = parser.ParseValues(item.AttributesXml, productAttributeMapping.Id);
+                        imgUrlDict.Add(item.Id, attrValues[0]);
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 <div class="order-summary-content">
@@ -104,8 +139,22 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
+
+                                        @if (item.AttributeInfo.Contains("CustomImgUrl"))
+                                        {
+                                            string url = imgUrlDict[item.Id];
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                            @Html.Widget("product_details_widget", item.ProductId)
+                                        }
+
+
                                         @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>*@
-                                        @Html.Widget("product_details_widget", item.ProductId)
+                                       
+
                                     </td>
                                 }
                                 <td class="product-info">
@@ -121,7 +170,11 @@
                                             }
                                             else
                                             {
-                                                @Html.Raw(item.AttributeInfo)
+                                                if (!item.AttributeInfo.ToLower().Contains("customimgurl"))
+                                                {
+                                                    @Html.Raw(item.AttributeInfo)
+                                                }
+
                                             }
 
                                         </div>

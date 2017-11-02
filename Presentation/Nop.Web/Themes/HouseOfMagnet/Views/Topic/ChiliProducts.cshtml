@@ -3,14 +3,34 @@
 @using Nop.Web.Models.Topics;
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Logging;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
 @{
 
     string page = string.Empty;
     try
     {
-        string iframeUrl = TempData["iframeurl"].ToString();
-        string urlEnd = TempData.Peek("pcode").ToString()+ "&top=DF&designtype=CC";
-        page = iframeUrl + urlEnd;
+        int prodId = Convert.ToInt32(Request.QueryString["id"]);
+        int cartId = Convert.ToInt32(Request.QueryString["cartid"]);
+
+        string sku = Request.QueryString["sku"];
+
+        var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(prodId);
+
+        TempData["productid"] = prodId;
+        TempData["cartid"] = cartId;
+
+        foreach (var item in CurrentSpecAttr)
+        {
+
+            if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "IframeURL")
+            {
+                page = item.SpecificationAttributeOption.Name;
+            }
+        }
+
+        page = page + sku;
     }
     catch (Exception ex)
     {
@@ -19,6 +39,7 @@
 }
 <form id="product-attributes-form">
     @{
+            
         try
         {
             int i = 0;
@@ -27,10 +48,10 @@
             {
                 foreach (var item in (IList<ProductDetailsModel.ProductAttributeModel>)TempData.Peek("productAttributes"))
                 {
-                    <input name="product_attribute_@item.Id" class="@item.Name" type="hidden" id="product_attribute_@item.Id" value="@value" />
-                    i++;
-                }
+            <input name="product_attribute_@item.Id" class="@item.Name" type="hidden" id="product_attribute_@item.Id" value="@value" />
+            i++;
             }
+        }
         }
         catch (Exception ex)
         {
@@ -41,8 +62,8 @@
 </form>
 @{
 
-    <div class="chili-template" style="overflow:hidden; height:@TempData.Peek("iframeheight")">
-        <iframe src="@T("hom.url")@page" style="height:@TempData["iframeheight"]; width:100%;"></iframe>
+    <div class="chili-template" style="overflow:hidden; height:1200px">
+        <iframe src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 }
 <!--product attributes-->
@@ -51,22 +72,20 @@
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     var eventer = window[eventMethod];
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-    var prodID = @Html.Raw(TempData["productid"]);
-    var cID =  @Html.Raw(TempData["cartid"]);
     var imageUrl = '';
     var check = true;
 
     // Listen to message from child window
     eventer(messageEvent, function (e) {
-        if (JSON.parse(e.data).success == true) {
-            if (check) {
+        //if (JSON.parse(e.data).success == true) {
+        //    if (check) {
                 check = addToCart(e.data);
-            }
-        }
+        //    }
+        //}
     }, false);
     function addToCart(val) {
         $(".CustomImgUrl").val(JSON.parse(val).preview);
-        AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = TempData["productID"], shoppingCartTypeId = TempData["cartID"] })', '#product-attributes-form');
+        AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = TempData["productid"], shoppingCartTypeId = TempData["cartid"] })', '#product-attributes-form');
         return false;
     }
 </script>
