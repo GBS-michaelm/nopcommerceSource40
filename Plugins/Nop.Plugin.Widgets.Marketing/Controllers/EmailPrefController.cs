@@ -112,18 +112,30 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
                 }
             }
 
-            MarketingContactModel marketingContact2 = marketingClient.getMarketingContact(_gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password, System.Web.HttpContext.Current.Request.QueryString["email"], "NCC");
+            MarketingContactModel marketingContact2 = marketingClient.getMarketingContact(_gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password, Email, "NCC");
             if (marketingContact2.error)
             {
                 var modelError = new EmailPreferencesErrorModel();
                 modelError.ErrorMessage = marketingContact2.errorMessage;
 
-                return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                if (modelError.ErrorMessage != "record not found")
+                {
+                    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                }
             }
 
             model.ContactPref = marketingContact2;
 
-            model.subscribeStatusPartner = model.ContactPref.subscribeStatus;
+
+            if (marketingContact2.errorMessage != "record not found")
+            {
+                model.subscribeStatusPartner = model.ContactPref.subscribeStatus;
+            }
+            else
+            {
+                model.ContactPref.emailAddress = Email;
+                model.subscribeStatusPartner = "unsubscribed";
+            }
 
             DBManager dbmanager2 = new DBManager();
             Dictionary<string, string> paramDic2 = new Dictionary<string, string>();
