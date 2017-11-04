@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Order.GBS.Models;
@@ -147,11 +148,6 @@ namespace Nop.Plugin.Order.GBS.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult AddPhoneNumber(string widgetZone, object additionalData = null)
-        {        
-                return View("~/Plugins/Order.GBS/Views/OrderGBS/AddPhoneNumber.cshtml");
-          }
     }
 }
   

@@ -20,6 +20,7 @@ using System.Data;
 using Nop.Plugin.Widgets.CustomersCanvas.Domain;
 using WebServices.Models.File;
 using System.Net;
+using System.Web;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
@@ -35,7 +36,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly ILogger _logger;
         private readonly IStoreContext _storeContext;
         private readonly IPluginFinder _pluginFinder;
-
+        private readonly HttpContextBase _httpContext;
 
 
         public GBSOrderController(
@@ -48,7 +49,8 @@ namespace Nop.Plugin.Order.GBS.Controllers
             IWorkContext workContext,
             ILogger logger,
             IStoreContext storeContext,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            HttpContextBase httpContext)
         {
             this._ccService = ccService;
             this._ccSettings = ccSettings;
@@ -60,6 +62,8 @@ namespace Nop.Plugin.Order.GBS.Controllers
             this._logger = logger;
             this._storeContext = storeContext;
             this._pluginFinder = pluginFinder;
+            this._httpContext = httpContext;
+
         }
 
         public ActionResult UpdateCanvasProductView()
@@ -431,6 +435,22 @@ namespace Nop.Plugin.Order.GBS.Controllers
             return stateID;
         }
 
+
+
+
+        [ChildActionOnly]
+        public ActionResult AddPhoneNumber(string widgetZone, object additionalData = null)
+        {
+            return View("~/Plugins/Order.GBS/Views/OrderGBS/AddPhoneNumber.cshtml");
+        }
+
+        [HttpPost]
+        public JsonResult AddSessionVar(string phnum)
+        {
+            // Add Customer Phone number to session for checkout 
+            _httpContext.Session["customerPhoneNumber"] = phnum;
+            return null;
+        }
 
     }
 }
