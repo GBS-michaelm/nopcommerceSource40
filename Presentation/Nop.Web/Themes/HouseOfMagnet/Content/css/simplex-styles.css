@@ -517,6 +517,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
             margin: auto;
             max-width: 100%;
             width: 70px;
+            z-index: -1;
         }
 
         .mini-shopping-cart .picture + .product {
