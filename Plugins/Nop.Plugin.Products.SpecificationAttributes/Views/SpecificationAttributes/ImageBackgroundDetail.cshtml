@@ -5,8 +5,8 @@
     string className = ViewBag.ClassName;
     int productId = ViewBag.ProductId;
 }
-    <div class="pictures" style="@fill">
-        <div class="@className">
+    <div class="gallerys"  style="@fill">
+        <div class="pictures @className">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@productId" class="detailimg" />
         </div>
     </div>
