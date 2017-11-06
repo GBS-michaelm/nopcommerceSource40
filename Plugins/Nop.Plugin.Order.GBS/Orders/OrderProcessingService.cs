@@ -62,6 +62,7 @@ namespace Nop.Services.Custom.Orders
         private readonly CcSettings _customersCanvasSettings;
         private readonly ILogger _logger;
         private readonly IProductAttributeFormatter  _productAttributeFormatter;
+        private readonly HttpContextBase _httpContext;
 
 
         public GBSOrderProcessingService(
@@ -109,7 +110,8 @@ namespace Nop.Services.Custom.Orders
             CurrencySettings currencySettings,
             ICountryService countryService,
             IStateProvinceService stateProviceService,
-            ICustomNumberFormatter customNumberFormatter) 
+            ICustomNumberFormatter customNumberFormatter,
+            HttpContextBase httpContext) 
             : base
             (orderService, 
                   webHelper, 
@@ -163,6 +165,7 @@ namespace Nop.Services.Custom.Orders
             this._customersCanvasSettings = settingService.LoadSetting<CcSettings>();
             this._logger = logger;
             this._productAttributeFormatter = productAttributeFormatter;
+            this._httpContext = httpContext;
         }
 
         private void SaveGBSOrderID(string gbsOrderId, int NOPOrderID)
@@ -174,6 +177,9 @@ namespace Nop.Services.Custom.Orders
             PlaceOrderResult myResult = null;
             CustomTokenProvider orderProv = null;
             string gbsOrderId = null;
+
+       
+
             var customer = _workContext.CurrentCustomer;
             try
             {
@@ -212,13 +218,16 @@ namespace Nop.Services.Custom.Orders
 
                     if (myResult.PlacedOrder != null)
                     {
+                        string addPhoneNum = _httpContext.Session["customerPhoneNumber"].ToString() == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                        _httpContext.Session.Remove("customerPhoneNumber");
+
                         Dictionary<string, string> paramDic = new Dictionary<string, string>();
                         paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
                         paramDic.Add("@gbsOrderID", gbsOrderId);
-
+                        paramDic.Add("@contactPhone", addPhoneNum);
                         //string insert = "INSERT INTO tblNOPOrder (nopID, gbsOrderID) ";
                         //insert += "VALUES ('" + myResult.PlacedOrder.Id + "', '" + gbsOrderId + "')";
-                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
+                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@contactPhone";
                         manager.SetParameterizedQueryNoData(insert, paramDic);
 
                         ICcService ccService = EngineContext.Current.Resolve<ICcService>();
@@ -370,10 +379,10 @@ namespace Nop.Services.Custom.Orders
                             Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
                             paramDicEx.Add("@nopOrderItemID", item.OrderItemID.ToString());
                             paramDicEx.Add("@ccID", item.ccID.ToString());
-
-                            //insert = "INSERT INTO tblNOPOrderItem (nopOrderItemID, ccID) ";
-                            //insert += "VALUES ('" + item.OrderItemID + "', '" + item.ccID + "')";
-                            insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
+                            
+                           //insert = "INSERT INTO tblNOPOrderItem (nopOrderItemID, ccID) ";
+                           //insert += "VALUES ('" + item.OrderItemID + "', '" + item.ccID + "')";
+                           insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
                             manager.SetParameterizedQueryNoData(insert, paramDicEx);
 
                         }
@@ -846,7 +855,6 @@ namespace Nop.Services.Custom.Orders
         public int ID { get; set; }
         public int OrderItemID { get; set; }
         public int ccID { get; set; }
-
     }
 
 

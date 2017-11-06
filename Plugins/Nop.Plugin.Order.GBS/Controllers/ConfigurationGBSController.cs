@@ -57,7 +57,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
             if (storeScope > 0)
             {
-                
+
                 model.LoginId_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.LoginId, storeScope);
                 model.Password_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.Password, storeScope);
                 model.GBSOrderWebServiceAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSOrderWebServiceAddress, storeScope);
@@ -147,6 +147,11 @@ namespace Nop.Plugin.Order.GBS.Controllers
             return Configure();
         }
 
+        [ChildActionOnly]
+        public ActionResult AddPhoneNumber(string widgetZone, object additionalData = null)
+        {        
+                return View("~/Plugins/Order.GBS/Views/OrderGBS/AddPhoneNumber.cshtml");
+          }
     }
-        
 }
+  
