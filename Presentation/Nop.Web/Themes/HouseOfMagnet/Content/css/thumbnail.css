@@ -8181,11 +8181,15 @@
 /********************* Start of Baseball-Insert Calss **********************/
 .product-grid .Baseball-Insert img {
     width: 250px;
-    max-height: 250px;
 }
 .product-details-page .gallery .Baseball-Insert {
-    width: 570px;
-    max-height: 570px;
+    width: 570px; 
+}
+#baseball-inserts-page .product-grid .pictures {
+    height: auto;
+}
+#baseball-inserts-page .item-box {
+    min-height: inherit;
 }
 /********************* Start of Calendar-Insert Calss **********************/
 .product-grid .Calendar-Insert img {
