@@ -1,9 +1,12 @@
-﻿<div class="row" style="margin:10px;">
-    <div style="text-align: center;" class="col-md-12">
-        <label>Add Phone Number :</label>
-        <input name="customerPhoneNumber" id="AddPhoneNum" required="" title="Enter a phone number" aria-required="true" class="input-validation-error" aria-describedby="AddPhoneNum-error" aria-invalid="true" type="tel">
-        <span style="color:red;">*</span>
-        <span id="spnPhoneStatus" style="display:none;">Invalid Phone #</span>
+﻿<div class="form-group" style="padding-top: 20px;padding-bottom: 30px;">
+    <label for="Add_phone_number" style="font-weight:normal; top:10px;" class="control-label col-sm-3 col-md-3">Add phone number</label>
+    <div class="visible-xs form-title-rquired"><span class="required" aria-required="true">*</span></div>
+    <div class="col-sm-4 col-md-4">
+        <input class="form-control" data-val="true" data-val-required="Phone number is required." id="Add_phone_number" name="Addphone.number" value="" aria-required="true" type="text">
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+        <span class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
     </div>
 </div>
 <script type="text/javascript">
