@@ -2970,7 +2970,7 @@
     <Content Include="Themes\TeamMagnet\Views\Shared\_Root.Head.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Topics\RequestQuote.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Web.config" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SportsTeamGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-gateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryGalleryTemplate.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-pricechart.cshtml" />
@@ -2987,6 +2987,13 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
     <Content Include="Themes\AtomicEnvelopes\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\Checkout\ShippingAddress.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\GatewayCategoryProduct.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\GatewayCategoryProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SportsTeamTabs.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-tabs.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
