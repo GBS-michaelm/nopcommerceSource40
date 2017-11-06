@@ -354,7 +354,10 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         public ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
             // Add Customer Phone number to session for checkout 
-            _httpContext.Session["customerPhoneNumber"] = form["customerPhoneNumber"].ToString();
+            if (!String.IsNullOrEmpty(form["customerPhoneNumber"]))
+            {
+                _httpContext.Session["customerPhoneNumber"] = form["customerPhoneNumber"].ToString();
+            }
 
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)

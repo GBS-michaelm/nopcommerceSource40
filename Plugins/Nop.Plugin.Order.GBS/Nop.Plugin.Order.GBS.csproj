@@ -94,6 +94,7 @@
     <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="CustomTokenProvider.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="Factories\GBSOrderModelFactory.cs" />
     <Compile Include="GBSOrderSettings.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
