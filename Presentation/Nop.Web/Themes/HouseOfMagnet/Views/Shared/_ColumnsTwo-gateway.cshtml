@@ -7,6 +7,7 @@
 @using System.Data;
 @using System.Text;
 @using Nop.Services.Catalog;
+@using Nop.Plugin.BusinessLogic.GBS.Domain;
 
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -39,11 +40,13 @@
 }
 
 @{
-    string id = @Model.Id.ToString();
+    int id = @Model.Id;
 }
 
 @{ 
     //chart to load
+    //*** set data to hold which chart will load depending on parent category *** 
+    //dynamic chart most likely
     string chart = "";
 
     if (@Model.Name.Contains("Specialty"))
@@ -55,67 +58,66 @@
 
 @{
 
-    DBManager manager = new DBManager();
-    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    GBSProductCategory gbsProductCategory = new GBSProductCategory(id);
+    string h1 = gbsProductCategory.h1;
+    string h2 = gbsProductCategory.h2;
+    string topText = gbsProductCategory.topText;
+    string bottomText = gbsProductCategory.bottomText;
+    string backgroundColor = gbsProductCategory.backgroundColor;
+    string foregroundImage = gbsProductCategory.foregroundImage;
+    string backgroundImage = gbsProductCategory.backgroundImage;
 
-    Dictionary<string, string> categoryIdDic = new Dictionary<string, string>();
-    categoryIdDic.Add("@CategoryId", id);
+    //FUTURE RELEASE STUFF
+    ////generate product categories
+    //StringBuilder sb = new StringBuilder();
+    //var categoryService = EngineContext.Current.Resolve<ICategoryService>();
+    //IList<Category> categoryProducts = categoryService.GetAllCategoriesByParentCategoryId(id);
+    //var productCategories = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
 
-    string selectSpecAttrAndCategoryDataView = "EXEC usp_SelectGBSCustomCategoryAndSpecAttributesData @CategoryId";
-    DataView specAttrAndCategoryDataView = manager.GetParameterizedDataView(selectSpecAttrAndCategoryDataView, categoryIdDic);
-    DataView categoryDataView = null;
+    //sb.Append("<div class='pricing bottommargin clearfix'>");
 
-    string h1 = Model.Name;
-    string h2 = "";
-    string topText = "Choose your magnet style to get started...";
-    string backgroundImage = "";
-    string foregroundImage = "";
-    string bottomText = "Can't decide? Let us help you...";
-    string backgroundColor = "";
-    bool hasTeams = false;
+    //foreach (var product in productCategories)
+    //{
 
-    if (specAttrAndCategoryDataView.Count > 0)
-    {
+    //    IPagedList<ProductCategory> productCategoryList = categoryService.GetProductCategoriesByCategoryId(product.Id);
+    //    ProductCategory singleProduct = productCategoryList[0];
 
-        h1 = !(string.IsNullOrEmpty(specAttrAndCategoryDataView[0]["H1"].ToString())) ? specAttrAndCategoryDataView[0]["H1"].ToString() : Model.Name;
-        h2 = specAttrAndCategoryDataView[0]["H2"].ToString();
-        topText = specAttrAndCategoryDataView[0]["UpperText"].ToString();
-        backgroundImage = specAttrAndCategoryDataView[0]["BackgroundPicturePath"].ToString(); //"/Themes/" + @themeName + "/Content/images/" +  old ver, before full path in db
-        foregroundImage = specAttrAndCategoryDataView[0]["ForegroundPicturePath"].ToString();
-        bottomText = specAttrAndCategoryDataView[0]["LowerText"].ToString();
-        backgroundColor = specAttrAndCategoryDataView[0]["BackgroundColor"].ToString();
-        hasTeams = true;
+    //    sb.Append("<div class='col-md-3'>");
+    //    sb.Append("    <div class='pricing-box'>");
+    //    sb.Append("        <div class='pricing-title'>");
+    //    sb.Append("            <h3>" + product.Name + "</h3>");
+    //    sb.Append("        </div>");
+    //    sb.Append("    <div class='gateway-image'><img src=''/></div>");
+    //    sb.Append("<div class='pricing-features'>");
+    //    sb.Append("<ul>");
+    //    sb.Append("< li>" + singleProduct.Product.Width + " X " + singleProduct.Product.Height + "</li>");
+    //    sb.Append("<li>" + product.Name + " top</li>");
+    //    sb.Append("< li>Partial magnet back</li>");
+    //    sb.Append("< li>60 designs available</li>");
+    //    sb.Append("</ul>");
+    //    sb.Append("< div class='gateway - pricing'>Starting at $30</div>");
+    //    sb.Append("</div>");
+    //    sb.Append("< div class='pricing-action'><a href=' / specialty - peel - stick' class='team - handle button button - rounded button - reveal button - large button - blue tright'><i class='icon - angle - right'></i><span>Select</span></a></div>");
+    //    sb.Append("</div>");
+    //    sb.Append("</div>");
+    //}
 
-    }
-    else
-    {
-        string selectCategoryData = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
-        categoryDataView = manager.GetParameterizedDataView(selectCategoryData, categoryIdDic);
+    //sb.Append("</div>");
 
-        if (categoryDataView.Count > 0)
-        {
-            h1 = !(string.IsNullOrEmpty(categoryDataView[0]["H1"].ToString())) ? categoryDataView[0]["H1"].ToString() : Model.Name;
-            h2 = categoryDataView[0]["H2"].ToString();
-            topText = categoryDataView[0]["UpperText"].ToString();
-            backgroundImage = categoryDataView[0]["BackgroundPicturePath"].ToString(); //Content/images/" + old ver, before full path in db
-            foregroundImage = categoryDataView[0]["ForegroundPicturePath"].ToString();
-            bottomText = categoryDataView[0]["LowerText"].ToString();
-            backgroundColor = categoryDataView[0]["BackgroundColor"].ToString();
-        }
+    //string productCategoriesHtml = sb.ToString();
 
-    }
 
 }
 
 @if (IsSectionDefined("Breadcrumb"))
 {
     @section Breadcrumb {
-        @RenderSection("Breadcrumb")
+            @RenderSection("Breadcrumb")
     }
-}
+    }
 
 @if (Model.DisplayCategoryBreadcrumb)
-{
+    {
     <div id="gatewayBreadcrumb" class="breadcrumb-wrapper">
         <ul class="breadcrumb">
             <li>
@@ -136,93 +138,17 @@
                     }
                 </li>
                 }
-            </ul>
-        </div>
+        </ul>
+    </div>
 }
 
-    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">
-                
-        @* h1 from db *@
+    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">               
         <h1 id="gatewayH1" class="gateway-h1">@h1</h1>
-
         <div class="gateway-h2-wrap">
-            @* h2 from db *@
             <p class="gateway-h2"><span >@h2</span></p>
         </div>
-
-    </div>
+    </div>  
    
-    @{
-        StringBuilder teamHtml = new StringBuilder();
-        string rawTeam = "";
-
-        if (@hasTeams == true)
-        {
-            //get specification attr list with teams
-            //foreach specAttr, ex.professional team, college team, conference etc
-            var specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-
-            teamHtml.Append("<main>");
-
-            //tabs
-            for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-            {
-                IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-                SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-                                
-                teamHtml.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
-                teamHtml.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + specificationAttr.Name + "</label>");
-               
-            }
-
-            //tab content
-            for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-            {
-                IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-                SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-                ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;                              
-
-                teamHtml.Append("<section id='content" + (i + 1) + "'><p>");
-
-                int cur = 1;
-                foreach (var option in optionList)
-                {
-                    
-                    if (cur % 8 == 0)
-                    {
-                        teamHtml.Append("<p class='inner-team-list'>");
-                    }
-                    else
-                    {
-                        teamHtml.Append("<a class='team-from-list' href='#'>" + option.Name + "</a><br />");
-                    }
-                    if (cur % 8 == 7)
-                    {
-                        teamHtml.Append("</p>");
-                    }
-
-                    cur++;
-
-                }
-                
-                teamHtml.Append("</section>");
-                //teamHtml.Append("<br />");
-
-            }
-
-            teamHtml.Append("</main>");
-
-
-            rawTeam = teamHtml.ToString();
-                        
-        }
-    }
-
-    
-    <div id="selectTeamDiv" style="display: none">
-        <p id="selectedTeam"></p><a id="changeSelectedTeam">(Change)</a>
-    </div>
-    
     <div>@*salewidgethere*@</div>
     <div id="gateway-body" style="background-color : @backgroundColor;">
         <div id="gateway-body-inner">
@@ -235,13 +161,7 @@
             </p>
 
             <div id="gateway-inner">          
-
-                <div id="gatewayLayersContainer">
-                    @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
-                    <div id="teamSelect">
-                        @Html.Raw(rawTeam);
-                    </div>
-
+                <div id="gatewayLayersContainer">                  
                     <div id="gatewayWYSIWYG" class="">
                         @if (!String.IsNullOrWhiteSpace(Model.Description))
                         {
@@ -251,194 +171,81 @@
                             </p>
                         }
                     </div>
-
-                    @* foreground image from db *@
                     <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
-                    @* background images from db *@
                     <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>               
-                </div>
-            
+                </div>           
             </div>
             <p id="gatewayBottomText">
-                @bottomText;
+                @bottomText
             </p>
         </div>
     </div>
 
-@{
 
-    if (@hasTeams == true)
-    {
-        //way for js to know gateway is a team page version
-        <input id="hasTeam" type="hidden" value="true" />
-    }
-
-        
-}
-        <script>
+    <script>
             
-            $(document).ready(function () {
-                            
-                //hide gateway show team box
-                if ($("#hasTeam").val() == "true") {
-                    $("#gatewayWYSIWYG").hide();
-                    $("#teamSelect").show();
-                    $("#label1").click();
-                } else {
-                    $("#teamSelect").remove();
-                }
+        $(document).ready(function () {                          
+                
+            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
+            $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
+                               
+            var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
+            CustomResize();
+                
+            obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+            CustomResize();
 
-                $(".team-from-list").click(function () {
-                    
-                    $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
+            function CustomResize() {
+                $(window).resize(obj, function () {
+                                                                       
+                    var $c = $('.container'),
+                        $w = $(obj.outer),
+                        totalWidth = $('.footer').outerWidth(),
+                        wellWidth = $c.outerWidth(),
+                        diff = totalWidth - wellWidth,
+                        marg = -Math.floor(diff / 2) + 'px';
+                    $w.each(function () {
+                        $(this).css({
+                            'margin-left': marg,
+                            'margin-right': marg
+                        });
+                    })
 
-                    
-                    @* cache team selection, session *@
-                    SetTeam($(this).text());
+                    $(obj.inner).width($(".container").width());
 
-                    $("#gatewayWYSIWYG").show();
-                    $("#teamSelect").hide();
-                    $("#selectTeamDiv").show();
-
-                    PageBodyResizeForMultipleProductRows("sports-wysiwyg");
-
-                })
-
-                $("#changeSelectedTeam").click(function () {
-                    $("#gatewayWYSIWYG").hide();
-                    $("#teamSelect").show();
-                    $("#selectTeamDiv").hide();
-                    PageBodyResizeForMultipleProductRows("");
-                })
-
-                $("#cssChange").click(function() {
-
-                    //console.log("cur h1 test");
-
-                    var type = $("#gatewayH1").html();
-
-                    //console.log(type);
-
-                    switch (type) {
-                        case "Specialty Magnets":
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
-                            $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
-                            break;
-
-                            
-
-
-                        default:
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
-                            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
-                            break;
-                    }
                 });
 
-
-               
-                var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
-                CustomResize();
+                $(window).resize();
+            }                              
                 
-                obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
-                CustomResize();
+            $("#gateway-inner").height($("#gateway-body").height());
+                
+            $("#cssChange").click();
+                
+            //remove topic header
+            $("#chartWrap div.panel-heading").remove();
+                
+            $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
 
-                function CustomResize() {
-                    $(window).resize(obj, function () {
-                                                                       
-                        var $c = $('.container'),
-                            $w = $(obj.outer),
-                            totalWidth = $('.footer').outerWidth(),
-                            wellWidth = $c.outerWidth(),
-                            diff = totalWidth - wellWidth,
-                            marg = -Math.floor(diff / 2) + 'px';
-                        $w.each(function () {
-                            $(this).css({
-                                'margin-left': marg,
-                                'margin-right': marg
-                            });
-                        })
-
-                        $(obj.inner).width($(".container").width());
-
-                    });
-
-                    $(window).resize();
-                }
-
-                function PageBodyResizeForMultipleProductRows(currentWYSIWYG) {
-                    if (currentWYSIWYG != null && currentWYSIWYG != "") {
-                        //save original height incase team is changed
-                        $("#originalBodyHeight").val($("#gateway-body").height());
-                        //change body height for multiple row products
-                        var newHeight = parseInt($("." + currentWYSIWYG).height() + 180) + "px";
-                        $("#gateway-body").height(newHeight);
-                        $("#gateway-inner").height(newHeight);
-
-
-                        if ($("#gateway-body").height() > 900) {
-                            //football foreground image adjust, check if wysiwyg height is greater than a single rows height.
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports-multirow");
-                        }
-                        
-                    } else {
-                        $("#gateway-body").height($("#originalBodyHeight").val());
-                        $("#gateway-inner").height($("#originalBodyHeight").val());
-                        
-                        $("#gatewayForegroundImage").removeClass("gateway-foreground-sports-multirow");
-                    }
+            function HeightHandle() {
                     
-                }
+                console.log("height handle called");
 
-                function SetTeam(team) {                   
-                    $(".team-handle").each(function () {
-                        //replace space with dash
-                        var current = $(this).attr("href");
-                        var teamNoSpace = team.replace(/\s+/g, '-');
-
-                        if(current.indexOf("?") >= 0){
-                            var splitURL = current.split('?');
-                            $(this).attr("href", splitURL[0] + "?team=" + teamNoSpace);
-                            console.log("split ver: " + splitURL[0] + "?team=" + teamNoSpace);
-
-                        }else{
-                            $(this).attr("href", current + "?team=" + teamNoSpace);
-                            console.log("new ver: " + current + "?team=" + teamNoSpace);
-                        }
-                        
-                    })                    
-                }
-                
-                $("#gateway-inner").height($("#gateway-body").height());
-                
-                $("#cssChange").click();
-                
-                //remove topic header
-                $("#chartWrap div.panel-heading").remove();
-                
-                $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
-
-                function HeightHandle() {
+                var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
                     
-                    console.log("height handle called");
+                $("#gateway-body").height(newHeight);
+                $("#gateway-inner").height(newHeight);
+            }
 
-                    var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
-                    
-                    $("#gateway-body").height(newHeight);
-                    $("#gateway-inner").height(newHeight);
-                }
-
-                $(window).resize(HeightHandle);
+            $(window).resize(HeightHandle);
 
 
 
-                //992px switches to mobileish screen
+            //992px switches to mobileish screen
 
-            });
-
-
-
-        </script>
+        });
+        
+    </script>
 
 
 @{
@@ -453,11 +260,11 @@
         </div>
     }
 
-    <div id="videoAndQuantityCalculatorWrap">
+    @*<div id="videoAndQuantityCalculatorWrap">
         <div id="innerVidAndWQtyCalc">
             @Html.Action("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
         </div>
-    </div>
+    </div>*@
 
     <div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
@@ -479,56 +286,11 @@
 
 
 }
-
-
-
    
-@*<div class="category-section">
-    <div class="row">
-        @*<div class="col-sm-6">
-<img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
-</div>*@
-        @*<div class="col-sm-6">
-            <div class="row">
-                <div class="col-sm-6 small-category"><img src="/Themes/SimplexTheme/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
-                <div class="col-sm-6 small-category"><img src="/Themes/SimplexTheme/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
-                <div class="col-sm-6"><img src="/Themes/SimplexTheme/Content/images/categoryimg3.jpg" width="269" height="173" alt="" /></div>
-                <div class="col-sm-6"><img src="/Themes/SimplexTheme/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
-            </div>
-        </div>*@
-    @*</div>*@
-@*</div>*@
-    
-@*<div class="listing-page">
-    <div class="sidebar col-md-3">
-        <div class=" sidebar-title">
-            <h3>Refine Your Choices</h3>
-            <a href="#">Clear</a>
-        </div>
-        @if (IsSectionDefined("left"))
-        {
-            @RenderSection("left")
-        }
-        else
-        {
-            @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
-            
-            @*@Html.Widget("left_side_column_after_category_navigation")
-            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-            @Html.Action("VendorNavigation", "Catalog")*@
-            @*@Html.Action("PopularProductTags", "Catalog")*@
-            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
-            @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
-        }
-    </div>*@
-    <div class="side-content col-md-9">
-        @*@Html.Widget("main_column_before")*@
-        @RenderBody()
-        @*@Html.Widget("main_column_after")*@
-    </div>
-@*</div>*@
+
+<div class="side-content col-md-9">  
+    @RenderBody()    
+</div>
 
 
 

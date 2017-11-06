@@ -113,6 +113,51 @@
     z-index: 4;*/
         }
 
+
+        #gatewayWYSIWYG .Baseball-QuickCard .detailimg {
+                position: absolute;
+                top: 14px;
+                left: 63px;
+                width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-QuickCard {
+            width : 243px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class .detailimg {
+                    position: relative;
+                    top: 43px;
+                    left: -20px;
+                    width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class {
+            width : 243px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet .detailimg {
+                    position: relative;
+                    top: 14px;
+                    left: -20px;
+                    width: 84px;
+        }
+        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet {
+            width : 241px;
+        }
+
+
+        #gatewayWYSIWYG .Baseball-QuickStix .detailimg {
+                position: absolute;
+                top: 14px;
+                left: 63px;
+                width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-QuickStix {
+            width : 241px;
+        }
+
         .regular-wysiwyg {
             position: relative;
             display: block;
@@ -133,7 +178,7 @@
             /*top: 11px;
     left: 67px;*/
             width: 85%;
-            /*top: -35%;*/
+            top: 20px;
             z-index: 5;
         }
 
@@ -188,9 +233,16 @@
 
         .gateway-foreground-sports {
             position: relative;
-            top: -881px;
-            left: 785px;
-            z-index: 2;
+            top: -880px;
+            left: 750px;
+            z-index: 3;
+        }
+
+        .gateway-foreground-sports-team {
+            position: relative;
+            top: -800px;
+            left: 750px;
+            z-index: 3;
         }
 
         .gateway-foreground-sports-multirow {
@@ -374,7 +426,10 @@ label[for*='4']:before { content: '\f1a9'; }*/
         #tab1:checked ~ #content1,
         #tab2:checked ~ #content2,
         #tab3:checked ~ #content3,
-        #tab4:checked ~ #content4 {
+        #tab4:checked ~ #content4,
+        #tab5:checked ~ #content5,
+        #tab6:checked ~ #content6,
+        #tab7:checked ~ #content7 {
             display: block;
         }
 
