@@ -1,0 +1,9 @@
+Group: Misc
+FriendlyName: GBS Customer
+SystemName: Customer.GBS
+Version: 1.00
+SupportedVersions: 3.90
+Author: Robert Borgeson
+DisplayOrder: 1
+FileName: Nop.Plugin.Customer.GBS.dll
+Description: GBS Customer Overrides

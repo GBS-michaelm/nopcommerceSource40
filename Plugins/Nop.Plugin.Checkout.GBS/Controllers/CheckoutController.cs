@@ -423,24 +423,18 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     ModelState.AddModelError("", error);
                 }
 
-                Match match = null;
-
                 if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
                 {
                     Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
-                    match = regex.Match(model.NewAddress.ZipPostalCode);
+                    Match match = regex.Match(model.NewAddress.ZipPostalCode);
                     if (!match.Success)
                     {
-                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
                     }
                 }
-                
 
                 if (ModelState.IsValid)
                 {
-                    
-                    model.NewAddress.ZipPostalCode = match.ToString();
-                                   
                     //try to find an address with the same values (don't duplicate records)
                     var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
                         model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
@@ -448,6 +442,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                         model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
                         model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
                         model.NewAddress.CountryId, customAttributes);
+
                     if (address == null)
                     {
                         address = model.NewAddress.ToEntity();
@@ -460,13 +455,12 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                             address.StateProvinceId = null;
                         _workContext.CurrentCustomer.Addresses.Add(address);
                     }
+
                     _workContext.CurrentCustomer.ShippingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     _baseNopCheckoutController.SelectShippingMethod(form["shipType"]);
 
-                    
-                        TempData["ShippingAddressId"] = address.Id;
-                    
+                    TempData["ShippingAddressId"] = address.Id;
                     
                     return RedirectToRoute("CheckoutShippingAddress");
                     //return RedirectToRoute("CheckoutPaymentMethod");
