@@ -175,7 +175,7 @@
                     <h1>Change your subscriptions</h1>
                     <h2>
                         You are subscribed as <span>@Model.ContactPref.emailAddress</span>. <br>
-                        Choose to only receive the types of emails you want to receive.
+                        Choose to only receive the types of emails you want to receive...
                     </h2>
                     <table width="775" border="0" align="center" cellpadding="0" cellspacing="0">
                         <tbody>
@@ -217,7 +217,7 @@
                                                 <div class="radio">
                                                     @if (item.Master == true)
                                                     {
-                                                        if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
+                                                        if (Model.masterFound == true && Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
                                                         {
                                                             <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
                                                         }
@@ -228,7 +228,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (item.listSubscribeStatus == true)
+                                                        if (item.listFound == true && item.listSubscribeStatus == true)
                                                         {
                                                             <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
                                                         }
@@ -245,7 +245,7 @@
                                         {
                                             <td width="85" align="center" valign="top" style="padding:0px;">
                                                 <div class="radio">
-                                                    @if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
+                                                    @if (Model.masterFound == true && Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
                                                     {
                                                     <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" checked />
                                                     }
@@ -271,7 +271,7 @@
                                                 <div class="radio">
                                                     @if (item.Master == true)
                                                     {
-                                                        if (Model.ContactPref.subscribeStatus == "unsubscribed")
+                                                        if (Model.masterFound == true && Model.ContactPref.subscribeStatus == "unsubscribed")
                                                         {
                                                             <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
                                                         }
@@ -282,7 +282,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (item.listSubscribeStatus == false)
+                                                        if (item.listFound == true && item.listSubscribeStatus == false)
                                                         {
                                                             <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
                                                         }
@@ -339,7 +339,7 @@
                                                 <div class="radio">
                                                     @if (item.Master == true)
                                                     {
-                                                        if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
+                                                        if (Model.partnerFound == true && Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == false)
                                                         {
                                                             <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
                                                         }
@@ -350,7 +350,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (item.listSubscribeStatus == true)
+                                                        if (item.listFound == true && item.listSubscribeStatus == true)
                                                         {
                                                             <input type="radio" id="@item.Id+SendWeekly" name="@item.Id" value="sendweekly" checked />
                                                         }
@@ -367,7 +367,7 @@
                                         {
                                             <td width="85" align="center" valign="top" style="padding:0px;">
                                                 <div class="radio">
-                                                    @if (Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
+                                                    @if (Model.partnerFound == true && Model.ContactPref.subscribeStatus == "subscribed" && item.listSubscribeStatus == true)
                                                     {
                                                         <input type="radio" id="@item.Id+SendMonthly" name="@item.Id" value="sendmonthly" checked />
                                                     }
@@ -393,7 +393,7 @@
                                                 <div class="radio">
                                                     @if (item.Master == true)
                                                     {
-                                                        if (Model.ContactPref.subscribeStatus == "unsubscribed")
+                                                        if (Model.partnerFound == true && Model.ContactPref.subscribeStatus == "unsubscribed")
                                                         {
                                                             <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
                                                         }
@@ -404,7 +404,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (item.listSubscribeStatus == false)
+                                                        if (item.listFound == true && item.listSubscribeStatus == false)
                                                         {
                                                             <input type="radio" id="@item.Id+Unsubscribe" name="@item.Id" value="unsubscribe" checked />
                                                         }

@@ -23,8 +23,14 @@ namespace Nop.Plugin.Widgets.Marketing.EmailPref.Models
             get { return _listSubscribeStatus; }
             set { _listSubscribeStatus = value; }
         }
-
         private bool _listSubscribeStatus = false;
+
+        public bool listFound
+        {
+            get { return _listFound; }
+            set { _listFound = value; }
+        }
+        private bool _listFound = false;
 
     }
 
@@ -35,6 +41,19 @@ namespace Nop.Plugin.Widgets.Marketing.EmailPref.Models
         public MarketingContactModel ContactPref { get; set; }
         public string subscribeStatusMaster { get; set; }
         public string subscribeStatusPartner { get; set; }
+        public bool masterFound
+        {
+            get { return _masterFound; }
+            set { _masterFound = value; }
+        }
+        private bool _masterFound = false;
+
+        public bool partnerFound
+        {
+            get { return _partnerFound; }
+            set { _partnerFound = value; }
+        }
+        private bool _partnerFound = false;
 
         public EmailPreferencesModel()
         {
