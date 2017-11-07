@@ -62,6 +62,7 @@ namespace Nop.Services.Custom.Orders
         private readonly CcSettings _customersCanvasSettings;
         private readonly ILogger _logger;
         private readonly IProductAttributeFormatter  _productAttributeFormatter;
+        private readonly HttpContextBase _httpContext;
 
 
         public GBSOrderProcessingService(
@@ -109,7 +110,8 @@ namespace Nop.Services.Custom.Orders
             CurrencySettings currencySettings,
             ICountryService countryService,
             IStateProvinceService stateProviceService,
-            ICustomNumberFormatter customNumberFormatter) 
+            ICustomNumberFormatter customNumberFormatter,
+            HttpContextBase httpContext) 
             : base
             (orderService, 
                   webHelper, 
@@ -163,6 +165,7 @@ namespace Nop.Services.Custom.Orders
             this._customersCanvasSettings = settingService.LoadSetting<CcSettings>();
             this._logger = logger;
             this._productAttributeFormatter = productAttributeFormatter;
+            this._httpContext = httpContext;
         }
 
         private void SaveGBSOrderID(string gbsOrderId, int NOPOrderID)
@@ -174,6 +177,9 @@ namespace Nop.Services.Custom.Orders
             PlaceOrderResult myResult = null;
             CustomTokenProvider orderProv = null;
             string gbsOrderId = null;
+
+       
+
             var customer = _workContext.CurrentCustomer;
             try
             {
@@ -212,13 +218,18 @@ namespace Nop.Services.Custom.Orders
 
                     if (myResult.PlacedOrder != null)
                     {
+
+                        string addPhoneNum = _httpContext.Session["customerPhoneNumber"].ToString() == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                        _httpContext.Session.Remove("customerPhoneNumber");
+
+
                         Dictionary<string, string> paramDic = new Dictionary<string, string>();
                         paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
                         paramDic.Add("@gbsOrderID", gbsOrderId);
-
+                        paramDic.Add("@contactPhone", addPhoneNum);
                         //string insert = "INSERT INTO tblNOPOrder (nopID, gbsOrderID) ";
                         //insert += "VALUES ('" + myResult.PlacedOrder.Id + "', '" + gbsOrderId + "')";
-                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
+                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@contactPhone";
                         manager.SetParameterizedQueryNoData(insert, paramDic);
 
                         ICcService ccService = EngineContext.Current.Resolve<ICcService>();
@@ -370,10 +381,10 @@ namespace Nop.Services.Custom.Orders
                             Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
                             paramDicEx.Add("@nopOrderItemID", item.OrderItemID.ToString());
                             paramDicEx.Add("@ccID", item.ccID.ToString());
-
-                            //insert = "INSERT INTO tblNOPOrderItem (nopOrderItemID, ccID) ";
-                            //insert += "VALUES ('" + item.OrderItemID + "', '" + item.ccID + "')";
-                            insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
+                            
+                           //insert = "INSERT INTO tblNOPOrderItem (nopOrderItemID, ccID) ";
+                           //insert += "VALUES ('" + item.OrderItemID + "', '" + item.ccID + "')";
+                           insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
                             manager.SetParameterizedQueryNoData(insert, paramDicEx);
 
                         }
@@ -692,7 +703,12 @@ namespace Nop.Services.Custom.Orders
                 string CustomerIp = HttpContext.Current.Request.UserHostAddress != null ? HttpContext.Current.Request.UserHostAddress : String.Empty;
                 string CardType = paymentRequest.CreditCardType != null ? paymentRequest.CreditCardType : String.Empty;
                 string CardName = paymentRequest.CreditCardName != null ? paymentRequest.CreditCardName : String.Empty;
-                string MaskedCreditCardNumber = paymentRequest.CreditCardNumber != null ? string.Format("************{0}", paymentRequest.CreditCardNumber.Trim().Substring(12, 4)) : String.Empty;
+                string MaskedCreditCardNumber = String.Empty;
+                try
+                {
+                    MaskedCreditCardNumber = !String.IsNullOrEmpty(paymentRequest.CreditCardNumber) ? string.Format("************{0}", paymentRequest.CreditCardNumber.Trim().Substring(12, 4)) : String.Empty;
+                }
+                catch (Exception ex1) { }
                 string CardExpirationMonth = paymentRequest.CreditCardExpireMonth.ToString();
                 string CardExpirationYear = paymentRequest.CreditCardExpireYear.ToString();
                 string ShippingMethod = orderContainer.ShippingMethodName != null ? orderContainer.ShippingMethodName : String.Empty;
@@ -707,7 +723,7 @@ namespace Nop.Services.Custom.Orders
                 if (String.IsNullOrEmpty(CardType))
                 {
                     string firstDigit = paymentRequest.CreditCardNumber;
-                    firstDigit = firstDigit.Substring(0, firstDigit.Length - (firstDigit.Length - 1));
+                    firstDigit = !String.IsNullOrEmpty(firstDigit) ? firstDigit.Substring(0, firstDigit.Length - (firstDigit.Length - 1)) : "U";
                     switch (firstDigit)
                     {
                         case "4":
@@ -841,7 +857,6 @@ namespace Nop.Services.Custom.Orders
         public int ID { get; set; }
         public int OrderItemID { get; set; }
         public int ccID { get; set; }
-
     }
 
 

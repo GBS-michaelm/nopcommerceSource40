@@ -43,6 +43,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI.WebControls;
 using Nop.Web.Factories;
+using System.Text.RegularExpressions;
 
 namespace Nop.Plugin.Checkout.GBS.Controllers
 {
@@ -280,8 +281,6 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-
-
                 ActionResult baseAR = _baseNopCheckoutController.Index();
                 return RedirectToRoute("CheckoutShippingAddress");
             }
@@ -326,12 +325,23 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
         public ActionResult SelectShippingAddress(int addressId, string shipType)
         {
+            TempData["ShippingAddressId"] = addressId;
+            TempData["ShippingType"] = shipType;
+
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
 
                 ActionResult selectShipping = _baseNopCheckoutController.SelectShippingAddress(addressId);
-                ActionResult selectShippingBase = _baseNopCheckoutController.SelectShippingMethod(shipType);
+
+                if (!string.IsNullOrEmpty(shipType))
+                {
+                    ActionResult selectShippingBase = _baseNopCheckoutController.SelectShippingMethod(shipType);
+                }
+                else
+                {
+                    return RedirectToRoute("CheckoutShippingMethod");
+                }                
                 
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
@@ -343,11 +353,12 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         [ValidateInput(false)]
         public ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
+          
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
                 //validation
-                
+
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
@@ -396,6 +407,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, selectedPoint, _storeContext.CurrentStore.Id);
 
+                        TempData["ShippingAddressId"] = "LocalPickup";
+
                         return RedirectToRoute("CheckoutPaymentMethod");
                     }
 
@@ -411,8 +424,24 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     ModelState.AddModelError("", error);
                 }
 
+                Match match = null;
+
+                if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
+                {
+                    Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
+                    match = regex.Match(model.NewAddress.ZipPostalCode);
+                    if (!match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
+                    }
+                }
+                
+
                 if (ModelState.IsValid)
                 {
+                    
+                    model.NewAddress.ZipPostalCode = match.ToString();
+                                   
                     //try to find an address with the same values (don't duplicate records)
                     var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
                         model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
@@ -436,7 +465,12 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     _baseNopCheckoutController.SelectShippingMethod(form["shipType"]);
 
-                    return RedirectToRoute("CheckoutPaymentMethod");
+                    
+                        TempData["ShippingAddressId"] = address.Id;
+                    
+                    
+                    return RedirectToRoute("CheckoutShippingAddress");
+                    //return RedirectToRoute("CheckoutPaymentMethod");
                 }
 
 
@@ -446,7 +480,12 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     selectedCountryId: model.NewAddress.CountryId,
                     overrideAttributesXml: customAttributes);
                 return View(model);
+
+
+                //return _baseNopCheckoutController.NewShippingAddress(model, form);
+
             }
+
             return _baseNopCheckoutController.NewShippingAddress(model, form);
 
         }
@@ -1003,9 +1042,8 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         {
             var model = new CheckoutShippingMethodModel();
 
-            var getShippingOptionResponse = _shippingService
-                .GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer,
-                "", _storeContext.CurrentStore.Id);
+            var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, "", _storeContext.CurrentStore.Id);
+            
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
@@ -1242,7 +1280,15 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             }
             else
             {
-                ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+                //if (!string.IsNullOrEmpty(HttpContext.Request.QueryString["addressid"]))
+                //{
+                //    int addressId = Int32.Parse(HttpContext.Request.QueryString["addressid"]);
+                //    TempData["ShippingAddressId"] = addressId;
+                //    _baseNopCheckoutController.SelectShippingAddress(addressId);
+
+                //}
+                
+                //ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
             }
 
             //allow pickup in store?
@@ -1321,6 +1367,33 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                 model.ExistingAddresses.Add(addressModel);
             }
 
+
+            if (!string.IsNullOrEmpty(HttpContext.Request.QueryString["addressid"]))
+            {
+                int addressId = Int32.Parse(HttpContext.Request.QueryString["addressid"]);
+                TempData["ShippingAddressId"] = addressId;
+                _baseNopCheckoutController.SelectShippingAddress(addressId);
+
+            }else if(TempData.Peek("ShippingAddressId") != null && TempData.Peek("ShippingAddressId").ToString() == "LocalPickup")
+            {
+                //all good
+            }
+            else if (TempData.Peek("ShippingAddressId") != null && Int32.Parse(TempData.Peek("ShippingAddressId").ToString()) > 0)
+            {
+                _baseNopCheckoutController.SelectShippingAddress(Int32.Parse(TempData.Peek("ShippingAddressId").ToString()));
+            }
+            else
+            {
+                if (addresses.Count > 0)
+                {
+                    TempData["ShippingAddressId"] = addresses[0].Id;
+                    _baseNopCheckoutController.SelectShippingAddress(addresses[0].Id);
+                }
+            }
+
+            ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+
+            
             //new address
             model.NewAddress.CountryId = selectedCountryId;
             _addressModelFactory.PrepareAddressModel(model.NewAddress,

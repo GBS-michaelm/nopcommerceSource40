@@ -123,10 +123,13 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-   <Content Include="Views\OrderGBS\UpdateCanvasProduct.cshtml">
+    <Content Include="Views\OrderGBS\UpdateCanvasProduct.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\OrderGBS\UpdateCanvasProductComplete.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\OrderGBS\AddPhoneNumber.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
