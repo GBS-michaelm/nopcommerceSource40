@@ -1714,6 +1714,9 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\iframe-custom-submit.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
@@ -2987,6 +2990,12 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\GluonProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\ChiliProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\CanvasProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

@@ -120,7 +120,11 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                            "estimateshippingtotal/",
                            new { controller = "Checkout", action = "EstimateShippingTotal" },
                            new[] { "Nop.Plugin.Checkout.GBS.Controllers" });
-           
+
+            routes.MapLocalizedRoute("GBSSubmitItem",
+                           "shoppingcart/submititem",
+                           new { controller = "GBSShoppingCart", action = "SubmitItem" },
+                           new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
 
 
 

@@ -65,6 +65,7 @@
         <iframe src="@T("hom.url")@page" style="height:1250px; width:100%;"></iframe>
     </div>
 }
+<input id="Button1" type="button" value="button" />
  <!--product attributes-->
 <script type="text/javascript">
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -72,7 +73,7 @@
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
     var imageUrl = '';
     var check = true;
-
+ 
     // Listen to message from child window
     eventer(messageEvent, function (e) {
         //if (JSON.parse(e.data).success == true) {
@@ -82,8 +83,21 @@
         //}
     }, false);
     function addToCart(val) {
+        console.log(JSON.parse(val));
         $(".CustomImgUrl").val("http://gluon.houseofmagnets.com" + JSON.parse(val).preview);
         AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = TempData["productid"], shoppingCartTypeId = TempData["cartid"] })', '#product-attributes-form');
         return false;
     }
+</script>
+<script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // When RequireJS-compatible modules are inserted through <script>, you have to add require.js reference only in the end. That's why we dynamically load it only when the page is loaded completely.
+        var json = { test: "test", test2: "test2" };
+        $("#Button1").SubmitItem(json);
+
+
+
+    });
 </script>

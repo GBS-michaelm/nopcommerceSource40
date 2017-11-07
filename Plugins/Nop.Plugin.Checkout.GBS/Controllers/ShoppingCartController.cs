@@ -44,6 +44,10 @@ using Newtonsoft.Json;
 using Nop.Web.Framework.Mvc;
 using Nop.Services.Shipping.Date;
 using Nop.Web.Factories;
+using System.Text;
+using Nop.Plugin.Checkout.GBS.Models;
+using Newtonsoft.Json.Linq;
+using Nop.Plugin.Checkout.GBS.Serialization;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -60,7 +64,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IProductService _productService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-
+        private readonly IShoppingCartService _cartService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly ISettingService _settingService;
+        private readonly IDownloadService _downloadService;
         #endregion
 
         #region Constructors
@@ -112,6 +119,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
             IPluginFinder pluginFinder,
+            IShoppingCartService cartService,
+            ISettingService settingService,
             CustomerSettings customerSettings) : base(
                   shoppingCartModelFactory,
                     productService,
@@ -153,11 +162,16 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._priceFormatter = priceFormatter;
+            this._downloadService = downloadService;
+            this._productAttributeService = productAttributeService;
+            this._settingService = settingService;
+            this._cartService = cartService;
 
         }
 
         #endregion
 
+        
         [ChildActionOnly]
         public ActionResult GBSOrderTotals(bool isEditable)
         {
@@ -274,5 +288,266 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if we got here just return the base value;
             return base.ProductDetails_AttributeChange(productId, validateAttributeConditions, loadPicture, form);
         }
+        
+        #region Custom Submit Cart For Edit
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult SubmitItem(string jsonData)//int productId, string dataJson, int quantity, string optionsJson = "", string formOptions = "")
+        {
+            var product = _productService.GetProductById(2993);
+            var customer = _workContext.CurrentCustomer;
+
+
+            var attributesXml = GetProductAttributes(product, jsonData);
+
+            var warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: 1);
+
+            var cart = customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
+            return Json(new { status = "success" }); //itemId = createdItem.Id, designId = designId 
+        }
+
+        private Dictionary<string, SelectedOption> DeserializeOptions(string optionsJson)
+        {
+            var result = new Dictionary<string, SelectedOption>();
+            if (!string.IsNullOrEmpty(optionsJson))
+            {
+                var converter = new OptionValueConverter();
+                result = JsonConvert.DeserializeObject<Dictionary<string, SelectedOption>>(optionsJson, converter);
+            }
+            return result;
+        }
+
+
+        private string GetProductAttributes(Core.Domain.Catalog.Product product, string jsonData)//, string formOptions)
+        {
+            var productMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            
+           // _productAttributeParser.AddProductAttribute
+            //var productAttributeMappingCcId = productMappings.First(x => x.ProductAttributeId == ccSettings.CcIdAttributeId);
+            var optionsAttributesXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", "22", "TEST");
+            ////var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
+            ////optionsAttributesXml += formOptionsAttributeXml;
+
+            return "<Attributes>" +
+                                 optionsAttributesXml +
+                                 "</Attributes>";//productAttributeMappingCcId.Id, designId);
+
+        }
+       
+        private string GetOptionsAttributes(Core.Domain.Catalog.Product product, Dictionary<string, SelectedOption> options)
+        {
+            var result = new StringBuilder();
+            foreach (var option in options)
+            {
+                var val = option.Value;
+                var attrId = val.Option.Id;
+
+                if (val.Value != null && val.Value.Any())
+                {
+                    result.AppendFormat("<ProductAttribute ID=\"{0}\">", attrId);
+                    foreach (var selectedOption in val.Value)
+                    {
+                        result.AppendFormat("<ProductAttributeValue><Value>{0}</Value></ProductAttributeValue>", "TEST");
+                    }
+                    result.AppendLine("</ProductAttribute>");
+                }
+            }
+
+            return result.ToString();
+        }
+
+
+        private string GetFormOptionsAttributesXml(Product product, string formOptions)
+        {
+            var nameValueCollection = new System.Collections.Specialized.NameValueCollection();
+            var jsonFormOptions = JObject.Parse(formOptions);
+            if (jsonFormOptions != null && jsonFormOptions.Root != null)
+            {
+                var root = jsonFormOptions.Root;
+                if (root.First != null)
+                {
+                    var item = root.First;
+                    while (item != null)
+                    {
+                        var name = item.Path;
+                        var value = item.First.Value<string>();
+                        nameValueCollection.Add(name, value);
+                        item = item.Next;
+                    }
+                    var formCollection = new FormCollection(nameValueCollection);
+                    var attributesXml = ParseProductAttributes(product, formCollection);
+                    attributesXml = attributesXml.Replace("<Attributes>", "").Replace("</Attributes>", "");
+                    return attributesXml;
+                }
+            }
+            return "";
+        }
+
+        private string ParseProductAttributes(Product product, FormCollection form)
+        {
+            string attributesXml = "";
+
+            #region Product attributes
+
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in productAttributes)
+            {
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                foreach (var item in ctrlAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in productAttributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                }
+            }
+
+            #endregion
+
+            #region Gift cards
+
+            if (product.IsGiftCard)
+            {
+                string recipientName = "";
+                string recipientEmail = "";
+                string senderName = "";
+                string senderEmail = "";
+                string giftCardMessage = "";
+                foreach (string formKey in form.AllKeys)
+                {
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderName", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.Message", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        giftCardMessage = form[formKey];
+                        continue;
+                    }
+                }
+
+                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+            }
+
+            #endregion
+
+            return attributesXml;
+        }
+        #endregion
     }
 }
