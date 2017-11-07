@@ -96,8 +96,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.BreadCrumb.GBS",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.BusinessLogic.GBS", "Plugins\Nop.Plugin.BusinessLogic.GBS\Nop.Plugin.BusinessLogic.GBS.csproj", "{A6A1624E-D525-4BFF-930C-5BB19DD6E96A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries (2)", "Libraries (2)", "{E5A0D337-6EBF-43B0-BEA5-A0889B114456}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{637E837F-FCE6-4CC6-BCA1-72C467F4C94E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests (2)", "Tests (2)", "{0785BBF9-624D-44A5-954F-07C7A64E3530}"
