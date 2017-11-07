@@ -20,7 +20,4 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
 
     }
 
-
-    //ToString("f1")
-
 }

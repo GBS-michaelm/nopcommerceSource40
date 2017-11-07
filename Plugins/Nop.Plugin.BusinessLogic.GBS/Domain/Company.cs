@@ -73,7 +73,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
             companyDic.Add("@CategoryId", companyId);
 
-            string companyDataQuery = "EXEC usp_SelectGBSCompanyData @CategoryId";
+            string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
             DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
             if(companyDataView.Count > 0)
