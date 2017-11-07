@@ -69,7 +69,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
 
             var model = new EmailPreferencesModel();
             model.ContactPref = marketingContact;
-
+            model.masterFound = true;
             model.subscribeStatusMaster = model.ContactPref.subscribeStatus;
 
             DBManager dbmanager = new DBManager();
@@ -94,13 +94,18 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
                     getList.Unsubscribe = (bool)dRow["Unsubscribe"];
                     getList.Master = (bool)dRow["Master"];
                     getList.ListWebsite = dRow["ListWebsite"].ToString();
-                    getList.Active = (bool)dRow["Active"];
 
                     foreach (MarketingListModel item in model.ContactPref.marketingLists)
                     {
                         if (item.name == getList.SubListName)
                         {
                             getList.listSubscribeStatus = true;
+                            getList.listFound = true;
+                        }
+                        else if (item.name == getList.UnSubListName)
+                        {
+                            getList.listSubscribeStatus = false;
+                            getList.listFound = true;
                         }
                     }
 
@@ -108,18 +113,31 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
                 }
             }
 
-            MarketingContactModel marketingContact2 = marketingClient.getMarketingContact(_gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password, System.Web.HttpContext.Current.Request.QueryString["email"], "NCC");
+            MarketingContactModel marketingContact2 = marketingClient.getMarketingContact(_gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password, Email, "NCC");
             if (marketingContact2.error)
             {
                 var modelError = new EmailPreferencesErrorModel();
                 modelError.ErrorMessage = marketingContact2.errorMessage;
 
-                return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                if (modelError.ErrorMessage != "record not found")
+                {
+                    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                }
             }
 
             model.ContactPref = marketingContact2;
 
+
             model.subscribeStatusPartner = model.ContactPref.subscribeStatus;
+
+            if (marketingContact2.errorMessage == "record not found")
+            {
+                model.ContactPref.emailAddress = Email;
+            }
+            else
+            {
+                model.partnerFound = true;
+            }
 
             DBManager dbmanager2 = new DBManager();
             Dictionary<string, string> paramDic2 = new Dictionary<string, string>();
@@ -143,13 +161,18 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
                     getList2.Unsubscribe = (bool)dRow["Unsubscribe"];
                     getList2.Master = (bool)dRow["Master"];
                     getList2.ListWebsite = dRow["ListWebsite"].ToString();
-                    getList2.Active = (bool)dRow["Active"];
 
                     foreach (MarketingListModel item in model.ContactPref.marketingLists)
                     {
                         if (item.name == getList2.SubListName)
                         {
                             getList2.listSubscribeStatus = true;
+                            getList2.listFound = true;
+                        }
+                        else if (item.name == getList2.UnSubListName)
+                        {
+                            getList2.listSubscribeStatus = false;
+                            getList2.listFound = true;
                         }
                     }
 
@@ -166,142 +189,249 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             string EmailAddress = form["EmailAddress"].ToString();
             string WebsiteMaster = form["WebsiteMaster"].ToString();
             string WebsitePartner = form["WebsitePartner"].ToString();
-            bool IsSubscribedMaster = true;
-            if (form["SubscribedMaster"].ToString() == "unsubscribed")
-            {
-                IsSubscribedMaster = false;
-            }
-            bool IsSubscribedPartner = true;
-            if (form["SubscribedPartner"].ToString() == "unsubscribed")
-            {
-                IsSubscribedPartner = false;
-            }
 
             //--Setup Master-------------//
             string MasterID = form["MasterID"].ToString();
-            string SelectedListMaster = form[MasterID].ToString();
+            bool processMaster = true;
             bool unsubscribeMaster = false;
             bool sendMonthlyMaster = false;
-            if (SelectedListMaster == "sendmonthly")
+            if (Request.Form[MasterID] != null)
             {
-                sendMonthlyMaster = true;
+                string SelectedListMaster = form[MasterID].ToString();
+
+                if (SelectedListMaster == "sendmonthly")
+                {
+                    sendMonthlyMaster = true;
+                }
+                else if (SelectedListMaster == "unsubscribe")
+                {
+                    unsubscribeMaster = true;
+                }
             }
-            else if (SelectedListMaster == "unsubscribe")
+            else
             {
-                unsubscribeMaster = true;
+                processMaster = false;
             }
+            //----------------------------------//
 
             //--Setup Master Child-------------//
             string ChildID = form["ChildID"].ToString();
-            string SelectedListChild = form[ChildID].ToString();
+            bool processChild = true;
             bool unsubscribeChild = false;
             bool sendWeeklyChild = false;
-            if (SelectedListChild == "sendweekly")
+            if (Request.Form[ChildID] != null)
             {
-                sendWeeklyChild = true;
+                string SelectedListChild = form[ChildID].ToString();
+                
+                if (SelectedListChild == "sendweekly")
+                {
+                    sendWeeklyChild = true;
+                }
+                else if (SelectedListChild == "unsubscribe")
+                {
+                    unsubscribeChild = true;
+                }
             }
-            else if (SelectedListChild == "unsubscribe")
+            else
             {
-                unsubscribeChild = true;
+                processChild = false;
             }
+            //----------------------------------//
 
             //--Setup Partner-------------//
             string MasterPartnerID = form["MasterPartnerID"].ToString();
-            string SelectedListPartner = form[MasterPartnerID].ToString();
+            bool processPartner = true;
             bool unsubscribePartner = false;
             bool sendMonthlyPartner = false;
-            if (SelectedListPartner == "sendmonthly")
+            if (Request.Form[MasterPartnerID] != null)
             {
-                sendMonthlyPartner = true;
+                string SelectedListPartner = form[MasterPartnerID].ToString();
+
+                if (SelectedListPartner == "sendmonthly")
+                {
+                    sendMonthlyPartner = true;
+                }
+                else if (SelectedListPartner == "unsubscribe")
+                {
+                    unsubscribePartner = true;
+                }
             }
-            else if (SelectedListPartner == "unsubscribe")
+            else
             {
-                unsubscribePartner = true;
+                processPartner = false;
             }
+            //----------------------------------//
 
             //--Setup Partner Child-------------//
-
-
-
-            GBSMarketingServiceClient marketingClient = new GBSMarketingServiceClient();
-            MarketingContactModel marketingModel = new MarketingContactModel();
-            dynamic json = null;
-            marketingModel.emailAddress = EmailAddress.ToString();
-            marketingModel.providerId = EmailAddress.ToString();
+            //string ChildPartnerID = form["ChildPartnerID"].ToString();
+            //string SelectedListChildPartner = form[ChildPartnerID].ToString();
+            //bool unsubscribeChildPartner = false;
+            //bool sendWeeklyChildPartner = false;
+            //if (SelectedListChildPartner == "sendweekly")
+            //{
+            //    sendWeeklyChildPartner = true;
+            //}
+            //else if (SelectedListChildPartner == "unsubscribe")
+            //{
+            //    unsubscribeChildPartner = true;
+            //}
+            //----------------------------------//
 
 
             //--Master Call------------------------//
-            marketingModel.website = WebsiteMaster.ToString();
-            if (unsubscribeMaster == true)
+            if (processMaster == true)
             {
-                marketingModel.subscribeStatus = "unsubscribed";
-                marketingModel.invalid = "true";
-                marketingModel.forceSubscribe = "false";
-            }
-            else
-            {
-                marketingModel.subscribeStatus = "subscribed";
-                marketingModel.invalid = "false";
-                marketingModel.forceSubscribe = "true";
-            }
-            if (sendMonthlyMaster == true)
-            {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "true";
-            }
-            else
-            {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "false";
-            }
-            var responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
-            
-            json = JsonConvert.DeserializeObject<Object>(responseMaster);
-            if (json.success != true)
-            {
-                var modelError = new EmailPreferencesErrorModel();
-                modelError.ErrorMessage = "something went wrong with your submission";
+                GBSMarketingServiceClient marketingClient = new GBSMarketingServiceClient();
+                MarketingContactModel marketingModel = new MarketingContactModel();
+                MarketingListModel marketingListModel = new MarketingListModel();
+                dynamic json = null;
+                marketingModel.emailAddress = EmailAddress.ToString();
+                marketingModel.providerId = EmailAddress.ToString();
+                marketingModel.website = WebsiteMaster.ToString();
+                if (unsubscribeMaster == true)
+                {
+                    marketingModel.subscribeStatus = "unsubscribed";
+                    marketingModel.invalid = "true";
+                    marketingModel.forceSubscribe = "false";
+                }
+                else
+                {
+                    marketingModel.subscribeStatus = "subscribed";
+                    marketingModel.invalid = "false";
+                    marketingModel.forceSubscribe = "true";
+                }
+                if (sendMonthlyMaster == true)
+                {
+                    marketingListModel = new MarketingListModel();
+                    marketingListModel.name = "Exclude_optdowns";
+                    marketingListModel.subscribeStatus = "true";
+                    marketingModel.marketingLists.Add(marketingListModel);
+                }
+                else
+                {
+                    marketingListModel = new MarketingListModel();
+                    marketingListModel.name = "Exclude_optdowns";
+                    marketingListModel.subscribeStatus = "false";
+                    marketingModel.marketingLists.Add(marketingListModel);
+                }
 
-                return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                if (processChild == true)
+                {
+                    if (sendWeeklyChild == true)
+                    {
+                        marketingListModel = new MarketingListModel();
+                        marketingListModel.name = "Mad_Monday_subscribers_engaged";
+                        marketingListModel.subscribeStatus = "true";
+                        marketingModel.marketingLists.Add(marketingListModel);
+
+                        marketingListModel = new MarketingListModel();
+                        marketingListModel.name = "Exclude_Mad_Monday-bh";
+                        marketingListModel.subscribeStatus = "false";
+                        marketingModel.marketingLists.Add(marketingListModel);
+                    }
+                    else if (unsubscribeChild == true)
+                    {
+                        marketingListModel = new MarketingListModel();
+                        marketingListModel.name = "Mad_Monday_subscribers_engaged";
+                        marketingListModel.subscribeStatus = "false";
+                        marketingModel.marketingLists.Add(marketingListModel);
+
+                        marketingListModel = new MarketingListModel();
+                        marketingListModel.name = "Exclude_Mad_Monday-bh";
+                        marketingListModel.subscribeStatus = "true";
+                        marketingModel.marketingLists.Add(marketingListModel);
+                    }
+                }
+
+                var responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
+
+                json = JsonConvert.DeserializeObject<Object>(responseMaster);
+                if (json.success != true)
+                {
+                    var modelError = new EmailPreferencesErrorModel();
+                    modelError.ErrorMessage = "something went wrong with your submission";
+
+                    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                }
             }
+
 
             //--Partner Call-----------------------//
-            marketingModel.website = WebsitePartner.ToString();
-            if (unsubscribePartner == true)
+            if (processPartner == true)
             {
-                marketingModel.subscribeStatus = "unsubscribed";
-                marketingModel.invalid = "true";
-                marketingModel.forceSubscribe = "false";
-            }
-            else
-            {
-                marketingModel.subscribeStatus = "subscribed";
-                marketingModel.invalid = "false";
-                marketingModel.forceSubscribe = "true";
-            }
-            if (sendMonthlyPartner == true)
-            {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "true";
-            }
-            else
-            {
-                marketingModel.listName = "Exclude_optdowns";
-                marketingModel.listNameStatus = "false";
-            }
-            var responsePartner = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
+                GBSMarketingServiceClient marketingClient2 = new GBSMarketingServiceClient();
+                MarketingContactModel marketingModel2 = new MarketingContactModel();
+                MarketingListModel marketingListPartnerModel = new MarketingListModel();
+                dynamic json2 = null;
+                marketingModel2.emailAddress = EmailAddress.ToString();
+                marketingModel2.providerId = EmailAddress.ToString();
+                marketingModel2.website = WebsitePartner.ToString();
+                //marketingModel2.marketingLists.Clear();
+                if (unsubscribePartner == true)
+                {
+                    marketingModel2.subscribeStatus = "unsubscribed";
+                    marketingModel2.invalid = "true";
+                    marketingModel2.forceSubscribe = "false";
+                }
+                else
+                {
+                    marketingModel2.subscribeStatus = "subscribed";
+                    marketingModel2.invalid = "false";
+                    marketingModel2.forceSubscribe = "true";
+                }
+                if (sendMonthlyPartner == true)
+                {
+                    marketingListPartnerModel = new MarketingListModel();
+                    marketingListPartnerModel.name = "Exclude_optdowns";
+                    marketingListPartnerModel.subscribeStatus = "true";
+                    marketingModel2.marketingLists.Add(marketingListPartnerModel);
+                }
+                else
+                {
+                    marketingListPartnerModel = new MarketingListModel();
+                    marketingListPartnerModel.name = "Exclude_optdowns";
+                    marketingListPartnerModel.subscribeStatus = "false";
+                    marketingModel2.marketingLists.Add(marketingListPartnerModel);
+                }
 
-            json = JsonConvert.DeserializeObject<Object>(responsePartner);
-            if (json.success != true)
-            {
-                var modelError = new EmailPreferencesErrorModel();
-                modelError.ErrorMessage = "something went wrong with your submission";
+                //if (sendWeeklyChildPartner == true)
+                //{
+                //    marketingListPartnerModel = new MarketingListModel();
+                //    marketingListPartnerModel.name = "Mad_Monday_subscribers_engaged";
+                //    marketingListPartnerModel.subscribeStatus = "true";
+                //    marketingModel.marketingLists.Add(marketingListPartnerModel);
 
-                return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                //    marketingListPartnerModel = new MarketingListModel();
+                //    marketingListPartnerModel.name = "Exclude_Mad_Monday-bh";
+                //    marketingListPartnerModel.subscribeStatus = "false";
+                //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+                //}
+                //else if (unsubscribeChildPartner == true)
+                //{
+                //    marketingListPartnerModel = new MarketingListModel();
+                //    marketingListPartnerModel.name = "Mad_Monday_subscribers_engaged";
+                //    marketingListPartnerModel.subscribeStatus = "false";
+                //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+
+                //    marketingListPartnerModel = new MarketingListModel();
+                //    marketingListPartnerModel.name = "Exclude_Mad_Monday-bh";
+                //    marketingListPartnerModel.subscribeStatus = "true";
+                //    marketingModel.marketingLists.Add(marketingListPartnerModel);
+                //}
+
+
+
+                var responsePartner = marketingClient2.updateMarketingContact(marketingModel2, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
+
+                json2 = JsonConvert.DeserializeObject<Object>(responsePartner);
+                if (json2.success != true)
+                {
+                    var modelError2 = new EmailPreferencesErrorModel();
+                    modelError2.ErrorMessage = "something went wrong with your submission";
+
+                    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError2);
+                }
             }
-
-
-
 
 
             return View("~/Plugins/Widgets.Marketing/Views/EmailPrefThankyou.cshtml");
