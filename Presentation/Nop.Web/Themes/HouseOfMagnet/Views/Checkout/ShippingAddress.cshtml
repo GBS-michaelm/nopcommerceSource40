@@ -273,6 +273,7 @@
 
                 }
             <div class="style-msg infomsg" id="local-pickup-msg" style="display:none; margin-top: 20px;">
+                @Html.Widget("order_addPhoneNumber_widget")
                 <div class="sb-msg"><i class="icon-info-sign"></i><strong>NOTE</strong> Local pickup availible 7am-5pm PT Monday through Friday</div>
             </div>
             @Html.Partial("_ShippingMethod", ShippingMethod)

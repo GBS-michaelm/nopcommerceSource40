@@ -61,9 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
-    <Compile Include="Controllers\BusinessLogic.cs" />
+    <Compile Include="Controllers\GatewayPageController.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Domain\Company.cs" />
+    <Compile Include="Domain\GBSProductCategory.cs" />
+    <Compile Include="Domain\SportsTeam.cs" />
+    <Compile Include="Infrastructure\BusinessLogicRouteProvider.cs" />
+    <Compile Include="Models\GatewayPageProductBoxModel.cs" />
+    <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +82,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Views\Gateways\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BusinessLogic\Configure.cshtml">
