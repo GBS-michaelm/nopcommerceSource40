@@ -8,6 +8,7 @@ using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Services.Security;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
 {
@@ -17,30 +18,37 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
-        public ShippingUPSController(UPSSettings upsSettings,
+
+        public ShippingUPSController(ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            UPSSettings upsSettings)
         {
-            this._upsSettings = upsSettings;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._settingService = settingService;
+            this._upsSettings = upsSettings;
         }
 
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var model = new UPSShippingModel();
-            model.Url = _upsSettings.Url;
-            model.AccessKey = _upsSettings.AccessKey;
-            model.Username = _upsSettings.Username;
-            model.Password = _upsSettings.Password;
-            model.AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge;
-            model.InsurePackage = _upsSettings.InsurePackage;
-            model.PackingPackageVolume = _upsSettings.PackingPackageVolume;
-            model.PackingType = Convert.ToInt32(_upsSettings.PackingType);
-            model.PackingTypeValues = _upsSettings.PackingType.ToSelectList();
-            model.PassDimensions = _upsSettings.PassDimensions;
+            var model = new UPSShippingModel
+            {
+                Url = _upsSettings.Url,
+                AccountNumber = _upsSettings.AccountNumber,
+                AccessKey = _upsSettings.AccessKey,
+                Username = _upsSettings.Username,
+                Password = _upsSettings.Password,
+                AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge,
+                InsurePackage = _upsSettings.InsurePackage,
+                PackingPackageVolume = _upsSettings.PackingPackageVolume,
+                PackingType = (int)_upsSettings.PackingType,
+                PackingTypeValues = _upsSettings.PackingType.ToSelectList(),
+                PassDimensions = _upsSettings.PassDimensions
+            };
 
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
@@ -101,6 +109,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //save settings
             _upsSettings.Url = model.Url;
+            _upsSettings.AccountNumber = model.AccountNumber;
             _upsSettings.AccessKey = model.AccessKey;
             _upsSettings.Username = model.Username;
             _upsSettings.Password = model.Password;

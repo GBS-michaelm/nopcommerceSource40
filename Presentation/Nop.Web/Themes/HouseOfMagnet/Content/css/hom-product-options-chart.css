@@ -1,0 +1,67 @@
+﻿body {
+}
+
+
+#productOptionsChart table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 0px;
+    /*height: 200px;*/
+  background: #fff;
+}
+
+#productOptionsChart thead {
+  /*text-align: center;
+  margin: auto;
+  border: 1px solid #dedede;
+  padding: 1rem;*/
+  
+}
+
+#productOptionsChart tr {
+    width: 0px;
+}
+
+
+#productOptionsChart tbody {
+    width: 0px !important;
+}
+
+#productOptionsChart th {
+    padding: 1rem;
+    font-weight: bold;
+    text-align: center;
+    width: 18.75%;
+    /*color: red;*/
+}
+
+#productOptionsChart td {
+    text-align: center;
+    width: 20%;
+    border-top : 1px solid #ddd;
+    padding: 11px 9px;
+    /*color: red;*/
+}
+
+#productOptionsChart td:nth-child(1) {
+    text-align: left;
+    width: 29%;
+    font-weight: bold;
+}
+
+#productOptionsChart th:nth-child(1) {
+    width: 25%;
+    text-align: left;
+    font-weight: bold;
+}
+
+#productOptionsChart a {
+    color: black;
+    cursor: pointer;
+}
+
+/*#productOptionsChart td:nth-child(even) {
+    color: #3468b1;
+    font-weight: bold;
+    background: #F5F5F5;
+}*/

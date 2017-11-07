@@ -6,7 +6,7 @@
         @Html.Action("AdminHeaderLinks", "Common")
         @if (Model.IsAuthenticated)
         {
-            <li><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><span>@T("Account.MyAccount")@*@Model.CustomerName*@</span></a></li>
+            <li class="my-account"><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><span>@T("Account.MyAccount")@*@Model.CustomerName*@</span></a></li>
         }
         else
         {

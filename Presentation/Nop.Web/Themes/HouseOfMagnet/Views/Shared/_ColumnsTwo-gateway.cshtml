@@ -1,0 +1,297 @@
+﻿@using System.Data.Entity;
+@using Nop.Plugin.DataAccess.GBS;
+@using Nop.Core;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.Themes;
+@using System.Data;
+@using System.Text;
+@using Nop.Services.Catalog;
+@using Nop.Plugin.BusinessLogic.GBS.Domain;
+
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+}
+@{
+
+//current category ID
+//int currentCategoryId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+//}
+
+////current manufacturer ID
+//int currentManufacturerId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+//}
+
+////current product ID
+//int currentProductId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+//}
+}
+
+@{
+    int id = @Model.Id;
+}
+
+@{ 
+    //chart to load
+    //*** set data to hold which chart will load depending on parent category *** 
+    //dynamic chart most likely
+    string chart = "";
+
+    if (@Model.Name.Contains("Specialty"))
+    {
+        chart = "hom_specialty_magnets_product_options_chart";
+    }
+
+}
+
+@{
+
+    GBSProductCategory gbsProductCategory = new GBSProductCategory(id);
+    string h1 = gbsProductCategory.h1;
+    string h2 = gbsProductCategory.h2;
+    string topText = gbsProductCategory.topText;
+    string bottomText = gbsProductCategory.bottomText;
+    string backgroundColor = gbsProductCategory.backgroundColor;
+    string foregroundImage = gbsProductCategory.foregroundImage;
+    string backgroundImage = gbsProductCategory.backgroundImage;
+
+    //FUTURE RELEASE STUFF
+    ////generate product categories
+    //StringBuilder sb = new StringBuilder();
+    //var categoryService = EngineContext.Current.Resolve<ICategoryService>();
+    //IList<Category> categoryProducts = categoryService.GetAllCategoriesByParentCategoryId(id);
+    //var productCategories = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
+
+    //sb.Append("<div class='pricing bottommargin clearfix'>");
+
+    //foreach (var product in productCategories)
+    //{
+
+    //    IPagedList<ProductCategory> productCategoryList = categoryService.GetProductCategoriesByCategoryId(product.Id);
+    //    ProductCategory singleProduct = productCategoryList[0];
+
+    //    sb.Append("<div class='col-md-3'>");
+    //    sb.Append("    <div class='pricing-box'>");
+    //    sb.Append("        <div class='pricing-title'>");
+    //    sb.Append("            <h3>" + product.Name + "</h3>");
+    //    sb.Append("        </div>");
+    //    sb.Append("    <div class='gateway-image'><img src=''/></div>");
+    //    sb.Append("<div class='pricing-features'>");
+    //    sb.Append("<ul>");
+    //    sb.Append("< li>" + singleProduct.Product.Width + " X " + singleProduct.Product.Height + "</li>");
+    //    sb.Append("<li>" + product.Name + " top</li>");
+    //    sb.Append("< li>Partial magnet back</li>");
+    //    sb.Append("< li>60 designs available</li>");
+    //    sb.Append("</ul>");
+    //    sb.Append("< div class='gateway - pricing'>Starting at $30</div>");
+    //    sb.Append("</div>");
+    //    sb.Append("< div class='pricing-action'><a href=' / specialty - peel - stick' class='team - handle button button - rounded button - reveal button - large button - blue tright'><i class='icon - angle - right'></i><span>Select</span></a></div>");
+    //    sb.Append("</div>");
+    //    sb.Append("</div>");
+    //}
+
+    //sb.Append("</div>");
+
+    //string productCategoriesHtml = sb.ToString();
+
+
+}
+
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+            @RenderSection("Breadcrumb")
+    }
+    }
+
+@if (Model.DisplayCategoryBreadcrumb)
+    {
+    <div id="gatewayBreadcrumb" class="breadcrumb-wrapper">
+        <ul class="breadcrumb">
+            <li>
+                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")"><i class="fa fa-home"></i></a>
+                @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
+                @foreach (var cat in Model.CategoryBreadcrumb)
+                {
+                    var isLastCategory = cat.Id == Model.Id;
+                <li>
+                    @if (isLastCategory)
+                    {
+                        <strong class="current-item active">@cat.Name</strong>
+                    }
+                    else
+                    {
+                        <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                        @*<span class="delimiter">@breadcrumbDelimiter</span>*@
+                    }
+                </li>
+                }
+        </ul>
+    </div>
+}
+
+    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">               
+        <h1 id="gatewayH1" class="gateway-h1">@h1</h1>
+        <div class="gateway-h2-wrap">
+            <p class="gateway-h2"><span >@h2</span></p>
+        </div>
+    </div>  
+   
+    <div>@*salewidgethere*@</div>
+    <div id="gateway-body" style="background-color : @backgroundColor;">
+        <div id="gateway-body-inner">
+           <input id="cssChange" type="hidden" value="" />
+           <input id="originalBodyHeight" type="hidden" value="" />
+
+            @* background top text from db *@
+            <p id="gatewayTopText">
+                @topText
+            </p>
+
+            <div id="gateway-inner">          
+                <div id="gatewayLayersContainer">                  
+                    <div id="gatewayWYSIWYG" class="">
+                        @if (!String.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            @*wysiwyg from nop admin*@
+                            <p id="" class="list-content">
+                                @Html.Raw(Model.Description)
+                            </p>
+                        }
+                    </div>
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>               
+                </div>           
+            </div>
+            <p id="gatewayBottomText">
+                @bottomText
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+            
+        $(document).ready(function () {                          
+                
+            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
+            $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
+                               
+            var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
+            CustomResize();
+                
+            obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+            CustomResize();
+
+            function CustomResize() {
+                $(window).resize(obj, function () {
+                                                                       
+                    var $c = $('.container'),
+                        $w = $(obj.outer),
+                        totalWidth = $('.footer').outerWidth(),
+                        wellWidth = $c.outerWidth(),
+                        diff = totalWidth - wellWidth,
+                        marg = -Math.floor(diff / 2) + 'px';
+                    $w.each(function () {
+                        $(this).css({
+                            'margin-left': marg,
+                            'margin-right': marg
+                        });
+                    })
+
+                    $(obj.inner).width($(".container").width());
+
+                });
+
+                $(window).resize();
+            }                              
+                
+            $("#gateway-inner").height($("#gateway-body").height());
+                
+            $("#cssChange").click();
+                
+            //remove topic header
+            $("#chartWrap div.panel-heading").remove();
+                
+            $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
+
+            function HeightHandle() {
+                    
+                console.log("height handle called");
+
+                var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
+                    
+                $("#gateway-body").height(newHeight);
+                $("#gateway-inner").height(newHeight);
+            }
+
+            $(window).resize(HeightHandle);
+
+
+
+            //992px switches to mobileish screen
+
+        });
+        
+    </script>
+
+
+@{
+    //Loading extra topics
+
+    if (!string.IsNullOrEmpty(@chart))
+    {
+        <div id="chartWrap">
+            <div id="chartSection">
+                @Html.Action("TopicBlock", "Topic", new { systemName = @chart.ToString() })
+            </div>
+        </div>
+    }
+
+    @*<div id="videoAndQuantityCalculatorWrap">
+        <div id="innerVidAndWQtyCalc">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
+        </div>
+    </div>*@
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
+    </div>
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })
+    </div>
+
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_testimonials" })
+    </div>
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })
+    </div>
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_opc_video" })
+    </div>
+
+
+}
+   
+
+<div class="side-content col-md-9">  
+    @RenderBody()    
+</div>
+
+
+
+

@@ -8,7 +8,7 @@ using WebServices.Models.File;
 
 namespace Nop.Plugin.Order.GBS.Models
 {
-   public class CanvasProductModel
+    public class CanvasProductModel
     {
         public string canvasServerBaseURL { get; set; }
         public string stateID { get; set; }
@@ -18,6 +18,8 @@ namespace Nop.Plugin.Order.GBS.Models
         public string gbsOrderId { get; set; }
         public string username { get; set; }
         public string webPlatform { get; set; }
+        public int ccId { get; set; }
+        public string sessionID { get; set; }
         public IList<ProductFileModel> productFileModels { get; set; }
 
         public CanvasProductModel()
@@ -33,5 +35,10 @@ namespace Nop.Plugin.Order.GBS.Models
         {
             return JsonConvert.DeserializeObject<CanvasProductModel>(input);
         }
+    }
+
+    public class Message
+    {
+        public string message { get; set; }
     }
 }
