@@ -423,11 +423,24 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     ModelState.AddModelError("", error);
                 }
 
+                //GBS custom zip validation
                 if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
                 {
                     Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
                     Match match = regex.Match(model.NewAddress.ZipPostalCode);
                     if (!match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
+                    }
+
+                    if(model.NewAddress.CountryId == 1)
+                    {
+                        if(model.NewAddress.ZipPostalCode.Length != 5 && model.NewAddress.ZipPostalCode.Length != 10)
+                        {
+                            ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
+                        }
+                    }
+                    else if(model.NewAddress.CountryId == 2 && model.NewAddress.ZipPostalCode.Length != 7)
                     {
                         ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
                     }
@@ -744,13 +757,26 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     ModelState.AddModelError("", error);
                 }
 
+                //GBS custom zip validation
                 if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
                 {
                     Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
                     Match match = regex.Match(model.NewAddress.ZipPostalCode);
                     if (!match.Success)
                     {
-                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code Format");
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
+                    }
+
+                    if (model.NewAddress.CountryId == 1)
+                    {
+                        if (model.NewAddress.ZipPostalCode.Length != 5 && model.NewAddress.ZipPostalCode.Length != 10)
+                        {
+                            ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
+                        }
+                    }
+                    else if (model.NewAddress.CountryId == 2 && model.NewAddress.ZipPostalCode.Length != 7)
+                    {
+                        ModelState.AddModelError("NewAddress.ZipPostalCode", "Invalid Zip Code");
                     }
                 }
 

@@ -31,9 +31,9 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Customer;
 
-namespace Nop.Web.Controllers
+namespace Nop.Web.GBS.Controllers
 {
-    public partial class GbsCustomerController : BasePublicController
+    public partial class CustomerController : Nop.Web.Controllers.CustomerController
     {
         #region Fields
 
@@ -78,7 +78,7 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public GbsCustomerController(IAddressModelFactory addressModelFactory,
+        public CustomerController(IAddressModelFactory addressModelFactory,
             ICustomerModelFactory customerModelFactory,
             IAuthenticationService authenticationService,
             DateTimeSettings dateTimeSettings,
@@ -113,6 +113,41 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             StoreInformationSettings storeInformationSettings)
+            :base(addressModelFactory,
+            customerModelFactory,
+            authenticationService,
+            dateTimeSettings,
+            taxSettings,
+            localizationService,
+            workContext,
+            storeContext,
+            customerService,
+            customerAttributeParser,
+            customerAttributeService,
+            genericAttributeService,
+            customerRegistrationService,
+            taxService,
+            customerSettings,
+            addressSettings,
+            forumSettings,
+            addressService,
+            countryService,
+            orderService,
+            pictureService,
+            newsLetterSubscriptionService,
+            shoppingCartService,
+            openAuthenticationService,
+            webHelper,
+            customerActivityService,
+            addressAttributeParser,
+            addressAttributeService,
+            storeService,
+            eventPublisher,
+            mediaSettings,
+            workflowMessageService,
+            localizationSettings,
+            captchaSettings,
+            storeInformationSettings)
         {
             this._addressModelFactory = addressModelFactory;
             this._customerModelFactory = customerModelFactory;
@@ -154,26 +189,10 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region My account / Addresses
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult AddressAdd()
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            var model = new CustomerAddressEditModel();
-            _addressModelFactory.PrepareAddressModel(model.Address,
-                address: null,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
-
-            return View("~/Views/Customer/AddressAdd.cshtml", model);
-        }
-
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public virtual ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
+        public override ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -188,11 +207,24 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            //GBS custom zip validation
             if (!string.IsNullOrEmpty(model.Address.ZipPostalCode))
             {
                 Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
                 Match match = regex.Match(model.Address.ZipPostalCode);
                 if (!match.Success)
+                {
+                    ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
+                }
+
+                if(model.Address.CountryId == 1)
+                {
+                    if(model.Address.ZipPostalCode.Length != 5 && model.Address.ZipPostalCode.Length != 10)
+                    {
+                        ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
+                    }
+                }
+                else if(model.Address.CountryId == 2 && model.Address.ZipPostalCode.Length != 7)
                 {
                     ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
                 }
@@ -222,36 +254,13 @@ namespace Nop.Web.Controllers
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
 
-            return View("~/Views/Customer/AddressAdd.cshtml", model);
-        }
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult AddressEdit(int addressId)
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            var customer = _workContext.CurrentCustomer;
-            //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
-            if (address == null)
-                //address is not found
-                return RedirectToRoute("CustomerAddresses");
-
-            var model = new CustomerAddressEditModel();
-            _addressModelFactory.PrepareAddressModel(model.Address,
-                address: address,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
-
-            return View("~/Views/Customer/AddressEdit.cshtml", model);
+            return View(model);
         }
 
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public virtual ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
+        public override ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -271,11 +280,24 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            //GBS custom zip validation
             if (!string.IsNullOrEmpty(model.Address.ZipPostalCode))
             {
                 Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
                 Match match = regex.Match(model.Address.ZipPostalCode);
                 if (!match.Success)
+                {
+                    ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
+                }
+
+                if (model.Address.CountryId == 1)
+                {
+                    if (model.Address.ZipPostalCode.Length != 5 && model.Address.ZipPostalCode.Length != 10)
+                    {
+                        ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
+                    }
+                }
+                else if (model.Address.CountryId == 2 && model.Address.ZipPostalCode.Length != 7)
                 {
                     ModelState.AddModelError("Address.ZipPostalCode", "Invalid Zip Code");
                 }
@@ -297,8 +319,7 @@ namespace Nop.Web.Controllers
                 addressSettings: _addressSettings,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
-
-            return View("~/Views/Customer/AddressEdit.cshtml", model);
+            return View(model);
         }
         #endregion
 

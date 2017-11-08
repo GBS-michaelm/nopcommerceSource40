@@ -19,14 +19,14 @@ namespace Nop.Plugin.Customer.GBS.Infrastructure
         {
             routes.MapLocalizedRoute("GbsCustomerAddressAdd",
                             "customer/addressadd",
-                            new { controller = "GbsCustomer", action = "AddressAdd" },
-                            new[] { "Nop.Plugin.Customer.GBS.Controllers" });
+                            new { controller = "Customer", action = "AddressAdd" },
+                            new[] { "Nop.Web.GBS.Controllers" });
 
             routes.MapLocalizedRoute("GbsCustomerAddressEdit",
                             "customer/addressedit/{addressId}",
-                            new { controller = "GbsCustomer", action = "AddressEdit" },
+                            new { controller = "Customer", action = "AddressEdit" },
                             new { addressId = @"\d+" },
-                            new[] { "Nop.Plugin.Customer.GBS.Controllers" });
+                            new[] { "Nop.Web.GBS.Controllers" });
 
         }
     }
