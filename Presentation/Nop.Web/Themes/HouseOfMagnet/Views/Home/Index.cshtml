@@ -25,17 +25,18 @@
         </div>
         <div class="clearfix"></div>
         @*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
-        @*<div class="container">
-                @Html.Widget("home_page_before_categories")
-                @Html.Action("HomepageCategories", "Catalog")
-            </div>*@
+        <div class="container">
+            @Html.Widget("home_page_before_categories")
+            @Html.Action("HomepageCategories", "Catalog")
+        </div>
         @*@Html.Widget("home_page_before_products")*@
-        <div class="featured-product">
+        @*<div class="featured-product">
             <div class="container">
                 <hr />
                 @Html.Action("HomepageProducts", "Product")
             </div>
-        </div>
+        </div>*@
+
 
         <!--Security section-->
         <div class="security-section">
