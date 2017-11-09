@@ -2338,12 +2338,11 @@
 }
 
     .product-details-page .gallery .Calendar-Full-Magnets-Executive-Horizontal img {
-        height: 323px;
-        left: 143px;
+        height: 290px;
+        left: 15px;
         position: absolute;
-        top: 98px;
-        width: 192px;
-       
+        top: 109px;
+        width: 508px;
     }
 
 .product-variant-list .variant-picture .Calendar-Full-Magnets-Executive-Horizontal img {
@@ -2364,11 +2363,11 @@
 }
 
 .wishlist-page .Calendar-Full-Magnets-Executive-Horizontal img {
-    height: 142px;
-    left: 62px;
+    height: 129px;
+    left: 10px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 38px;
+    width: 217px;
 }
 
 .mini-shopping-cart .Calendar-Full-Magnets-Executive-Horizontal {
@@ -2419,11 +2418,10 @@
 
 .product-grid .pictures .Calendar-Full-Magnets-First-Class-Horizontal img {
     height: 84px;
-    left: 34px;
+    left: 47px;
     position: absolute;
     top: 73px;
-    width: 154px;
-   
+    width: 140px;
 }
 
 .order-productimg .Calendar-Full-Magnets-First-Class-Horizontal img {
@@ -2441,12 +2439,11 @@
 }
 
     .product-details-page .gallery .Calendar-Full-Magnets-First-Class-Horizontal img {
-        height: 323px;
-        left: 143px;
+        height: 197px;
+        left: 103px;
         position: absolute;
-        top: 98px;
-        width: 192px;
-       
+        top: 162px;
+        width: 323px;
     }
 
 .product-variant-list .variant-picture .Calendar-Full-Magnets-First-Class-Horizontal img {
@@ -2459,19 +2456,19 @@
 }
 
 .shopping-cart-page .Calendar-Full-Magnets-First-Class-Horizontal img {
-    height: 142px;
-    left: 62px;
+    height: 83px;
+    left: 46px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 65px;
+    width: 141px;
 }
 
 .wishlist-page .Calendar-Full-Magnets-First-Class-Horizontal img {
-    height: 142px;
-    left: 62px;
+    height: 83px;
+    left: 46px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 65px;
+    width: 141px;
 }
 
 .mini-shopping-cart .Calendar-Full-Magnets-First-Class-Horizontal {
@@ -2543,12 +2540,11 @@
 }
 
     .product-details-page .gallery .Calendar-Full-Magnets-Executive-Vertical img {
-        height: 323px;
-        left: 143px;
+        height: 509px;
+        left: 104px;
         position: absolute;
-        top: 98px;
-        width: 192px;
-       
+        top: 17px;
+        width: 295px;
     }
 
 .product-variant-list .variant-picture .Calendar-Full-Magnets-Executive-Vertical img {
@@ -2561,19 +2557,19 @@
 }
 
 .shopping-cart-page .Calendar-Full-Magnets-Executive-Vertical img {
-    height: 142px;
-    left: 62px;
+    height: 220px;
+    left: 49px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 0px;
+    width: 127px;
 }
 
 .wishlist-page .Calendar-Full-Magnets-Executive-Vertical img {
-    height: 142px;
-    left: 62px;
+    height: 220px;
+    left: 49px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 0px;
+    width: 127px;
 }
 
 .mini-shopping-cart .Calendar-Full-Magnets-Executive-Vertical {
@@ -2646,12 +2642,11 @@
 }
 
     .product-details-page .gallery .Calendar-Full-Magnets-Jumbo-Vertical img {
-        height: 323px;
-        left: 143px;
+        height: 362px;
+        left: 120px;
         position: absolute;
-        top: 98px;
-        width: 192px;
-       
+        top: 70px;
+        width: 283px;
     }
 
 .product-variant-list .variant-picture .Calendar-Full-Magnets-Jumbo-Vertical img {
@@ -2664,19 +2659,19 @@
 }
 
 .shopping-cart-page .Calendar-Full-Magnets-Jumbo-Vertical img {
-    height: 142px;
-    left: 62px;
+    height: 159px;
+    left: 54px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 21px;
+    width: 122px;
 }
 
 .wishlist-page .Calendar-Full-Magnets-Jumbo-Vertical img {
-    height: 142px;
-    left: 62px;
+    height: 159px;
+    left: 54px;
     position: absolute;
-    top: 43px;
-    width: 85px;
+    top: 21px;
+    width: 122px;
 }
 
 .mini-shopping-cart .Calendar-Full-Magnets-Jumbo-Vertical {
@@ -8171,51 +8166,47 @@
 /***** END OF CALENDAR FULL MAGNET BUDGET VERTICAL *******/
 
 /********************* Start of Award Calss **********************/
-.product-grid .Awards img {
-    width: 250px;
-    max-height: 250px;
+#awards-page .product-grid .pictures {
+    height: auto;
+}
+.product-details-page .gallery .Awards {
+    width: 570px;
 }
 /********************* Start of Baseball-Insert Calss **********************/
-.product-grid .Baseball-Insert img {
-    width: 250px;
-}
 .product-details-page .gallery .Baseball-Insert {
     width: 570px; 
 }
 #baseball-inserts-page .product-grid .pictures {
     height: auto;
 }
-#baseball-inserts-page .item-box {
-    min-height: inherit;
-}
 /********************* Start of Calendar-Insert Calss **********************/
 .product-grid .Calendar-Insert img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Envelope-Sealers Calss **********************/
 .product-grid .Envelope-Sealers img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Upload-Your-Own Calss **********************/
 .product-grid .Upload-Your-Own img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of NASCAR-Insert Calss **********************/
 .product-grid .NASCAR-Insert img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Patriotic Calss **********************/
 .product-grid .Patriotic img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Golf-Insert Calss **********************/
 .product-grid .Golf-Insert img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Personalized-Pen Calss **********************/
@@ -8229,18 +8220,25 @@
 }
 /********************* Start of Door-Knobs Calss **********************/
 .product-grid .Door-Knobs img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of Envelope Calss **********************/
 .product-grid .Envelope img {
-    width: 250px;
+    /*width: 250px;*/
     max-height: 250px;
 }
 /********************* Start of other-products-page Calss **********************/
-#other-products-page .pictures {
+.other-products-page-pen {
     display: flex;
     align-items: center;
     justify-content: center;
+    height:inherit;
+}
+.other-products-page-Baseball {   
+    height: auto !important;
+}
+.other-products-page-Award{
+    height: auto !important;
 }
 
