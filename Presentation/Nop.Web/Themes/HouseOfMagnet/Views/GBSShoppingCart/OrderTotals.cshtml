@@ -54,11 +54,13 @@
                 <tr>
                     <td class="cart-total-left">
                         <span class="">
-                            @T("ShoppingCart.Totals.Shipping")</span>
-                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+                        @T("ShoppingCart.Totals.Shipping")</span>
+                       
+                        @*@if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                         {
                             <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
-                        }
+                        }*@
+                        <a ref="#" data-toggle="tooltip" class="gbs-cursor-pointer gbs-color-black" title="@T("ShoppingCart.Totals.ShippingInfo")"><i class="icon-question"></i></a>
                     </td>
                   
                     <td class="cart-total-right">
