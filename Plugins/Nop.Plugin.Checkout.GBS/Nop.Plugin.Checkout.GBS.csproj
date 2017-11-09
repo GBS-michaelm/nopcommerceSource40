@@ -93,11 +93,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logo.jpg">
-<<<<<<< HEAD
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-=======
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
->>>>>>> 2635c994eb2b1d183f56220fcd5b2cab981bd833
     </Content>
     <Content Include="web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

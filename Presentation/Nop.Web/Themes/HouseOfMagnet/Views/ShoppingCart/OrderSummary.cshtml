@@ -3,17 +3,17 @@
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart;
-@*@using Nop.Plugin.Widgets.CustomersCanvas.Services;
-@using Nop.Plugin.Checkout.GBS;*@
+@using Nop.Plugin.Widgets.CustomersCanvas.Services;
+@using Nop.Plugin.Checkout.GBS;
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 @{
 
-//var ccService = EngineContext.Current.Resolve<ICcService>();
-//GBSCheckout gbs = new GBSCheckout();
-//var helpers = gbs._helper;
-//Model.CustomProperties = helpers.GetNoteCardSetCount();
+    var ccService = EngineContext.Current.Resolve<ICcService>();
+    GBSCheckout gbs = new GBSCheckout();
+    var helpers = gbs._helper;
+    Model.CustomProperties = helpers.GetNoteCardSetCount();
 }
 
 <div class="order-summary-content">
@@ -165,7 +165,7 @@
                                         </div>
                                     }
 
-                                    @*@if (ccService.IsProductForCc(item.ProductId))
+                                    @if (ccService.IsProductForCc(item.ProductId))
                                     {
                                         //var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                         //editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
@@ -176,9 +176,8 @@
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div>
-                                    }
-                                    else if*@ 
-                                    @if (Model.IsEditable && item.AllowItemEditing)
+                                    }                                    
+                                    else if (Model.IsEditable && item.AllowItemEditing)
                                     {
                                         var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
