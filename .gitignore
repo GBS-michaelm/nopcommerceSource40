@@ -4,3 +4,4 @@ obj/
 /Presentation/Nop.Web/Plugins/
 /Presentation/Nop.Web/Content/Images/Thumbs
 /Plugins/Nop.Plugin.Widgets.CustomersCanvas/Editors/editor-notecard
+*.user

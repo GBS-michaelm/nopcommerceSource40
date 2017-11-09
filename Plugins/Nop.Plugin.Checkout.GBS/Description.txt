@@ -7,4 +7,4 @@ Author: Joe Barrus
 DisplayOrder: 1
 FileName: Nop.Plugin.Checkout.GBS.dll
 Description: 
-LimitedToStores: 6
+LimitedToStores: 7,6
