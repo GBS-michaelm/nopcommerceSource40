@@ -8,6 +8,12 @@
         <span class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
     </div>
 </div>
+<style>
+    .inactive {
+            opacity: 0.5;
+            pointer-events: none;
+    }
+</style>
 <script type="text/javascript">
     var subphone = function submitPhone() {
         $('.field-validation-error').removeClass('field-validation-error').addClass('field-validation-valid');
@@ -22,12 +28,14 @@
                 data: JSON.stringify({ phnum: phonenumber }),
                 success: function (valid) { document.getElementById("Add_phone_number").value = phonenumber; }
             });
+            $("button[name='nextstep']").removeClass('inactive');
             return true;
         } else {
             $('.field-validation-valid').removeClass('field-validation-valid').addClass('field-validation-error');
             $('.field-validation-error').html("Must be between 7 and 10 characters in length");
             document.getElementById("Add_phone_number").focus();
             document.getElementById("Add_phone_number").value = phonenumber;
+            $("button[name='nextstep']").addClass('inactive');
             return false;
         }
     }
