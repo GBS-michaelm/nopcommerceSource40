@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -83,10 +83,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.BreadCrumb.GBS", "Plugins\Nop.Plugin.BreadCrumb.GBS\Nop.Plugin.BreadCrumb.GBS.csproj", "{83326190-FBE7-4E41-9A77-A12FA03BE00D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.BusinessLogic.GBS", "Plugins\Nop.Plugin.BusinessLogic.GBS\Nop.Plugin.BusinessLogic.GBS.csproj", "{A6A1624E-D525-4BFF-930C-5BB19DD6E96A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{637E837F-FCE6-4CC6-BCA1-72C467F4C94E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins (2)", "Plugins (2)", "{9416D896-1407-47AC-A023-85DEB58744A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.Marketing", "Plugins\Nop.Plugin.Widgets.Marketing\Nop.Plugin.Widgets.Marketing.csproj", "{89916445-3E25-47BE-B41A-865BD2E5E0DB}"
 EndProject
