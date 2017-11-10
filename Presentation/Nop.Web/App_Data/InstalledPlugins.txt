@@ -36,3 +36,4 @@ BusinessLogic.GBS
 Order.GBS
 Checkout.GBS
 Logging.GBS
+Widgets.Marketing
