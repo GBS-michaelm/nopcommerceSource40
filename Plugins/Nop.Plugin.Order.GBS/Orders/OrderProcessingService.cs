@@ -219,7 +219,7 @@ namespace Nop.Services.Custom.Orders
                     if (myResult.PlacedOrder != null)
                     {
 
-                        string addPhoneNum = _httpContext.Session["customerPhoneNumber"].ToString() == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                        string addPhoneNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
                         _httpContext.Session.Remove("customerPhoneNumber");
 
 

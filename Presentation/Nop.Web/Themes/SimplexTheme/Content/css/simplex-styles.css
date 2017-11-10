@@ -8639,6 +8639,7 @@ body:not(.device-touch) .social-icon i {
         position: absolute;
         top: 92px;
         width: 342px;
+        z-index:auto;
     }
 
 .product-details-page .gallery .Horizontal {
@@ -8652,6 +8653,7 @@ body:not(.device-touch) .social-icon i {
         position: relative;
         top: 80px;
         width: 454px;
+        z-index: auto;
     }
 
 .dropdown-filter {

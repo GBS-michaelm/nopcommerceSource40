@@ -441,6 +441,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         [ChildActionOnly]
         public ActionResult AddPhoneNumber(string widgetZone, object additionalData = null)
         {
+
             return View("~/Plugins/Order.GBS/Views/OrderGBS/AddPhoneNumber.cshtml");
         }
 

@@ -1,35 +1,53 @@
 ﻿<div class="form-group" style="padding-top: 20px;padding-bottom: 30px;">
     <label for="Add_phone_number" style="font-weight:normal; top:10px;" class="control-label col-sm-3 col-md-3">Add phone number</label>
-    <div class="visible-xs form-title-rquired"><span class="required" aria-required="true">*</span></div>
     <div class="col-sm-4 col-md-4">
-        <input class="form-control" data-val="true" data-val-required="Phone number is required." id="Add_phone_number" name="Addphone.number" value="" aria-required="true" type="text">
+        <input class="form-control" data-val="true" data-val-required="Phone number is required." id="Add_phone_number" name="Addphone.number" value='@HttpContext.Current.Session["customerPhoneNumber"]' aria-required="true" type="text">
     </div>
     <div class="col-sm-4 col-md-4">
         <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
-        <span class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
+        <span id="AddphoneValidation" class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
     </div>
 </div>
+<style>
+    .inactive {
+            opacity: 0.5;
+            pointer-events: none;
+    }
+</style>
 <script type="text/javascript">
-    $('#AddPhoneNum').blur(function () {
-        $('#spnPhoneStatus').hide();
+    var subphone = function submitPhone() {
+        $('#AddphoneValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+        $('#AddphoneValidation').html("");
         var phonenumber = $(this).val();
-        var phoneNum = phonenumber.replace(/[^\d]/g, '');
+        var phonenumber = phonenumber.replace(/[^\d]/g, '');
         if (phonenumber.length > 6 && phonenumber.length < 11) {
             $.ajax({
                 url: '/GBSOrder/AddSessionVar',
                 type: 'POST',
                 contentType: 'application/json;',
-                data: JSON.stringify({ phnum: $(this).val() }),
-                success: function (valid) { }
+                data: JSON.stringify({ phnum: phonenumber }),
+                success: function (valid) { document.getElementById("Add_phone_number").value = phonenumber; }
             });
+            $("button[name='nextstep']").removeClass('inactive');
+            return true;
         } else {
-            $('#spnPhoneStatus').show();
-            $('#spnPhoneStatus').css('color', 'red');
-            document.getElementById("AddPhoneNum").focus();
-            document.getElementById("AddPhoneNum").value = "";
+            $('#AddphoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+            $('#AddphoneValidation').html("Must be between 7 and 10 characters in length");
+            document.getElementById("Add_phone_number").focus();
+            document.getElementById("Add_phone_number").value = phonenumber;
+            $("button[name='nextstep']").addClass('inactive');
             return false;
         }
+    }
+    $('#Add_phone_number').blur(subphone);
+    $('#Add_phone_number').on('keydown', function (e) {
+        if (e.which == 13) {
+            if (subphone.call(this)) {
+                $("button[name='nextstep']").click();
+            } else {
+                return false;
+            }
+        }
     });
-
 
 </script>
