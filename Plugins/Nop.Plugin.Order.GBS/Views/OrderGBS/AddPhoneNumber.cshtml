@@ -5,7 +5,7 @@
     </div>
     <div class="col-sm-4 col-md-4">
         <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
-        <span class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
+        <span id="AddphoneValidation" class="field-validation-valid" data-valmsg-for="Addphone.number" data-valmsg-replace="true"></span>
     </div>
 </div>
 <style>
@@ -16,8 +16,8 @@
 </style>
 <script type="text/javascript">
     var subphone = function submitPhone() {
-        $('.field-validation-error').removeClass('field-validation-error').addClass('field-validation-valid');
-        $('.field-validation-valid').html("");
+        $('#AddphoneValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+        $('#AddphoneValidation').html("");
         var phonenumber = $(this).val();
         var phonenumber = phonenumber.replace(/[^\d]/g, '');
         if (phonenumber.length > 6 && phonenumber.length < 11) {
@@ -31,8 +31,8 @@
             $("button[name='nextstep']").removeClass('inactive');
             return true;
         } else {
-            $('.field-validation-valid').removeClass('field-validation-valid').addClass('field-validation-error');
-            $('.field-validation-error').html("Must be between 7 and 10 characters in length");
+            $('#AddphoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+            $('#AddphoneValidation').html("Must be between 7 and 10 characters in length");
             document.getElementById("Add_phone_number").focus();
             document.getElementById("Add_phone_number").value = phonenumber;
             $("button[name='nextstep']").addClass('inactive');

@@ -25,6 +25,9 @@
                             </span>
                             <span class="value">
                                 @Model.ShippingMethod
+                                <span id="contactPhone" style="display:block">
+                                    Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
+                                </span>
                             </span>
                         </li>
                         <li>&nbsp;</li>
