@@ -72,13 +72,25 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             this.Products = categoryModel.Products;
 
             //datalook up via category(sports team) id from gbscategory table
-            Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
-            sportsTeamDic.Add("@CategoryId", teamId);
+            //Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
+            //sportsTeamDic.Add("@CategoryId", teamId);
 
-            string sportsTeamDataQuery = "EXEC usp_SelectGBSCustomSportsTeam @categoryId";
-            DataView sportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
+            //string sportsTeamDataQuery = "EXEC usp_SelectGBSCustomSportsTeam @categoryId";
+            //DataView sportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
 
-            if(sportsTeamDataView.Count > 0)
+            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+
+            DataView sportsTeamDataView = cacheManager.Get("sportsTeam" + teamId, 60, () => {
+                Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
+                sportsTeamDic.Add("@CategoryId", teamId);
+
+                string sportsTeamDataQuery = "EXEC usp_SelectGBSCustomSportsTeam @categoryId";
+                DataView innerSportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
+
+                return innerSportsTeamDataView;
+            });
+
+            if (sportsTeamDataView.Count > 0)
             {
                 //team specific data
                 this.parentCategoryId = category.ParentCategoryId;
@@ -111,6 +123,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public bool isFeatured { get { return _isFeatured; } set { _isFeatured = value; } }
         public string gatewayHtml { get { return _gatewayHtml; } set { _gatewayHtml = value; } }
 
+
+        public DataView GetExtendedTeamData(int teamId)
+        {
+            Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
+            sportsTeamDic.Add("@CategoryId", teamId);
+
+            string sportsTeamDataQuery = "EXEC usp_SelectGBSCustomSportsTeam @categoryId";
+            DataView sportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
+
+            return sportsTeamDataView;
+        }
 
         public string GenerateTeamProductHtml()
         {

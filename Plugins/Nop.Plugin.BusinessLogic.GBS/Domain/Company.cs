@@ -70,13 +70,27 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             this.Products = categoryModel.Products;
             
             //datalook up via category(company) id from gbscategory table
-            Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-            companyDic.Add("@CategoryId", companyId);
+            //Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+            //companyDic.Add("@CategoryId", companyId);
 
-            string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
-            DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+            //string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+            //DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
-            if(companyDataView.Count > 0)
+
+            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+
+            DataView companyDataView = cacheManager.Get("sportsTeam" + companyId, 60, () => {
+                Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+                companyDic.Add("@CategoryId", companyId);
+
+                string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+                DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+
+                return innerCompanyDataView;
+            });
+
+
+            if (companyDataView.Count > 0)
             {
                 
                 this.parentCategoryId = category.ParentCategoryId;               
