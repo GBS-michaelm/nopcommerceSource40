@@ -64,13 +64,24 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
                 var modelError = new EmailPreferencesErrorModel();
                 modelError.ErrorMessage = marketingContact.errorMessage;
 
-                return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                if (modelError.ErrorMessage != "record not found")
+                {
+                    return View("~/Plugins/Widgets.Marketing/Views/EmailPrefError.cshtml", modelError);
+                }
             }
 
             var model = new EmailPreferencesModel();
             model.ContactPref = marketingContact;
-            model.masterFound = true;
             model.subscribeStatusMaster = model.ContactPref.subscribeStatus;
+
+            if (marketingContact.errorMessage == "record not found")
+            {
+                model.ContactPref.emailAddress = Email;
+            }
+            else
+            {
+                model.masterFound = true;
+            }
 
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
@@ -126,8 +137,6 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
 
             model.ContactPref = marketingContact2;
-
-
             model.subscribeStatusPartner = model.ContactPref.subscribeStatus;
 
             if (marketingContact2.errorMessage == "record not found")

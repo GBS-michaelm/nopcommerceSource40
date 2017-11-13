@@ -8,11 +8,11 @@
         <div class="row">
             <div class="col-sm-4 footerleft">
                 <div id="aboutUsSection">
-                    <h3>About Note Card Café</h3>
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_about-us" })
+                    <h3>About House of Magnets</h3>
+                    @Html.Action("TopicBlock", "Topic", new { systemName = "hom_about-us" })
                 </div>
                 <div id="contactUsSection">
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_contact-us" })
+                    @Html.Action("TopicBlock", "Topic", new { systemName = "hom_contact-us" })
                 </div>
               
 
@@ -22,7 +22,7 @@
                     <div class="column newsletter-wrapper col-sm-7 col-md-12">
                         <div class="row">
                             <div class="col-sm-7">
-                                 @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_footer_emaillist" })
+                                 @Html.Action("TopicBlock", "Topic", new { systemName = "hom_footer_emaillist" })
 								
 								
 								
@@ -37,8 +37,8 @@
                                 <h3 class="footer-title">Shop With Confidence</h3>
                                
                                 <!-- Begin DigiCert site seal HTML and JavaScript -->
-<div id="DigiCertClickID_EUn4Gw8W" style="padding-top: 15px;">
-	<a href="https://seal.digicert.com/seals/popup/?tag=EUn4Gw8W&lang=en" target="_blank"><img alt="DigiCert SSL" src="~/Themes/HouseOfMagnet/Content/images/digicert.png"></a>   @*These changes for local only*@ 
+<div id="DigiCertClickID_PckNbLXo" style="padding-top: 15px;">
+	<a href="https://seal.digicert.com/seals/popup/?tag=PckNbLXo&lang=en" target="_blank"><img alt="DigiCert SSL" src="~/Themes/HouseOfMagnet/Content/images/digicert.png"></a> 
 </div>
 <!-- End DigiCert site seal HTML and JavaScript -->
 
@@ -72,9 +72,12 @@
                                 {
                                     <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
                                 }
-								<li><a href="/view-all-single-cards"><i class="fa fa-angle-double-right"></i>Single Note Cards</a></li>
-								<li><a href="/view-all-sets"><i class="fa fa-angle-double-right"></i>Note Card Sets</a></li>
-								<li><a href="/envelopes"><i class="fa fa-angle-double-right"></i>Envelopes</a></li>
+								<li><a href="/business-cards"><i class="fa fa-angle-double-right"></i>Business Cards</a></li>
+								<li><a href="/calendars"><i class="fa fa-angle-double-right"></i>Calendars</a></li>
+								<li><a href="/sports-schedules"><i class="fa fa-angle-double-right"></i>Sports Schedules</a></li>
+								<li><a href="/notepads"><i class="fa fa-angle-double-right"></i>Notepads</a></li>
+								<li><a href="/specialty"><i class="fa fa-angle-double-right"></i>Specialty Magnets</a></li>
+								<li><a href="/other-products"><i class="fa fa-angle-double-right"></i>More Products</a></li>
                             </ul>
                         </div>
                         <div class="column customer-service col-sm-4 col-md-4">
@@ -151,7 +154,7 @@
     <div class="footer-lower">
         <div class="container">
             <div class="row ">
-                <div class="footerlink">  @Html.Action("TopicBlock", "Topic", new { systemName = "ncc_footer-gbs-family" })</div>
+                <div class="footerlink">  @Html.Action("TopicBlock", "Topic", new { systemName = "hom_footer-gbs-family" })</div>
                 <div class="footer-disclaimer">
                     @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
                 </div>
