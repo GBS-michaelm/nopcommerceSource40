@@ -59,57 +59,6 @@
 
 @{
 
-    //DBManager manager = new DBManager();
-    //var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-
-    //Dictionary<string, string> categoryIdDic = new Dictionary<string, string>();
-    //categoryIdDic.Add("@CategoryId", id);
-
-    //string selectSpecAttrAndCategoryDataView = "EXEC usp_SelectGBSCustomCategoryAndSpecAttributesData @CategoryId";
-    //DataView specAttrAndCategoryDataView = manager.GetParameterizedDataView(selectSpecAttrAndCategoryDataView, categoryIdDic);
-    //DataView categoryDataView = null;
-
-    //string h1 = Model.Name;
-    //string h2 = "";
-    //string topText = "Choose your magnet style to get started...";
-    //string backgroundImage = "";
-    //string foregroundImage = "";
-    //string bottomText = "Can't decide? Let us help you...";
-    //string backgroundColor = "";
-    //bool hasTeams = false;
-
-    //if (specAttrAndCategoryDataView.Count > 0)
-    //{
-
-    //    h1 = !(string.IsNullOrEmpty(specAttrAndCategoryDataView[0]["H1"].ToString())) ? specAttrAndCategoryDataView[0]["H1"].ToString() : Model.Name;
-    //    h2 = specAttrAndCategoryDataView[0]["H2"].ToString();
-    //    topText = specAttrAndCategoryDataView[0]["UpperText"].ToString();
-    //    backgroundImage = specAttrAndCategoryDataView[0]["BackgroundPicturePath"].ToString(); //"/Themes/" + @themeName + "/Content/images/" +  old ver, before full path in db
-    //    foregroundImage = specAttrAndCategoryDataView[0]["ForegroundPicturePath"].ToString();
-    //    bottomText = specAttrAndCategoryDataView[0]["LowerText"].ToString();
-    //    backgroundColor = specAttrAndCategoryDataView[0]["BackgroundColor"].ToString();
-    //    hasTeams = true;
-
-    //}
-    //else
-    //{
-    //    string selectCategoryData = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
-    //    categoryDataView = manager.GetParameterizedDataView(selectCategoryData, categoryIdDic);
-
-    //    if (categoryDataView.Count > 0)
-    //    {
-    //        h1 = !(string.IsNullOrEmpty(categoryDataView[0]["H1"].ToString())) ? categoryDataView[0]["H1"].ToString() : Model.Name;
-    //        h2 = categoryDataView[0]["H2"].ToString();
-    //        topText = categoryDataView[0]["UpperText"].ToString();
-    //        backgroundImage = categoryDataView[0]["BackgroundPicturePath"].ToString(); //Content/images/" + old ver, before full path in db
-    //        foregroundImage = categoryDataView[0]["ForegroundPicturePath"].ToString();
-    //        bottomText = categoryDataView[0]["LowerText"].ToString();
-    //        backgroundColor = categoryDataView[0]["BackgroundColor"].ToString();
-    //    }
-
-    //}
-
-
     //Load Team Select
     SportsTeam sportsTeam = new SportsTeam(id);
     string h1 = sportsTeam.h1;
@@ -123,64 +72,7 @@
     StringBuilder teamSectionStringBuilder = new StringBuilder();
     var categoryService = EngineContext.Current.Resolve<ICategoryService>();
     IList<Category> categoryProducts = categoryService.GetAllCategoriesByParentCategoryId(id);
-    var teamCategories = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
-
-
-    //teamSectionStringBuilder.Append("<main>");
-
-    //for(int i = 0; i < teamCategories.Count; i++)
-    //{
-    //    teamSectionStringBuilder.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
-    //    teamSectionStringBuilder.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + teamCategories[i].Name + "</label>");
-    //}
-    //for (int i = 0; i < teamCategories.Count; i++)
-    //{
-
-    //    IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[i].Id);
-    //    var teams = teamList.OrderBy(x => x.Name).ToList();
-
-    //    teamSectionStringBuilder.Append("<section id='content" + (i + 1) + "'><p>");
-    //    int cur = 1;
-
-    //    foreach (var team in teams)
-    //    {
-
-    //        if (cur % 8 == 0)
-    //        {
-    //            teamSectionStringBuilder.Append("<p class='inner-team-list'>");
-    //        }
-    //        else
-    //        {
-    //            teamSectionStringBuilder.Append("<a id='" + team.Id + "' class='team-from-list' href='#'>" + team.Name + "</a><br />");
-    //        }
-    //        if (cur % 8 == 7)
-    //        {
-    //            teamSectionStringBuilder.Append("</p>");
-    //        }
-
-    //        cur++;
-
-
-    //    }
-
-    //    teamSectionStringBuilder.Append("</section>");
-
-    //}
-
-    //teamSectionStringBuilder.Append("</main>");
-
-    //string teamHtml = teamSectionStringBuilder.ToString();
-
-
-    //After Team Is Selected Category Data
-
-
-
-
-
-    //Handle for team select change
-
-
+    var teamCategories = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();    
 
 }
 
@@ -228,138 +120,42 @@
         </div>
 
     </div>
-   
-    @{
-//StringBuilder teamHtml = new StringBuilder();
-//string rawTeam = "";
-
-//if (@hasTeams == true)
-//{
-//    //get specification attr list with teams
-//    //foreach specAttr, ex.professional team, college team, conference etc
-//    var specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-
-//    teamHtml.Append("<main>");
-
-//    //tabs
-//    for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-//    {
-//        IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-//        SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-
-//        teamHtml.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
-//        teamHtml.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + specificationAttr.Name + "</label>");
-
-//    }
-
-//    //tab content
-//    for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-//    {
-//        IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-//        SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-//        ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;                              
-
-//        teamHtml.Append("<section id='content" + (i + 1) + "'><p>");
-
-//        int cur = 1;
-//        foreach (var option in optionList)
-//        {
-
-//            if (cur % 8 == 0)
-//            {
-//                teamHtml.Append("<p class='inner-team-list'>");
-//            }
-//            else
-//            {
-//                teamHtml.Append("<a class='team-from-list' href='#'>" + option.Name + "</a><br />");
-//            }
-//            if (cur % 8 == 7)
-//            {
-//                teamHtml.Append("</p>");
-//            }
-
-//            cur++;
-
-//        }
-
-//        teamHtml.Append("</section>");
-//        //teamHtml.Append("<br />");
-
-//    }
-
-//    teamHtml.Append("</main>");
-
-
-//    rawTeam = teamHtml.ToString();
-
-//}
-    }
-
-    
-    <div id="selectTeamDiv" style="display: none">
-        <p id="selectedTeam"></p><a id="changeSelectedTeam">(Change)</a>
-    </div>
-    
+         
     <div>@*salewidgethere*@</div>
-    <div id="gateway-body" style="background-color : @backgroundColor;">
-        <div id="gateway-body-inner">
+    <div id="gateway-body" style="background-color : @backgroundColor;" class="bottommargin topmargin ">
+        <div id="gateway-body-inner" style="background-image: url(@backgroundImage)">
            <input id="cssChange" type="hidden" value="" />
            <input id="originalBodyHeight" type="hidden" value="" />
-
-            @* background top text from db *@
-            <p id="gatewayTopText">
-                @topText
-            </p>
-
-            <div id="gateway-inner">          
-
-                <div id="gatewayLayersContainer">
-                    @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
-                    @*<div id="teamSelect">
-                        @Html.Raw(teamHtml);
-                    </div>*@
-
-                    <div id="gatewayWYSIWYG" class="sports-wysiwyg">                      
-                        @*@if (!String.IsNullOrWhiteSpace(Model.Description))
-                        {*@
-                            @*wysiwyg from nop admin*@
-                            @*<p id="" class="list-content">
-                                @Html.Raw(Model.Description)
-                            </p>*@
-                            @*}*@
-
-                        @Html.Action("GatewayCatalogProducts", "GatewayPage", new { type = "sportsTeam", id = id})
-
-                    </div>
-
-                    @* foreground image from db *@
-                    <img id="gatewayForegroundImage" class="gateway-foreground-sports-team" src="@foregroundImage" />
-                    @* background images from db *@
-                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>       
+           
+            @*<div id="gateway-inner">*@   
+            <div id="topInner">
+                <p id="gatewayTopText">
+                    @topText
+                </p>
+            </div> 
+            <div id="gatewayLayersContainer" >
+                   
+                <div id="gatewayWYSIWYG" class="sports-wysiwyg">                                             
+                    @Html.Action("GatewayCatalogProducts", "GatewayPage", new { type = "sportsTeam", id = id})
                 </div>
-            
+                @* foreground image from db *@
+                @*<div id="sportImage">
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                </div>*@
+                @**@
+                @* background images from db *@                       
             </div>
-            <p id="gatewayBottomText">
-                @bottomText
-            </p>
+            <div id="bottomInner">
+                <p id="gatewayBottomText">
+                    @bottomText
+                </p>
+            </div>
+                
+            @*</div>*@
+            
         </div>
     </div>
 
-@{
-
-    @*if (@hasTeams == true)
-    {
-        //way for js to know gateway is a team page version
-        <input id="hasTeam" type="hidden" value="true" />
-    }*@
-
-
-
-@*var testLink = Url.RouteUrl("GenerateTeamHtml");
-<p id="link">@testLink</p>
-string link = testLink;*@
-
-}
         <script>
             
             $(document).ready(function () {
@@ -474,10 +270,15 @@ string link = testLink;*@
                                                                        
                         var $c = $('.container'),
                             $w = $(obj.outer),
-                            totalWidth = $('.footer').outerWidth(),
+                            totalWidth = $('.footer').outerWidth(),                         
                             wellWidth = $c.outerWidth(),
                             diff = totalWidth - wellWidth,
                             marg = -Math.floor(diff / 2) + 'px';
+
+                        console.log("footer width: " + $('.footer').outerWidth());
+                        console.log("container width: " + $c.outerWidth());
+                        console.log("");
+
                         $w.each(function () {
                             $(this).css({
                                 'margin-left': marg,
@@ -486,6 +287,7 @@ string link = testLink;*@
                         })
 
                         $(obj.inner).width($(".container").width());
+                        //$(".gateway-foreground-sports-team").height($(obj.inner).height());
 
                     });
 
@@ -504,7 +306,7 @@ string link = testLink;*@
 
                         if ($("#gateway-body").height() > 900) {
                             //football foreground image adjust, check if wysiwyg height is greater than a single rows height.
-                            $("#gatewayForegroundImage").addClass("gateway-foreground-sports-multirow");
+                            //$("#gatewayForegroundImage").addClass("gateway-foreground-sports-multirow");
                         }
                         
                     } else {
@@ -554,9 +356,8 @@ string link = testLink;*@
                     $("#gateway-inner").height(newHeight);
                 }
 
-                $(window).resize(HeightHandle);
-
-
+                //$(window).resize(CustomResize(obj));
+                
 
                 //992px switches to mobileish screen
 

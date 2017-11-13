@@ -14,11 +14,15 @@
 
 @{ 
     var bestPrice = "";
+    var mostPopular = "";
+    var width = Model.width.ToString("f1");
+    var length = Model.length.ToString("f1");
 
     if (Model.isFeatured)
     {
         bestPrice = "pricing-box best-price";
-    }else
+        mostPopular = "Most Popular";
+    } else
     {
         bestPrice = "pricing-box";
     }
@@ -30,17 +34,20 @@
 
 
         <div class='pricing-title'>
-
             <h3>@Model.name</h3>
-
+            <span>@mostPopular</span>
         </div>
-        <div class='gateway-image'>@Html.Widget("product_details_widget", Model.featuredProductId)</div>
+
+        <div class='gateway-image'>
+            @Html.Widget("product_details_widget", Model.featuredProductId)
+        </div>
+
         <div class='pricing-features'>
 
             <ul>
+               
+                <li> @width " X @length "</li>
                 
-                <li> @Model.width " X @Model.length "</li>
-
                 <li>@Model.name top</li>
 
                 <li></li>
@@ -54,11 +61,11 @@
         @{
             if (Model.isFeatured)
             {
-                <div class='pricing-action'><a href='' class='team-handle button button-rounded button-reveal button-large button-green tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
+                <div class='pricing-action'><a href='@Model.productLink' class='team-handle button button-rounded button-reveal button-large button-green tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
             }
             else
             {
-                <div class='pricing-action'><a href='' class='team-handle button button-rounded button-reveal button-large button-blue tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
+                <div class='pricing-action'><a href='@Model.productLink' class='team-handle button button-rounded button-reveal button-large button-blue tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
             }
         }
 

@@ -310,44 +310,33 @@
     </div>
     
     <div>@*salewidgethere*@</div>
-    <div id="gateway-body" style="background-color : @backgroundColor;">
-        <div id="gateway-body-inner">
-           <input id="cssChange" type="hidden" value="" />
-           <input id="originalBodyHeight" type="hidden" value="" />
+    <div id="gateway-body" style="background-color : @backgroundColor;" class="bottommargin topmargin ">
+        <div id="gateway-body-inner" style="background-image: url(@backgroundImage)">
+            <input id="cssChange" type="hidden" value="" />
+            <input id="originalBodyHeight" type="hidden" value="" />
 
-            @* background top text from db *@
-            <p id="gatewayTopText">
-                @topText
-            </p>
-
-            <div id="gateway-inner">          
-
-                <div id="gatewayLayersContainer">
-                    @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
-                    <div id="teamSelect">
-                        @Html.Raw(teamHtml);
-                    </div>
-
-                    <div id="gatewayWYSIWYG" class="sports-wysiwyg">                      
-                        @*@if (!String.IsNullOrWhiteSpace(Model.Description))
-                        {*@
-                            @*wysiwyg from nop admin*@
-                            @*<p id="" class="list-content">
-                                @Html.Raw(Model.Description)
-                            </p>*@
-                            @*}*@
-                    </div>
-
-                    @* foreground image from db *@
-                    <img id="gatewayForegroundImage" class="gateway-foreground-sports" src="@foregroundImage" />
-                    @* background images from db *@
-                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>       
-                </div>
-            
+            @*<div id="gateway-inner">*@
+            <div id="topInner">
+                <p id="gatewayTopText">
+                    @topText
+                </p>
             </div>
-            <p id="gatewayBottomText">
-                @bottomText;
-            </p>
+            <div id="gatewayLayersContainer">
+                <div id="teamSelect">
+                    @Html.Raw(teamHtml);
+                </div>
+                <div id="sportImage">
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                </div>
+            </div>
+            <div id="bottomInnerTabs">
+                <p id="gatewayBottomText">
+                    @bottomText
+                </p>
+            </div>
+
+            @*</div>*@
+
         </div>
     </div>
 
