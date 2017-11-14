@@ -73,7 +73,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
 
-            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
             DataView companyDataView = cacheManager.Get("sportsTeam" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();

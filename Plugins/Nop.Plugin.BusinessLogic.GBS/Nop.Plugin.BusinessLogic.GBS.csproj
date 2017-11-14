@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Nop.Core">
       <HintPath>..\..\Libraries\Nop.Core\bin\Debug\Nop.Core.dll</HintPath>
     </Reference>
@@ -61,8 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
+    <Compile Include="Controllers\AccessoryPageController.cs" />
     <Compile Include="Controllers\GatewayPageController.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="Domain\Accessory.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\SportsTeam.cs" />

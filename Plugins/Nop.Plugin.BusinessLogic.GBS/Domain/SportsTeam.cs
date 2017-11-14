@@ -78,7 +78,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //string sportsTeamDataQuery = "EXEC usp_SelectGBSCustomSportsTeam @categoryId";
             //DataView sportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
 
-            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
             DataView sportsTeamDataView = cacheManager.Get("sportsTeam" + teamId, 60, () => {
                 Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
@@ -128,9 +128,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         {
             List<SportsTeam> teams = new List<SportsTeam>();
 
-            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
-            if(teamList.Count > 0)
+            if (teamList.Count > 0)
             {
                 teams = cacheManager.Get("sportsTeamList" + teamList[0].ParentCategoryId, 60, () => {
 
