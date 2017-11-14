@@ -124,6 +124,31 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string gatewayHtml { get { return _gatewayHtml; } set { _gatewayHtml = value; } }
 
 
+        public List<SportsTeam> CreateSportsTeamListFromCategories(IList<Category> teamList)
+        {
+            List<SportsTeam> teams = new List<SportsTeam>();
+
+            ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+
+            if(teamList.Count > 0)
+            {
+                teams = cacheManager.Get("sportsTeamList" + teamList[0].ParentCategoryId, 60, () => {
+
+                    foreach (var team in teamList)
+                    {
+
+                        SportsTeam curTeam = new SportsTeam(team.Id);
+                        teams.Add(curTeam);
+                    }
+
+                    return teams;
+
+                });
+            }   
+            
+            return teams;
+        }
+
         public DataView GetExtendedTeamData(int teamId)
         {
             Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
