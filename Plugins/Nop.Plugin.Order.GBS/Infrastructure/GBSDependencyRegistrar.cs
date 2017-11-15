@@ -51,6 +51,8 @@ namespace Nop.Services.Order.GBS
                 builder.RegisterType<CustomTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();
+              //  builder.RegisterType<GBSOrderService>().As<IOrderService>().InstancePerLifetimeScope();
+
             }
 
         }

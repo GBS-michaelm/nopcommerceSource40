@@ -19,13 +19,18 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
+using Nop.Plugin.Order.GBS.Orders;
 
 using Nop.Web.Factories;
+using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Order.GBS.Factories
 {
     class GBSOrderModelFactory : OrderModelFactory
     {
+        private readonly IPluginFinder _pluginFinder;
 
         public GBSOrderModelFactory(IAddressModelFactory addressModelFactory,
             IOrderService orderService,
@@ -49,7 +54,8 @@ namespace Nop.Plugin.Order.GBS.Factories
             ShippingSettings shippingSettings,
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
-            PdfSettings pdfSettings) : base(
+            PdfSettings pdfSettings,
+            IPluginFinder pluginFinder) : base(
              addressModelFactory,
              orderService,
              workContext,
@@ -73,7 +79,9 @@ namespace Nop.Plugin.Order.GBS.Factories
              addressSettings,
              rewardPointsSettings,
              pdfSettings
-                ) { }
+                ) {
+            this._pluginFinder = pluginFinder;
+        }
 
         /// <summary>
         /// Prepare the customer order list model
@@ -82,13 +90,12 @@ namespace Nop.Plugin.Order.GBS.Factories
         public override CustomerOrderListModel PrepareCustomerOrderListModel()
         {
             CustomerOrderListModel model = base.PrepareCustomerOrderListModel();
-            CustomerOrderListModel.OrderDetailsModel testorder = new CustomerOrderListModel.OrderDetailsModel();
-            testorder.CustomOrderNumber = "homtest";
-            testorder.OrderStatus = "archived";
-            //OrderDetailsModel.OrderItemModel testitem = new OrderDetailsModel.OrderItemModel();
-            //testitem.ProductId = 1;
-            //testorder.
-            model.Orders.Add(testorder);
+            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
+            if (miscPlugins.Count > 0)
+            {
+                List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> legacyOrders = Orders.OrderExtensions.getLegacyOrders();
+                ((List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
+            }
 
             return model;
         }

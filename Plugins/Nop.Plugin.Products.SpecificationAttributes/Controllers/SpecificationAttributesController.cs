@@ -526,7 +526,17 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                 foreach (var l in list)
                 {
-                    var order = _orderService.GetOrderById(l.Id);
+                    Nop.Core.Domain.Orders.Order order = null;
+
+                    if (l.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(l.CustomProperties["isLegacy"]) == true)
+                    {
+                        order = Nop.Plugin.Order.GBS.Orders.OrderExtensions.GetOrderById(l.Id,true);
+                    }
+                    else
+                    {
+                        order = _orderService.GetOrderById(l.Id);
+                    }
+
                     var proitems = order.OrderItems;
                     var firstName = order.ShippingAddress != null ? order.ShippingAddress.FirstName : "";
                     var lastName = order.ShippingAddress != null ? order.ShippingAddress.LastName : "";
