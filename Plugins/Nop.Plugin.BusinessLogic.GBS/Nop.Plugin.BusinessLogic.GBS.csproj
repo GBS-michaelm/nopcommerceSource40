@@ -65,10 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
-    <Compile Include="Controllers\AccessoryPageController.cs" />
     <Compile Include="Controllers\GatewayPageController.cs" />
     <Compile Include="DataManager.cs" />
-    <Compile Include="Domain\Accessory.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\SportsTeam.cs" />

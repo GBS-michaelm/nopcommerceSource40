@@ -1,2 +1,2 @@
 DataProvider: sqlserver
-DataConnectionString: Data Source=.;Initial Catalog=nopCommerceLocal;Integrated Security=True;Persist Security Info=False;MultipleActiveResultSets=true;
+DataConnectionString: Data Source=10.200.1.124;Initial Catalog=nopCommerceStage;Integrated Security=False;MultipleActiveResultSets=true;Persist Security Info=False;User ID=sa;Password=n0mansSERVER
