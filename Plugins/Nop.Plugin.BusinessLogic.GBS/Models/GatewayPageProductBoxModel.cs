@@ -17,6 +17,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         public int price;
         public bool isFeatured;
         public int featuredProductId;
+        public string productLink;
 
     }
 

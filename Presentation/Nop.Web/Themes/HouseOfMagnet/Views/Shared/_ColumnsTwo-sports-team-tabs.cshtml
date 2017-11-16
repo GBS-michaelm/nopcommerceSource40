@@ -146,22 +146,25 @@
     {
 
         IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[i].Id);
-        var teams = teamList.OrderBy(x => x.Name).ToList();
+
+        List<SportsTeam> teams = sportsTeam.CreateSportsTeamListFromCategories(teamList);
+
+        var teamsInOrder = teams.OrderBy(x => x.Name).ToList();
 
         teamSectionStringBuilder.Append("<section id='content" + (i + 1) + "'><p>");
         int cur = 1;
 
-        foreach (var team in teams)
+        foreach (var curTeam in teamsInOrder)
         {
 
-            SportsTeam curTeam = new SportsTeam(team.Id);
+            //SportsTeam curTeam = new SportsTeam(team.Id);
             
             if (cur % 8 == 0)
             {
                 teamSectionStringBuilder.Append("<p class='inner-team-list'>");
             }
             
-                teamSectionStringBuilder.Append("<a id='" + team.Id + "' class='team-from-list' href='" + curTeam.SeName + "'>" + team.Name + "</a><br />");
+                teamSectionStringBuilder.Append("<a id='" + curTeam.Id + "' class='team-from-list' href='" + curTeam.SeName + "'>" + curTeam.Name + "</a><br />");
             
             if (cur % 8 == 7)
             {
@@ -310,44 +313,33 @@
     </div>
     
     <div>@*salewidgethere*@</div>
-    <div id="gateway-body" style="background-color : @backgroundColor;">
-        <div id="gateway-body-inner">
-           <input id="cssChange" type="hidden" value="" />
-           <input id="originalBodyHeight" type="hidden" value="" />
+    <div id="gateway-body" style="background-color : @backgroundColor;" class="bottommargin topmargin ">
+        <div id="gateway-body-inner" style="background-image: url(@backgroundImage)">
+            <input id="cssChange" type="hidden" value="" />
+            <input id="originalBodyHeight" type="hidden" value="" />
 
-            @* background top text from db *@
-            <p id="gatewayTopText">
-                @topText
-            </p>
-
-            <div id="gateway-inner">          
-
-                <div id="gatewayLayersContainer">
-                    @* will only display on certain sports pages. will hide wysiwyg until team is selected, all of gateway body *@
-                    <div id="teamSelect">
-                        @Html.Raw(teamHtml);
-                    </div>
-
-                    <div id="gatewayWYSIWYG" class="sports-wysiwyg">                      
-                        @*@if (!String.IsNullOrWhiteSpace(Model.Description))
-                        {*@
-                            @*wysiwyg from nop admin*@
-                            @*<p id="" class="list-content">
-                                @Html.Raw(Model.Description)
-                            </p>*@
-                            @*}*@
-                    </div>
-
-                    @* foreground image from db *@
-                    <img id="gatewayForegroundImage" class="gateway-foreground-sports" src="@foregroundImage" />
-                    @* background images from db *@
-                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>       
-                </div>
-            
+            @*<div id="gateway-inner">*@
+            <div id="topInner">
+                <p id="gatewayTopText">
+                    @topText
+                </p>
             </div>
-            <p id="gatewayBottomText">
-                @bottomText;
-            </p>
+            <div id="gatewayLayersContainer">
+                <div id="teamSelect">
+                    @Html.Raw(teamHtml);
+                </div>
+                <div id="sportImage">
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                </div>
+            </div>
+            <div id="bottomInnerTabs">
+                <p id="gatewayBottomText">
+                    @bottomText
+                </p>
+            </div>
+
+            @*</div>*@
+
         </div>
     </div>
 

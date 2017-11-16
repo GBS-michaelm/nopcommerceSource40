@@ -7,6 +7,15 @@
 /* Using Simplex js for nopAccelerate Simplex Theme */
 
 $(document).ready(function () {
+    var id = $('html').attr('id');
+    if (id == 'other-products-page') {
+        $('.Personalized-Pen').parents('div[class^="pictures"]').addClass("other-products-page-pen");
+        $('.Baseball-Insert').parents('div[class^="pictures"]').addClass("other-products-page-Baseball");
+        $('.Awards').parents('div[class^="pictures"]').addClass("other-products-page-Award");
+    }
+
+
+    
     //Used js for Header Sticky Menu  
     //http://www.jqueryscript.net/menu/Sticky-Navigation-Bar-with-jQuery-Bootstrap.html
     $(window).bind('scroll', function () {
@@ -304,3 +313,4 @@ $(document).on("nopAjaxFiltersFiltrationCompleteEvent", function (e) {
     });
 });
 //</script>
+
