@@ -394,32 +394,38 @@ namespace Nop.Services.Custom.Orders
                         GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
                         if (ccFiles.Count > 0)
                         {
-                            try
+                            List<List<ProductFileModel>> chunksOf3 = SplitList(ccFiles,3);
+                            foreach (var ccFilesOf3 in chunksOf3)
                             {
-                                string response = FileService.CopyFilesToProduction(ccFiles, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
-                                List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
-                                foreach (ProductFileModel product in responseFiles) {
-                                    if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception"))
+                                try
+                                {
+                                    string response = FileService.CopyFilesToProduction(ccFilesOf3, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
+                                    List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
+                                    foreach (ProductFileModel product in responseFiles)
                                     {
-                                        Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
-                                        paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
-                                        paramDicEx.Add("@ProductType", product.product.productType);
-                                        paramDicEx.Add("@FileName", product.product.productionFileName);
+                                        if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception"))
+                                        {
+                                            Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
+                                            paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
+                                            paramDicEx.Add("@ProductType", product.product.productType);
+                                            paramDicEx.Add("@FileName", product.product.productionFileName);
 
-                                        //insert = "INSERT INTO tblNOPProductionFiles (nopOrderItemID, ProductType,FileName) ";
-                                        //insert += "VALUES ('" + product.product.sourceReference + "', '" + product.product.productType + "', '" + product.product.productionFileName + "')";
-                                        insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName";
-                                        manager.SetParameterizedQueryNoData(insert, paramDicEx);
-                                    }else
-                                    {
-                                        _logger.Error("Error with product filename" + response, null, customer);
+                                            //insert = "INSERT INTO tblNOPProductionFiles (nopOrderItemID, ProductType,FileName) ";
+                                            //insert += "VALUES ('" + product.product.sourceReference + "', '" + product.product.productType + "', '" + product.product.productionFileName + "')";
+                                            insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName";
+                                            manager.SetParameterizedQueryNoData(insert, paramDicEx);
+                                        }
+                                        else
+                                        {
+                                            _logger.Error("Error with product filename" + response, null, customer);
+                                        }
                                     }
-                                }
 
-                            }
-                            catch (Exception eee)
-                            {
-                                _logger.Error("Error accesing File Service", eee, customer);
+                                }
+                                catch (Exception eee)
+                                {
+                                    _logger.Error("Error accesing File Service", eee, customer);
+                                }
                             }
                         }
 
@@ -444,6 +450,14 @@ namespace Nop.Services.Custom.Orders
 
             return myResult;
 
+        }
+
+        public static List<List<T>> SplitList<T>(List<T> me, int size = 50)
+        {
+            var list = new List<List<T>>();
+            for (int i = 0; i < me.Count; i += size)
+                list.Add(me.GetRange(i, Math.Min(size, me.Count - i)));
+            return list;
         }
 
         public string GetReturnAddressEnvelopeOption(OrderItem item)
