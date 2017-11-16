@@ -37,3 +37,4 @@ Order.GBS
 Checkout.GBS
 Logging.GBS
 Widgets.Marketing
+Payments.GBS.PurchaseOrder
