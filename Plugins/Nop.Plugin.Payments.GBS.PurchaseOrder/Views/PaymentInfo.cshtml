@@ -14,8 +14,8 @@
     </tr>
     <tr>
         <td width="100px">
-            @*@Html.LabelFor(model => model.PurchaseOrderName, false):*@
-            <label for="PurchaseOrderPhoneName">NAME:</label>
+            @Html.LabelFor(model => model.PurchaseOrderName, false):
+            @*<label for="PurchaseOrderPhoneName">NAME:</label>*@
         </td>
         <td>
             @Html.TextBoxFor(model => model.PurchaseOrderName, new { style = "Width: 165px;", autocomplete = "off" })
@@ -24,8 +24,8 @@
     </tr>
     <tr>
         <td width="150px">
-            @*@Html.LabelFor(model => model.PurchaseOrderPhoneNumber, false):*@
-            <label for="PurchaseOrderPhoneNumber">PHONE NUMBER:</label>
+            @Html.LabelFor(model => model.PurchaseOrderPhoneNumber, false):
+            @*<label for="PurchaseOrderPhoneNumber">PHONE NUMBER:</label>*@
         </td>
         <td>
             @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { style = "Width: 165px;", autocomplete = "off" })
