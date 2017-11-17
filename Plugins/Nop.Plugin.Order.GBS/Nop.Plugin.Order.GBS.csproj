@@ -38,7 +38,8 @@
     <Reference Include="FileService">
       <HintPath>..\..\Libraries\GBS\FileService.dll</HintPath>
     </Reference>
-    <Reference Include="GBSFileServiceClient">
+    <Reference Include="GBSFileServiceClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\GBS\GBSFileServiceClient.dll</HintPath>
     </Reference>
     <Reference Include="GBSOrderServiceClient">

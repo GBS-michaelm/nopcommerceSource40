@@ -25,9 +25,16 @@
                             </span>
                             <span class="value">
                                 @Model.ShippingMethod
-                                <span id="contactPhone" style="display:block">
-                                    Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
-                                </span>
+                                @if (Model.SelectedPickUpInStore)
+                                {
+                                    <span id="contactPhone" style="display:block">
+                                        Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    HttpContext.Current.Session["customerPhoneNumber"] = "";
+                                }
                             </span>
                         </li>
                         <li>&nbsp;</li>

@@ -69,6 +69,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                         productBox.price = (int)featuredProductData.Price;
                         productBox.isFeatured = customExtendedCategoryData.isFeatured;
                         productBox.featuredProductId = customExtendedCategoryData.featuredProductId;
+                        productBox.productLink = customExtendedCategoryData.SeName;
 
                         teamProductBlocks.productBoxes.Add(productBox);
 
