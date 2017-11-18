@@ -119,9 +119,6 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
             _httpContext.Session["purchaseOrderNumber"] = form["PurchaseOrderNumber"];
             _httpContext.Session["purchaseOrderName"] = form["PurchaseOrderName"];
             _httpContext.Session["purchaseOrderPhoneNumber"] = form["PurchaseOrderPhoneNumber"];
-            ViewBag.PO = form["PurchaseOrderNumber"];
-            ViewBag.POName = form["PurchaseOrderName"];
-            ViewBag.POPhoneNumber = form["PurchaseOrderPhoneNumber"];
             return paymentInfo;
         }
     }
