@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.GBS.PurchaseOrder.Models;
@@ -16,16 +17,19 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly HttpContextBase _httpContext;
 
         public GBSPaymentPurchaseOrderController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            HttpContextBase httpContext)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._httpContext = httpContext;
         }
         
         [AdminAuthorize]
@@ -112,6 +116,12 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
             paymentInfo.CustomValues.Add(_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber"), form["PurchaseOrderNumber"]);
             paymentInfo.CustomValues.Add(_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderName"), form["PurchaseOrderName"]);
             paymentInfo.CustomValues.Add(_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderPhoneNumber"), form["PurchaseOrderPhoneNumber"]);
+            _httpContext.Session["purchaseOrderNumber"] = form["PurchaseOrderNumber"];
+            _httpContext.Session["purchaseOrderName"] = form["PurchaseOrderName"];
+            _httpContext.Session["purchaseOrderPhoneNumber"] = form["PurchaseOrderPhoneNumber"];
+            ViewBag.PO = form["PurchaseOrderNumber"];
+            ViewBag.POName = form["PurchaseOrderName"];
+            ViewBag.POPhoneNumber = form["PurchaseOrderPhoneNumber"];
             return paymentInfo;
         }
     }

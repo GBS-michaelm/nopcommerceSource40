@@ -1,5 +1,8 @@
 ﻿@{
     Layout = "";
+    var purchaseOrderNumber = HttpContext.Current.Session["purchaseOrderNumber"];
+    var purchaseOrderName = HttpContext.Current.Session["purchaseOrderName"];
+    var purchaseOrderPhoneNumber = HttpContext.Current.Session["purchaseOrderPhoneNumber"];
 }
 @model Nop.Plugin.Payments.GBS.PurchaseOrder.Models.PaymentInfoModel
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
@@ -8,7 +11,7 @@
             @Html.LabelFor(model => model.PurchaseOrderNumber, false):
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off" })
+            @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderNumber })
             @Html.ValidationMessageFor(model => model.PurchaseOrderNumber)
         </td>
     </tr>
@@ -18,7 +21,7 @@
             @*<label for="PurchaseOrderPhoneName">NAME:</label>*@
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderName, new { style = "Width: 165px;", autocomplete = "off" })
+            @Html.TextBoxFor(model => model.PurchaseOrderName, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderName })
             @Html.ValidationMessageFor(model => model.PurchaseOrderName)
         </td>
     </tr>
@@ -28,7 +31,7 @@
             @*<label for="PurchaseOrderPhoneNumber">PHONE NUMBER:</label>*@
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { style = "Width: 165px;", autocomplete = "off" })
+            @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderPhoneNumber })
             @Html.ValidationMessageFor(model => model.PurchaseOrderPhoneNumber)
         </td>
     </tr>
