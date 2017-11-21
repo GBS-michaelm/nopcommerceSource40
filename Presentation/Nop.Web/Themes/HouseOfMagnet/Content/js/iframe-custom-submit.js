@@ -1,25 +1,53 @@
 ﻿(function ($) {
-
-    $.fn.SubmitItem = function (inputs) {
+   
+    $.fn.SubmitItem = function (option,  qty) {
         this.click(function () {
-            var postdata = JSON.stringify({ test: inputs });
+            var userInput = GetCSV(option);
             $.ajax({
                 cache: false,
-                url: "/shoppingcart/submititem?test=" + postdata,
+                url: "/shoppingcart/submititem?json=" + userInput + "&qty=" + qty,
                 type: "post",
-                data: postdata,
                 success: function (data) {
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    _notImplemented("update price failed responce handling not implemented");
+
                 }
             });
-            console.log(inputs.test);
+
         })
     };
 
-    var DataInput = function (inputType, inputValue) {
-        this.inputType = inputType;
-        this.inputValue = inputValue;
-    }
+    $.fn.CollectProductAttributes = function ( formselector, url) {
+        this.click(function () {
+            $.ajax({
+                cache: false,
+                url: "shoppingcart/getproductoptions",
+                data: $(formselector).serialize(),
+                type: "post",
+                success: function (data) {
+                    window.location = url
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+    
+                }
+            });
+
+        })
+    };
+   
+  
+
+    //var GetCSV = function (input) {
+    //    var csvVal = "";
+    //    for (var key in input) {
+
+    //        csvVal += key + ":" + input[key] + ","
+
+    //    }
+    //    csvVal = csvVal.slice(0, 1);
+
+    //    return csvVal;
+    //}
+    
 }(jQuery));
+

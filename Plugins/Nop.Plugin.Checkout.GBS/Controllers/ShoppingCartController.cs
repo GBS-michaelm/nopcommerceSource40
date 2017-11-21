@@ -6,11 +6,6 @@ using Nop.Core;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
-using Nop.Services.Stores;
-using Nop.Services;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
-using Nop.Web.Controllers;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Media;
@@ -33,11 +28,9 @@ using Nop.Core.Domain.Tax;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Web.Models.ShoppingCart;
 using System.Globalization;
 using Nop.Web.Framework.Security;
-using Nop.Web;
 using Nop.Core.Plugins;
 using Nop.Plugin.Checkout.GBS;
 using Newtonsoft.Json;
@@ -47,7 +40,8 @@ using Nop.Web.Factories;
 using System.Text;
 using Nop.Plugin.Checkout.GBS.Models;
 using Newtonsoft.Json.Linq;
-using Nop.Plugin.Checkout.GBS.Serialization;
+
+using System.IO;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -288,27 +282,57 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if we got here just return the base value;
             return base.ProductDetails_AttributeChange(productId, validateAttributeConditions, loadPicture, form);
         }
-        
+
         #region Custom Submit Cart For Edit
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubmitItem(string jsonData)//int productId, string dataJson, int quantity, string optionsJson = "", string formOptions = "")
+        public ActionResult SetProductOptions(string options)//int productId, string dataJson, int quantity, string optionsJson = "", string formOptions = "")
         {
-            var product = _productService.GetProductById(2993);
-            var customer = _workContext.CurrentCustomer;
+            var productMappings = _productAttributeService.GetProductAttributeMappingsByProductId(2993);
+
+            Session["productOptions"] = options.ToString();
+            return Json(new { status = "success" });
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
+        {
+            try
+            {
+                
+                var product = _productService.GetProductById(Convert.ToInt32(productId));
+                var customer = _workContext.CurrentCustomer;
 
 
-            var attributesXml = GetProductAttributes(product, jsonData);
+                string optionsAttributesXml = string.Empty;
+                if (Convert.ToBoolean(editActive.ToLower()))
+                {
+                    _cartService.UpdateShoppingCartItem(customer, Convert.ToInt32(cartItemId), "", 0, quantity: 0);
+                    optionsAttributesXml = productXml; 
+                }
+                else
+                {
+                    var prodOptions = Session["productOptions"].ToString();
+                    var options = DeserializeOptions(prodOptions);
+                    optionsAttributesXml = GetOptionsAttributes(product, options);
+                }
+                var attributesXml = GetProductAttributes(product,  formOptions, dataJson, cartImageSrc, optionsAttributesXml);
+                var warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
 
-            var warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: 1);
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+                var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
 
-            var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
-            return Json(new { status = "success" }); //itemId = createdItem.Id, designId = designId 
+
+                return Json(new { status = "success" });
+            } catch(Exception e){
+                return Json(new { status = e.Message });
+            }
+
         }
 
         private Dictionary<string, SelectedOption> DeserializeOptions(string optionsJson)
@@ -323,22 +347,41 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         }
 
 
-        private string GetProductAttributes(Core.Domain.Catalog.Product product, string jsonData)//, string formOptions)
+        private string GetProductAttributes(Core.Domain.Catalog.Product product,  string formOptions, string iframeData, string cartImageSrc, string optionsAttributesXml)
         {
             var productMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             
-           // _productAttributeParser.AddProductAttribute
-            //var productAttributeMappingCcId = productMappings.First(x => x.ProductAttributeId == ccSettings.CcIdAttributeId);
-            var optionsAttributesXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", "22", "TEST");
-            ////var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
-            ////optionsAttributesXml += formOptionsAttributeXml;
+            int iframeDataId = 0;
+            int customImgId = 0;
+            foreach (var item in productMappings)
+            {
+                switch (item.ProductAttribute.Name)
+                {
+                    case "IframeData":
+                        iframeDataId = item.Id;
+                        break;
+                    case "CustomImgUrl":
+                        customImgId = item.Id;
+                        break;
+                    default:
+                        break;
+                }
 
-            return "<Attributes>" +
+
+            }
+            string customImgXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", customImgId, cartImageSrc);
+   
+            var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
+            optionsAttributesXml += formOptionsAttributeXml;
+
+            return string.Format("<Attributes>"  +
+                                 "<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>" +
                                  optionsAttributesXml +
-                                 "</Attributes>";//productAttributeMappingCcId.Id, designId);
+                                 customImgXml +
+                                 "</Attributes>", iframeDataId.ToString(), iframeData);
 
         }
-       
+
         private string GetOptionsAttributes(Core.Domain.Catalog.Product product, Dictionary<string, SelectedOption> options)
         {
             var result = new StringBuilder();
@@ -352,7 +395,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     result.AppendFormat("<ProductAttribute ID=\"{0}\">", attrId);
                     foreach (var selectedOption in val.Value)
                     {
-                        result.AppendFormat("<ProductAttributeValue><Value>{0}</Value></ProductAttributeValue>", "TEST");
+                        result.AppendFormat("<ProductAttributeValue><Value>{0}</Value></ProductAttributeValue>", selectedOption);
                     }
                     result.AppendLine("</ProductAttribute>");
                 }

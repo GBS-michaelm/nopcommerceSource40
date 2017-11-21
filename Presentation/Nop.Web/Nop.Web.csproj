@@ -1717,6 +1717,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\iframe-custom-submit.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\HouseOfMagnet\Content\js\iframe-data.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />

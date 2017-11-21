@@ -1,13 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nop.Plugin.Checkout.GBS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Nop.Plugin.Checkout.GBS.Serialization
+namespace Nop.Plugin.Checkout.GBS.Models
 {
     internal class OptionValueConverter : JsonConverter
     {
