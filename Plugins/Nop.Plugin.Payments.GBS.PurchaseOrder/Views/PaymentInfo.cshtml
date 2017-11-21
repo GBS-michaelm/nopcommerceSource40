@@ -11,8 +11,17 @@
             @Html.LabelFor(model => model.PurchaseOrderNumber, false):
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderNumber })
-            @Html.ValidationMessageFor(model => model.PurchaseOrderNumber)
+            @*@Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderNumber })
+            @Html.ValidationMessageFor(model => model.PurchaseOrderNumber)*@
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    <input class="form-control" data-val="true" data-val-required="PO number is required." id="PurchaseOrderNumber" name="PurchaseOrderNumber" value='@HttpContext.Current.Session["purchaseOrderNumber"]' aria-required="true" type="text">
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddPOValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderNumber" data-valmsg-replace="true"></span>
+                </div>
+            </div>
         </td>
     </tr>
     <tr>
@@ -20,8 +29,17 @@
             @Html.LabelFor(model => model.PurchaseOrderName, false):
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderName, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderName })
-            @Html.ValidationMessageFor(model => model.PurchaseOrderName)
+            @*@Html.TextBoxFor(model => model.PurchaseOrderName, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderName })
+            @Html.ValidationMessageFor(model => model.PurchaseOrderName)*@
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    <input class="form-control" data-val="true" data-val-required="Name is required." id="PurchaseOrderName" name="PurchaseOrderName" value='@HttpContext.Current.Session["purchaseOrderName"]' aria-required="true" type="text">
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddNameValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderName" data-valmsg-replace="true"></span>
+                </div>
+            </div>
         </td>
     </tr>
     <tr>
@@ -29,8 +47,93 @@
             @Html.LabelFor(model => model.PurchaseOrderPhoneNumber, false):
         </td>
         <td>
-            @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderPhoneNumber })
-            @Html.ValidationMessageFor(model => model.PurchaseOrderPhoneNumber)
+            @*@Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { style = "Width: 165px;", autocomplete = "off", Value = purchaseOrderPhoneNumber })
+            @Html.ValidationMessageFor(model => model.PurchaseOrderPhoneNumber)*@
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    <input class="form-control" data-val="true" data-val-required="Phone number is required." id="PurchaseOrderPhoneNumber" name="PurchaseOrderPhoneNumber" value='@HttpContext.Current.Session["purchaseOrderPhoneNumber"]' aria-required="true" type="text">
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddPhoneValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderPhoneNumber" data-valmsg-replace="true"></span>
+                </div>
+            </div>
         </td>
     </tr>
 </table>
+<style>
+    .inactive {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("button[name='nextstep']").addClass('inactive');
+    });
+    var subPhone = function submitPhone() {
+        $('#AddPhoneValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+        $('#AddPhoneValidation').html("");
+        var phonenumber = $(this).val();
+        var phonenumber = phonenumber.replace(/[^\d]/g, '');
+        if (phonenumber.length > 6 && phonenumber.length < 11) {
+            $("button[name='nextstep']").removeClass('inactive');
+            return true;
+        } else {
+            $('#AddPhoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+            $('#AddPhoneValidation').html("7 and 10 characters required.");
+            document.getElementById("PurchaseOrderPhoneNumber").focus();
+            document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
+            $("button[name='nextstep']").addClass('inactive');
+            return false;
+        }
+    }
+    $('#PurchaseOrderPhoneNumber').blur(subPhone);
+    $('#PurchaseOrderPhoneNumber').on('keydown', function (e) {
+        if (e.which == 13) {
+            if (subPhone.call(this)) {
+                $("button[name='nextstep']").click();
+            } else {
+                return false;
+            }
+        }
+    });
+
+    var subPO = function submitPO() {
+        $('#AddPOValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+        $('#AddPOValidation').html("");
+        var ponumber = $(this).val();
+        if (ponumber != '') {
+            $("button[name='nextstep']").removeClass('inactive');
+            return true;
+        } else {
+            $('#AddPOValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+            $('#AddPOValidation').html("PO number is required.");
+            document.getElementById("PurchaseOrderNumber").focus();
+            document.getElementById("PurchaseOrderNumber").value = phonenumber;
+            $("button[name='nextstep']").addClass('inactive');
+            return false;
+        }
+    }
+    $('#PurchaseOrderNumber').blur(subPO);
+
+    var subName = function submitName() {
+        $('#AddNameValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+        $('#AddNameValidation').html("");
+        var name = $(this).val();
+        if (name != '') {
+            $("button[name='nextstep']").removeClass('inactive');
+            return true;
+        } else {
+            $('#AddNameValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+            $('#AddNameValidation').html("Name is required.");
+            document.getElementById("PurchaseOrderName").focus();
+            document.getElementById("PurchaseOrderName").value = name;
+            $("button[name='nextstep']").addClass('inactive');
+            return false;
+        }
+    }
+    $('#PurchaseOrderName').blur(subName);
+
+
+</script>
