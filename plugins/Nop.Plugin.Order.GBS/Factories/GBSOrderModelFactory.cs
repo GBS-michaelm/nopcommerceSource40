@@ -25,6 +25,7 @@ using Nop.Web.Factories;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Order.GBS.Factories
 {
@@ -90,11 +91,12 @@ namespace Nop.Plugin.Order.GBS.Factories
         public override CustomerOrderListModel PrepareCustomerOrderListModel()
         {
             CustomerOrderListModel model = base.PrepareCustomerOrderListModel();
+           // string colmJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
             var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-                List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> legacyOrders = Orders.OrderExtensions.getLegacyOrders();
-                ((List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
+                List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = Orders.OrderExtensions.getLegacyOrders();
+                ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
             }
 
             return model;

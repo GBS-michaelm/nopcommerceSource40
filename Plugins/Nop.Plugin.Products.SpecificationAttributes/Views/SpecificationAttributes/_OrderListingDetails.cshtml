@@ -23,7 +23,7 @@
                 </div>*@
             </div>
             <div class="head-col4">
-                <div class="order-label" >@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(@Model.Id)<span id="@DBManager.getGBSOrderID(@Model.Id)" class="hidden">@Model.Id</span></div>
+                <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @Model.CustomProperties["orderNo"]<span id="@Model.CustomProperties["orderNo"]" class="hidden">@Model.Id</span></div>
                 <div class="order-links">
                     <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })">Order Details</a> |
                     <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })">Invoice</a>

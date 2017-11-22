@@ -31,6 +31,7 @@ using Nop.Web.Factories;
 using System.Collections;
 using Nop.Services.Orders;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.DataAccess.GBS;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -521,6 +522,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         public ActionResult OrderListing(IEnumerable<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> list)
         {
             var model1 = new List<CustomerOrderListModel.OrderDetailsModel>();
+
             if (list != null)
             {
 
@@ -534,9 +536,10 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     }
                     else
                     {
+                        //order = Nop.Plugin.Order.GBS.Orders.OrderExtensions.GetOrderById(l.Id, false);
                         order = _orderService.GetOrderById(l.Id);
+                        l.CustomProperties["orderNo"] = DBManager.getGBSOrderID(l.Id);
                     }
-
                     var proitems = order.OrderItems;
                     var firstName = order.ShippingAddress != null ? order.ShippingAddress.FirstName : "";
                     var lastName = order.ShippingAddress != null ? order.ShippingAddress.LastName : "";
@@ -552,155 +555,173 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
                         IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
                         ShipTo = firstName + " " + lastName,
-                        Monthvalue = (DateTime.Now.Year - l.CreatedOn.Year) * 12 + DateTime.Now.Month - l.CreatedOn.Month
+                        Monthvalue = (DateTime.Now.Year - l.CreatedOn.Year) * 12 + DateTime.Now.Month - l.CreatedOn.Month,
+                        CustomProperties = l.CustomProperties
                     };
 
                     foreach (var orderItem in proitems)
                     {
-                        var products = new List<Product>();
-                        products.Add(orderItem.Product);
-                        var Products = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
-                        var product = _productService.GetProductById(orderItem.ProductId);
-                        var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
-                        var orderItemModel = new CustomerOrderListModel.OrderItemModel
+                        if (orderItem.Product.Id != 0)
                         {
-                            Id = orderItem.Id,
-                            OrderItemGuid = orderItem.OrderItemGuid,
-                            Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                            ProductId = orderItem.Product.Id,
-                            ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                            ProductSeName = orderItem.Product.GetSeName(),
-                            Quantity = orderItem.Quantity,
-                            AttributeInfo = orderItem.AttributeDescription,
-                            UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
-                            ImageUrl = Products.DefaultPictureModel.ImageUrl
-
-                        };
-                        var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
-                        var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
-                        if (imageSpecAttrOption.Any())
-                        {
-                            var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
-                            if (thumbnailBackground.Any())
+                            var products = new List<Product>();
+                            products.Add(orderItem.Product);
+                            var Products = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                            var product = _productService.GetProductById(orderItem.ProductId);
+                            var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+                            var orderItemModel = new CustomerOrderListModel.OrderItemModel
                             {
-                                //foreach (var thbackground in thumbnailBackground)
-                                //{
-                                //    var backGround = thbackground.Name;
-                                //    if (backGround.Any())
-                                //    {
-                                //        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
-                                //        if (backGroundShape.Any())
-                                //        {
-                                //            if (backGround == "TreatmentImage")
-                                //            {
-                                //                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
-                                //            }
-                                //            else
-                                //            {
-                                //                var optionValue = backGroundShape.FirstOrDefault().Name;
-                                //                if (optionValue.Any())
-                                //                {
-                                //                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
-                                //                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
-                                //                    if (optionValue.Contains("#") && optionValue.Length == 7)
-                                //                    {
-                                //                        ViewBag.fill = "background-color:" + optionValue;
-                                //                    }
-                                //                    else
-                                //                    {
-                                //                        ViewBag.fill = "background-image:url('" + optionValue + "')";
-                                //                    }
-                                //                }
-                                //            }
-                                //        }
-                                //    }
-                                //}
-                                foreach (var thbackground in thumbnailBackground)
+                                Id = orderItem.Id,
+                                OrderItemGuid = orderItem.OrderItemGuid,
+                                Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                                ProductId = orderItem.Product.Id,
+                                ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                                ProductSeName = orderItem.Product.GetSeName(),
+                                Quantity = orderItem.Quantity,
+                                AttributeInfo = orderItem.AttributeDescription,
+                                UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
+                                ImageUrl = Products.DefaultPictureModel.ImageUrl
+
+                            };
+                            var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
+                            var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+                            if (imageSpecAttrOption.Any())
+                            {
+                                var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
+                                if (thumbnailBackground.Any())
                                 {
-                                    var gbsBackGroundName = thbackground.Name;
-                                    ViewBag.fill = "";
-                                    ViewBag.ClassName = "";
-                                    if (gbsBackGroundName.Any())
+                                    //foreach (var thbackground in thumbnailBackground)
+                                    //{
+                                    //    var backGround = thbackground.Name;
+                                    //    if (backGround.Any())
+                                    //    {
+                                    //        var backGroundShape = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGround);
+                                    //        if (backGroundShape.Any())
+                                    //        {
+                                    //            if (backGround == "TreatmentImage")
+                                    //            {
+                                    //                ViewBag.ClassName = backGroundShape.FirstOrDefault().Name;
+                                    //            }
+                                    //            else
+                                    //            {
+                                    //                var optionValue = backGroundShape.FirstOrDefault().Name;
+                                    //                if (optionValue.Any())
+                                    //                {
+                                    //                    var isfill = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == optionValue);
+                                    //                    optionValue = isfill.FirstOrDefault().ColorSquaresRgb;
+                                    //                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                    //                    {
+                                    //                        ViewBag.fill = "background-color:" + optionValue;
+                                    //                    }
+                                    //                    else
+                                    //                    {
+                                    //                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                    //                    }
+                                    //                }
+                                    //            }
+                                    //        }
+                                    //    }
+                                    //}
+                                    foreach (var thbackground in thumbnailBackground)
                                     {
-                                        switch (gbsBackGroundName)
+                                        var gbsBackGroundName = thbackground.Name;
+                                        ViewBag.fill = "";
+                                        ViewBag.ClassName = "";
+                                        if (gbsBackGroundName.Any())
                                         {
-                                            case "TreatmentImage":
-                                                var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
-                                                if (backGroundShapeName.Any())
-                                                {
-                                                    ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
-                                                }
-                                                break;
-                                            case "TreatmentFill":
-                                                var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
-                                                if (backGroundFillOption.Any())
-                                                {
-                                                    var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
-                                                    switch (fillOptionValue)
+                                            switch (gbsBackGroundName)
+                                            {
+                                                case "TreatmentImage":
+                                                    var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                                    if (backGroundShapeName.Any())
                                                     {
-                                                        case "TreatmentFillPattern":
-                                                            var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
-                                                            if (img.Any())
-                                                            {
-                                                                ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
-
-                                                            }
-                                                            break;
-                                                        case "TreatmentFillColor":
-                                                            var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
-                                                            if (color.Any())
-                                                            {
-                                                                ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
-
-                                                            }
-                                                            break;
+                                                        ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
                                                     }
-                                                }
-                                                break;
+                                                    break;
+                                                case "TreatmentFill":
+                                                    var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                                    if (backGroundFillOption.Any())
+                                                    {
+                                                        var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
+                                                        switch (fillOptionValue)
+                                                        {
+                                                            case "TreatmentFillPattern":
+                                                                var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                                if (img.Any())
+                                                                {
+                                                                    ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+
+                                                                }
+                                                                break;
+                                                            case "TreatmentFillColor":
+                                                                var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                                if (color.Any())
+                                                                {
+                                                                    ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+
+                                                                }
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                            }
                                         }
+
                                     }
-
                                 }
-                            }
-                            else
-                            {
-                                var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
-                                var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
-                                if (defaultEnvelopType.Any())
+                                else
                                 {
-                                    string className = defaultEnvelopType.FirstOrDefault().Name;
-                                    orderItemModel.ClassName = className;
-
-                                    if (defaultColorOption.Any())
+                                    var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                                    var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                                    if (defaultEnvelopType.Any())
                                     {
-                                        var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
-                                        orderItemModel.DefaultColor = optionValue;
-                                        if (optionValue.Contains("#") && optionValue.Length == 7)
+                                        string className = defaultEnvelopType.FirstOrDefault().Name;
+                                        orderItemModel.ClassName = className;
+
+                                        if (defaultColorOption.Any())
                                         {
-                                            orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                            var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                                            orderItemModel.DefaultColor = optionValue;
+                                            if (optionValue.Contains("#") && optionValue.Length == 7)
+                                            {
+                                                orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                            }
+                                            else
+                                            {
+                                                orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                            }
                                         }
                                         else
                                         {
-                                            orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                            orderItemModel.DefaultColor = "";
                                         }
-                                    }
-                                    else
-                                    {
-                                        orderItemModel.DefaultColor = "";
                                     }
                                 }
                             }
-                        }
 
-                        //rental info
-                        if (orderItem.Product.IsRental)
+                            //rental info
+                            if (orderItem.Product.IsRental)
+                            {
+                                var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                                var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                                orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                                    rentalStartDate, rentalEndDate);
+                            }
+                            model.Items.Add(orderItemModel);
+                        }else
                         {
-                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                            orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                                rentalStartDate, rentalEndDate);
+                            var orderItemModel = new CustomerOrderListModel.OrderItemModel
+                            {
+                                Id = orderItem.Id,
+                                OrderItemGuid = orderItem.OrderItemGuid,
+                                Sku = orderItem.Product.Sku,
+                                ProductName = orderItem.Product.Name,
+                                Quantity = orderItem.Quantity,
+                                AttributeInfo = orderItem.AttributeDescription,
+                                UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax),
+
+                            };
+                            model.Items.Add(orderItemModel);
                         }
-                        model.Items.Add(orderItemModel);
                     }
                     model1.Add(model);
                 }
