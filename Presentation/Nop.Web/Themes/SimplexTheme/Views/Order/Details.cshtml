@@ -202,7 +202,7 @@
                                         {
                                             foreach (var item in Model.CustomValues)
                                             {
-                                                if (item.Key != "Order Number")
+                                                if (item.Key == "PO Number" || item.Key == "Name" || item.Key == "Phone Number")
                                                 {
                                                     <li class="custom-value">
                                                         <span class="value">
@@ -354,6 +354,25 @@
                                                 @Model.PickupAddress.CountryName
                                             </li>
                                         }
+
+                                        if (Model.CustomValues != null)
+                                        {
+                                            foreach (var item in Model.CustomValues)
+                                            {
+                                                if (item.Key == "Contact Phone")
+                                                {
+                                                    <li class="custom-value">
+                                                        <span class="value">
+                                                            @item.Key: 
+                                                        </span>
+                                                        <span class="value">
+                                                            @(item.Value != null ? item.Value.ToString() : "")
+                                                        </span>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+
                                     }
                                 </ul>
                             </div>

@@ -209,6 +209,12 @@ namespace Nop.Services.Custom.Orders
                     }
                 }
 
+                string addContactNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                if (addContactNum != null && addContactNum != "")
+                {
+                    processPaymentRequest.CustomValues.Add("Contact Phone", addContactNum);
+                }
+
                 myResult = base.PlaceOrder(processPaymentRequest);
 
                 if (miscPlugins.Count > 0)
@@ -226,10 +232,11 @@ namespace Nop.Services.Custom.Orders
                         Dictionary<string, string> paramDic = new Dictionary<string, string>();
                         paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
                         paramDic.Add("@gbsOrderID", gbsOrderId);
-                        paramDic.Add("@contactPhone", addPhoneNum);
+                        //paramDic.Add("@contactPhone", addPhoneNum);
                         //string insert = "INSERT INTO tblNOPOrder (nopID, gbsOrderID) ";
                         //insert += "VALUES ('" + myResult.PlacedOrder.Id + "', '" + gbsOrderId + "')";
-                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@contactPhone";
+                        //string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@contactPhone";
+                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
                         manager.SetParameterizedQueryNoData(insert, paramDic);
 
                         ICcService ccService = EngineContext.Current.Resolve<ICcService>();
