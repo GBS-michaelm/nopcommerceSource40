@@ -217,8 +217,8 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PaymentMethodDescription", "Pay by purchase order (PO) number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderName", "Name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderPhoneNumber", "Phone Number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderName", "PO Name");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderPhoneNumber", "PO Phone");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired", "Shippable product required");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 

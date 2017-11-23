@@ -20,7 +20,7 @@
         $('#AddphoneValidation').html("");
         var phonenumber = $(this).val();
         var phonenumber = phonenumber.replace(/[^\d]/g, '');
-        if (phonenumber.length > 6 && phonenumber.length < 11) {
+        if (phonenumber.length == 10) {
             $.ajax({
                 url: '/GBSOrder/AddSessionVar',
                 type: 'POST',
@@ -32,7 +32,7 @@
             return true;
         } else {
             $('#AddphoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
-            $('#AddphoneValidation').html("Must be between 7 and 10 characters in length");
+            $('#AddphoneValidation').html("Must be 10 characters in length");
             document.getElementById("Add_phone_number").focus();
             document.getElementById("Add_phone_number").value = phonenumber;
             $("button[name='nextstep']").addClass('inactive');

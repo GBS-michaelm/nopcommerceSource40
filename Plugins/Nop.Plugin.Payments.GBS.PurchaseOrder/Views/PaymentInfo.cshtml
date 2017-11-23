@@ -84,14 +84,14 @@
             var phonenumber = $(this).val();
             var phonenumber = phonenumber.replace(/[^\d]/g, '');
             if (phonenumber != '') {
-                if (phonenumber.length > 6 && phonenumber.length < 11) {
+                if (phonenumber.length == 10) {
                     document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
                     //$("button[name='nextstep']").removeClass('inactive');
                     checkFields();
                     return true;
                 } else {
                     $('#AddPhoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
-                    $('#AddPhoneValidation').html("Between 7 and 10 characters required.");
+                    $('#AddPhoneValidation').html("10 characters required.");
                     document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
                     $("button[name='nextstep']").addClass('inactive');
                     return false;
