@@ -1,0 +1,91 @@
+﻿body {
+}
+
+.accessory-wrap {
+    background-color : #F5F5F5;
+    height : fit-content;
+    /*margin-left : -50%;*/
+}
+
+#accessoryGoToCart {
+    clear: both;
+    text-align : center;
+    height : 75px;
+}
+
+#accessoryGoToCart p {
+    position: relative;
+    top: 30%;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+#accessoryGoToCart a {
+   text-decoration: underline !important; 
+}
+
+.accessory {
+    border : 1px solid #F0EFF4;
+    border-radius : 5px;
+    background-color : white;
+    /*text-shadow : none;*/
+    margin-top : 40px !important;
+    /*margin-bottom : 55px;*/
+    /*float: left;*/
+    width: 24%;
+    
+}
+
+
+#accessoryInnerWrap {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*:not(:last-child)*/
+
+#accessoryInnerWrap div:not(:first-child) {
+    margin-left: 15px;
+    /*margin-right: 7px;*/
+}
+
+.accessory-title {
+    background-color : white;
+    border-bottom : none;
+    padding-bottom : 0px;
+}
+
+.accessory-title h3 {
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0px;
+}
+
+.accessory-image {
+    width: 97%;
+    display: block;
+    margin-left :auto;
+    margin-right : auto;
+    margin-top : 7px;
+    min-height: 254px;
+    cursor : pointer;
+}
+
+.accessory-pricing-features {
+    border-bottom : none;
+}
+
+.accessory-pricing {
+    text-align: center;
+    border-bottom : none;
+}
+
+.accessory-description {
+    width: 94%;
+    display: block;
+    margin-left :auto;
+    margin-right : auto;
+    margin-top : 20px;
+}

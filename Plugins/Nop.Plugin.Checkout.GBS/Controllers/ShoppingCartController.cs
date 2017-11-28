@@ -44,6 +44,8 @@ using Newtonsoft.Json;
 using Nop.Web.Framework.Mvc;
 using Nop.Services.Shipping.Date;
 using Nop.Web.Factories;
+using System.Reflection;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -274,5 +276,48 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if we got here just return the base value;
             return base.ProductDetails_AttributeChange(productId, validateAttributeConditions, loadPicture, form);
         }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public override ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
+        {
+            var groupId = 0;
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            Product product = productService.GetProductById(productId);
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            var specAttrs = specService.GetProductSpecificationAttributes(productId);
+
+            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+                  
+            foreach (var item in specAttrs)
+            {
+                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "accessoryGroup")
+                {
+                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                }
+            }
+            
+            JsonResult action = (JsonResult)base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
+
+            Type t = action.Data.GetType();
+            PropertyInfo redirect = t.GetProperty("redirect");
+            PropertyInfo success = t.GetProperty("success");
+            string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+            bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+            if ((redirectValue != null && redirectValue == "/cart") || successValue)
+            {
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("AccessoryPage", new {groupId = groupId, productId = productId }),
+                });
+            }
+            
+            return action;
+            
+        }
+
+
+
     }
 }

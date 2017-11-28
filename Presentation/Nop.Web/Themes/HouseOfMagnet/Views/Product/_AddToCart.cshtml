@@ -77,7 +77,7 @@
                 <div class="product-add-button">
                    @* <input id="add-to-cart-button-@Model.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
-                       <button id="add-to-cart-button-@Model.ProductId" type="submit" class=" button button-rounded button-reveal button-small button-green tright"  data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" >
+                       <button id="add-to-cart-button-@Model.ProductId" type="submit" class="button button-rounded button-reveal button-small button-green tright"  data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" >
 
                        <i class="icon-line-arrow-right"></i><span> @(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</span></button>
 

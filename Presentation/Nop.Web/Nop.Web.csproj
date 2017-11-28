@@ -1501,6 +1501,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.dev.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\gbscustom.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-accessory.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
@@ -2996,6 +2997,10 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-tabs.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\ShoppingCart\_OrderReviewData.cshtml" />
     <Content Include="Themes\AtomicEnvelopes\Views\ShoppingCart\_OrderReviewData.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryPage.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessories.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessory.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\CrossSellProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

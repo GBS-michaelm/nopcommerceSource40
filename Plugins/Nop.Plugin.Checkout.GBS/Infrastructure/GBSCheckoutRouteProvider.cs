@@ -37,6 +37,13 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                             "shoppingcart/productdetails_attributechange",
                             new { controller = "GBSShoppingCart", action = "MyPDA" },
                             new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+                        
+            routes.MapLocalizedRoute("GBSAddProductToCart-Details",
+                            "addproducttocart/details/{productId}/{shoppingCartTypeId}",
+                            new { controller = "GBSShoppingCart", action = "AddProductToCart_Details" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             //routes.MapLocalizedRoute("GBSOrderSummary",
             //             "ordersummary/",
             //             new { controller = "GBSShoppingCart", action = "OrderSummary" },

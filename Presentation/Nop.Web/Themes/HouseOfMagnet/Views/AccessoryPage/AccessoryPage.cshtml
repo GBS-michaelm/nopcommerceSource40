@@ -1,0 +1,59 @@
+﻿@model AccessoryPageModel
+@using Nop.Web.Framework.Themes
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Configuration;
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using System.Data;
+@using System.Text;
+@using Nop.Services.Catalog;
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Plugin.BusinessLogic.GBS.Models;
+
+
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-accessory.css", themeName));
+       
+}
+
+@{ 
+    IProductService productService = EngineContext.Current.Resolve<IProductService>();
+
+}
+
+
+<div id="" class="page-title panel-heading">
+
+    <h1 id="" class="">Accessories</h1>
+
+    <div class="">
+        <p class=""><span>Stand out with a complete package by including accessories</span></p>
+    </div>
+
+</div>
+
+
+<div id = "accessoryTopSection" >
+
+        @Html.Action("AccessoryCategories", "AccessoryPage", new {groupid = Model.groupId})
+
+</div>
+<div id="accessoryBottomSection">
+       
+        @*@Html.Action("CrossSellProducts", "Product")*@     
+        @* , new { productId1 = 4429 } *@
+
+        @Html.Action("AccessoryCrossSells", "AccessoryPage", new { productId = Model.productId })  
+        
+
+</div>
+   

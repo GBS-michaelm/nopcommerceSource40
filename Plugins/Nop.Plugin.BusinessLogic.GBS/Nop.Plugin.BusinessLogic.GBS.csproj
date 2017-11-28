@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="Nop.Web">
       <HintPath>..\..\Presentation\Nop.Web\bin\Nop.Web.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Nop.Web.Framework">
       <HintPath>..\..\Presentation\Nop.Web.Framework\bin\Debug\Nop.Web.Framework.dll</HintPath>
@@ -73,6 +74,9 @@
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="Infrastructure\BusinessLogicRouteProvider.cs" />
+    <Compile Include="Models\AccessoryPageBoxModel.cs" />
+    <Compile Include="Models\AccessoryPageCategoryAccessoriesModel.cs" />
+    <Compile Include="Models\AccessoryPageModel.cs" />
     <Compile Include="Models\GatewayPageProductBoxModel.cs" />
     <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
