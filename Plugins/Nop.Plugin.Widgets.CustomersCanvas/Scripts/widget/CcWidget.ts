@@ -15,14 +15,14 @@ class CcWidget {
         let img: JQuery = null;
         if (input.length > 0) {
             row = input.parent().parent();
-            img = $("td a img", row);
+            img = $("td img", row);
         }
         else if (index > -1) {
             row = $(`div.order-summary-content table.cart tbody tr:nth-child(${index + 1})`);
-            img = $("td.product-picture a img", row);
+            img = $("td.product-picture img", row);
         }
         if (img != null) {
-            img.attr("style", "max-width: 80px; max-height: 80px");
+         //   img.attr("style", "max-width: 80px; max-height: 80px");
             img.attr("src", imageSource);
         }
     }

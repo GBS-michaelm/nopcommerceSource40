@@ -101,5 +101,11 @@ namespace Nop.Plugin.Order.GBS.Factories
 
             return model;
         }
+
+        public OrderDetailsModel PrepareOrderDetailsModelLegacy(Nop.Core.Domain.Orders.Order order)
+        {
+            var model = new OrderDetailsModel();
+            return model;
+        }
     }
 }

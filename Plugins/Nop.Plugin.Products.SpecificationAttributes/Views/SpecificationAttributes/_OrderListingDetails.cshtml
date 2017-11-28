@@ -25,8 +25,18 @@
             <div class="head-col4">
                 <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @Model.CustomProperties["orderNo"]<span id="@Model.CustomProperties["orderNo"]" class="hidden">@Model.Id</span></div>
                 <div class="order-links">
-                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })">Order Details</a> |
-                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })">Invoice</a>
+
+                    @*ToDo - check if legacy, then call different action on GBSOrderController to get legacy order data and return normal order details view*@
+
+                    @if (@Model.CustomProperties.ContainsKey("isLegacy") &&  Convert.ToBoolean(@Model.CustomProperties["isLegacy"])){
+                            <a href = "@Url.RouteUrl("OrderDetailsL", new { orderId = Model.Id })" > Order Details </a > <span>|</span>
+                            <a href = "@Url.RouteUrl("GetOrderPdfInvoiceL", new { orderId = Model.Id })" > Invoice </a >
+                        }
+                        else
+                        {
+                            <a href = "@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" > Order Details </a > <span>|</span>
+                            <a href = "@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" > Invoice </a >
+                        }
                 </div>
             </div>
         </div>
@@ -36,7 +46,7 @@
                     <div class="orderstatus">
                         @T("Account.CustomerOrders.OrderStatus"):
                         @if (@Model.OrderStatus != "Cancelled")
-                        {
+                            {
                             <strong class="space"> @Model.ShippingStatus  </strong>
                             if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
                             {                                
@@ -74,11 +84,18 @@
                                 <div class="product-unit-price">@item.UnitPrice</div>
                                 <div>
                                     @if (Model.IsReOrderAllowed)
-                                        {
+                    {
                                         @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
-                                        <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })   ')" />
+                                        if (@Model.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(@Model.CustomProperties["isLegacy"]))
+                                          {
 
+                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetailsL", new { orderId = Model.Id })   ')" />
                                         }
+                                        else
+                                        {
+                                            <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })   ')" />
+                                        }
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -87,7 +104,14 @@
             <div class="productlist-right">
                     <ul>
                         <li>
-                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            @if (@Model.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(@Model.CustomProperties["isLegacy"]))
+                            {
+                                <a href="@Url.RouteUrl("OrderDetailsL", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            }
                         </li>
                         <li>
                             <a href="#">Track Package</a>

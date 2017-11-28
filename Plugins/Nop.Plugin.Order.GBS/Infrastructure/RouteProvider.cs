@@ -12,11 +12,20 @@ namespace Nop.Plugin.Order.GBS.Infrastructure
            
             routes.MapLocalizedRoute("CanvasUpdateProductView",
                             "order/updateproduct",
-                            new { controller = "GBSOrder", action = "UpdateCanvasProductView" },
+                            new { controller = "Order", action = "UpdateCanvasProductView" },
                             new[] { "Nop.Plugin.Order.GBS.Controllers" });
             routes.MapLocalizedRoute("CopyFilesToProduction",
                             "order/CopyFilesToProduction",
-                            new { controller = "GBSOrder", action = "CopyFilesToProduction" },
+                            new { controller = "Order", action = "CopyFilesToProduction" },
+                            new[] { "Nop.Plugin.Order.GBS.Controllers" });
+            routes.MapLocalizedRoute("OrderDetailsL",
+                            "orderdetailsL/{orderId}",
+                            new { controller = "Order", action = "DetailsLegacy" },
+                            new { orderId = @"\d+" },
+                            new[] { "Nop.Plugin.Order.GBS.Controllers" });
+            routes.MapLocalizedRoute("GetOrderPdfInvoiceL",
+                            "orderdetailsL/pdf/{orderId}",
+                            new { controller = "Order", action = "GetPdfInvoiceLegacy" },
                             new[] { "Nop.Plugin.Order.GBS.Controllers" });
         }
 

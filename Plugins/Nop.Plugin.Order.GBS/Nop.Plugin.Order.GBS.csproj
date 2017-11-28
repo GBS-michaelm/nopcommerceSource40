@@ -104,7 +104,6 @@
     <Compile Include="MyOrderServicePlugin.cs" />
     <Compile Include="Orders\OrderExtensions.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
-    <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

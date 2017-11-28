@@ -21,10 +21,14 @@ using Nop.Plugin.Widgets.CustomersCanvas.Domain;
 using WebServices.Models.File;
 using System.Net;
 using System.Web;
+using Nop.Web.Framework.Security;
+using Nop.Services.Orders;
+using Nop.Web.Factories;
+using Nop.Plugin.Order.GBS.Factories;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
-    public class GBSOrderController : BaseController
+    public class OrderController : BaseController
     {
         private readonly CcSettings _ccSettings;
         private readonly ICcService _ccService;
@@ -37,9 +41,13 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IPluginFinder _pluginFinder;
         private readonly HttpContextBase _httpContext;
+        private readonly IOrderService _orderService;
+        private readonly IOrderModelFactory _orderModelFactory;
 
 
-        public GBSOrderController(
+        public OrderController(
+            IOrderModelFactory orderModelFactory,
+            IOrderService orderService,
             ICcService ccService,
             CcSettings ccSettings,
             GBSOrderSettings gbsOrderSettings,
@@ -52,6 +60,8 @@ namespace Nop.Plugin.Order.GBS.Controllers
             IPluginFinder pluginFinder,
             HttpContextBase httpContext)
         {
+            this._orderModelFactory = orderModelFactory;
+            this._orderService = orderService;
             this._ccService = ccService;
             this._ccSettings = ccSettings;
             this._gbsOrderSettings = gbsOrderSettings;
@@ -64,6 +74,20 @@ namespace Nop.Plugin.Order.GBS.Controllers
             this._pluginFinder = pluginFinder;
             this._httpContext = httpContext;
 
+        }
+
+        //My account / Order details page
+        //retreiving legacy orders
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public virtual ActionResult DetailsLegacy(int orderId)
+        {
+            var order = Orders.OrderExtensions.GetOrderById(orderId, true);
+            if (order == null || order.Deleted )
+                return new HttpUnauthorizedResult();
+            //GBSOrderModelFactory gbsOrderModelFactory = (GBSOrderModelFactory)_orderModelFactory;
+            //var model = gbsOrderModelFactory.PrepareOrderDetailsModelLegacy(order);
+            var model = _orderModelFactory.PrepareOrderDetailsModel(order);
+            return View("Details",model);
         }
 
         public ActionResult UpdateCanvasProductView()
