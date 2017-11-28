@@ -196,6 +196,23 @@
                                             @Model.PaymentMethod
                                         </span>
                                     </li>
+                                    @if (Model.PaymentMethod == "Purchase Order")
+                                    {
+                                        if (Model.CustomValues != null)
+                                        {
+                                            foreach (var item in Model.CustomValues)
+                                            {
+                                                if (item.Key == "PO Number" || item.Key == "PO Name" || item.Key == "PO Phone")
+                                                {
+                                                    <li class="custom-value">
+                                                        <span class="value">
+                                                            @(item.Value != null ? item.Value.ToString() : "")
+                                                        </span>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    }
                                     @if (!Model.PrintMode)
                                 {
                                         <li class="payment-method-status">
@@ -336,6 +353,24 @@
                                         <li class="country">
                                             @Model.PickupAddress.CountryName
                                         </li>
+                                    }
+
+                                    if (Model.CustomValues != null)
+                                    {
+                                        foreach (var item in Model.CustomValues)
+                                        {
+                                            if (item.Key == "Pickup Contact Phone")
+                                            {
+                                                <li class="custom-value">
+                                                    <span class="value">
+                                                        @item.Key: 
+                                                    </span>
+                                                    <span class="value">
+                                                        @(item.Value != null ? item.Value.ToString() : "")
+                                                    </span>
+                                                </li>
+                                            }
+                                        }
                                     }
                                 }
                                 </ul>

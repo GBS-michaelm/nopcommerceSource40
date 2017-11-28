@@ -80,7 +80,7 @@
                             @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                         </li>
                     }
-                    @if (Model.CustomValues != null)
+                    @*@if (Model.CustomValues != null)
                     {
                         foreach (var item in Model.CustomValues)
                         {
@@ -93,7 +93,7 @@
                                 </span>
                             </li>
                         }
-                    }
+                    }*@
                 </ul>
             </div>
             @if (!String.IsNullOrEmpty(Model.PaymentMethod))
@@ -111,6 +111,21 @@
                                 @Model.PaymentMethod
                             </span>
                         </li>
+
+                        @if (Model.PaymentMethod == "Purchase Order")
+                        {
+                            if (Model.CustomValues != null)
+                            {
+                                foreach (var item in Model.CustomValues)
+                                {
+                                        <li class="custom-value">
+                                            <span class="value">
+                                                @(item.Value != null ? item.Value.ToString() : "")
+                                            </span>
+                                        </li>
+                                    }
+                                }
+                            }
                     </ul>
                 </div>
             }
@@ -243,7 +258,7 @@
                                 @if (Model.SelectedPickUpInStore)
                                 {
                                     <span id="contactPhone" style="display:block">
-                                        Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
+                                        Pickup Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
                                     </span>
                                 }
                                 else
