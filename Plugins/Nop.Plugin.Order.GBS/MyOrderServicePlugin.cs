@@ -32,7 +32,7 @@ namespace Nop.Plugin.Order.GBS
         public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "AddPhoneNumber";
-            controllerName = "GBSOrder";
+            controllerName = "Order";
             routeValues = new RouteValueDictionary()
             {
                 { "Namespaces", "Nop.Plugin.Order.GBS.Controllers" },
