@@ -21,7 +21,7 @@ var CcWidget = (function () {
             img = $("td.product-picture img", row);
         }
         if (img != null) {
-            //   img.attr("style", "max-width: 80px; max-height: 80px"); 
+            //   img.attr("style", "max-width: 80px; max-height: 80px");
             img.attr("src", imageSource);
         }
     };
@@ -98,7 +98,7 @@ var CcWidget = (function () {
         flyoutCart.attr("data-cc-flag", 1);
     };
     CcWidget.prototype._updateFlyoutCartItem = function (flyoutCartItems, index, imageSource) {
-        var img = $("div.item:nth-child(" + index + ") div.picture a img", flyoutCartItems);
+        var img = $("div.item:nth-child(" + index + ") div.picture img", flyoutCartItems);
         img.attr("src", imageSource);
     };
     return CcWidget;
