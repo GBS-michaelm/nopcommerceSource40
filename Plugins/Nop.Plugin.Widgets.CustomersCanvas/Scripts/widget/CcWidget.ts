@@ -111,7 +111,7 @@ class CcWidget {
     }
 
     private _updateFlyoutCartItem(flyoutCartItems: JQuery, index: number, imageSource: string) {
-        const img = $(`div.item:nth-child(${index}) div.picture a img`, flyoutCartItems);
+        const img = $(`div.item:nth-child(${index}) div.picture img`, flyoutCartItems);
         img.attr("src", imageSource);
     }
 }
