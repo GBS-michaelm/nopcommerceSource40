@@ -216,27 +216,31 @@ namespace Nop.Services.Custom.Orders
                     _httpContext.Session.Remove("customerPhoneNumber");
                 }
 
-                string POnum = _httpContext.Session["purchaseOrderNumber"] == null ? "" : _httpContext.Session["purchaseOrderNumber"].ToString();
-                if (POnum != null && POnum != "")
-                {
-                    processPaymentRequest.CustomValues.Add("PO Number", POnum);
-                    _httpContext.Session.Remove("purchaseOrderNumber");
-                }
 
-                string POname = _httpContext.Session["purchaseOrderName"] == null ? "" : _httpContext.Session["purchaseOrderName"].ToString();
-                if (POname != null && POname != "")
+                if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.PurchaseOrder")
                 {
-                    processPaymentRequest.CustomValues.Add("PO Name", POname);
-                    _httpContext.Session.Remove("purchaseOrderName");
-                }
+                    string POnum = _httpContext.Session["purchaseOrderNumber"] == null ? "" : _httpContext.Session["purchaseOrderNumber"].ToString();
+                    if (POnum != null && POnum != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("PO Number", POnum);
+                        _httpContext.Session.Remove("purchaseOrderNumber");
+                    }
 
-                string POphone = _httpContext.Session["purchaseOrderPhoneNumber"] == null ? "" : _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
-                if (POphone != null && POphone != "")
-                {
-                    processPaymentRequest.CustomValues.Add("PO Phone", POphone);
-                    _httpContext.Session.Remove("purchaseOrderPhoneNumber");
-                }
+                    string POname = _httpContext.Session["purchaseOrderName"] == null ? "" : _httpContext.Session["purchaseOrderName"].ToString();
+                    if (POname != null && POname != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("PO Name", POname);
+                        _httpContext.Session.Remove("purchaseOrderName");
+                    }
 
+                    string POphone = _httpContext.Session["purchaseOrderPhoneNumber"] == null ? "" : _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
+                    if (POphone != null && POphone != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("PO Phone", POphone);
+                        _httpContext.Session.Remove("purchaseOrderPhoneNumber");
+                    }
+                }
+                
 
                 myResult = base.PlaceOrder(processPaymentRequest);
 
