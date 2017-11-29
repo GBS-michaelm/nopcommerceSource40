@@ -10,8 +10,8 @@
 </div>
 <style>
     .inactive {
-            opacity: 0.5;
-            pointer-events: none;
+            opacity: 0.5 !important;
+            pointer-events: none !important;
     }
 </style>
 <script type="text/javascript">
@@ -29,6 +29,7 @@
                 success: function (valid) { document.getElementById("Add_phone_number").value = phonenumber; }
             });
             $("button[name='nextstep']").removeClass('inactive');
+            $("input[name='nextstep']").removeClass('inactive');
             return true;
         } else {
             $('#AddphoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
@@ -36,6 +37,7 @@
             document.getElementById("Add_phone_number").focus();
             document.getElementById("Add_phone_number").value = phonenumber;
             $("button[name='nextstep']").addClass('inactive');
+            $("input[name='nextstep']").addClass('inactive');
             return false;
         }
     }
@@ -44,10 +46,10 @@
         if (e.which == 13) {
             if (subphone.call(this)) {
                 $("button[name='nextstep']").click();
+                $("input[name='nextstep']").click();
             } else {
                 return false;
             }
         }
     });
-
 </script>

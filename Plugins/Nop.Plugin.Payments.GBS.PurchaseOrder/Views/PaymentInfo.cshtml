@@ -71,8 +71,10 @@
         function checkFields() {
             if (document.getElementById("PurchaseOrderPhoneNumber").value == '' || document.getElementById("PurchaseOrderNumber").value == '' || document.getElementById("PurchaseOrderName").value == '') {
                 $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
             } else {
                 $("button[name='nextstep']").removeClass('inactive');
+                $("input[name='nextstep']").removeClass('inactive');
             }
         }
         
@@ -86,7 +88,6 @@
             if (phonenumber != '') {
                 if (phonenumber.length == 10) {
                     document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
-                    //$("button[name='nextstep']").removeClass('inactive');
                     checkFields();
                     return true;
                 } else {
@@ -94,6 +95,7 @@
                     $('#AddPhoneValidation').html("10 characters required.");
                     document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
                     $("button[name='nextstep']").addClass('inactive');
+                    $("input[name='nextstep']").addClass('inactive');
                     return false;
                 }
             } else {
@@ -101,6 +103,7 @@
                 $('#AddPhoneValidation').html("Phone number is required.");
                 document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
                 $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
                 return false;
             }
         
@@ -114,6 +117,7 @@
                         return false
                     } else {
                         $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
                     }
                 } else {
                     return false;
@@ -127,7 +131,6 @@
             var ponumber = $(this).val();
             if (ponumber != '') {
                 document.getElementById("PurchaseOrderNumber").value = ponumber;
-                //$("button[name='nextstep']").removeClass('inactive');
                 checkFields();
                 return true;
             } else {
@@ -135,6 +138,7 @@
                 $('#AddPOValidation').html("PO number is required.");
                 document.getElementById("PurchaseOrderNumber").value = ponumber;
                 $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
                 return false;
             }
         }
@@ -147,6 +151,7 @@
                         return false
                     } else {
                         $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
                     }
                 } else {
                     return false;
@@ -160,7 +165,6 @@
             var name = $(this).val();
             if (name != '') {
                 document.getElementById("PurchaseOrderName").value = name;
-                //$("button[name='nextstep']").removeClass('inactive');
                 checkFields();
                 return true;
             } else {
@@ -168,6 +172,7 @@
                 $('#AddNameValidation').html("Name is required.");
                 document.getElementById("PurchaseOrderName").value = name;
                 $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
                 return false;
             }
         }
@@ -180,6 +185,7 @@
                         return false
                     } else {
                         $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
                     }
                 } else {
                     return false;
