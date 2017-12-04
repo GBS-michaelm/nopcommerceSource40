@@ -57,7 +57,7 @@
 
 @{
 
-    //DBManager manager = new DBManager();
+    DBManager manager = new DBManager();
 
     //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
     //categoryDic.Add("@CategoryId", id);
@@ -154,20 +154,35 @@
             StringBuilder sb = new StringBuilder();
 
             //category stuff
-            var catService = EngineContext.Current.Resolve<ICategoryService>();
-            IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
-            //for testing
-            //int catCount = marketCenterByNameList.Count();
-            //int storeId = marketCenterByNameList[0].Id;
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
+            //var catService = EngineContext.Current.Resolve<ICategoryService>();
+            //IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
+            ////for testing
+            ////int catCount = marketCenterByNameList.Count();
+            ////int storeId = marketCenterByNameList[0].Id;
+            ////IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
 
-            IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
+            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
 
-            var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
+            //var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
 
-            foreach (var item in companiesInOrder)
+            //foreach (var item in companiesInOrder)
+            //{
+            //    sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+            //}
+
+            //stored proc way
+            Dictionary<string, Object> childCategoryDic = new Dictionary<string, Object>();
+            childCategoryDic.Add("@CategoryId", id);
+            string childCategoryDataQuery = "EXEC usp_SelectGBSChildCategoryData @CategoryId";
+            DataView childCategoryDataView = manager.GetParameterizedDataView(childCategoryDataQuery, childCategoryDic);
+
+            if (childCategoryDataView.Count > 0)
             {
-                sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                for (int i = 0; i < childCategoryDataView.Count; i++)
+                {
+                    sb.Append(childCategoryDataView[i]["childCategoryData"].ToString());
+                }
+
             }
 
             string allString = sb.ToString();
