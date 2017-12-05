@@ -38,3 +38,4 @@ Checkout.GBS
 Logging.GBS
 Widgets.Marketing
 Payments.GBS.PurchaseOrder
+Payments.GBS.MonthlyBilling

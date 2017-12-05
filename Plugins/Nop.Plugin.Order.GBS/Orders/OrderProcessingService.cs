@@ -240,7 +240,31 @@ namespace Nop.Services.Custom.Orders
                         _httpContext.Session.Remove("purchaseOrderPhoneNumber");
                     }
                 }
-                
+
+                if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.MonthlyBilling")
+                {
+                    string MBname = _httpContext.Session["monthlyBillingName"] == null ? "" : _httpContext.Session["monthlyBillingName"].ToString();
+                    if (MBname != null && MBname != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("Monthly Billing Name", MBname);
+                        _httpContext.Session.Remove("monthlyBillingName");
+                    }
+
+                    string MBphone = _httpContext.Session["monthlyBillingPhoneNumber"] == null ? "" : _httpContext.Session["monthlyBillingPhoneNumber"].ToString();
+                    if (MBphone != null && MBphone != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("Monthly Billing Phone", MBphone);
+                        _httpContext.Session.Remove("monthlyBillingPhoneNumber");
+                    }
+
+                    string MBref = _httpContext.Session["monthlyBillingReference"] == null ? "" : _httpContext.Session["monthlyBillingReference"].ToString();
+                    if (MBref != null && MBref != "")
+                    {
+                        processPaymentRequest.CustomValues.Add("Monthly Billing Reference", MBref);
+                        _httpContext.Session.Remove("monthlyBillingReference");
+                    }
+                }
+
 
                 myResult = base.PlaceOrder(processPaymentRequest);
 
