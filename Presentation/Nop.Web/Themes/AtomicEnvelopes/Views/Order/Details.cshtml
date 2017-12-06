@@ -176,6 +176,23 @@
                             }
                         }
                     }
+                    if (Model.PaymentMethod == "Monthly Billing")
+                    {
+                        if (Model.CustomValues != null)
+                        {
+                            foreach (var item in Model.CustomValues)
+                            {
+                                if (item.Key == "Monthly Billing Name" || item.Key == "Monthly Billing Phone" || item.Key == "Monthly Billing Reference")
+                                {
+                                    <li class="custom-value">
+                                        <span class="value">
+                                            @(item.Value != null ? item.Value.ToString() : "")
+                                        </span>
+                                    </li>
+                                }
+                            }
+                        }
+                    }
                     if (!Model.PrintMode)
                     {
                         <li class="payment-method-status">

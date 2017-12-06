@@ -1,9 +1,6 @@
 ﻿@using System.Web.Mvc;
 @{
     Layout = "";
-    var monthlyBillingReference = HttpContext.Current.Session["monthlyBillingReference"];
-    var monthlyBillingName = HttpContext.Current.Session["monthlyBillingName"];
-    var monthlyBillingPhoneNumber = HttpContext.Current.Session["monthlyBillingPhoneNumber"];
 }
 @model Nop.Plugin.Payments.GBS.MonthlyBilling.Models.PaymentInfoModel
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
@@ -15,7 +12,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextBoxFor(model => model.MonthlyBillingName, new { Class = "form-control", autocomplete = "off", Value = monthlyBillingName })
+                    @Html.TextBoxFor(model => model.MonthlyBillingName, new { @class = "form-control", @autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
@@ -32,7 +29,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextBoxFor(model => model.MonthlyBillingPhoneNumber, new { Class = "form-control", autocomplete = "off", Value = monthlyBillingPhoneNumber })
+                    @Html.TextBoxFor(model => model.MonthlyBillingPhoneNumber, new { @class = "form-control", @autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
@@ -49,7 +46,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextAreaFor(model => model.MonthlyBillingReference, new { Class = "form-control", autocomplete = "off", Value = monthlyBillingReference, @rows = 5 })
+                    @Html.TextAreaFor(model => model.MonthlyBillingReference, new { @rows = 5, @class = "form-control", @autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <span id="AddMBValidation" class="field-validation-valid" data-valmsg-for="MonthlyBillingReference" data-valmsg-replace="true"></span>

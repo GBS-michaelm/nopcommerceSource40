@@ -1,9 +1,6 @@
 ﻿@using System.Web.Mvc;
 @{
     Layout = "";
-    var purchaseOrderNumber = HttpContext.Current.Session["purchaseOrderNumber"];
-    var purchaseOrderName = HttpContext.Current.Session["purchaseOrderName"];
-    var purchaseOrderPhoneNumber = HttpContext.Current.Session["purchaseOrderPhoneNumber"];
 }
 @model Nop.Plugin.Payments.GBS.PurchaseOrder.Models.PaymentInfoModel
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
@@ -14,8 +11,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { Class = "form-control", autocomplete = "off", Value = purchaseOrderNumber })
-                    @*<input class="form-control" data-val="true" data-val-required="PO number is required." id="PurchaseOrderNumber" name="PurchaseOrderNumber" value='@HttpContext.Current.Session["purchaseOrderNumber"]' aria-required="true" type="text">*@
+                    @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { Class = "form-control", autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
@@ -31,8 +27,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextBoxFor(model => model.PurchaseOrderName, new { Class = "form-control", autocomplete = "off", Value = purchaseOrderName })
-                    @*<input class="form-control" data-val="true" data-val-required="Name is required." id="PurchaseOrderName" name="PurchaseOrderName" value='@HttpContext.Current.Session["purchaseOrderName"]' aria-required="true" type="text">*@
+                    @Html.TextBoxFor(model => model.PurchaseOrderName, new { Class = "form-control", autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
@@ -48,8 +43,7 @@
         <td>
             <div class="form-group" style="padding-top: 20px;">
                 <div class="col-sm-4 col-md-4">
-                    @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { Class = "form-control", autocomplete = "off", Value = purchaseOrderPhoneNumber })
-                    @*<input class="form-control" data-val="true" data-val-required="Phone number is required." id="PurchaseOrderPhoneNumber" name="PurchaseOrderPhoneNumber" value='@HttpContext.Current.Session["purchaseOrderPhoneNumber"]' aria-required="true" type="text">*@
+                    @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { Class = "form-control", autocomplete = "off" })
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>

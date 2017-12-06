@@ -168,7 +168,7 @@
  
                     }
 
-                  @if (Model.PaymentMethod == "Purchase Order")
+                  @if (Model.PaymentMethod == "Purchase Order" || Model.PaymentMethod == "Monthly Billing")
                   {
                       if (Model.CustomValues != null)
                       {
@@ -184,7 +184,7 @@
 
                     <li>&nbsp;</li>
                   }
-                  else if(Model.PaymentMethod != "Check / Money Order")
+                  else if (Model.PaymentMethod != "Check / Money Order")
                   {
                     <li>&nbsp;</li>
                     <li class="title">

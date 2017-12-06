@@ -99,6 +99,19 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
             model.PurchaseOrderName = form["PurchaseOrderName"];
             model.PurchaseOrderPhoneNumber = form["PurchaseOrderPhoneNumber"];
 
+            if (_httpContext.Session["purchaseOrderNumber"] != null)
+            {
+                model.PurchaseOrderNumber = _httpContext.Session["purchaseOrderNumber"].ToString();
+            }
+            if (_httpContext.Session["purchaseOrderName"] != null)
+            {
+                model.PurchaseOrderName = _httpContext.Session["purchaseOrderName"].ToString();
+            }
+            if (_httpContext.Session["purchaseOrderPhoneNumber"] != null)
+            {
+                model.PurchaseOrderPhoneNumber = _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
+            }
+
             return View("~/Plugins/Payments.GBS.PurchaseOrder/Views/PaymentInfo.cshtml", model);
         }
 

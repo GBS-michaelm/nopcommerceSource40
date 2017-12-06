@@ -215,7 +215,7 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.PaymentMethodDescription", "Pay by purchase order (PO) number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.PaymentMethodDescription", "Pay by monthly billing");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.MonthlyBillingReference", "Monthly Billing Reference");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.MonthlyBillingName", "Monthly Billing Name");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.MonthlyBilling.MonthlyBillingPhoneNumber", "Monthly Billing Phone");

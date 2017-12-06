@@ -112,7 +112,7 @@
                             </span>
                         </li>
 
-                        @if (Model.PaymentMethod == "Purchase Order")
+                        @if (Model.PaymentMethod == "Purchase Order" || Model.PaymentMethod == "Monthly Billing")
                         {
                             if (Model.CustomValues != null)
                             {

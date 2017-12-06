@@ -99,6 +99,19 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers
             model.MonthlyBillingPhoneNumber = form["MonthlyBillingPhoneNumber"];
             model.MonthlyBillingReference = form["MonthlyBillingReference"];
 
+            if (_httpContext.Session["monthlyBillingName"] != null)
+            {
+                model.MonthlyBillingName = _httpContext.Session["monthlyBillingName"].ToString();
+            }
+            if (_httpContext.Session["monthlyBillingPhoneNumber"] != null)
+            {
+                model.MonthlyBillingPhoneNumber = _httpContext.Session["monthlyBillingPhoneNumber"].ToString();
+            }
+            if (_httpContext.Session["monthlyBillingReference"] != null)
+            {
+                model.MonthlyBillingReference = _httpContext.Session["monthlyBillingReference"].ToString();
+            }
+
             return View("~/Plugins/Payments.GBS.MonthlyBilling/Views/PaymentInfo.cshtml", model);
         }
 
