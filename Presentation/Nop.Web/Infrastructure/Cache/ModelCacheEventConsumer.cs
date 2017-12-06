@@ -288,6 +288,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
 
         /// <summary>
+        /// Key for PrepareCategoryNavigationModel results caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : current category id
+        /// {1} : current Product Id 
+        /// </remarks>
+        public const string CATEGORIES_MODEL_KEY = "Nop.pres.category.Categories-{0}-{1}";
+
+        /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
         /// </summary>
         /// <remarks>
