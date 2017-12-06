@@ -43,10 +43,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 foreach (var accessory in accessoriesByDisplayOrderList)
                 {
 
-                    int price = 0;
+                    decimal price = 0;
                     IPagedList<ProductCategory> productCategoryList = iCategoryService.GetProductCategoriesByCategoryId(accessory.id);
                     var productsInOrder = productCategoryList.OrderBy(x => x.Product.Price).ToList();
-                    price = (int)productsInOrder[0].Product.Price;
+                    price = productsInOrder[0].Product.Price;
 
                     AccessoryPageBoxModel accessoryBox = new AccessoryPageBoxModel();
                     accessoryBox.name = accessory.Name;

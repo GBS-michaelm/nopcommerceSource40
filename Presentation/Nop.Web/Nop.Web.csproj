@@ -1489,6 +1489,7 @@
     <Content Include="Themes\GoGBS\Content\js\jquery.js" />
     <Content Include="Themes\GoGBS\Content\js\plugins.js" />
     <Content Include="Themes\GoGBS\GoGBS-Theme.png" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\amalgamation.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\animate.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\bootstrap-theme.min.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\bootstrap.min.css" />
@@ -3001,6 +3002,9 @@
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessory.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\CrossSellProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\AmalgamationProductsInGridOrLines.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-amalgamation.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxAmalgamation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

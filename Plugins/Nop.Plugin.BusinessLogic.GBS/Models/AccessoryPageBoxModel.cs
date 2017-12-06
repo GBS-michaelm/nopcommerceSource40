@@ -10,7 +10,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
     {
         public string name;
         public string mainPicturePath;
-        public int price;
+        public decimal price;
         public bool isFeatured;
         public string description;
         public int featuredProductId;
