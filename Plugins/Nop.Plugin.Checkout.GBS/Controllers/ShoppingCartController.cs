@@ -281,7 +281,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         [ValidateInput(false)]
         public override ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
         {
-            var groupId = 0;
+            var groupId = 0000;
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             Product product = productService.GetProductById(productId);
             ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
@@ -296,28 +296,44 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
                 }
             }
-            
+
             JsonResult action = (JsonResult)base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
 
-            Type t = action.Data.GetType();
-            PropertyInfo redirect = t.GetProperty("redirect");
-            PropertyInfo success = t.GetProperty("success");
-            string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
-            bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+            if (groupId != 0000)
+            {               
 
-            if ((redirectValue != null && redirectValue == "/cart") || successValue)
-            {
-                return Json(new
+                Type t = action.Data.GetType();
+                PropertyInfo redirect = t.GetProperty("redirect");
+                PropertyInfo success = t.GetProperty("success");
+                string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                if ((redirectValue != null && redirectValue == "/cart") || successValue)
                 {
-                    redirect = Url.RouteUrl("AccessoryPage", new {groupId = groupId, productId = productId }),
-                });
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
+                    });
+                }
             }
-            
+                        
             return action;
             
         }
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public void AddProductToCart_Amalgamation(int productId, int shoppingCartTypeId, FormCollection form)
+        {
+            
+            base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
 
+
+
+
+
+            
+        }
 
     }
 }

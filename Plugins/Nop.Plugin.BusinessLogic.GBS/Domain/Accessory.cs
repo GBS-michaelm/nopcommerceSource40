@@ -36,7 +36,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         string _mainPicturePath = "";
         int _featuredProductId = 2222;
         bool _isFeatured = false;
-        //int _orderBy = 0;
+        //int _displayOrder = 0;
         
         public Accessory(int accessoryId)
         {
@@ -79,7 +79,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
                 this.parentCategoryId = category.ParentCategoryId;
                 this.h1 = !string.IsNullOrEmpty(accessoryDataView[0]["H1"].ToString()) ? accessoryDataView[0]["H1"].ToString() : this.Name;
-                this.mainPicturePath = !string.IsNullOrEmpty(accessoryDataView[0]["MainPicturePath"].ToString()) ? accessoryDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
+                this.mainPicturePath = !string.IsNullOrEmpty(this.PictureModel.ThumbImageUrl) ? this.PictureModel.ThumbImageUrl : _mainPicturePath;
                 int featuredId;
                 this.featuredProductId = Int32.TryParse(accessoryDataView[0]["FeaturedProductId"].ToString(), out featuredId) ? featuredId : _featuredProductId;
                 this.isFeatured = accessoryDataView[0]["IsFeatured"] != null && accessoryDataView[0]["IsFeatured"] != DBNull.Value ? (Convert.ToBoolean(accessoryDataView[0]["IsFeatured"]) == true ? true : false) : _isFeatured;
@@ -96,8 +96,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string mainPicturePath { get { return _mainPicturePath; } set { _mainPicturePath = value; } }
         public int featuredProductId { get { return _featuredProductId; } set { _featuredProductId = value; } }
         public bool isFeatured { get { return _isFeatured; } set { _isFeatured = value; } }
-        //public int orderBy { get { return _orderBy; } set { _orderBy = value; } }
-        
+        //public int displayOrder { get { return _orderBy; } set { _orderBy = value; } }
+
         public static List<Accessory> GetAllCrossSellAccessories(int accessoryGroupId)
         {
 
