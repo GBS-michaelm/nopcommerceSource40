@@ -15,6 +15,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         public string description;
         public int featuredProductId;
         public string categoryPageLink;
+        public int displayOrder;
 
     }
 }

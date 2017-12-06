@@ -291,7 +291,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                   
             foreach (var item in specAttrs)
             {
-                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "accessoryGroup")
+                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
                 {
                     groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
                 }

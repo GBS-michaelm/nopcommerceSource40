@@ -34,11 +34,13 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
 
             AccessoryPageCategoryAccessoriesModel accessoryCategoryBlocks = new AccessoryPageCategoryAccessoriesModel();
             List<Accessory> accessoryList = new List<Accessory>();
-            accessoryList = Accessory.GetAllCrossSellAccessories(groupId);
-                        
-            if(accessoryList.Count > 0)
+            accessoryList = Accessory.GetAllCrossSellAccessories(groupId); //accessory categories that relate to selected product
+
+            var accessoriesByDisplayOrderList = accessoryList.OrderBy(x => x.displayOrder).ToList();
+
+            if (accessoryList.Count > 0)
             {
-                foreach (var accessory in accessoryList)
+                foreach (var accessory in accessoriesByDisplayOrderList)
                 {
 
                     int price = 0;
@@ -54,6 +56,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                     accessoryBox.description = accessory.Description;
                     accessoryBox.featuredProductId = accessory.featuredProductId;
                     accessoryBox.categoryPageLink = accessory.SeName;
+                    accessoryBox.displayOrder = accessory.displayOrder;
 
                     accessoryCategoryBlocks.accessoryBoxes.Add(accessoryBox);
 
@@ -61,6 +64,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             }
             
             
+
+
+
+
             return View("AccessoryCategoryAccessories", accessoryCategoryBlocks);
         }
 

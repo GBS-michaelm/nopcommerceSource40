@@ -33,34 +33,43 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         int _id = 0;
         int _parentCategoryId = 0;
         string _h1 = "";
-        string _mainPicturePath = "";
+        string _mainPicturePath; //no default value will use nops no image found if image not found
         int _featuredProductId = 2222;
         bool _isFeatured = false;
-        //int _displayOrder = 0;
+        int _displayOrder = 0;
         
-        public Accessory(int accessoryId)
+        public Accessory(int accessoryId, bool lightVer = true)
         {
             ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
             this.id = accessoryId;
             Category category = categoryService.GetCategoryById(accessoryId);
-            ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
-            CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
-            catalogPagingFilteringModel.PageSize = 1;
-            this.PagingFilteringContext = catalogPagingFilteringModel;
-            CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-            this.Name = categoryModel.Name;
-            this.Description = categoryModel.Description;
-            this.MetaKeywords = categoryModel.MetaKeywords;
-            this.MetaDescription = categoryModel.MetaDescription;
-            this.MetaTitle = categoryModel.MetaTitle;
-            this.SeName = categoryModel.SeName;
-            this.PictureModel = categoryModel.PictureModel;
-            this.PagingFilteringContext = categoryModel.PagingFilteringContext;
-            this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-            this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-            this.SubCategories = categoryModel.SubCategories;
-            this.FeaturedProducts = categoryModel.FeaturedProducts;
-            this.Products = categoryModel.Products;
+            this.Name = category.Name;
+            this.parentCategoryId = category.ParentCategoryId;
+            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
+
+            if (lightVer == false)
+            {
+                ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+                CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+                catalogPagingFilteringModel.PageSize = 1;
+                this.PagingFilteringContext = catalogPagingFilteringModel;
+                CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+                this.Name = categoryModel.Name;
+                this.Description = categoryModel.Description;
+                this.MetaKeywords = categoryModel.MetaKeywords;
+                this.MetaDescription = categoryModel.MetaDescription;
+                this.MetaTitle = categoryModel.MetaTitle;
+                this.SeName = categoryModel.SeName;
+                this.PictureModel = categoryModel.PictureModel;
+                this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+                this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+                this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+                this.SubCategories = categoryModel.SubCategories;
+                this.FeaturedProducts = categoryModel.FeaturedProducts;
+                this.Products = categoryModel.Products;
+            }
+            
 
             ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
 
@@ -79,16 +88,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
                 this.parentCategoryId = category.ParentCategoryId;
                 this.h1 = !string.IsNullOrEmpty(accessoryDataView[0]["H1"].ToString()) ? accessoryDataView[0]["H1"].ToString() : this.Name;
-                this.mainPicturePath = !string.IsNullOrEmpty(this.PictureModel.ThumbImageUrl) ? this.PictureModel.ThumbImageUrl : _mainPicturePath;
+                this.mainPicturePath = !string.IsNullOrEmpty(this.mainPicturePath) ? this.mainPicturePath : _mainPicturePath;
                 int featuredId;
                 this.featuredProductId = Int32.TryParse(accessoryDataView[0]["FeaturedProductId"].ToString(), out featuredId) ? featuredId : _featuredProductId;
                 this.isFeatured = accessoryDataView[0]["IsFeatured"] != null && accessoryDataView[0]["IsFeatured"] != DBNull.Value ? (Convert.ToBoolean(accessoryDataView[0]["IsFeatured"]) == true ? true : false) : _isFeatured;
                 int order;
-                //this.orderBy = Int32.TryParse(accessoryDataView[0]["OrderBy"].ToString(), out order) ? order : _orderBy;
+                this.displayOrder = Int32.TryParse(accessoryDataView[0]["DisplayOrder"].ToString(), out order) ? order : _displayOrder;
 
             }
             
-        }
+        }     
+
 
         public int id { get { return _id; } set { _id = value; } }
         public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }
@@ -96,7 +106,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string mainPicturePath { get { return _mainPicturePath; } set { _mainPicturePath = value; } }
         public int featuredProductId { get { return _featuredProductId; } set { _featuredProductId = value; } }
         public bool isFeatured { get { return _isFeatured; } set { _isFeatured = value; } }
-        //public int displayOrder { get { return _orderBy; } set { _orderBy = value; } }
+        public int displayOrder { get { return _displayOrder; } set { _displayOrder = value; } }
 
         public static List<Accessory> GetAllCrossSellAccessories(int accessoryGroupId)
         {
