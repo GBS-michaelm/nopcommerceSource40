@@ -132,6 +132,7 @@ var CreateJson = function (array, options) {
 }
 
 var AddItem = function (dataJson, cartItemId, qty, prodId, cartImageSrc, editActive) {
+    console.log(dataJson);
     $.ajax({
         cache: false,
         url: "shoppingcart/submititem?productId=" + prodId + "&dataJson=" + dataJson + "&quantity=" + qty + "&cartImageSrc=" + cartImageSrc + "&editActive=" + editActive + "&formOptions={}&cartItemId=" + cartItemId ,

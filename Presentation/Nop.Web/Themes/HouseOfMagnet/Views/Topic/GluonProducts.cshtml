@@ -11,7 +11,7 @@
 @using System.Xml;
 @using Nop.Core;
 @using Nop.Core.Domain.Orders;
-@using Nop.Services.Orders;
+@using Nop.Services.Orders; 
 @{
     DBManager db = new DBManager();
     string page = string.Empty;
@@ -94,23 +94,16 @@
         editActive = true;
 
     }
-        @*<input type="hidden" id="hdn-product-xml" value="@productXml" />*@
-        <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
-        <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
-        <input type="hidden" id="hdn-qty" value="@qty" />
-        <input type="hidden" id="hdn-product-id" value="@prodId" />
-        <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
-        //}
-        //catch (Exception ex)
-        //{
-        //    page = string.Empty;
-        //}
 
+    @*<input type="hidden" id="hdn-product-xml" value="@productXml" />*@
+    <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
+    <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
+    <input type="hidden" id="hdn-qty" value="@qty" />
+    <input type="hidden" id="hdn-product-id" value="@prodId" />
+    <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
-
-
-    <div class="gluon-template"  style="overflow:hidden; height:1250px">
-        <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1250px; width:100%;"></iframe>
+    <div class="gluon-template"  style="overflow:hidden; height:1900px">
+        <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1900px; width:100%;"></iframe>
     </div>
 }
  <!--product attributes-->
@@ -124,8 +117,7 @@
  
     // Listen to message from child window
     eventer(messageEvent, function (e) {
-        console.log(e.data);
-        var cartImageSrc = "http://gluon.houseofmagnets.com" + JSON.parse(e.data).preview;
+        var cartImageSrc = "http://gluon.houseofmagnets.com" + JSON.parse(e.data)[320];
         AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
         
     }, false);
