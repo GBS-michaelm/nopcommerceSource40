@@ -10,10 +10,10 @@
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-order-completed-page");
 }
-@if (!Model.OnePageCheckoutEnabled)
+@*@if (!Model.OnePageCheckoutEnabled)
 {
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Complete })
-}
+}*@
 <div class="page checkout-page order-completed-page">
     <div class="page-title panel-heading">
         <h1>@T("Checkout.ThankYou")</h1>

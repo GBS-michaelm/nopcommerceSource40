@@ -1,32 +1,8 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 
-
-
-
-
        body {
         }
-
-        /*.container {
-    width: 100% !important;
-    padding: 0px !important;
-    
-}*/
-
-        /*#gatewayPageTitle {
-   display: block;
-   margin-left: auto;
-   margin-right: auto;
-   width : 1510px;
-}*/
-
-        /*#gatewayBreadcrumb {
-   display: block;
-   margin-left: auto;
-   margin-right: auto;
-   width : 1510px;
-}*/
 
         #selectTeamDiv {
             display: block;
@@ -36,35 +12,92 @@
             float: left;
         }
 
-            #selectTeamDiv a {
-                color: #1767d6;
-                font-weight: bold;
-            }
+        #selectTeamDiv a {
+            color: #1767d6;
+            font-weight: bold;
+        }
 
-            #selectTeamDiv p {
-                float: left;
-            }
-
-
+        #selectTeamDiv p {
+            float: left;
+        }
+        
         #gateway-body {
-            margin-bottom: 75px;
-            margin-top: 80px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            clear : both;
+            position: relative;
             z-index: 0;
-            min-height: 900px;
-            height: 900px;
-            background-repeat: repeat-x;
+            min-height: 850px;
+            /*height: 900px;*/
+            height: fit-content;
+            /*background-repeat: repeat-x;*/
         }
 
         #gateway-body-inner {
             display: block;
             margin-left: auto;
             margin-right: auto;
+            min-height: 850px;
+            height: inherit;
+            /*position : absolute;*/
+            z-index: 1;
+            /*left : 250px;*/
         }
 
-        #gateway-inner {
-            /*height: 100%;*/
-            /*height: 835px;*/
-            min-height: 900px;
+        #topInner {
+            display: block;
+            height: fit-content;
+        }
+
+        #topInner p {
+            position: relative;
+            top: 29px;
+            left: 8%;
+            color: white;
+            font-size: 26pt;
+            font-weight: bold;
+            width : fit-content;
+        }
+
+        #gatewayLayersContainer {
+            position: relative;
+            top: 0;
+            left: 0;
+            height: fit-content;
+            background-size: contain;
+        }
+
+        #sportImage {
+            height : inherit;
+            z-index: 1;
+            float : right;
+            position: relative;
+            top: -923px;
+        }
+
+
+        #bottomInner {
+            display: block;
+            height: fit-content;
+        }
+
+        #bottomInner p {
+            position: relative;
+            top: 29px;
+            color: white;
+            font-size: 23pt;
+            font-weight: bold;
+            text-align: center;
+        }       
+
+        #bottomInnerTabs p {
+            position: relative;
+            top: 0px;
+            color: white;
+            font-size: 23pt;
+            font-weight: bold;
+            text-align: center;
         }
 
         .gateway-h1 {
@@ -96,30 +129,84 @@
                 padding-left: 0px;
             }
 
-        #gatewayLayersContainer {
-            position: relative;
-            top: 0;
-            left: 0;
-            height: 100%;
-        }
+        
 
         #gatewayWYSIWYG {
-            /*position: relative;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 85%;
-    top: -35%;
-    z-index: 4;*/
+            z-index: 2;
         }
+
+        #gatewayWYSIWYG .Baseball-QuickCard .detailimg {
+                position: absolute;
+                top: 14px;
+                left: 59px;
+                width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-QuickCard {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            float: none;
+            width : 243px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class .detailimg {
+                    position: relative;
+                    top: 43px;
+                    left: -20px;
+                    width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            float: none;
+            width : 243px;
+        }
+
+        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet .detailimg {
+                    position: relative;
+                    top: 14px;
+                    left: -20px;
+                    width: 84px;
+        }
+        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            float: none;
+            width : 241px;
+        }
+
+
+        #gatewayWYSIWYG .Baseball-QuickStix .detailimg {
+                position: absolute;
+                top: 14px;
+                left: 63px;
+                width: 85px;
+        }
+
+        #gatewayWYSIWYG .Baseball-QuickStix {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            float: none;
+            width : 241px;
+        }
+
+        
+
+        #gatewayWYSIWYG .pricing-features {
+            clear: both;
+        }
+
 
         .regular-wysiwyg {
             position: relative;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            /*top: 11px;
-    left: 67px;*/
             width: 85%;
             top: 4%;
             z-index: 4;
@@ -130,51 +217,14 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            /*top: 11px;
-    left: 67px;*/
             width: 85%;
-            /*top: -35%;*/
+            top: 32px;
             z-index: 5;
         }
 
 
 
-        #gatewayTopText {
-            position: relative;
-            top: 29px;
-            left: 8%;
-            /*top: 43px;
-    left: 82px;*/
-            color: white;
-            font-size: 26pt;
-            font-weight: bold;
-            z-index: 3;
-        }
-
-        #gatewayBottomText {
-            position: relative;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            /*top: -170px;*/
-            /*left: -289px;*/
-            bottom: 167px;
-            color: white;
-            font-size: 23pt;
-            font-weight: bold;
-            text-align: center;
-            z-index: 3;
-        }
-
-        #gatewayForegroundImage {
-            /*position: relative;
-    top: -916px;
-    left: 56%;
-    width: 45%;
-    max-width: 400px;
-    max-height : 998px;
-    z-index: 2;*/
-        }
+        
 
         .gateway-foreground-specialty {
             position: relative;
@@ -188,9 +238,16 @@
 
         .gateway-foreground-sports {
             position: relative;
-            top: -881px;
-            left: 785px;
-            z-index: 2;
+            top: -880px;
+            left: 750px;
+            z-index: 3;
+        }
+
+        .gateway-foreground-sports-team {
+            position: relative;
+            top: -842px;
+            left: 750px;
+            z-index: 3;
         }
 
         .gateway-foreground-sports-multirow {
@@ -374,7 +431,10 @@ label[for*='4']:before { content: '\f1a9'; }*/
         #tab1:checked ~ #content1,
         #tab2:checked ~ #content2,
         #tab3:checked ~ #content3,
-        #tab4:checked ~ #content4 {
+        #tab4:checked ~ #content4,
+        #tab5:checked ~ #content5,
+        #tab6:checked ~ #content6,
+        #tab7:checked ~ #content7 {
             display: block;
         }
 

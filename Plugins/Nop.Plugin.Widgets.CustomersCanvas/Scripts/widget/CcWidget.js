@@ -14,14 +14,14 @@ var CcWidget = (function () {
         var img = null;
         if (input.length > 0) {
             row = input.parent().parent();
-            img = $("td a img", row);
+            img = $("td img", row);
         }
         else if (index > -1) {
             row = $("div.order-summary-content table.cart tbody tr:nth-child(" + (index + 1) + ")");
-            img = $("td.product-picture a img", row);
+            img = $("td.product-picture img", row);
         }
         if (img != null) {
-            img.attr("style", "max-width: 80px; max-height: 80px");
+            //     img.attr("style", "max-width: 80px; max-height: 80px");
             img.attr("src", imageSource);
         }
     };
@@ -98,7 +98,7 @@ var CcWidget = (function () {
         flyoutCart.attr("data-cc-flag", 1);
     };
     CcWidget.prototype._updateFlyoutCartItem = function (flyoutCartItems, index, imageSource) {
-        var img = $("div.item:nth-child(" + index + ") div.picture a img", flyoutCartItems);
+        var img = $("div.item:nth-child(" + index + ") div.picture img", flyoutCartItems);
         img.attr("src", imageSource);
     };
     return CcWidget;

@@ -25,6 +25,16 @@
                             </span>
                             <span class="value">
                                 @Model.ShippingMethod
+                                @if (Model.SelectedPickUpInStore)
+                                {
+                                    <span id="contactPhone" style="display:block">
+                                    Pickup Contact Phone: @HttpContext.Current.Session["customerPhoneNumber"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    HttpContext.Current.Session["customerPhoneNumber"] = "";
+                                }
                             </span>
                         </li>
                         <li>&nbsp;</li>
@@ -157,7 +167,24 @@
                         </li>
  
                     }
-                  @if(Model.PaymentMethod != "Check / Money Order")
+
+                  @if (Model.PaymentMethod == "Purchase Order" || Model.PaymentMethod == "Monthly Billing")
+                  {
+                      if (Model.CustomValues != null)
+                      {
+                          foreach (var item in Model.CustomValues)
+                          {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @(item.Value != null ? item.Value.ToString() : "")
+                                </span>
+                            </li>
+                          }
+                      }
+
+                    <li>&nbsp;</li>
+                  }
+                  else if (Model.PaymentMethod != "Check / Money Order")
                   {
                     <li>&nbsp;</li>
                     <li class="title">

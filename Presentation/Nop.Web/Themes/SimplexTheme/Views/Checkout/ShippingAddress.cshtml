@@ -272,22 +272,12 @@
                 @Html.Widget("checkout_shipping_address_bottom")
             </div>
             }
-            @*<div id="sh_phone_number" style="display:none; padding-top:30px; padding-bottom:40px;" class="form-group">
-                                    <strong>Contact Information :</strong>
-                <div style="padding-top: 15px;">
-                                        @Html.LabelFor(model => model.NewAddress.PhoneNumber, new { @class = "control-label col-sm-2 col-md-2" })
-                                        <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-                                        <div class="col-sm-6 col-md-6">
-                                            @Html.TextBoxFor(model => model.NewAddress.PhoneNumber, new { @class = "form-control" })
-                                        </div>
-                                        <div class="col-sm-4 col-md-4">
-                                                <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                                            @Html.ValidationMessageFor(model => model.NewAddress.PhoneNumber)
-                                    </div>
-                </div>
-            </div>*@
-            <div class="style-msg infomsg" id="local-pickup-msg" style="display:none;">
+        
+            <div  id="local-pickup-msg" style="display:none;">
+                 @Html.Widget("order_addPhoneNumber_widget") 
+                <div class="style-msg infomsg">
                 <div class="sb-msg"><i class="icon-info-sign"></i><strong>NOTE</strong> Local pickup availible 7am-5pm PT Monday through Friday</div>
+                </div>
             </div>
             
                 @Html.Partial("_ShippingMethod", ShippingMethod)

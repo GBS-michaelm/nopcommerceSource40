@@ -39,11 +39,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string _logoPicturePath = "";
         private string _aboutYourMarketCenter = "";       
         private string _forgroundColor = "#000000";
-
-        //private string _backgroundColor = ""; 
-        //private string _landingHeader = "";
-        //private int _statusId = 0;
-
+        
         public Company(int companyId)
         {
             //nop category data
@@ -70,13 +66,27 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             this.Products = categoryModel.Products;
             
             //datalook up via category(company) id from gbscategory table
-            Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-            companyDic.Add("@CategoryId", companyId);
+            //Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+            //companyDic.Add("@CategoryId", companyId);
 
-            string companyDataQuery = "EXEC usp_SelectGBSCompanyData @CategoryId";
-            DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+            //string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+            //DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
-            if(companyDataView.Count > 0)
+
+            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+
+            DataView companyDataView = cacheManager.Get("sportsTeam" + companyId, 60, () => {
+                Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+                companyDic.Add("@CategoryId", companyId);
+
+                string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+                DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+
+                return innerCompanyDataView;
+            });
+
+
+            if (companyDataView.Count > 0)
             {
                 
                 this.parentCategoryId = category.ParentCategoryId;               
@@ -87,11 +97,6 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
                 this.aboutYourMarketCenter = !string.IsNullOrEmpty(companyDataView[0]["aboutYourMarketCenter"].ToString()) ? companyDataView[0]["aboutYourMarketCenter"].ToString() : _aboutYourMarketCenter;               
                 this.foregroundColor = !string.IsNullOrEmpty(companyDataView[0]["ForegroundColor"].ToString()) ? companyDataView[0]["ForegroundColor"].ToString() : _forgroundColor;
-
-                //this.backgroundColor = !string.IsNullOrEmpty(companyDataView[0]["BackgroundColor"].ToString()) ? companyDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
-                //this.landingHeader = !string.IsNullOrEmpty(companyDataView[0]["LandingHeader"].ToString()) ? companyDataView[0]["LandingHeader"].ToString() : _landingHeader;
-                //int statId;
-                //this.statusId = Int32.TryParse(companyDataView[0]["StatusID"].ToString(), out statId) ? statId : _statusId;
 
             }
 
@@ -106,10 +111,6 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string logoPicturePath { get { return _logoPicturePath; } set { _logoPicturePath = value; } }
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
-
-        //public string backgroundColor { get { return _backgroundColor; } set { _backgroundColor = value; } }
-        //public string landingHeader { get { return _landingHeader; } set { _landingHeader = value; } }
-        //public int statusId { get { return _statusId; } set { _statusId = value; } }
         
     }
 }

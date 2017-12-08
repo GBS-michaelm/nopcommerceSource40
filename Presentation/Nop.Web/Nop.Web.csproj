@@ -28,6 +28,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>f94c814a</NuGetPackageImportStamp>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1549,6 +1550,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\simplex-styles.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\style.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail-responsive.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\thumbnail.css" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons-snapchat.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\fonts\font-icons.svg" />
@@ -2973,7 +2975,7 @@
     <Content Include="Themes\TeamMagnet\Views\Shared\_Root.Head.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Topics\RequestQuote.cshtml" />
     <Content Include="Themes\TeamMagnet\Views\Web.config" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SportsTeamGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-gateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryGalleryTemplate.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-pricechart.cshtml" />
@@ -2988,6 +2990,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
+
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
@@ -2997,6 +3000,18 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
+
+    <Content Include="Themes\AtomicEnvelopes\Views\Checkout\ShippingAddress.cshtml" />
+    <Content Include="Themes\AdhesiveMagnets\Views\Checkout\ShippingAddress.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\GatewayCategoryProduct.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\GatewayCategoryProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SportsTeamTabs.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-tabs.cshtml" />
+    <Content Include="Themes\AdhesiveMagnets\Views\ShoppingCart\_OrderReviewData.cshtml" />
+    <Content Include="Themes\AtomicEnvelopes\Views\ShoppingCart\_OrderReviewData.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
@@ -3223,7 +3238,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 		 Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->

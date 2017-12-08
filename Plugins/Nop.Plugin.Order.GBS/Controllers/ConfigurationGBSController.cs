@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Order.GBS.Models;
@@ -57,7 +58,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
             if (storeScope > 0)
             {
-                
+
                 model.LoginId_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.LoginId, storeScope);
                 model.Password_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.Password, storeScope);
                 model.GBSOrderWebServiceAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSOrderWebServiceAddress, storeScope);
@@ -148,5 +149,5 @@ namespace Nop.Plugin.Order.GBS.Controllers
         }
 
     }
-        
 }
+  

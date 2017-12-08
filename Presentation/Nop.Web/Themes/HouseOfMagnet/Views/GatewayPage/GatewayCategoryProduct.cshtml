@@ -1,0 +1,73 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.BusinessLogic.GBS.Models.GatewayPageProductBoxModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@{
+
+    Layout = "";
+
+}
+
+
+@{ 
+    var bestPrice = "";
+    var mostPopular = "";
+    var width = Model.width.ToString("f1");
+    var length = Model.length.ToString("f1");
+
+    if (Model.isFeatured)
+    {
+        bestPrice = "pricing-box best-price";
+        mostPopular = "Most Popular";
+    } else
+    {
+        bestPrice = "pricing-box";
+    }
+}
+
+<div class='col-md-3'>
+
+    <div class='@bestPrice'>
+
+
+        <div class='pricing-title'>
+            <h3>@Model.name</h3>
+            <span>@mostPopular</span>
+        </div>
+
+        <div class='gateway-image'>
+            @Html.Widget("product_details_widget", Model.featuredProductId)
+        </div>
+
+        <div class='pricing-features'>
+
+            <ul>
+               
+                <li> @width " X @length "</li>
+                
+                <li>@Model.name top</li>
+
+                <li></li>
+
+                <li>@Model.designCount designs available</li>
+
+            </ul>
+            <div class='gateway-pricing'>Starting at $@Model.price</div>
+
+        </div>
+        @{
+            if (Model.isFeatured)
+            {
+                <div class='pricing-action'><a href='@Model.productLink' class='team-handle button button-rounded button-reveal button-large button-green tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
+            }
+            else
+            {
+                <div class='pricing-action'><a href='@Model.productLink' class='team-handle button button-rounded button-reveal button-large button-blue tright'><i class='icon-angle-right'></i><span>Select</span></a></div>
+            }
+        }
+
+    </div>
+</div>
