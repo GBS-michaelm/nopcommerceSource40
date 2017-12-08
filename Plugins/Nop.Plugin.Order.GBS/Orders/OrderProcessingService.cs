@@ -269,6 +269,16 @@ namespace Nop.Services.Custom.Orders
 
                 myResult = base.PlaceOrder(processPaymentRequest);
 
+
+                _httpContext.Session.Remove("customerPhoneNumber");
+                _httpContext.Session.Remove("purchaseOrderNumber");
+                _httpContext.Session.Remove("purchaseOrderName");
+                _httpContext.Session.Remove("purchaseOrderPhoneNumber");
+                _httpContext.Session.Remove("monthlyBillingName");
+                _httpContext.Session.Remove("monthlyBillingPhoneNumber");
+                _httpContext.Session.Remove("monthlyBillingReference");
+
+
                 if (miscPlugins.Count > 0)
                 {
                     

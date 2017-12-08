@@ -223,7 +223,20 @@
                                                 {
                                                     <li class="custom-value">
                                                         <span class="value">
-                                                            @(item.Value != null ? item.Value.ToString() : "")
+                                                            @if (item.Key == "Monthly Billing Reference")
+                                                            {
+                                                                if (item.Value != null && item.Value.ToString() != "")
+                                                                {
+                                                                    string mbRef = item.Value.ToString();
+                                                                    mbRef = mbRef.Replace("<![CDATA[", "");
+                                                                    mbRef = mbRef.Replace("]]>", "");
+                                                                    @mbRef;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @(item.Value != null ? item.Value.ToString() : "")
+                                                            }
                                                         </span>
                                                     </li>
                                                 }
@@ -372,24 +385,6 @@
                                             </li>
                                         }
 
-                                        if (Model.CustomValues != null)
-                                        {
-                                            foreach (var item in Model.CustomValues)
-                                            {
-                                                if (item.Key == "Pickup Contact Phone")
-                                                {
-                                                    <li class="custom-value">
-                                                        <span class="value">
-                                                            @item.Key: 
-                                                        </span>
-                                                        <span class="value">
-                                                            @(item.Value != null ? item.Value.ToString() : "")
-                                                        </span>
-                                                    </li>
-                                                }
-                                            }
-                                        }
-
                                     }
                                 </ul>
                             </div>
@@ -421,6 +416,24 @@
                                             @Model.ShippingStatus
                                         </span>
                                     </li>
+                                }
+
+                                @if (Model.CustomValues != null)
+                                {
+                                    foreach (var item in Model.CustomValues)
+                                    {
+                                        if (item.Key == "Pickup Contact Phone")
+                                        {
+                                            <li class="custom-value">
+                                                <span class="value">
+                                                    @item.Key:
+                                                </span>
+                                                <span class="value">
+                                                    @(item.Value != null ? item.Value.ToString() : "")
+                                                </span>
+                                            </li>
+                                        }
+                                    }
                                 }
                             </ul>
                         </div>
