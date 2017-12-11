@@ -260,7 +260,13 @@ namespace Nop.Services.Custom.Orders
                     string MBref = _httpContext.Session["monthlyBillingReference"] == null ? "" : _httpContext.Session["monthlyBillingReference"].ToString();
                     if (MBref != null && MBref != "")
                     {
-                        MBref = "<![CDATA[" + MBref + "]]>";
+                        //MBref = "<![CDATA[" + MBref + "]]>";
+                        MBref = MBref.Replace("&", " ");
+                        MBref = MBref.Replace("<", " ");
+                        MBref = MBref.Replace(">", " ");
+                        MBref = MBref.Replace("\"", " ");
+                        MBref = MBref.Replace("\'", " ");
+
                         processPaymentRequest.CustomValues.Add("Monthly Billing Reference", MBref);
                         _httpContext.Session.Remove("monthlyBillingReference");
                     }
