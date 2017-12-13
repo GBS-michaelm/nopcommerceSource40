@@ -43,6 +43,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 
+
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
@@ -314,10 +315,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 else
                 {
                     var prodOptions =  Session["productOptions"] == null ? "" : Session["productOptions"].ToString();
-                    //var options = DeserializeOptions(prodOptions);
-                    //optionsAttributesXml = GetOptionsAttributes(product, options);
+                    var options = DeserializeOptions(prodOptions);
+                    optionsAttributesXml = GetOptionsAttributes(product, options);
                 }
-                var attributesXml = GetProductAttributes(product,  formOptions, dataJson, cartImageSrc, "");
+                var attributesXml = GetProductAttributes(product,  formOptions, dataJson, cartImageSrc, optionsAttributesXml);
                 var warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
 
                 var cart = customer.ShoppingCartItems
@@ -335,16 +336,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         }
 
-        //private Dictionary<string, SelectedOption> DeserializeOptions(string optionsJson)
-        //{
-        //    var result = new Dictionary<string, SelectedOption>();
-        //    if (!string.IsNullOrEmpty(optionsJson))
-        //    {
-        //        var converter = new OptionValueConverter();
-        //        result = JsonConvert.DeserializeObject<Dictionary<string, SelectedOption>>(optionsJson, converter);
-        //    }
-        //    return result;
-        //}
+
+        private Dictionary<string, SelectedOption> DeserializeOptions(string optionsJson)
+        {
+            var result = new Dictionary<string, SelectedOption>();
+            if (!string.IsNullOrEmpty(optionsJson))
+            {
+                var converter = new OptionValueConverter();
+                result = JsonConvert.DeserializeObject<Dictionary<string, SelectedOption>>(optionsJson, converter);
+            }
+            return result;
+        }
+
 
 
         private string GetProductAttributes(Core.Domain.Catalog.Product product,  string formOptions, string iframeData, string cartImageSrc, string optionsAttributesXml)
@@ -382,33 +385,35 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         }
 
-        //private string GetOptionsAttributes(Core.Domain.Catalog.Product product, Dictionary<string, SelectedOption> options)
-        //{
-        //    var result = new StringBuilder();
-        //    foreach (var option in options)
-        //    {
-        //        var val = option.Value;
-        //        var attrId = val.Option.Id;
 
-        //        if (val.Value != null && val.Value.Any())
-        //        {
-        //            result.AppendFormat("<ProductAttribute ID=\"{0}\">", attrId);
-        //            foreach (var selectedOption in val.Value)
-        //            {
-        //                result.AppendFormat("<ProductAttributeValue><Value>{0}</Value></ProductAttributeValue>", selectedOption);
-        //            }
-        //            result.AppendLine("</ProductAttribute>");
-        //        }
-        //    }
+        private string GetOptionsAttributes(Core.Domain.Catalog.Product product, Dictionary<string, SelectedOption> options)
+        {
+            var result = new StringBuilder();
+            foreach (var option in options)
+            {
+                var val = option.Value;
+                var attrId = val.Option.Id;
 
-        //    return result.ToString();
-        //}
+                if (val.Value != null && val.Value.Any())
+                {
+                    result.AppendFormat("<ProductAttribute ID=\"{0}\">", attrId);
+                    foreach (var selectedOption in val.Value)
+                    {
+                        result.AppendFormat("<ProductAttributeValue><Value>{0}</Value></ProductAttributeValue>", selectedOption);
+                    }
+                    result.AppendLine("</ProductAttribute>");
+                }
+            }
+
+            return result.ToString();
+        }
 
 
         private string GetFormOptionsAttributesXml(Product product, string formOptions)
         {
             var nameValueCollection = new System.Collections.Specialized.NameValueCollection();
             var jsonFormOptions = string.IsNullOrEmpty(formOptions) ? null : JObject.Parse(formOptions);
+
             if (jsonFormOptions != null && jsonFormOptions.Root != null)
             {
                 var root = jsonFormOptions.Root;
@@ -616,5 +621,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             }
             return RedirectToRoute("ShoppingCart");
         }
+
     }
 }

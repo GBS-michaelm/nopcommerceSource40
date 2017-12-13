@@ -3,46 +3,106 @@
 @using Nop.Web.Models.Topics;
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Logging;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using System.Web.Script.Serialization;
+@using Nop.Plugin.Payments.GBS;
+@using System.Data;
+@using System.Xml;
+@using Nop.Core;
+@using Nop.Core.Domain.Orders;
+@using Nop.Services.Orders;
+ 
 @{
-
+    DBManager db = new DBManager();
     string page = string.Empty;
-    try
+    //try
+    //{
+    int prodId = Convert.ToInt32(Request.QueryString["id"]);
+    int cartId = Convert.ToInt32(Request.QueryString["cartid"]);
+    int cartItemID = (!string.IsNullOrEmpty(Request.QueryString["updatecartitemid"])) ? Convert.ToInt32(Request.QueryString["updatecartitemid"]) : 0;
+    string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
+    string sku = Request.QueryString["sku"];
+    string iframeData = string.Empty;
+    var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var attributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+    var attributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+    var attributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
+    var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(prodId);
+    string attributeXml = string.Empty;
+    bool editActive = false;
+    //string productXml = string.Empty;
+    //Set iframe url
+    foreach (var item in CurrentSpecAttr)
     {
-        string iframeUrl = TempData["iframeurl"].ToString();
-        string urlEnd = TempData.Peek("pcode").ToString()+ "&top=DF&designtype=CC";
-        page = iframeUrl + urlEnd;
-    }
-    catch (Exception ex)
-    {
-        page = string.Empty;
-    }
-}
-<form id="product-attributes-form">
-    @{
-        try
+
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "IframeURL")
         {
-            int i = 0;
-            string value = string.Empty;
-            if (!string.IsNullOrEmpty(TempData.Peek("productAttributes").ToString()))
+            page = item.SpecificationAttributeOption.Name;
+        }
+    }
+    page = page + sku;
+
+    //Handles edit from cart
+    if (cartItemID != 0)
+    {
+        var customer = workContext.CurrentCustomer;
+        var cart = customer.ShoppingCartItems
+                      .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                      .LimitPerStore(_storeContext.CurrentStore.Id)
+                      .ToList();
+        foreach (var item in cart)
+        {
+            if (item.Id == cartItemID)
             {
-                foreach (var item in (IList<ProductDetailsModel.ProductAttributeModel>)TempData.Peek("productAttributes"))
-                {
-                    <input name="product_attribute_@item.Id" class="@item.Name" type="hidden" id="product_attribute_@item.Id" value="@value" />
-                    i++;
-                }
+                attributeXml = item.AttributesXml;
             }
         }
-        catch (Exception ex)
-        {
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(attributeXml);
+        XmlNodeList nodeList = xmldoc.GetElementsByTagName("ProductAttribute");
+        var node = xmldoc.FirstChild.FirstChild.InnerText;
+        //var attributeMappingId = attributeService.GetProductAttributeMappingsByProductId(prodId);
 
-        }
+
+        //XmlNode currentNode;
+
+        //var attributes = attributeService.GetProductAttributeMappingsByProductId(prodId);
+        //foreach (var item in attributes)
+        //{
+        //    switch (item.ProductAttribute.Name)
+        //    {
+        //        case "IframeUrl":
+        //            currentNode = xmldoc.SelectSingleNode("/Attributes/ProductAttribute[@ID='" + item.Id + "']");
+        //            currentNode.ParentNode.RemoveChild(currentNode);
+
+        //            break;
+        //        case "CustomImgUrl":
+        //            currentNode = xmldoc.SelectSingleNode("/Attributes/ProductAttribute[@ID='" + item.Id + "']");
+        //            currentNode.ParentNode.RemoveChild(currentNode);
+
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
+
+
+        //var productXml = xmldoc.OuterXml;
+        iframeData = node;
+        editActive = true;
     }
 
-</form>
-@{
+    <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
+    <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
+    <input type="hidden" id="hdn-qty" value="@qty" />
+    <input type="hidden" id="hdn-product-id" value="@prodId" />
+    <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
-    <div class="chili-template" style="overflow:hidden; height:@TempData.Peek("iframeheight")">
-        <iframe src="@T("hom.url")@page" style="height:@TempData["iframeheight"]; width:100%;"></iframe>
+    <div class="chili-template" style="overflow:hidden; height:1200px">
+        <iframe id="chili-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 }
 <!--product attributes-->
@@ -51,23 +111,24 @@
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     var eventer = window[eventMethod];
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-    var prodID = @Html.Raw(TempData["productid"]);
-    var cID =  @Html.Raw(TempData["cartid"]);
     var imageUrl = '';
     var check = true;
 
+
     // Listen to message from child window
     eventer(messageEvent, function (e) {
-        if (JSON.parse(e.data).success == true) {
-            if (check) {
-                check = addToCart(e.data);
-            }
-        }
+        var cartImageSrc = "http://chili.houseofmagnets.com" + JSON.parse(e.data)[320];
+        AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
+
     }, false);
-    function addToCart(val) {
-        $(".CustomImgUrl").val(JSON.parse(val).preview);
-        AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = TempData["productID"], shoppingCartTypeId = TempData["cartID"] })', '#product-attributes-form');
-        return false;
-    }
 </script>
+<script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#hdn-iframe-data").val() != "") {
+            $("#chili-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
+        }
+    });
+</script>
+
 

@@ -203,6 +203,53 @@
                                             @Model.PaymentMethod
                                         </span>
                                     </li>
+                                    @if (Model.PaymentMethod == "Purchase Order")
+                                    {
+                                        if (Model.CustomValues != null)
+                                        {
+                                            foreach (var item in Model.CustomValues)
+                                            {
+                                                if (item.Key == "PO Number" || item.Key == "PO Name" || item.Key == "PO Phone")
+                                                {
+                                                    <li class="custom-value">
+                                                        <span class="value">
+                                                            @(item.Value != null ? item.Value.ToString() : "")
+                                                        </span>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    @if (Model.PaymentMethod == "Monthly Billing")
+                                    {
+                                        if (Model.CustomValues != null)
+                                        {
+                                            foreach (var item in Model.CustomValues)
+                                            {
+                                                if (item.Key == "Monthly Billing Name" || item.Key == "Monthly Billing Phone" || item.Key == "Monthly Billing Reference")
+                                                {
+                                                    <li class="custom-value">
+                                                        <span class="value">
+                                                            @if (item.Key == "Monthly Billing Reference")
+                                                            {
+                                                                if (item.Value != null && item.Value.ToString() != "")
+                                                                {
+                                                                    string mbRef = item.Value.ToString();
+                                                                    mbRef = mbRef.Replace("<![CDATA[", "");
+                                                                    mbRef = mbRef.Replace("]]>", "");
+                                                                    @mbRef;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @(item.Value != null ? item.Value.ToString() : "")
+                                                            }
+                                                        </span>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    }
                                     @if (!Model.PrintMode)
                                     {
                                         <li class="payment-method-status">
@@ -344,6 +391,7 @@
                                                 @Model.PickupAddress.CountryName
                                             </li>
                                         }
+
                                     }
                                 </ul>
                             </div>
@@ -375,6 +423,24 @@
                                             @Model.ShippingStatus
                                         </span>
                                     </li>
+                                }
+
+                                @if (Model.CustomValues != null)
+                                {
+                                    foreach (var item in Model.CustomValues)
+                                    {
+                                        if (item.Key == "Pickup Contact Phone")
+                                        {
+                                            <li class="custom-value">
+                                                <span class="value">
+                                                    @item.Key:
+                                                </span>
+                                                <span class="value">
+                                                    @(item.Value != null ? item.Value.ToString() : "")
+                                                </span>
+                                            </li>
+                                        }
+                                    }
                                 }
                             </ul>
                         </div>

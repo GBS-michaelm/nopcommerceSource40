@@ -10,8 +10,10 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                if (!attribute.Name.ToLower().Contains("customimgurl") && !attribute.Name.ToLower().Contains("iframedata"))
+                {
+                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dl id="@string.Format("product_attribute_label_{0}", attribute.Id)" class="row">
                     <dt >
                         <label class="text-prompt">
@@ -55,12 +57,12 @@
                                     <ul class="option-list">
                                         @foreach (var attributeValue in attribute.Values)
                                         {
-														
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
-                                            attributeValue.Name :
-                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;															
-															
+
+                                            var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                                attributeValue.Name :
+                                                T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
+                                                    attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+
                                             <li>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                                 <label for="@(controlId)_@(attributeValue.Id)">@attributeName </label>
@@ -109,14 +111,14 @@
                                     {
                                         download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
                                     }
-                                    
+
                                     //register CSS and JS
                                     Html.AddCssFileParts("~/Scripts/fineuploader/fineuploader-4.2.2.min.css");
                                     Html.AddScriptParts("~/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
                                     //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                     var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
-                                    
+
                                     if (download != null)
                                     {
                                         <input id="@(controlId)" name="@(controlId)" type="hidden" value="@download.DownloadGuid" />
@@ -191,7 +193,7 @@
                                     <div id="@(controlId + "downloadurl")">
                                         @if (download != null)
                                         {
-                                            <a href="@(Url.Action("GetFileUpload", "Download", new {downloadId = download.DownloadGuid}))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
+                                            <a href="@(Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
                                         }
                                     </div>
                                     <div>
@@ -214,7 +216,7 @@
                                         {
                                             var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                             attributeValue.Name :
-                                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,String.Empty).Text;
+                                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, String.Empty).Text;
                                             <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                                 <label for="@(controlId)_@(attributeValue.Id)">
                                                     <span class="color-container" title="@attributeName">
@@ -235,8 +237,8 @@
                                     </script>
                                 }
                                 break;
-                                case AttributeControlType.ImageSquares:
-                            {
+                            case AttributeControlType.ImageSquares:
+                                {
                                 <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
@@ -265,12 +267,13 @@
                                         });
                                     });
                                 </script>
-                            }
-                            break;
+                                }
+                                break;
                         }
                     </dd>
 
                 </dl>
+                }
             }
         </dl>
     </div>
