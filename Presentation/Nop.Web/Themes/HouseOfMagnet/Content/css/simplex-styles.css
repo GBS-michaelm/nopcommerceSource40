@@ -7706,7 +7706,11 @@ doesnotexist:-o-prefocus, .new-wrapper.register-block legend, doesnotexist:-o-pr
 
 .account-page .order-details-page .picture a {
     width: 120px;
-    height: 120px;
+    /*height: 120px;*/
+    background-size: 100%;
+    float: left;
+    position: relative;
+    background-repeat: no-repeat;
 }
 
 /* SAFARI STYLE */
@@ -11314,4 +11318,12 @@ body hr {
     .shopnow {
         display: inline-block;
     }
+}
+
+.orderdetails-list .name img {
+    border: 0 none;
+    border: 0 none;
+    margin-top: 31px;
+    width: 161px;
+    z-index: -1;
 }

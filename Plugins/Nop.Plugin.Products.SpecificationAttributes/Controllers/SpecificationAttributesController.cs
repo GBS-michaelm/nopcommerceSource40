@@ -32,11 +32,14 @@ using System.Collections;
 using Nop.Services.Orders;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.DataAccess.GBS;
+using Nop.Plugin.Order.GBS.Controllers;
+using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
     public class SpecificationAttributesController : BasePluginController
     {
+        public static int joecounter = 0;
         private readonly ICustomerService _customerService;
         private readonly ILanguageService _languageService;
         private readonly ISettingService _settingService;
@@ -284,15 +287,40 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 if (id <= 0)
                     return Content("");
 
+
+
+                /***** Unhide following code if GBS want to use image background on order detail page ******/
+                if (widgetZone == "orderdetails_product_line_product")
+                {
+                    var orderitem = _orderService.GetOrderItemById(id);
+                    if (orderitem != null)
+                    {
+                        if (orderitem is LegacyOrderItem && ((LegacyOrderItem)orderitem).webToPrintType == "canvas")
+                        {
+                            var gbsOrdercontroller = DependencyResolver.Current.GetService<GBSOrderController>();
+                            gbsOrdercontroller.ControllerContext = new ControllerContext(this.Request.RequestContext, gbsOrdercontroller);
+                            return gbsOrdercontroller.DisplayLegacyOrderItemImage("",orderitem.Id);
+                        }
+                        else
+                        {
+                            return OrderProductImage(orderitem.Product.Id);
+                        }
+                    }
+                    return null;
+                }
+                //if (widgetZone == "orderdetails_product_line")
+                //{
+                //    var orderitem = _orderService.GetOrderItemById(id);
+                //    if (orderitem != null)
+                //    {
+                //        return OrderProductImage(orderitem.Product.Id);
+                //    }
+                //    return null;
+                //}
+
                 var product = _productService.GetProductById(id);
                 if (product == null)
                     return Content("");
-
-                /***** Unhide following code if GBS want to use image background on order detail page ******/
-                //if (widgetZone == "orderdetails_product_line")
-                //{
-                //    return OrderProductImage(product.Id);
-                //}
 
                 if (widgetZone == "product_by_artist")
                 {
@@ -528,11 +556,12 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                 foreach (var l in list)
                 {
+                    joecounter++;
                     Nop.Core.Domain.Orders.Order order = null;
 
                     if (l.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(l.CustomProperties["isLegacy"]) == true)
                     {
-                        order = Nop.Plugin.Order.GBS.Orders.OrderExtensions.GetOrderById(l.Id,true);
+                        order = new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderById(l.Id,true);
                     }
                     else
                     {
@@ -561,12 +590,18 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                     foreach (var orderItem in proitems)
                     {
+                        //var orderExtensions = new Nop.Plugin.Order.GBS.Orders.OrderExtensions();
+                        //orderExtensions.prepareLegacyOrderItem(orderItem);
                         if (orderItem.Product.Id != 0)
                         {
                             var products = new List<Product>();
                             products.Add(orderItem.Product);
                             var Products = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
                             var product = _productService.GetProductById(orderItem.ProductId);
+                            if (product == null)
+                            {
+                                product = orderItem.Product;
+                            }
                             var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
                             var orderItemModel = new CustomerOrderListModel.OrderItemModel
                             {
@@ -582,6 +617,12 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 ImageUrl = Products.DefaultPictureModel.ImageUrl
 
                             };
+                            if (l.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(l.CustomProperties["isLegacy"]) == true)
+                            {
+                                Nop.Plugin.Order.GBS.Orders.OrderExtensions.LegacyOrderItem legacyOrderItem = (Nop.Plugin.Order.GBS.Orders.OrderExtensions.LegacyOrderItem)new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(orderItem.Id, true);
+
+                                orderItemModel.ImageUrl = legacyOrderItem.legacyPicturePath;
+                            }
                             var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
                             var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
                             if (imageSpecAttrOption.Any())
@@ -635,6 +676,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                     if (backGroundShapeName.Any())
                                                     {
                                                         ViewBag.ClassName = backGroundShapeName.FirstOrDefault().Name;
+                                                        orderItemModel.ClassName = backGroundShapeName.FirstOrDefault().Name;
                                                     }
                                                     break;
                                                 case "TreatmentFill":
@@ -649,6 +691,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                                 if (img.Any())
                                                                 {
                                                                     ViewBag.fill = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+                                                                    orderItemModel.DefaultColor = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
 
                                                                 }
                                                                 break;
@@ -657,6 +700,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                                 if (color.Any())
                                                                 {
                                                                     ViewBag.fill = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+                                                                    orderItemModel.DefaultColor = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
 
                                                                 }
                                                                 break;
@@ -737,8 +781,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             if (id <= 0)
                 return Content("");
 
-            var orderitem = _orderService.GetOrderItemById(id);
-            var product = _productService.GetProductById(orderitem.ProductId);
+            //var orderitem = _orderService.GetOrderItemById(id);
+            //var product = _productService.GetProductById(orderitem.ProductId);
+            var product = _productService.GetProductById(id);
 
             if (product == null)
                 return Content("");

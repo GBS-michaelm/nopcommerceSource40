@@ -31,17 +31,29 @@ namespace Nop.Plugin.Order.GBS
         /// <param name="routeValues">Route values</param>
         public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            actionName = "AddPhoneNumber";
-            controllerName = "Order";
-            routeValues = new RouteValueDictionary()
+            if (widgetZone == "categorydetails_top")
             {
-                { "Namespaces", "Nop.Plugin.Order.GBS.Controllers" },
-                { "area", null }
-            };
+                    actionName = "AddPhoneNumber";
+                    controllerName = "GBSOrder";
+                    routeValues = new RouteValueDictionary()
+                    {
+                        { "Namespaces", "Nop.Plugin.Order.GBS.Controllers" },
+                        { "area", null }
+                    };
+            } else 
+            {
+                actionName = "DisplayLegacyOrderItemImage";
+                controllerName = "GBSOrder";
+                routeValues = new RouteValueDictionary()
+                    {
+                        { "Namespaces", "Nop.Plugin.Order.GBS.Controllers" },
+                        { "area", "" }
+                    };
+            }
         }
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "order_addPhoneNumber_widget" }; 
+            return new List<string> { "order_addPhoneNumber_widget", "orderdetails_product_line" }; 
         }
     }
 }

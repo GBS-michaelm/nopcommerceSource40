@@ -16,7 +16,7 @@ using Nop.Plugin.Order.GBS.Orders;
 
 namespace Nop.Services.Custom.Orders
 {
-    class GBSOrderService : Nop.Services.Orders.OrderService
+    public class GBSOrderService : Nop.Services.Orders.OrderService
     {
         #region Fields
 
@@ -28,6 +28,7 @@ namespace Nop.Services.Custom.Orders
         private readonly IRepository<Customer> _customerRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IStoreContext _storeContext;
 
         #endregion
         #region Ctor
@@ -49,7 +50,8 @@ namespace Nop.Services.Custom.Orders
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<Customer> customerRepository,
             IEventPublisher eventPublisher,
-            IPluginFinder pluginFinder) : base(orderRepository, orderItemRepository, orderNoteRepository, productRepository, recurringPaymentRepository, customerRepository, eventPublisher)
+            IPluginFinder pluginFinder,
+            IStoreContext storeContext) : base(orderRepository, orderItemRepository, orderNoteRepository, productRepository, recurringPaymentRepository, customerRepository, eventPublisher)
         {
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
@@ -59,42 +61,106 @@ namespace Nop.Services.Custom.Orders
             this._customerRepository = customerRepository;
             this._eventPublisher = eventPublisher;
             this._pluginFinder = pluginFinder;
+            this._storeContext = storeContext;
         }
+
 
         #endregion
-
-        public override IPagedList<Nop.Core.Domain.Orders.Order> SearchOrders(int storeId = 0,
-            int vendorId = 0, int customerId = 0,
-            int productId = 0, int affiliateId = 0, int warehouseId = 0,
-            int billingCountryId = 0, string paymentMethodSystemName = null,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
-            string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public Nop.Core.Domain.Orders.OrderItem GetOrderItemById(int orderItemId, bool useBase)
         {
-            IPagedList<Nop.Core.Domain.Orders.Order> orders = base.SearchOrders(storeId, vendorId, customerId, productId, affiliateId, warehouseId, billingCountryId, paymentMethodSystemName, createdFromUtc, createdToUtc, osIds, psIds, ssIds,
-                billingEmail, billingLastName, orderNotes, pageIndex, pageSize);
-            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
+            if (useBase)
+            {
+                return base.GetOrderItemById(orderItemId);
+            }
+            return GetOrderItemById(orderItemId);
+        }
+
+        public Nop.Core.Domain.Orders.Order GetOrderById(int orderId, bool useBase = false)
+        {
+            if (useBase)
+            {
+                return base.GetOrderById(orderId);
+            }
+            return GetOrderById(orderId);
+        }
+        /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="orderId">The order identifier</param>
+        /// <returns>Order</returns>
+        public override Nop.Core.Domain.Orders.Order GetOrderById(int orderId)
+        {
+            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-
-                Nop.Core.Domain.Orders.Order myOrder = new Nop.Core.Domain.Orders.Order();
-                myOrder.Id = 99999999;
-                Nop.Core.Domain.Orders.OrderItem myItem = new Nop.Core.Domain.Orders.OrderItem();
-                myItem.Id = 99999999;
-                var _productService = EngineContext.Current.Resolve<IProductService>(); ;
-                OrderExtensions.setCustomValue("isLegacy", true, myOrder);
-                // bool isLegacy = Convert.ToBoolean(OrderExtensions.getCustomValue("isLegacy", myOrder));
-                myItem.OrderId = 99999999;
-                myItem.Product = _productService.GetProductBySku("NCALH6-00001");
-                myOrder.OrderItems.Add(myItem);
-                orders.Add(myOrder);
-                //orders.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
-                return orders;
-            }else
-            {
-                return orders;
+                var order = base.GetOrderById(orderId);
+                if(order == null)
+                {
+                    order = new OrderExtensions().GetOrderById(orderId, true);
+                }
+                return order;
             }
+            else {
+                return base.GetOrderById(orderId);
+            }
+
         }
+        /// <summary>
+        /// Gets an order item
+        /// </summary>
+        /// <param name="orderId">The order item identifier</param>
+        /// <returns>Order</returns>
+        public override Nop.Core.Domain.Orders.OrderItem GetOrderItemById(int orderItemId)
+        {
+            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
+            if (miscPlugins.Count > 0)
+            {
+                var orderItem = base.GetOrderItemById(orderItemId);
+                if (orderItem == null)
+                {
+                    orderItem = new OrderExtensions().GetOrderItemById(orderItemId, true);
+                }
+                return orderItem;
+            }
+            else
+            {
+                return base.GetOrderItemById(orderItemId);
+            }
+
+        }
+
+        //public override IPagedList<Nop.Core.Domain.Orders.Order> SearchOrders(int storeId = 0,
+        //    int vendorId = 0, int customerId = 0,
+        //    int productId = 0, int affiliateId = 0, int warehouseId = 0,
+        //    int billingCountryId = 0, string paymentMethodSystemName = null,
+        //    DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+        //    List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
+        //    string billingEmail = null, string billingLastName = "",
+        //    string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        //{
+        //    IPagedList<Nop.Core.Domain.Orders.Order> orders = base.SearchOrders(storeId, vendorId, customerId, productId, affiliateId, warehouseId, billingCountryId, paymentMethodSystemName, createdFromUtc, createdToUtc, osIds, psIds, ssIds,
+        //        billingEmail, billingLastName, orderNotes, pageIndex, pageSize);
+        //    var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
+        //    if (miscPlugins.Count > 0)
+        //    {
+
+        //        Nop.Core.Domain.Orders.Order myOrder = new Nop.Core.Domain.Orders.Order();
+        //        myOrder.Id = 99999999;
+        //        Nop.Core.Domain.Orders.OrderItem myItem = new Nop.Core.Domain.Orders.OrderItem();
+        //        myItem.Id = 99999999;
+        //        var _productService = EngineContext.Current.Resolve<IProductService>(); ;
+        //        OrderExtensions.setCustomValue("isLegacy", true, myOrder);
+        //        // bool isLegacy = Convert.ToBoolean(OrderExtensions.getCustomValue("isLegacy", myOrder));
+        //        myItem.OrderId = 99999999;
+        //        myItem.Product = _productService.GetProductBySku("NCALH6-00001");
+        //        myOrder.OrderItems.Add(myItem);
+        //        orders.Add(myOrder);
+        //        //orders.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+        //        return orders;
+        //    }else
+        //    {
+        //        return orders;
+        //    }
+        //}
     }
 }

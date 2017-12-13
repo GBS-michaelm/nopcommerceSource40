@@ -25,10 +25,11 @@ using Nop.Web.Framework.Security;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
 using Nop.Plugin.Order.GBS.Factories;
+using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
-    public class OrderController : BaseController
+    public class GBSOrderController : BaseController
     {
         private readonly CcSettings _ccSettings;
         private readonly ICcService _ccService;
@@ -45,7 +46,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly IOrderModelFactory _orderModelFactory;
 
 
-        public OrderController(
+        public GBSOrderController(
             IOrderModelFactory orderModelFactory,
             IOrderService orderService,
             ICcService ccService,
@@ -81,13 +82,16 @@ namespace Nop.Plugin.Order.GBS.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult DetailsLegacy(int orderId)
         {
-            var order = Orders.OrderExtensions.GetOrderById(orderId, true);
+            var orderExtensions = new Orders.OrderExtensions();
+            var order = orderExtensions.GetOrderById(orderId, true);
             if (order == null || order.Deleted )
                 return new HttpUnauthorizedResult();
             //GBSOrderModelFactory gbsOrderModelFactory = (GBSOrderModelFactory)_orderModelFactory;
             //var model = gbsOrderModelFactory.PrepareOrderDetailsModelLegacy(order);
             var model = _orderModelFactory.PrepareOrderDetailsModel(order);
-            return View("Details",model);
+            //var treatmentData = orderExtensions.getTreatmentData(model);
+            //ViewBag.treatmentData = treatmentData;
+            return View("DetailsLegacy", model);
         }
 
         public ActionResult UpdateCanvasProductView()
@@ -105,7 +109,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                     model.productType = productType;
                     model.webPlatform = webPlatform;
 
-                    IWorkContext _workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    IWorkContext _workContext = EngineContext.Current.Resolve<IWorkContext>(); 
 
                     var customerID = _workContext.CurrentCustomer.Id;
                     model.canvasServerBaseURL = _ccSettings.ServerHostUrl;
@@ -460,13 +464,35 @@ namespace Nop.Plugin.Order.GBS.Controllers
         }
 
 
-
-
         [ChildActionOnly]
         public ActionResult AddPhoneNumber(string widgetZone, object additionalData = null)
         {
 
             return View("~/Plugins/Order.GBS/Views/OrderGBS/AddPhoneNumber.cshtml");
+        }
+
+
+        [ChildActionOnly]
+        public ActionResult DisplayLegacyOrderItemImage(string widgetZone, object additionalData = null)
+        {
+            if (additionalData == null) { return null; }
+
+            //Nop.Core.Domain.Orders.OrderItem item = ((Nop.Services.Custom.Orders.GBSOrderService)_orderService).GetOrderItemById(Convert.ToInt32(additionalData),true);
+            //if (item != null) { return null; }
+            //LegacyOrderItem orderItem = (LegacyOrderItem)new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(Convert.ToInt32(additionalData), true);
+            //string cString = "<img title = '' alt = '"+ orderItem.Product.Name+"' src = '"+orderItem.legacyPicturePath+"'>";
+            //return Content(cString);
+            Nop.Core.Domain.Orders.OrderItem item = ((Nop.Services.Custom.Orders.GBSOrderService)_orderService).GetOrderItemById(Convert.ToInt32(additionalData));
+            if (item is LegacyOrderItem)
+            {
+                LegacyOrderItem orderItem = (LegacyOrderItem)item;
+                string cString = "<img title = '' alt = '" + orderItem.Product.Name + "' src = '" + orderItem.legacyPicturePath + "'>";
+                return Content(cString);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpPost]

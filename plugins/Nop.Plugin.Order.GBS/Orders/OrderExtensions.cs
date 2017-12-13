@@ -14,20 +14,34 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using System.Data;
 using Newtonsoft.Json;
+using Nop.Plugin.Widgets.CustomersCanvas.Services;
+using Nop.Plugin.Widgets.CustomersCanvas.Data;
+using System.Data.Common;
+using System.Reflection;
 
 namespace Nop.Plugin.Order.GBS.Orders
 {
-    public static class OrderExtensions
+    public class OrderExtensions
     {
-        public static IProductService _productService = EngineContext.Current.Resolve<IProductService>();
-        public static object getCustomValue(string key, Nop.Core.Domain.Orders.Order order)
+        public  IProductService _productService = EngineContext.Current.Resolve<IProductService>();
+        public  ICcService ccService = EngineContext.Current.Resolve<ICcService>();
+        public  IProductAttributeParser productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+        public  IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+        public  GBSOrderSettings _gbsOrderSettings = EngineContext.Current.Resolve<GBSOrderSettings>();
+        public ISpecificationAttributeService _specificationAttributeService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        public Nop.Services.Custom.Orders.GBSOrderService _gbsOrderService = (Nop.Services.Custom.Orders.GBSOrderService)EngineContext.Current.Resolve<IOrderService>();
+        //public static DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
+
+
+
+        public  object getCustomValue(string key, Nop.Core.Domain.Orders.Order order)
         {
             Dictionary<string, object> customValues = PaymentExtensions.DeserializeCustomValues(order);
 
             return customValues[key];
         }
 
-        public static void setCustomValue(string key, object value, Nop.Core.Domain.Orders.Order order)
+        public  void setCustomValue(string key, object value, Nop.Core.Domain.Orders.Order order)
         {
             Dictionary<string, object> customValues = PaymentExtensions.DeserializeCustomValues(order);
             customValues[key] = value;
@@ -36,7 +50,7 @@ namespace Nop.Plugin.Order.GBS.Orders
             order.CustomValuesXml = request.SerializeCustomValues();
 
         }
-        public static Nop.Core.Domain.Orders.Order GetOrderById(int orderId, bool isLegacy)
+        public  Nop.Core.Domain.Orders.Order GetOrderById(int orderId, bool isLegacy)
         {
             if (!isLegacy)
             {
@@ -72,30 +86,198 @@ namespace Nop.Plugin.Order.GBS.Orders
                 //};
                 //legacyOrder.OrderItems.Add(orderItem);
 
-                GBSOrderSettings _gbsOrderSettings = EngineContext.Current.Resolve<GBSOrderSettings>();
+                //GBSOrderSettings _gbsOrderSettings = EngineContext.Current.Resolve<GBSOrderSettings>();
                 Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
                 paramDicEx.Add("@orderId", orderId);
 
                 DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
                 string select = "EXEC usp_getLegacyOrderForNOP @orderId";
-                DataView orderResult = manager.GetParameterizedDataView(select, paramDicEx);
+                //DataView orderResult = manager.GetParameterizedDataView(select, paramDicEx);
+                string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
 
-                var legacyOrder = JsonConvert.DeserializeObject<Nop.Core.Domain.Orders.Order>((string)orderResult[0][0]);
-                var _productService = EngineContext.Current.Resolve<IProductService>();
+                var legacyOrder = JsonConvert.DeserializeObject<Nop.Core.Domain.Orders.Order>(jsonResult);
+                //var _productService = EngineContext.Current.Resolve<IProductService>();
+
                 foreach(var item in legacyOrder.OrderItems)
                 {
-                    var product = _productService.GetProductBySku(item.Product.Sku);
-                    if (product != null)
-                    {
-                        item.Product = product;
-                        item.ProductId = product.Id;
-                    }
+                    prepareLegacyOrderItem(item);
                 }
                 return legacyOrder;
             }
         }
 
-        public static List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> getLegacyOrders()
+        public LegacyOrderItem ConvertToLegacyOrderItem(OrderItem orderItem)
+        {
+            var type = typeof(LegacyOrderItem);
+            var instance = Activator.CreateInstance(type);
+
+            if (type.BaseType != null)
+            {
+                var properties = type.BaseType.GetProperties();
+                foreach (var property in properties)
+                    if (property.CanWrite)
+                        property.SetValue(instance, property.GetValue(orderItem, null), null);
+            }
+
+            return (LegacyOrderItem)instance;
+        }
+
+        public class LegacyOrderItem : Nop.Core.Domain.Orders.OrderItem
+        {
+            public string legacyPicturePath { get; set; }
+            public string productOptionsJson { get; set; }
+            public string webToPrintType { get; set; }
+        }
+
+        public  Nop.Core.Domain.Orders.OrderItem GetOrderItemById(int orderItemId, bool isLegacy)
+        {
+            if (!isLegacy)
+            {
+                Core.Domain.Orders.OrderItem orderItem = EngineContext.Current.Resolve<IOrderService>().GetOrderItemById(orderItemId);
+                return orderItem;
+            }
+            else
+            {
+                DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
+
+                Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                paramDicEx.Add("@orderItemId", orderItemId);
+
+                string select = "EXEC usp_getLegacyOrderItemForNOP @orderItemId";
+                //DataView orderResult = manager.GetParameterizedDataView(select, paramDicEx);
+                string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
+
+                var legacyOrderItem = JsonConvert.DeserializeObject<LegacyOrderItem>(jsonResult);
+                return prepareLegacyOrderItem(legacyOrderItem);
+            }
+        }
+
+
+        public  OrderItem prepareLegacyOrderItem(OrderItem orderItem)
+        {
+            //var ccId = ccService.GetCcAttrId(CcProductAttributes.CcId);
+            var product = _productService.GetProductBySku(orderItem.Product.Sku);
+            if (product != null)
+            {
+                orderItem.Product = product;
+                orderItem.ProductId = product.Id;
+                //var mappings = productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                //var mapping = mappings.FirstOrDefault(x => x.ProductAttributeId == ccId);
+                //var attributesXml = productAttributeParser.AddProductAttribute("",
+                //                mapping, null);
+                //orderItem.AttributesXml = attributesXml;
+            }
+            //else
+            //{
+            //    orderItem.ProductId = -1;
+            //    orderItem.Product.Id = -1;
+            //}
+            return orderItem;
+        }
+        public class TreatmentData 
+        {
+            public int id { get; set; }
+            public string DefaultColor { get; set; }
+            public string ClassName { get; set; }
+        }
+        public List<TreatmentData> getTreatmentData(OrderDetailsModel orderDetailsModel)
+        {
+            List<TreatmentData> treatmentDataList = new List<TreatmentData>();
+            foreach (var orderItemModel in orderDetailsModel.Items)
+            {
+                TreatmentData treatmentDataItem = new TreatmentData();
+                treatmentDataItem.id = orderItemModel.Id;
+                var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItemModel.ProductId);
+                var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
+                if (imageSpecAttrOption.Any())
+                {
+
+                    var thumbnailBackground = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Treatment");
+                    if (thumbnailBackground.Any())
+                    {
+                        foreach (var thbackground in thumbnailBackground)
+                        {
+                            var gbsBackGroundName = thbackground.Name;
+                            treatmentDataItem.DefaultColor = "";
+                            treatmentDataItem.ClassName = "";
+                            if (gbsBackGroundName.Any())
+                            {
+                                switch (gbsBackGroundName)
+                                {
+                                    case "TreatmentImage":
+                                        var backGroundShapeName = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                        if (backGroundShapeName.Any())
+                                        {
+                                            treatmentDataItem.ClassName = backGroundShapeName.FirstOrDefault().Name;
+                                        }
+                                        break;
+                                    case "TreatmentFill":
+                                        var backGroundFillOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == gbsBackGroundName);
+                                        if (backGroundFillOption.Any())
+                                        {
+                                            var fillOptionValue = backGroundFillOption.FirstOrDefault().Name;
+                                            switch (fillOptionValue)
+                                            {
+                                                case "TreatmentFillPattern":
+                                                    var img = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                    if (img.Any())
+                                                    {
+                                                        treatmentDataItem.DefaultColor = "background-image:url('" + img.FirstOrDefault().ColorSquaresRgb + "')";
+
+                                                    }
+                                                    break;
+                                                case "TreatmentFillColor":
+                                                    var color = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == backGroundFillOption.FirstOrDefault().Name);
+                                                    if (color.Any())
+                                                    {
+                                                        treatmentDataItem.DefaultColor = "background-color:" + color.FirstOrDefault().ColorSquaresRgb;
+
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var defaultColorOption = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "DefaultEnvelopeColor");
+                        var defaultEnvelopType = imageSpecAttrOption.Where(x => x.SpecificationAttribute.Name == "Orientation");
+                        if (defaultEnvelopType.Any())
+                        {
+                            string className = defaultEnvelopType.FirstOrDefault().Name;
+                            treatmentDataItem.ClassName = className;
+
+                            if (defaultColorOption.Any())
+                            {
+                                var optionValue = defaultColorOption.FirstOrDefault().ColorSquaresRgb;
+                                treatmentDataItem.DefaultColor = optionValue;
+                                if (optionValue.Contains("#") && optionValue.Length == 7)
+                                {
+                                    treatmentDataItem.DefaultColor = "background-color:" + optionValue;
+                                }
+                                else
+                                {
+                                    treatmentDataItem.DefaultColor = "background-image:url('" + optionValue + "')";
+                                }
+                            }
+                            else
+                            {
+                                treatmentDataItem.DefaultColor = "";
+                            }
+                        }
+                    }
+                }
+                treatmentDataList.Add(treatmentDataItem);
+                
+            }
+            return treatmentDataList;
+        }
+
+        public  List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> getLegacyOrders()
         {
             // Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel myOrder = new Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel();
             // myOrder.Id = 99999999;
@@ -119,9 +301,17 @@ namespace Nop.Plugin.Order.GBS.Orders
 
             DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
             string select = "EXEC usp_getLegacyOrdersForNOP @email, @website";
-            DataView orderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
 
-            var myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>((string)orderItemResult[0][0]);
+            var myOrders = new List<CustomerOrderListModel.OrderDetailsModel>();
+
+            //DataView orderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
+            //if (orderItemResult.Count > 0)
+            //{
+            //     myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>((string)orderItemResult[0][0]);
+
+            //}
+            string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
+            myOrders = myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>(jsonResult);
             return myOrders;
         }
     }

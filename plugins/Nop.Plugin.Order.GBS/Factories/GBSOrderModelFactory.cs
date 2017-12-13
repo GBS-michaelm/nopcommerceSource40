@@ -95,8 +95,9 @@ namespace Nop.Plugin.Order.GBS.Factories
             var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-                List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = Orders.OrderExtensions.getLegacyOrders();
+                List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = new Orders.OrderExtensions().getLegacyOrders();
                 ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
+                ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).Sort((x, y) => y.CreatedOn.CompareTo(x.CreatedOn));
             }
 
             return model;

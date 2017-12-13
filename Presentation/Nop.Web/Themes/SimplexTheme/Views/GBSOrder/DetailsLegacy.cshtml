@@ -1,13 +1,19 @@
 ﻿@model OrderDetailsModel
-@using Nop.Plugin.DataAccess.GBS;
+@*@using Nop.Plugin.DataAccess.GBS;*@
 @using Nop.Web.Models.Order
 @using Nop.Core.Infrastructure;
+@using Nop.Services.Catalog;
+@using Nop.Core;
+@using Nop.Services.Stores;
 @using Nop.Plugin.Widgets.CustomersCanvas.Services
-
+@using Nop.Services.Orders;
 @{
-
+    var _productService = EngineContext.Current.Resolve<IProductService>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
+    var _storeService = EngineContext.Current.Resolve<IStoreService>();
     var _ccService = EngineContext.Current.Resolve<ICcService>();
-
+    var _gbsOrderService = (Nop.Services.Custom.Orders.GBSOrderService)EngineContext.Current.Resolve<IOrderService>();
 }
 @*@functions {
 
@@ -59,8 +65,8 @@
         @Html.Widget("orderdetails_page_top", Model.Id)
         <div class="order-overview">
             <div class="order-number">
-                @*<h4>@T("Order.Order#")@Model.Id</h4>*@
-                <h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>   
+                <h4>@T("Order.Order#")@Model.CustomValues["Order Number"]</h4>
+                @*<h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>*@   
             </div>
             <ul class="order-details order-overview-content">
                 <li class="order-date">
@@ -91,31 +97,31 @@
                                     @T("Order.Email"): @Model.BillingAddress.Email
                                 </li>
                                 @if (Model.BillingAddress.PhoneEnabled)
-                                {
+                        {
                                     <li class="phone">
                                         @T("Order.Phone"): @Model.BillingAddress.PhoneNumber
                                     </li>
-                                }
+                    }
                                 @if (Model.BillingAddress.FaxEnabled)
-                                {
+                    {
                                     <li class="fax">
                                         @T("Order.Fax"): @Model.BillingAddress.FaxNumber
                                     </li>
-                                }
+                }
                                 @if (Model.BillingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.BillingAddress.Company))
-                                {
+                {
                                     <li class="company">
                                         @Model.BillingAddress.Company
                                     </li>
                                 }
                                 @if (Model.BillingAddress.StreetAddressEnabled)
-                                {
+                {
                                     <li class="address1">
                                         @Model.BillingAddress.Address1
                                     </li>
                                 }
                                 @if (Model.BillingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.BillingAddress.Address2))
-                                {
+                {
                                     <li class="address2">
                                         @Model.BillingAddress.Address2
                                     </li>
@@ -123,34 +129,34 @@
                                 @if (Model.BillingAddress.CityEnabled ||
                 Model.BillingAddress.StateProvinceEnabled ||
                 Model.BillingAddress.ZipPostalCodeEnabled)
-                                {
+                {
                                     <li class="city-state-zip">
                                         @if (Model.BillingAddress.CityEnabled)
-                                        {
-                                            @Model.BillingAddress.City
+                {
+                    @Model.BillingAddress.City
                                         }
                                         @if (Model.BillingAddress.CityEnabled && (Model.BillingAddress.StateProvinceEnabled || Model.BillingAddress.ZipPostalCodeEnabled))
                                         {
                                             <text>,</text>
                                         }
                                         @if (Model.BillingAddress.StateProvinceEnabled)
-                                        {
-                                            @Model.BillingAddress.StateProvinceName
+                {
+                    @Model.BillingAddress.StateProvinceName
                                         }
                                         @if (Model.BillingAddress.ZipPostalCodeEnabled)
-                                        {
-                                            @Model.BillingAddress.ZipPostalCode
+                {
+                    @Model.BillingAddress.ZipPostalCode
                                         }
                                     </li>
                                 }
                                 @if (Model.BillingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.BillingAddress.CountryName))
-                                {
+                {
                                     <li class="country">
                                         @Model.BillingAddress.CountryName
                                     </li>
                                 }
                                 @if (!String.IsNullOrEmpty(Model.VatNumber))
-                                {
+                {
                                     <li class="vat">
                                         <span class="vat-label">
                                             <strong>@T("Order.VATNumber")</strong>
@@ -161,7 +167,7 @@
                                     </li>
                                 }
                                 @if (!String.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
-                                {
+                {
                                     <li class="custom-attributes-view">
                                         @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                                     </li>
@@ -547,20 +553,44 @@
                             {
                                 <tr>
                                     <td class="name">                                      
-                                        @{  if (!_ccService.IsProductForCc(item.ProductId) )
+                                        @{  var nopProduct = _productService.GetProductBySku(item.Sku);
+                                            if (nopProduct != null && (!_ccService.IsProductForCc(nopProduct.Id) || (_ccService.IsProductForCc(nopProduct.Id) && _gbsOrderService.GetOrderItemById(item.Id, true) == null)))
                                             {
 
-                                                    @Html.Widget("orderdetails_product_line_product", item.Id)
+                                                @Html.Widget("orderdetails_product_line_product", item.Id)
                                             }
-                                            else 
+                                            else
                                             {
                                                 @Html.Widget("orderdetails_product_line", item.Id)
                                             }
-                                        }
-                                    </td>
+                                        }                                    </td>
                                     <td class="a-left">
                                         <div class="product-tile"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
-
+                                        @if (Model.IsReOrderAllowed)
+                                        {
+                                            if (@Model.CustomValues.ContainsKey("isLegacy") && Convert.ToBoolean(@Model.CustomValues["isLegacy"]))
+                                            {
+                                                var product = _productService.GetProductBySku(item.Sku);
+                                                if (product != null)
+                                                {
+                                                    var stores = _storeMappingService.GetStoresIdsWithAccess<Nop.Core.Domain.Catalog.Product>(_productService.GetProductBySku(item.Sku));
+                                                    var NCCStore = _storeService.GetAllStores().Where(x => x.Name == "Note Card Cafe").FirstOrDefault();
+                                                    var HOMStore = _storeService.GetAllStores().Where(x => x.Name == "House of Magnets").FirstOrDefault();
+                                                    if (stores.Where(x => x == NCCStore.Id).Any())
+                                                    {
+                                                        <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })   ')" />
+                                                    }
+                                                    else if (stores.Where(x => x == HOMStore.Id).Any())
+                                                    {
+                                                        <a class="" target="_blank" href="@HOMStore.Url@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })">Buy it again at House of Magnets</a>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = false })   ')" />
+                                            }
+                                        }
                                         <div class="sku-number">
                                             @if (!Model.PrintMode)
                                             {
@@ -598,12 +628,6 @@
                                         @if (Model.ShowSku)
                                         {
                                             <span class="sku-number">SKU: @item.Sku</span>
-
-                                        }
-                                        @if (Model.IsReOrderAllowed)
-                                        {
-
-                                            <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = false })   ')" />
 
                                         }
 
