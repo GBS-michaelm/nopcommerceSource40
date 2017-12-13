@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+﻿Group: GBS Payments
 FriendlyName: Credit Card
 SystemName: Payments.GBS
 Version: 2.00

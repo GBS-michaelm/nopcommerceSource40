@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+﻿Group: GBS Payments
 FriendlyName: Monthly Billing
 SystemName: Payments.GBS.MonthlyBilling
 Version: 1.21
