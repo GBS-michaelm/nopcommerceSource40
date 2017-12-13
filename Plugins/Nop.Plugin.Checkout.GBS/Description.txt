@@ -1,4 +1,4 @@
-Group: Misc
+Group: GBS
 FriendlyName: GBS Checkout
 SystemName: Checkout.GBS
 Version: 2.00
