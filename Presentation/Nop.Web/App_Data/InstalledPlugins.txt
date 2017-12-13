@@ -18,6 +18,9 @@ Payments.CheckMoneyOrder
 Payments.AuthorizeNet
 Payments.GBS
 SevenSpikes.Core
+SevenSpikes.Nop.Plugins.AjaxFilters
+SevenSpikes.Nop.Plugins.AjaxFilters.Pro
+SevenSpikes.Nop.Plugins.NopQuickTabs
 PriceCalculation.GBS
 Pickup.PickupInStore
 Widgets.CustomersCanvas
@@ -28,9 +31,11 @@ Nop.Plugin.Api
 Nop.Plugin.Shipping.GBS
 Catalogs.GBS
 Products.SpecificationAttributes
+BreadCrumb.GBS
 BusinessLogic.GBS
 Order.GBS
 Checkout.GBS
 Logging.GBS
 Widgets.Marketing
-Nop.Plugin.Catalog.GBS
+Payments.GBS.MonthlyBilling
+Payments.GBS.PurchaseOrder
