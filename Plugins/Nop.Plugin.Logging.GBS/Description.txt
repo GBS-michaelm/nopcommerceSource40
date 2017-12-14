@@ -1,4 +1,4 @@
-﻿Group: Misc
+﻿Group: GBS
 FriendlyName: GBS LOGGER SERVICE
 SystemName: Logging.GBS
 Version: 1.00

@@ -1,4 +1,4 @@
-Group: Misc
+Group: GBS
 FriendlyName: GBS Business Logic
 SystemName: BusinessLogic.GBS
 Version: 1.00

@@ -1,4 +1,4 @@
-Group: Shipping GBS
+Group: GBS
 FriendlyName: Shipping GBS Extended Field Plugin
 SystemName: Nop.Plugin.Shipping.GBS
 Version: 1.0
