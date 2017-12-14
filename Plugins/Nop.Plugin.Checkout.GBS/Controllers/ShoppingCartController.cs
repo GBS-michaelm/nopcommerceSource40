@@ -42,6 +42,7 @@ using Nop.Plugin.Checkout.GBS.Models;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
+using Nop.Services.Seo;
 
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
@@ -63,6 +64,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly ISettingService _settingService;
         private readonly IDownloadService _downloadService;
+        private readonly ILogger _logger;
         #endregion
 
         #region Constructors
@@ -116,7 +118,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             IPluginFinder pluginFinder,
             IShoppingCartService cartService,
             ISettingService settingService,
-            CustomerSettings customerSettings) : base(
+            CustomerSettings customerSettings,
+            ILogger logger) : base(
                   shoppingCartModelFactory,
                     productService,
                     storeContext,
@@ -161,6 +164,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             this._productAttributeService = productAttributeService;
             this._settingService = settingService;
             this._cartService = cartService;
+            this._logger = logger;
 
         }
 
@@ -299,11 +303,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         [ValidateInput(false)]
         public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
         {
+            var customer = _workContext.CurrentCustomer;
+            IList<string> warnings = new List<string>();
             try
             {
                 
                 var product = _productService.GetProductById(Convert.ToInt32(productId));
-                var customer = _workContext.CurrentCustomer;
 
 
                 string optionsAttributesXml = string.Empty;
@@ -319,7 +324,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     optionsAttributesXml = GetOptionsAttributes(product, options);
                 }
                 var attributesXml = GetProductAttributes(product,  formOptions, dataJson, cartImageSrc, optionsAttributesXml);
-                var warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
+                warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
 
                 var cart = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -328,10 +333,20 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                 var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
 
-
-                return Json(new { status = "success" });
-            } catch(Exception e){
-                return Json(new { status = e.Message });
+                if (warnings.Count > 0)
+                {
+                    throw new Exception("Add to cart failed");
+                }
+                SubmitItemResponse response = new SubmitItemResponse();
+                response.status = "success";
+                return Json(response);
+            } catch(Exception ex){
+                _logger.Error("Error in SubmitItem = productId = " + productId, ex, customer);
+                SubmitItemResponse response = new SubmitItemResponse();
+                response.status = "failure";
+                response.message = ex.Message;
+                response.warnings = warnings;
+                return Json(response);
             }
 
         }
@@ -602,24 +617,55 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         public ActionResult BuyItAgain(int orderItemId, bool isLegacy)
         {
             var customer = _workContext.CurrentCustomer;
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-
-            var orderItem = new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(orderItemId, isLegacy);
-
-            if (isLegacy)
+            IList<string> warnings = new List<string>();
+            JsonResult responseJSON = Json(new SubmitItemResponse());
+            OrderItem orderItem = new OrderItem();
+            SubmitItemResponse response = new SubmitItemResponse();
+            try
             {
-                var legacyOrderItem = (LegacyOrderItem)orderItem;
-                //build the dataJson object.  need to add it to the stored proc?  select for json into a json array inside an AttributesXml doc?
-                SubmitItem(legacyOrderItem.ProductId.ToString(), legacyOrderItem.productOptionsJson, legacyOrderItem.Quantity.ToString(), legacyOrderItem.legacyPicturePath, "false", "", "", "");
-            }
-            else
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
+
+                orderItem = new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(orderItemId, isLegacy);
+
+                if (isLegacy)
+                {
+                    var legacyOrderItem = (LegacyOrderItem)orderItem;
+                    //build the dataJson object.  need to add it to the stored proc?  select for json into a json array inside an AttributesXml doc?
+                    responseJSON = (JsonResult)SubmitItem(legacyOrderItem.ProductId.ToString(), legacyOrderItem.productOptionsJson, legacyOrderItem.Quantity.ToString(), legacyOrderItem.legacyPicturePath, "false", "", "", "");
+                }
+                else
+                {
+                    warnings = _cartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
+                }
+
+                response = (SubmitItemResponse)responseJSON.Data;
+                if (response.status != "success" || warnings.Count > 0)
+                {
+                    throw new Exception("Failed to submit item to cart");
+                }
+                return RedirectToRoute("ShoppingCart");
+            }catch (Exception ex)
             {
-                var warnings = _cartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
+                var finalWarnings = warnings;
+                if (warnings.Count == 0)
+                {
+                    finalWarnings = response.warnings;
+                }
+                _logger.Error("Error in Buy it Again = orderitemid = " + orderItemId + ", warnings = " +JsonConvert.SerializeObject(finalWarnings), ex, customer);
+                string productURL = Url.RouteUrl("Product", new { SeName = orderItem.Product.GetSeName() });
+                if(string.IsNullOrEmpty(productURL))
+                {
+                    return RedirectToRoute("ShoppingCart");
+                }
+                else
+                {
+                    return Redirect(productURL);
+
+                }
             }
-            return RedirectToRoute("ShoppingCart");
         }
 
     }

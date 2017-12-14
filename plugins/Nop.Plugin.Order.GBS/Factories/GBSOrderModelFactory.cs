@@ -32,6 +32,7 @@ namespace Nop.Plugin.Order.GBS.Factories
     class GBSOrderModelFactory : OrderModelFactory
     {
         private readonly IPluginFinder _pluginFinder;
+        private readonly GBSOrderSettings _gbsOrderSettings;
 
         public GBSOrderModelFactory(IAddressModelFactory addressModelFactory,
             IOrderService orderService,
@@ -56,7 +57,8 @@ namespace Nop.Plugin.Order.GBS.Factories
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
             PdfSettings pdfSettings,
-            IPluginFinder pluginFinder) : base(
+            IPluginFinder pluginFinder,
+            GBSOrderSettings gbsOrderSettings) : base(
              addressModelFactory,
              orderService,
              workContext,
@@ -82,6 +84,8 @@ namespace Nop.Plugin.Order.GBS.Factories
              pdfSettings
                 ) {
             this._pluginFinder = pluginFinder;
+            this._gbsOrderSettings = gbsOrderSettings;
+
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace Nop.Plugin.Order.GBS.Factories
             CustomerOrderListModel model = base.PrepareCustomerOrderListModel();
            // string colmJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
             var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
-            if (miscPlugins.Count > 0)
+            if (miscPlugins.Count > 0 && _gbsOrderSettings.LegacyOrdersInOrderHistory)
             {
                 List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = new Orders.OrderExtensions().getLegacyOrders();
                 ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);

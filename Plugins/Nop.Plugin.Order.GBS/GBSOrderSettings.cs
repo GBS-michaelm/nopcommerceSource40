@@ -13,6 +13,6 @@ namespace Nop.Plugin.Order.GBS
         public string GBSStoreNamePrepend { get; set; }
         public string HOMConnectionString { get; set; }
         public string IntranetBaseAddress { get; set; }
-
+        public bool LegacyOrdersInOrderHistory { get; set; }
     }
 }

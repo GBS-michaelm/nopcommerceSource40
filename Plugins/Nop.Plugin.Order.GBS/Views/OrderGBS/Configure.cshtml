@@ -96,6 +96,17 @@
             </td>
         </tr>
         <tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.LegacyOrdersInOrderHistory_OverrideForStore, model => model.LegacyOrdersInOrderHistory, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.LegacyOrdersInOrderHistory):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LegacyOrdersInOrderHistory)
+                @Html.ValidationMessageFor(model => model.LegacyOrdersInOrderHistory)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             </td>
