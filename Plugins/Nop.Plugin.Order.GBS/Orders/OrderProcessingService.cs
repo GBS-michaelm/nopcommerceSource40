@@ -184,8 +184,9 @@ namespace Nop.Services.Custom.Orders
             {
 
                 var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: processPaymentRequest.StoreId).ToList();
-                if (miscPlugins.Count > 0) { 
+                if (miscPlugins.Count > 0) {
 
+                    processPaymentRequest.CustomValues.Clear();
 
                     string address = _gbsOrderSettings.GBSOrderWebServiceAddress;
                     GBSOrderServiceClient myOrderService = new GBSOrderServiceClient();
@@ -206,6 +207,7 @@ namespace Nop.Services.Custom.Orders
                     {
                         processPaymentRequest.CustomValues.Add(orderNumberKeyGBS.DisplayName, gbsOrderId);
                     }
+
                     string addContactNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
                     if (addContactNum != null && addContactNum != "")
                     {
@@ -281,19 +283,7 @@ namespace Nop.Services.Custom.Orders
                         }
                     }
 
-
-                    _httpContext.Session.Remove("customerPhoneNumber");
-                    _httpContext.Session.Remove("purchaseOrderNumber");
-                    _httpContext.Session.Remove("purchaseOrderName");
-                    _httpContext.Session.Remove("purchaseOrderPhoneNumber");
-                    _httpContext.Session.Remove("monthlyBillingName");
-                    _httpContext.Session.Remove("monthlyBillingPhoneNumber");
-                    _httpContext.Session.Remove("monthlyBillingReference");
-
-
                 }
-
-
 
 
                 myResult = base.PlaceOrder(processPaymentRequest);
@@ -516,6 +506,14 @@ namespace Nop.Services.Custom.Orders
                             }
                         }
 
+
+                        _httpContext.Session.Remove("customerPhoneNumber");
+                        _httpContext.Session.Remove("purchaseOrderNumber");
+                        _httpContext.Session.Remove("purchaseOrderName");
+                        _httpContext.Session.Remove("purchaseOrderPhoneNumber");
+                        _httpContext.Session.Remove("monthlyBillingName");
+                        _httpContext.Session.Remove("monthlyBillingPhoneNumber");
+                        _httpContext.Session.Remove("monthlyBillingReference");
 
                     }//if (myResult.PlacedOrder != null)
                     else
