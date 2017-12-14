@@ -1,4 +1,4 @@
-Group: Misc
+Group: GBS
 FriendlyName: Product Specification Attributes
 SystemName: Products.SpecificationAttributes
 Version: 1.0

@@ -1,4 +1,4 @@
-Group: Misc
+Group: GBS
 FriendlyName: GBS PRICECALCULATION SERVICE
 SystemName: PriceCalculation.GBS
 Version: 1.00

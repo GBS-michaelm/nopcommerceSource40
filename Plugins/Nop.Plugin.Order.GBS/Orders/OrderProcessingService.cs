@@ -178,15 +178,15 @@ namespace Nop.Services.Custom.Orders
             CustomTokenProvider orderProv = null;
             string gbsOrderId = null;
 
-            processPaymentRequest.CustomValues.Clear();
 
             var customer = _workContext.CurrentCustomer;
             try
             {
 
                 var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: processPaymentRequest.StoreId).ToList();
-                if (miscPlugins.Count > 0) { 
+                if (miscPlugins.Count > 0) {
 
+                    processPaymentRequest.CustomValues.Clear();
 
                     string address = _gbsOrderSettings.GBSOrderWebServiceAddress;
                     GBSOrderServiceClient myOrderService = new GBSOrderServiceClient();
@@ -207,77 +207,86 @@ namespace Nop.Services.Custom.Orders
                     {
                         processPaymentRequest.CustomValues.Add(orderNumberKeyGBS.DisplayName, gbsOrderId);
                     }
-                }
 
-                string addContactNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
-                if (addContactNum != null && addContactNum != "")
-                {
-                    processPaymentRequest.CustomValues.Add("Pickup Contact Phone", addContactNum);
-                    _httpContext.Session.Remove("customerPhoneNumber");
-                }
-
-
-                if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.PurchaseOrder")
-                {
-                    string POnum = _httpContext.Session["purchaseOrderNumber"] == null ? "" : _httpContext.Session["purchaseOrderNumber"].ToString();
-                    if (POnum != null && POnum != "")
+                    string addContactNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
+                    if (addContactNum != null && addContactNum != "")
                     {
-                        processPaymentRequest.CustomValues.Add("PO Number", POnum);
-                        _httpContext.Session.Remove("purchaseOrderNumber");
+                        processPaymentRequest.CustomValues["Pickup Contact Phone"] = addContactNum;
+                        //processPaymentRequest.CustomValues.Add("Pickup Contact Phone", addContactNum);
+                        _httpContext.Session.Remove("customerPhoneNumber");
                     }
 
-                    string POname = _httpContext.Session["purchaseOrderName"] == null ? "" : _httpContext.Session["purchaseOrderName"].ToString();
-                    if (POname != null && POname != "")
+
+                    if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.PurchaseOrder")
                     {
-                        processPaymentRequest.CustomValues.Add("PO Name", POname);
-                        _httpContext.Session.Remove("purchaseOrderName");
+                        string POnum = _httpContext.Session["purchaseOrderNumber"] == null ? "" : _httpContext.Session["purchaseOrderNumber"].ToString();
+                        if (POnum != null && POnum != "")
+                        {
+                            processPaymentRequest.CustomValues["PO Number"] = POnum;
+
+                            //processPaymentRequest.CustomValues.Add("PO Number", POnum);
+                            _httpContext.Session.Remove("purchaseOrderNumber");
+                        }
+
+                        string POname = _httpContext.Session["purchaseOrderName"] == null ? "" : _httpContext.Session["purchaseOrderName"].ToString();
+                        if (POname != null && POname != "")
+                        {
+                            processPaymentRequest.CustomValues["PO Name"] = POname;
+
+                            //processPaymentRequest.CustomValues.Add("PO Name", POname);
+                            _httpContext.Session.Remove("purchaseOrderName");
+                        }
+
+                        string POphone = _httpContext.Session["purchaseOrderPhoneNumber"] == null ? "" : _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
+                        if (POphone != null && POphone != "")
+                        {
+                            processPaymentRequest.CustomValues["PO Phone"] = POphone;
+
+                            //processPaymentRequest.CustomValues.Add("PO Phone", POphone);
+                            _httpContext.Session.Remove("purchaseOrderPhoneNumber");
+                        }
                     }
 
-                    string POphone = _httpContext.Session["purchaseOrderPhoneNumber"] == null ? "" : _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
-                    if (POphone != null && POphone != "")
+                    if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.MonthlyBilling")
                     {
-                        processPaymentRequest.CustomValues.Add("PO Phone", POphone);
-                        _httpContext.Session.Remove("purchaseOrderPhoneNumber");
-                    }
-                }
+                        string MBname = _httpContext.Session["monthlyBillingName"] == null ? "" : _httpContext.Session["monthlyBillingName"].ToString();
+                        if (MBname != null && MBname != "")
+                        {
+                            processPaymentRequest.CustomValues["Monthly Billing Name"] = MBname;
 
-                if (processPaymentRequest.PaymentMethodSystemName == "Payments.GBS.MonthlyBilling")
-                {
-                    string MBname = _httpContext.Session["monthlyBillingName"] == null ? "" : _httpContext.Session["monthlyBillingName"].ToString();
-                    if (MBname != null && MBname != "")
-                    {
-                        processPaymentRequest.CustomValues.Add("Monthly Billing Name", MBname);
-                        _httpContext.Session.Remove("monthlyBillingName");
+                            //processPaymentRequest.CustomValues.Add("Monthly Billing Name", MBname);
+                            _httpContext.Session.Remove("monthlyBillingName");
+                        }
+
+                        string MBphone = _httpContext.Session["monthlyBillingPhoneNumber"] == null ? "" : _httpContext.Session["monthlyBillingPhoneNumber"].ToString();
+                        if (MBphone != null && MBphone != "")
+                        {
+                            processPaymentRequest.CustomValues["Monthly Billing Phone"] = MBphone;
+
+                            //processPaymentRequest.CustomValues.Add("Monthly Billing Phone", MBphone);
+                            _httpContext.Session.Remove("monthlyBillingPhoneNumber");
+                        }
+
+                        string MBref = _httpContext.Session["monthlyBillingReference"] == null ? "" : _httpContext.Session["monthlyBillingReference"].ToString();
+                        if (MBref != null && MBref != "")
+                        {
+                            //MBref = "<![CDATA[" + MBref + "]]>";
+                            MBref = MBref.Replace("&", " ");
+                            MBref = MBref.Replace("<", " ");
+                            MBref = MBref.Replace(">", " ");
+                            MBref = MBref.Replace("\"", " ");
+                            MBref = MBref.Replace("\'", " ");
+                            processPaymentRequest.CustomValues["Monthly Billing Reference"] = MBref;
+
+                            //processPaymentRequest.CustomValues.Add("Monthly Billing Reference", MBref);
+                            _httpContext.Session.Remove("monthlyBillingReference");
+                        }
                     }
 
-                    string MBphone = _httpContext.Session["monthlyBillingPhoneNumber"] == null ? "" : _httpContext.Session["monthlyBillingPhoneNumber"].ToString();
-                    if (MBphone != null && MBphone != "")
-                    {
-                        processPaymentRequest.CustomValues.Add("Monthly Billing Phone", MBphone);
-                        _httpContext.Session.Remove("monthlyBillingPhoneNumber");
-                    }
-
-                    string MBref = _httpContext.Session["monthlyBillingReference"] == null ? "" : _httpContext.Session["monthlyBillingReference"].ToString();
-                    if (MBref != null && MBref != "")
-                    {
-                        MBref = "<![CDATA[" + MBref + "]]>";
-                        processPaymentRequest.CustomValues.Add("Monthly Billing Reference", MBref);
-                        _httpContext.Session.Remove("monthlyBillingReference");
-                    }
                 }
 
 
                 myResult = base.PlaceOrder(processPaymentRequest);
-
-
-                _httpContext.Session.Remove("customerPhoneNumber");
-                _httpContext.Session.Remove("purchaseOrderNumber");
-                _httpContext.Session.Remove("purchaseOrderName");
-                _httpContext.Session.Remove("purchaseOrderPhoneNumber");
-                _httpContext.Session.Remove("monthlyBillingName");
-                _httpContext.Session.Remove("monthlyBillingPhoneNumber");
-                _httpContext.Session.Remove("monthlyBillingReference");
-
 
                 if (miscPlugins.Count > 0)
                 {
@@ -497,6 +506,14 @@ namespace Nop.Services.Custom.Orders
                             }
                         }
 
+
+                        _httpContext.Session.Remove("customerPhoneNumber");
+                        _httpContext.Session.Remove("purchaseOrderNumber");
+                        _httpContext.Session.Remove("purchaseOrderName");
+                        _httpContext.Session.Remove("purchaseOrderPhoneNumber");
+                        _httpContext.Session.Remove("monthlyBillingName");
+                        _httpContext.Session.Remove("monthlyBillingPhoneNumber");
+                        _httpContext.Session.Remove("monthlyBillingReference");
 
                     }//if (myResult.PlacedOrder != null)
                     else

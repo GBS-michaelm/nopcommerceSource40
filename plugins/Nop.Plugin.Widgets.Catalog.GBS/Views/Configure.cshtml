@@ -1,0 +1,56 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Catalog.GBS.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">               
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllCategory_OverrideForStore, model => model.AllCategory, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllCategory)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AllCategory)
+                        @Html.ValidationMessageFor(model => model.AllCategory)
+                    </div>
+                </div>             
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NoOfChildren_OverrideForStore, model => model.NoOfChildren, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NoOfChildren)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.NoOfChildren)
+                        @Html.ValidationMessageFor(model => model.NoOfChildren)
+                    </div>
+                </div>             
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IsActive_OverrideForStore, model => model.IsActive, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IsActive)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsActive)
+                        @Html.ValidationMessageFor(model => model.IsActive)
+                    </div>
+                </div>             
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
