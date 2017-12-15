@@ -19,12 +19,45 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
     public class DBManager
     {
 
+        public static string getGBSOrderID(int nopID)
+        {
+            DBManager dbmanager = new DBManager();
+            Dictionary<string, string> paramDic = new Dictionary<string, string>();
+            paramDic.Add("@nopID", nopID.ToString());
+            string select = "Select gbsOrderID from tblNOPOrder where nopID = " + nopID + "";
+            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
+
+            if (dView.Count > 0)
+            {
+                return dView[0]["gbsOrderID"].ToString();
+            }
+            else
+            {
+                return "Row Not Found";
+            }
+
+        }
+
+
         private DbConnection dbConnection = null;
-        
+
         public DBManager()
         {
             this.dbConnection = new SqlConnection();
             dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
+        }
+        public DBManager(string connectionString)
+        {
+            this.dbConnection = new SqlConnection();
+
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                dbConnection.ConnectionString = connectionString;
+            }
+            else
+            {
+                dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
+            }
         }
 
         public void Open()
@@ -48,7 +81,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
         }
 
-                           
+
 
         public DataView GetDataView(String sqlQuery)
         {
@@ -79,10 +112,10 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
                 {
                     Close();
                 }
-               
+
             }
 
-           
+
 
         }
 
@@ -139,6 +172,43 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
                 }
 
 
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+
+
+        }
+        public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    SqlDataReader sqlReader = cmd.ExecuteReader();
+                    DataView dv = new DataView();
+                    DataTable dt = new DataTable();
+                    dt.Load(sqlReader);
+                    dv = dt.DefaultView;
+                    Close();
+
+                    return dv;
+                }
+
+
 
 
             }
@@ -149,7 +219,6 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 
 
         }
-
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
         {
             try
@@ -175,6 +244,38 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 
             }
             catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
+        public void SetParameterizedQueryNoData(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    cmd.ExecuteNonQuery();
+
+                }
+                Close();
+
+            }
+            catch (SqlException ex)
             {
                 throw ex;
             }

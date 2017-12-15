@@ -34,7 +34,7 @@
                 </div>
                 @if (Model.AllowedQuantities.Count > 0)
                 {
-                    @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty- dropdown form-control" })
+                    @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown form-control" })
                 }
                 else
                 {

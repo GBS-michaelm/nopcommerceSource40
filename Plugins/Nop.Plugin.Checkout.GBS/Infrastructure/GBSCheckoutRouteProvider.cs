@@ -44,6 +44,24 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                             new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
                             new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
 
+            routes.MapLocalizedRoute("GBSAddProductToCart-Amalgamation",
+                            "addproducttocart/amalgamation/{productId}/{shoppingCartTypeId}/{quantity}",
+                            new { controller = "GBSShoppingCart", action = "AddProductToCart_Amalgamation" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("GBS-AmalgamationCartCategoryTotal",
+                            "amalgamationgetcarttotal/{categoryId}/{productId}",
+                            new { controller = "GBSShoppingCart", action = "AmalgamationCartCategoryTotal" },
+                            new { categoryId = @"\d+", productId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("GBS-AmalgamationBar",
+                            "amalgamationbar/{categoryId}/{featuredProductId}",
+                            new { controller = "GBSShoppingCart", action = "AmalgamationBarUpdate" },
+                            new { categoryId = @"\d+", featuredProductId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             //routes.MapLocalizedRoute("GBSOrderSummary",
             //             "ordersummary/",
             //             new { controller = "GBSShoppingCart", action = "OrderSummary" },
