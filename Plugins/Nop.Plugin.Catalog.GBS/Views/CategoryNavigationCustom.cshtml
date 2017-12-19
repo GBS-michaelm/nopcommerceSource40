@@ -1,8 +1,8 @@
 ﻿@model Nop.Plugin.Catalog.GBS.Models.CategoryNavigationModelCustom
 @using Nop.Plugin.Catalog.GBS.Models;
-@{    
+@{
     if (Model.NoOfChildren < 0)
-    { 
+    {
         Model.NoOfChildren = 0;
     }
     int NoOfChildren = Model.NoOfChildren;
@@ -49,11 +49,11 @@
             //if (category.Id == Model.CurrentCategoryId ||
             //    category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
             //{
-                if (category.SubCategories.Count > 0)
+            if (category.SubCategories.Count > 0)
+            {
+                level = level + 1;
+                if (level <= NoOfChildren)
                 {
-                     level = level + 1;                
-                    if (level <= NoOfChildren)
-                    {
                     <ul class="sublist">
                         @foreach (var subCategory in category.SubCategories)
                         {
@@ -61,15 +61,15 @@
                             {
                                 @RenderCategoryLine(subCategory, level, NoOfChildren)
                             }
-                            else if (subCategory.ProductsCount > 0)
+                            else if (subCategory.ProductsCount > 0 || Nop.Plugin.Catalog.GBS.Controllers.WidgetsCategoryNavigationController.HasSubcategoryProducts(subCategory))
                             {
                                 @RenderCategoryLine(subCategory, level, NoOfChildren)
                             }
                         }
                     </ul>
-                    }
                 }
-            //}
+            }
+    //}
         }
     </li>
 }
@@ -87,7 +87,7 @@
                     {
                         @RenderCategoryLine(category, 0, NoOfChildren)
                     }
-                    else if (category.ProductsCount > 0 || category.SubCategories.Any(sc => sc.ProductsCount > 0))
+                    else if (category.ProductsCount > 0 || Nop.Plugin.Catalog.GBS.Controllers.WidgetsCategoryNavigationController.HasSubcategoryProducts(category))
                     {
                         @RenderCategoryLine(category, 0, NoOfChildren)
                     }
