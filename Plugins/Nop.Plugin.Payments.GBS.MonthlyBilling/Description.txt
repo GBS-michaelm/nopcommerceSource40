@@ -1,0 +1,9 @@
+﻿Group: GBS Payments
+FriendlyName: Monthly Billing
+SystemName: Payments.GBS.MonthlyBilling
+Version: 1.21
+SupportedVersions: 3.90
+Author: Clint Treadway
+DisplayOrder: 1
+FileName: Nop.Plugin.Payments.GBS.MonthlyBilling.dll
+Description: This plugin allows paying with Monthly Billing

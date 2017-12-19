@@ -1,0 +1,191 @@
+﻿@using System.Web.Mvc;
+@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.GBS.PurchaseOrder.Models.PaymentInfoModel
+<table width="100%" cellspacing="2" cellpadding="1" border="0">
+    <tr>
+        <td width="100px">
+            @Html.LabelFor(model => model.PurchaseOrderNumber, false):
+        </td>
+        <td>
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { Class = "form-control", autocomplete = "off" })
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddPOValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderNumber" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td width="100px">
+            @Html.LabelFor(model => model.PurchaseOrderName, false):
+        </td>
+        <td>
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    @Html.TextBoxFor(model => model.PurchaseOrderName, new { Class = "form-control", autocomplete = "off" })
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddNameValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderName" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td width="150px">
+            @Html.LabelFor(model => model.PurchaseOrderPhoneNumber, false):
+        </td>
+        <td>
+            <div class="form-group" style="padding-top: 20px;">
+                <div class="col-sm-4 col-md-4">
+                    @Html.TextBoxFor(model => model.PurchaseOrderPhoneNumber, new { Class = "form-control", autocomplete = "off" })
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="visible-lg visible-md visible-sm form-title-rquired"><span class="required" aria-required="true">*</span></div>
+                    <span id="AddPhoneValidation" class="field-validation-valid" data-valmsg-for="PurchaseOrderPhoneNumber" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+<style>
+    .inactive {
+
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        function checkFields() {
+            if (document.getElementById("PurchaseOrderPhoneNumber").value == '' || document.getElementById("PurchaseOrderNumber").value == '' || document.getElementById("PurchaseOrderName").value == '') {
+                $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
+            } else {
+                $("button[name='nextstep']").removeClass('inactive');
+                $("input[name='nextstep']").removeClass('inactive');
+            }
+        }
+        
+        checkFields();
+    
+        var subPhone = function submitPhone() {
+            $('#AddPhoneValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+            $('#AddPhoneValidation').html("");
+            var phonenumber = $(this).val();
+            var phonenumber = phonenumber.replace(/[^\d]/g, '');
+            if (phonenumber != '') {
+                if (phonenumber.length == 10) {
+                    document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
+                    checkFields();
+                    return true;
+                } else {
+                    $('#AddPhoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+                    $('#AddPhoneValidation').html("10 characters required.");
+                    document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
+                    $("button[name='nextstep']").addClass('inactive');
+                    $("input[name='nextstep']").addClass('inactive');
+                    return false;
+                }
+            } else {
+                $('#AddPhoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+                $('#AddPhoneValidation').html("Phone number is required.");
+                document.getElementById("PurchaseOrderPhoneNumber").value = phonenumber;
+                $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
+                return false;
+            }
+        
+        }
+        $('#PurchaseOrderPhoneNumber').blur(checkFields(), subPhone);
+        $('#PurchaseOrderPhoneNumber').focus(checkFields());
+        $('#PurchaseOrderPhoneNumber').on('keydown', function (e) {
+            if (e.which == 13) {
+                if (subPhone.call(this)) {
+                    if (document.getElementById("PurchaseOrderPhoneNumber").value == '' || document.getElementById("PurchaseOrderNumber").value == '' || document.getElementById("PurchaseOrderName").value == '') {
+                        return false
+                    } else {
+                        $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
+                    }
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        var subPO = function submitPO() {
+            $('#AddPOValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+            $('#AddPOValidation').html("");
+            var ponumber = $(this).val();
+            if (ponumber != '') {
+                document.getElementById("PurchaseOrderNumber").value = ponumber;
+                checkFields();
+                return true;
+            } else {
+                $('#AddPOValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+                $('#AddPOValidation').html("PO number is required.");
+                document.getElementById("PurchaseOrderNumber").value = ponumber;
+                $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
+                return false;
+            }
+        }
+        $('#PurchaseOrderNumber').blur(checkFields(), subPO);
+        $('#PurchaseOrderNumber').focus(checkFields());
+        $('#PurchaseOrderNumber').on('keydown', function (e) {
+            if (e.which == 13) {
+                if (subPO.call(this)) {
+                    if (document.getElementById("PurchaseOrderPhoneNumber").value == '' || document.getElementById("PurchaseOrderNumber").value == '' || document.getElementById("PurchaseOrderName").value == '') {
+                        return false
+                    } else {
+                        $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
+                    }
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        var subName = function submitName() {
+            $('#AddNameValidation').removeClass('field-validation-error').addClass('field-validation-valid');
+            $('#AddNameValidation').html("");
+            var name = $(this).val();
+            if (name != '') {
+                document.getElementById("PurchaseOrderName").value = name;
+                checkFields();
+                return true;
+            } else {
+                $('#AddNameValidation').removeClass('field-validation-valid').addClass('field-validation-error');
+                $('#AddNameValidation').html("Name is required.");
+                document.getElementById("PurchaseOrderName").value = name;
+                $("button[name='nextstep']").addClass('inactive');
+                $("input[name='nextstep']").addClass('inactive');
+                return false;
+            }
+        }
+        $('#PurchaseOrderName').blur(checkFields(), subName);
+        $('#PurchaseOrderName').focus(checkFields());
+        $('#PurchaseOrderName').on('keydown', function (e) {
+            if (e.which == 13) {
+                if (subName.call(this)) {
+                    if (document.getElementById("PurchaseOrderPhoneNumber").value == '' || document.getElementById("PurchaseOrderNumber").value == '' || document.getElementById("PurchaseOrderName").value == '') {
+                        return false
+                    } else {
+                        $("button[name='nextstep']").click();
+                        $("input[name='nextstep']").click();
+                    }
+                } else {
+                    return false;
+                }
+            }
+        });
+
+    });
+</script>

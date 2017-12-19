@@ -10,8 +10,8 @@
 </div>
 <style>
     .inactive {
-            opacity: 0.5;
-            pointer-events: none;
+            opacity: 0.5 !important;
+            pointer-events: none !important;
     }
 </style>
 <script type="text/javascript">
@@ -20,7 +20,7 @@
         $('#AddphoneValidation').html("");
         var phonenumber = $(this).val();
         var phonenumber = phonenumber.replace(/[^\d]/g, '');
-        if (phonenumber.length > 6 && phonenumber.length < 11) {
+        if (phonenumber.length == 10) {
             $.ajax({
                 url: '/GBSOrder/AddSessionVar',
                 type: 'POST',
@@ -29,13 +29,15 @@
                 success: function (valid) { document.getElementById("Add_phone_number").value = phonenumber; }
             });
             $("button[name='nextstep']").removeClass('inactive');
+            $("input[name='nextstep']").removeClass('inactive');
             return true;
         } else {
             $('#AddphoneValidation').removeClass('field-validation-valid').addClass('field-validation-error');
-            $('#AddphoneValidation').html("Must be between 7 and 10 characters in length");
+            $('#AddphoneValidation').html("Must be 10 characters in length");
             document.getElementById("Add_phone_number").focus();
             document.getElementById("Add_phone_number").value = phonenumber;
             $("button[name='nextstep']").addClass('inactive');
+            $("input[name='nextstep']").addClass('inactive');
             return false;
         }
     }
@@ -44,10 +46,10 @@
         if (e.which == 13) {
             if (subphone.call(this)) {
                 $("button[name='nextstep']").click();
+                $("input[name='nextstep']").click();
             } else {
                 return false;
             }
         }
     });
-
 </script>

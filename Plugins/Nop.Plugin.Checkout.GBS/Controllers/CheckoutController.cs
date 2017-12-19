@@ -353,7 +353,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         [ValidateInput(false)]
         public ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
-          
+
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
@@ -486,8 +486,25 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            return _baseNopCheckoutController.NewShippingAddress(model, form);
+            ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
+            //foreach (var item in _baseNopCheckoutController.ModelState)
+            //{
+            //    if (!ModelState.ContainsKey(item.Key))
+            //    {
+            //        ModelState.Add(item.Key, item.Value);
+            //    }
+            //}
+            if (_baseNopCheckoutController.ModelState.IsValid)
+            {
+                return retVal;
+            }
 
+            //If we got this far, something failed, redisplay form
+            var customAttributesOuter = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            model = _checkoutModelFactory.PrepareShippingAddressModel(
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributesOuter);
+            return View(model);
         }
 
         #endregion

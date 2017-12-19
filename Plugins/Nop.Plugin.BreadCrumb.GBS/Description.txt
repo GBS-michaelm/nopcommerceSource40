@@ -1,4 +1,4 @@
-Group: Misc
+Group: GBS
 FriendlyName: GBS BREADCRUMB SERVICE
 SystemName: BreadCrumb.GBS
 Version: 1.00
