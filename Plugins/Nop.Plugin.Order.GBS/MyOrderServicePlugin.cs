@@ -53,7 +53,7 @@ namespace Nop.Plugin.Order.GBS
         }
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "order_addPhoneNumber_widget", "orderdetails_product_line" }; 
+            return new List<string> { "order_addPhoneNumber_widget", "orderdetails_product_line","orderdetails_product_line_legacy" }; 
         }
     }
 }

@@ -7,13 +7,14 @@
 @using Nop.Services.Stores;
 @using Nop.Plugin.Widgets.CustomersCanvas.Services
 @using Nop.Services.Orders;
+@using Nop.Services.Custom.Orders;
 @{
     var _productService = EngineContext.Current.Resolve<IProductService>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
     var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
     var _storeService = EngineContext.Current.Resolve<IStoreService>();
     var _ccService = EngineContext.Current.Resolve<ICcService>();
-    var _gbsOrderService = (Nop.Services.Custom.Orders.GBSOrderService)EngineContext.Current.Resolve<IOrderService>();
+    var _gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
 }
 @*@functions {
 
@@ -558,6 +559,10 @@
                                             {
 
                                                 @Html.Widget("orderdetails_product_line_product", item.Id)
+                                            }
+                                            else if (_gbsOrderService.GetOrderItemById(item.Id, true) == null)
+                                            {
+                                                @Html.Widget("orderdetails_product_line_legacy", item.Id)
                                             }
                                             else
                                             {

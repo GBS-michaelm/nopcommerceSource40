@@ -33,7 +33,7 @@
                 </div>*@
             </div>
             <div class="head-col4">
-                <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @Model.CustomProperties["orderNo"]<span id="@Model.CustomProperties["orderNo"]" class="hidden">@Model.Id</span></div>
+                <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @if (@Model.CustomProperties.ContainsKey("orderNo") ){@Model.CustomProperties["orderNo"]}<span id="@if (@Model.CustomProperties.ContainsKey("orderNo") ){@Model.CustomProperties["orderNo"]}" class="hidden">@Model.Id</span></div>
                 <div class="order-links">
 
                     @*ToDo - check if legacy, then call different action on GBSOrderController to get legacy order data and return normal order details view*@

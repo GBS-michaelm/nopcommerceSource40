@@ -13,6 +13,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Order.GBS;
 using Nop.Services.Payments;
 using Nop.Plugin.Order.GBS.Orders;
+using Newtonsoft.Json;
 
 namespace Nop.Services.Custom.Orders
 {

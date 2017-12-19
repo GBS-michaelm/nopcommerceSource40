@@ -26,6 +26,7 @@ using Nop.Services.Orders;
 using Nop.Web.Factories;
 using Nop.Plugin.Order.GBS.Factories;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
+using Nop.Services.Custom.Orders;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
@@ -44,6 +45,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly HttpContextBase _httpContext;
         private readonly IOrderService _orderService;
         private readonly IOrderModelFactory _orderModelFactory;
+        private readonly GBSOrderService _gbsOrderService;
 
 
         public GBSOrderController(
@@ -74,6 +76,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             this._storeContext = storeContext;
             this._pluginFinder = pluginFinder;
             this._httpContext = httpContext;
+            this._gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
 
         }
 
@@ -475,6 +478,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         [ChildActionOnly]
         public ActionResult DisplayLegacyOrderItemImage(string widgetZone, object additionalData = null)
         {
+
             if (additionalData == null) { return null; }
 
             //Nop.Core.Domain.Orders.OrderItem item = ((Nop.Services.Custom.Orders.GBSOrderService)_orderService).GetOrderItemById(Convert.ToInt32(additionalData),true);
@@ -482,10 +486,14 @@ namespace Nop.Plugin.Order.GBS.Controllers
             //LegacyOrderItem orderItem = (LegacyOrderItem)new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(Convert.ToInt32(additionalData), true);
             //string cString = "<img title = '' alt = '"+ orderItem.Product.Name+"' src = '"+orderItem.legacyPicturePath+"'>";
             //return Content(cString);
-            Nop.Core.Domain.Orders.OrderItem item = ((Nop.Services.Custom.Orders.GBSOrderService)_orderService).GetOrderItemById(Convert.ToInt32(additionalData));
+            //Nop.Core.Domain.Orders.OrderItem item = ((Nop.Services.Custom.Orders.GBSOrderService)_orderService).GetOrderItemById(Convert.ToInt32(additionalData));
+            Nop.Core.Domain.Orders.OrderItem item = _gbsOrderService.GetOrderItemById(Convert.ToInt32(additionalData));
+
+
             if (item is LegacyOrderItem)
             {
                 LegacyOrderItem orderItem = (LegacyOrderItem)item;
+
                 string cString = "<img title = '' alt = '" + orderItem.Product.Name + "' src = '" + orderItem.legacyPicturePath + "'>";
                 return Content(cString);
             }

@@ -34,6 +34,8 @@ using Nop.Core.Domain.Orders;
 using Nop.Plugin.DataAccess.GBS;
 using Nop.Plugin.Order.GBS.Controllers;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
+using Nop.Services.Logging;
+using Nop.Services.Custom.Orders;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -70,6 +72,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly IOrderService _orderService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly SpecificationAttributesSettings _specificationAttributesSettings;
+        private readonly ILogger _logger;
+        private readonly GBSOrderService _gbsOrderService;
+
 
         public SpecificationAttributesController(
             SpecificationAttributesSettings specificationAttributesSettings,
@@ -101,7 +106,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             IOrderService orderService,
             OrderSettings orderSettings,
             IOrderProcessingService orderProcessingService,
-            IProductAttributeParser productAttributeParser)
+            IProductAttributeParser productAttributeParser,
+            ILogger logger)
         {
             _specificationAttributesSettings = specificationAttributesSettings;
             _customerService = customerService;
@@ -133,6 +139,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
             _productAttributeParser = productAttributeParser;
+            _logger = logger;
+            this._gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
+
         }
 
         [AdminAuthorize]
@@ -292,9 +301,12 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 /***** Unhide following code if GBS want to use image background on order detail page ******/
                 if (widgetZone == "orderdetails_product_line_product")
                 {
-                    var orderitem = _orderService.GetOrderItemById(id);
+
+                    var orderitem = _gbsOrderService.GetOrderItemById(id);
+
                     if (orderitem != null)
                     {
+
                         if (orderitem is LegacyOrderItem && ((LegacyOrderItem)orderitem).webToPrintType == "canvas")
                         {
                             var gbsOrdercontroller = DependencyResolver.Current.GetService<GBSOrderController>();

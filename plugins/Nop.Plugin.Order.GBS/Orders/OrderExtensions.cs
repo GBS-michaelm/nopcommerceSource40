@@ -18,6 +18,9 @@ using Nop.Plugin.Widgets.CustomersCanvas.Services;
 using Nop.Plugin.Widgets.CustomersCanvas.Data;
 using System.Data.Common;
 using System.Reflection;
+using Nop.Services.Custom.Orders;
+using System.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Order.GBS.Orders
 {
@@ -29,7 +32,8 @@ namespace Nop.Plugin.Order.GBS.Orders
         public  IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
         public  GBSOrderSettings _gbsOrderSettings = EngineContext.Current.Resolve<GBSOrderSettings>();
         public ISpecificationAttributeService _specificationAttributeService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-        public Nop.Services.Custom.Orders.GBSOrderService _gbsOrderService = (Nop.Services.Custom.Orders.GBSOrderService)EngineContext.Current.Resolve<IOrderService>();
+        public GBSOrderService _gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
         //public static DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
 
 
@@ -146,8 +150,8 @@ namespace Nop.Plugin.Order.GBS.Orders
                 string select = "EXEC usp_getLegacyOrderItemForNOP @orderItemId";
                 //DataView orderResult = manager.GetParameterizedDataView(select, paramDicEx);
                 string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
-
                 var legacyOrderItem = JsonConvert.DeserializeObject<LegacyOrderItem>(jsonResult);
+
                 return prepareLegacyOrderItem(legacyOrderItem);
             }
         }
@@ -172,6 +176,12 @@ namespace Nop.Plugin.Order.GBS.Orders
             //    orderItem.ProductId = -1;
             //    orderItem.Product.Id = -1;
             //}
+            //_logger.Information("OrderExtensoins prepareLegacyOrderItem orderItem = " + JsonConvert.SerializeObject(orderItem, new JsonSerializerSettings
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+            //    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //}));
+
             return orderItem;
         }
         public class TreatmentData 
@@ -279,39 +289,32 @@ namespace Nop.Plugin.Order.GBS.Orders
 
         public  List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> getLegacyOrders()
         {
-            // Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel myOrder = new Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel();
-            // myOrder.Id = 99999999;
-            // //myOrder.CustomValues["isLegacy"] = true;
-            // //OrderDetailsModel.OrderItemModel myItem = new OrderDetailsModel.OrderItemModel();
-            // //myItem.Id = 11111111;
-            // //myItem.ProductId = _productService.GetProductBySku("NCALH6-00001").Id;
-            // //bool isLegacy = Convert.ToBoolean(OrderExtensions.getCustomValue("isLegacy", myOrder));
-            // myOrder.CustomProperties["isLegacy"] = true;
-
-            //// myOrder.Items.Add(myItem);
-            // List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel> myOrders = new List<Nop.Web.Models.Order.CustomerOrderListModel.OrderDetailsModel>();
-            // myOrders.Add(myOrder);
-
+            
             GBSOrderSettings _gbsOrderSettings = EngineContext.Current.Resolve<GBSOrderSettings>();
             IWorkContext _workContext = EngineContext.Current.Resolve<IWorkContext>();
             Customer customer = _workContext.CurrentCustomer;
             Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-            paramDicEx.Add("@email", customer.Email);
-            paramDicEx.Add("@website", _gbsOrderSettings.GBSStoreNamePrepend);
-
-            DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
-            string select = "EXEC usp_getLegacyOrdersForNOP @email, @website";
-
             var myOrders = new List<CustomerOrderListModel.OrderDetailsModel>();
+            //_logger.Information("Entered getLegacyOrders");
 
-            //DataView orderItemResult = manager.GetParameterizedDataView(select, paramDicEx);
-            //if (orderItemResult.Count > 0)
-            //{
-            //     myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>((string)orderItemResult[0][0]);
+            try
+            {
+                paramDicEx.Add("@email", customer.Email);
+                paramDicEx.Add("@website", _gbsOrderSettings.GBSStoreNamePrepend);
 
-            //}
-            string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
-            myOrders = myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>(jsonResult);
+                DBManager manager = new DBManager(_gbsOrderSettings.HOMConnectionString);
+                string select = "EXEC usp_getLegacyOrdersForNOP @email, @website";
+
+                string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
+                myOrders = JsonConvert.DeserializeObject<List<CustomerOrderListModel.OrderDetailsModel>>(jsonResult);
+                //_logger.Information("getLegacyOrders() - myOrders.count = " + (myOrders != null ? Convert.ToString(myOrders.Count()) : "NULL"));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error in GBS Order Extensions getLegacyOrders() - myOrders.count = " + (myOrders != null ? Convert.ToString(myOrders.Count()) : "NULL"), ex, customer);
+                throw ex;
+            }
             return myOrders;
         }
     }

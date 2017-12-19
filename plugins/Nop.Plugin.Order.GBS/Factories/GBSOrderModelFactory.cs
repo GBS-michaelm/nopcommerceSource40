@@ -26,6 +26,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Order.GBS.Factories
 {
@@ -33,6 +34,9 @@ namespace Nop.Plugin.Order.GBS.Factories
     {
         private readonly IPluginFinder _pluginFinder;
         private readonly GBSOrderSettings _gbsOrderSettings;
+        private readonly ILogger _logger;
+        private readonly IWorkContext _workContext;
+
 
         public GBSOrderModelFactory(IAddressModelFactory addressModelFactory,
             IOrderService orderService,
@@ -58,7 +62,8 @@ namespace Nop.Plugin.Order.GBS.Factories
             RewardPointsSettings rewardPointsSettings,
             PdfSettings pdfSettings,
             IPluginFinder pluginFinder,
-            GBSOrderSettings gbsOrderSettings) : base(
+            GBSOrderSettings gbsOrderSettings,
+            ILogger logger) : base(
              addressModelFactory,
              orderService,
              workContext,
@@ -85,6 +90,8 @@ namespace Nop.Plugin.Order.GBS.Factories
                 ) {
             this._pluginFinder = pluginFinder;
             this._gbsOrderSettings = gbsOrderSettings;
+            this._logger = logger;
+            this._workContext = workContext;
 
         }
 
@@ -94,14 +101,36 @@ namespace Nop.Plugin.Order.GBS.Factories
         /// <returns>Customer order list model</returns>
         public override CustomerOrderListModel PrepareCustomerOrderListModel()
         {
-            CustomerOrderListModel model = base.PrepareCustomerOrderListModel();
-           // string colmJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
-            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
-            if (miscPlugins.Count > 0 && _gbsOrderSettings.LegacyOrdersInOrderHistory)
+            //_logger.Information("Entered PrepareCustomerOrderListModel");
+
+            CustomerOrderListModel model = new CustomerOrderListModel();
+            // string colmJSON = JsonConvert.SerializeObject(model, Formatting.Indented);
+            List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = null;
+            try
             {
-                List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = new Orders.OrderExtensions().getLegacyOrders();
-                ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
-                ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).Sort((x, y) => y.CreatedOn.CompareTo(x.CreatedOn));
+                model = base.PrepareCustomerOrderListModel();
+                var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
+                if (miscPlugins.Count > 0 && _gbsOrderSettings.LegacyOrdersInOrderHistory)
+                {
+                    legacyOrders = new Orders.OrderExtensions().getLegacyOrders();
+                    //_logger.Information("Trace - legacyOrders.count = " + (legacyOrders != null ? Convert.ToString(legacyOrders.Count()) : "NULL"));
+
+                    if (legacyOrders != null && legacyOrders.Count() > 0)
+                    {
+                        ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).AddRange(legacyOrders);
+                        //_logger.Information("added range to orders");
+
+                    }
+                    ((List<CustomerOrderListModel.OrderDetailsModel>)model.Orders).Sort((x, y) => y.CreatedOn.CompareTo(x.CreatedOn));
+                    //_logger.Information("sorted orders");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                var customer = _workContext.CurrentCustomer;
+                _logger.Error("Error in PrepareCustomerOrderListModel() - legacyOrders.count = " + (legacyOrders != null ? Convert.ToString(legacyOrders.Count()) : "NULL"), ex, customer);
+
             }
 
             return model;
