@@ -35,9 +35,8 @@ BreadCrumb.GBS
 BusinessLogic.GBS
 Order.GBS
 Checkout.GBS
-Logging.GBS
 Widgets.Marketing
 Payments.GBS.MonthlyBilling
 Payments.GBS.PurchaseOrder
+Logging.GBS
 Nop.Plugin.Catalog.GBS
-FoxNetSoft.Plugin.Misc.SpeedFilters
