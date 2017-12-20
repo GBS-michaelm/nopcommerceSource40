@@ -756,6 +756,11 @@
     <Content Include="Themes\AdhesiveMagnets\Content\images\watch.png" />
     <Content Include="Themes\AdhesiveMagnets\Content\images\wishlist-button.png" />
     <Content Include="Themes\AdhesiveMagnets\preview.jpg" />
+    <Content Include="Themes\AdhesiveMagnets\SpeedFiltersContent\css\tab-style.css" />
+    <Content Include="Themes\AdhesiveMagnets\SpeedFiltersContent\images\filters-checkbox-checked-2.png" />
+    <Content Include="Themes\AdhesiveMagnets\SpeedFiltersContent\images\filters-checkbox-checked.png" />
+    <Content Include="Themes\AdhesiveMagnets\SpeedFiltersContent\images\filters-checkbox.png" />
+    <Content Include="Themes\AdhesiveMagnets\SpeedFiltersContent\images\filters-toggle.png" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\ie8.css" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\print.css" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\styles.css" />
@@ -806,6 +811,11 @@
     <Content Include="Themes\AtomicEnvelopes\Content\images\watch.png" />
     <Content Include="Themes\AtomicEnvelopes\Content\images\wishlist-button.png" />
     <Content Include="Themes\AtomicEnvelopes\preview.jpg" />
+    <Content Include="Themes\AtomicEnvelopes\SpeedFiltersContent\css\tab-style.css" />
+    <Content Include="Themes\AtomicEnvelopes\SpeedFiltersContent\images\filters-checkbox-checked-2.png" />
+    <Content Include="Themes\AtomicEnvelopes\SpeedFiltersContent\images\filters-checkbox-checked.png" />
+    <Content Include="Themes\AtomicEnvelopes\SpeedFiltersContent\images\filters-checkbox.png" />
+    <Content Include="Themes\AtomicEnvelopes\SpeedFiltersContent\images\filters-toggle.png" />
     <Content Include="Themes\BellaGiftWrap\BellaGiftWrap-Theme.png" />
     <Content Include="Themes\BellaGiftWrap\Content\css\animate.css" />
     <Content Include="Themes\BellaGiftWrap\Content\css\bootstrap.css" />
@@ -1724,6 +1734,11 @@
     <Content Include="Themes\HouseOfMagnet\hom_product-page.jpg" />
     <Content Include="Themes\HouseOfMagnet\License.txt" />
     <Content Include="Themes\HouseOfMagnet\Release note.txt" />
+    <Content Include="Themes\HouseOfMagnet\SpeedFiltersContent\css\tab-style.css" />
+    <Content Include="Themes\HouseOfMagnet\SpeedFiltersContent\images\filters-checkbox-checked-2.png" />
+    <Content Include="Themes\HouseOfMagnet\SpeedFiltersContent\images\filters-checkbox-checked.png" />
+    <Content Include="Themes\HouseOfMagnet\SpeedFiltersContent\images\filters-checkbox.png" />
+    <Content Include="Themes\HouseOfMagnet\SpeedFiltersContent\images\filters-toggle.png" />
     <Content Include="Themes\MagneticAttractions\Content\css\ie8.css" />
     <Content Include="Themes\MagneticAttractions\Content\css\print.css" />
     <Content Include="Themes\MagneticAttractions\Content\css\styles.css" />
@@ -1991,6 +2006,11 @@
     <Content Include="Themes\SimplexTheme\License.txt" />
     <Content Include="Themes\SimplexTheme\nopAccelerate-Simplex-Theme.png" />
     <Content Include="Themes\SimplexTheme\Release note.txt" />
+    <Content Include="Themes\SimplexTheme\SpeedFiltersContent\css\tab-style.css" />
+    <Content Include="Themes\SimplexTheme\SpeedFiltersContent\images\filters-checkbox-checked-2.png" />
+    <Content Include="Themes\SimplexTheme\SpeedFiltersContent\images\filters-checkbox-checked.png" />
+    <Content Include="Themes\SimplexTheme\SpeedFiltersContent\images\filters-checkbox.png" />
+    <Content Include="Themes\SimplexTheme\SpeedFiltersContent\images\filters-toggle.png" />
     <Content Include="Themes\SimplexTheme\Views\PaymentGBS\PaymentInfo.cshtml" />
     <Content Include="Themes\TeamMagnet\Content\css\ie8.css" />
     <Content Include="Themes\TeamMagnet\Content\css\print.css" />
