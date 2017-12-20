@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A6A1624E-D525-4BFF-930C-5BB19DD6E96A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nop.Plugin.BusinessLogic.GBS</RootNamespace>
     <AssemblyName>Nop.Plugin.BusinessLogic.GBS</AssemblyName>
