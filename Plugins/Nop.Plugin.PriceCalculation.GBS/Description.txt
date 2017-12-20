@@ -1,4 +1,4 @@
-Group: GBS
+Group: Misc
 FriendlyName: GBS PRICECALCULATION SERVICE
 SystemName: PriceCalculation.GBS
 Version: 1.00
@@ -7,4 +7,4 @@ Author: Joe Barrus
 DisplayOrder: 1
 FileName: Nop.Plugin.PriceCalculation.GBS.dll
 Description: 
-LimitedToStores: 6
+LimitedToStores: 7,6

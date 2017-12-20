@@ -12,6 +12,9 @@ using Nop.Services.Discounts;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Plugins;
+using Nop.Plugin.PriceCalculation.DataAccess.GBS;
+using System.Data;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 {
@@ -20,6 +23,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
 
 
         #region Ctor
@@ -30,7 +34,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
             this._pluginFinder = pluginFinder;
             this._storeContext = storeContext;
             this._productAttributeParser = productAttributeParser;
-
+            this._productService = productService;
 
         }
         #endregion
@@ -49,7 +53,98 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
             var miscPlugins = _pluginFinder.GetPlugins<MyPriceCalculationServicePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-               
+
+                #region Amalgamation
+
+                DBManager manager = new DBManager();
+                ICategoryService iCategoryService = EngineContext.Current.Resolve<ICategoryService>();
+                //check if amalgamation is on
+                //usp check amalgamation
+
+                IList<ProductCategory> productCategories = iCategoryService.GetProductCategoriesByProductId(product.Id);
+                string categoryIds = "";
+                for (int i = 0; i < productCategories.Count; i++)
+                {                    
+                    if(i < productCategories.Count && i != 0)
+                    {
+                         categoryIds += "," + productCategories[i].CategoryId.ToString();
+                    }else
+                    {
+                        categoryIds += productCategories[i].CategoryId.ToString();
+                    }
+                }
+
+                string amalgamationDataQuery = "EXEC usp_SelectGBSAmalgamationMaster @categoryId";
+                Dictionary<string, string> amalgamationDic = new Dictionary<string, string>();
+                amalgamationDic.Add("@CategoryId", categoryIds);               
+                DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+
+                if(amalgamationDataView.Count > 0)
+                {
+                    List<int> amalgamationMasterCategoryList = new List<int>(); //used if multiple master category id are returned
+                    int masterCategoryId; //used to get featured product id
+                    int amalgamationGroupId; //group that holds all the associated category ids
+                    int bestPriceProductId;
+                    int qty = 0;
+                    
+                    for (int i = 0; i < amalgamationDataView.Count; i++)
+                    {
+                        //add all return master Ids 
+                        amalgamationMasterCategoryList.Add(Int32.Parse(amalgamationDataView[i]["masterCategoryId"].ToString()));
+                    }
+
+                    int[] masterIdProductIdGroupId = GetRealMasterId(amalgamationMasterCategoryList);
+                    masterCategoryId = masterIdProductIdGroupId[0];
+                    bestPriceProductId = masterIdProductIdGroupId[1];
+                    amalgamationGroupId = masterIdProductIdGroupId[2];
+
+                    List<int> categoryGroupMembersIds = GetCategoryGroupIds(amalgamationGroupId);                  
+                    ICollection<ShoppingCartItem> cartItemList = customer.ShoppingCartItems;
+                    Dictionary<int, int> qtyEachDic = new Dictionary<int, int>();
+
+                    for (int i = 0; i < categoryGroupMembersIds.Count; i++)
+                    {
+                        foreach (ShoppingCartItem item in cartItemList)
+                        {
+                            IList<ProductCategory> cartProductCategories = iCategoryService.GetProductCategoriesByProductId(item.ProductId);
+
+                            foreach (ProductCategory cartCategory in cartProductCategories)
+                            {
+                                if (cartCategory.CategoryId == categoryGroupMembersIds[i])
+                                {
+                                    if (!qtyEachDic.ContainsKey(item.Id))
+                                    {
+                                        qtyEachDic.Add(item.Id, item.Quantity);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+
+                    foreach (KeyValuePair<int, int> pair in qtyEachDic)
+                    {
+                        qty += pair.Value;
+                    }
+
+                    //qty = 20;
+
+                    product = _productService.GetProductById(bestPriceProductId);
+                    quantity = qty;
+                   
+                }
+
+
+                //get quantity by finding the number of items that belong to the same alamgamation category
+                //change quantity on get unit price to get proper per unit price.
+                //if (product.Id == 4430)
+                //{
+                //    quantity = 31;
+                //}
+
+                #endregion Amalgamation
+
                 decimal finalPrice = base.GetUnitPrice(product, customer, shoppingCartType, quantity, attributesXml, customerEnteredPrice, rentalStartDate, rentalEndDate, includeDiscounts, out discountAmount, out appliedDiscounts);
                 //eventually make this a configurable rules plugin
                 bool hasReturnAddressAttr = false;
@@ -117,6 +212,82 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 
         }
 
+        //for multiple master ids
+        private int[] GetRealMasterId(List<int> list)
+        {
+            DBManager manager = new DBManager();
+            int[] masterIdProductIdGroupId = new int[3];
+            int lowestPricedProductID = 00;
+            int masterCategoryID = 00; //needed to get group number later
+            int groupId = 00;
+            decimal currentLowestPrice = 999999.01M;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                //query for featured product id
+                string featuredProductDataQuery = "EXEC usp_SelectGBSFeaturedProductAndGroup @categoryId";
+                Dictionary<string, string> featuredProductDic = new Dictionary<string, string>();
+                featuredProductDic.Add("@CategoryId", list[i].ToString());
+                DataView featuredProductDataView = manager.GetParameterizedDataView(featuredProductDataQuery, featuredProductDic);
+                
+                if(featuredProductDataView.Count > 0)
+                {
+                    Product featured = _productService.GetProductById(Int32.Parse(featuredProductDataView[i]["FeaturedProductId"].ToString()));
+                    
+                    if(i != 0) //set pass just set values
+                    {
+                        if(featured.Price < currentLowestPrice)
+                        {
+                            lowestPricedProductID = featured.Id;
+                            masterCategoryID = list[i];
+                            currentLowestPrice = featured.Price;
+                            groupId = Int32.Parse(featuredProductDataView[i]["amalgamationGroupId"].ToString());
+                        }
+
+                    }else
+                    {
+                        lowestPricedProductID = featured.Id;
+                        masterCategoryID = list[i];
+                        currentLowestPrice = featured.Price;
+                        groupId = Int32.Parse(featuredProductDataView[i]["amalgamationGroupId"].ToString());
+                    }
+                    
+                }
+
+            }
+
+            masterIdProductIdGroupId[0] = masterCategoryID;
+            masterIdProductIdGroupId[1] = lowestPricedProductID;
+            masterIdProductIdGroupId[2] = groupId;
+            
+            return masterIdProductIdGroupId;
+        }
+        
+        private List<int> GetCategoryGroupIds(int groupId)
+        {
+            DBManager manager = new DBManager();
+            List<int> categoryGroupMemberIdsList = new List<int>();
+
+            string groupIdDataQuery = "EXEC usp_SelectGBSAllCategoryGroupMembers @amalgamationGroupId";
+            Dictionary<string, Object> categoryGroupMembersDic = new Dictionary<string, Object>();
+            categoryGroupMembersDic.Add("@amalgamationGroupId", groupId);
+            DataView categoryGroupMembersDataView = manager.GetParameterizedDataView(groupIdDataQuery, categoryGroupMembersDic);
+
+            if (categoryGroupMembersDataView.Count > 0)
+            {
+
+                for (int i = 0; i < categoryGroupMembersDataView.Count; i++)
+                {
+                    categoryGroupMemberIdsList.Add(Int32.Parse(categoryGroupMembersDataView[i]["categoryId"].ToString()));
+                }
+                
+            }
+            
+            return categoryGroupMemberIdsList;
+
+        }
 
     }
+    
+
 }

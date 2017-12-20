@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -6,6 +6,11 @@ using Nop.Core;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
+using Nop.Services;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
+using Nop.Web.Controllers;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Media;
@@ -28,15 +33,20 @@ using Nop.Core.Domain.Tax;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Web.Models.ShoppingCart;
 using System.Globalization;
 using Nop.Web.Framework.Security;
+using Nop.Web;
 using Nop.Core.Plugins;
 using Nop.Plugin.Checkout.GBS;
 using Newtonsoft.Json;
 using Nop.Web.Framework.Mvc;
 using Nop.Services.Shipping.Date;
 using Nop.Web.Factories;
+using System.Reflection;
+using Nop.Core.Infrastructure;
+using System.Data;
 using System.Text;
 using Nop.Plugin.Checkout.GBS.Models;
 using Newtonsoft.Json.Linq;
@@ -60,11 +70,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IProductService _productService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _cartService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ISettingService _settingService;
         private readonly IDownloadService _downloadService;
         private readonly ILogger _logger;
+        private readonly IShoppingCartService _shoppingCartService;
         #endregion
 
         #region Constructors
@@ -116,7 +126,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
             IPluginFinder pluginFinder,
-            IShoppingCartService cartService,
             ISettingService settingService,
             CustomerSettings customerSettings,
             ILogger logger) : base(
@@ -154,6 +163,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 )
         {
             this._shoppingCartModelFactory = shoppingCartModelFactory;
+            this._shoppingCartService = shoppingCartService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._pluginFinder = pluginFinder;
@@ -163,7 +173,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             this._downloadService = downloadService;
             this._productAttributeService = productAttributeService;
             this._settingService = settingService;
-            this._cartService = cartService;
             this._logger = logger;
 
         }
@@ -288,6 +297,219 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             return base.ProductDetails_AttributeChange(productId, validateAttributeConditions, loadPicture, form);
         }
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public override ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
+        {
+            var groupId = 0000;
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            Product product = productService.GetProductById(productId);
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            var specAttrs = specService.GetProductSpecificationAttributes(productId);
+
+            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+                  
+            foreach (var item in specAttrs)
+            {
+                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+                {
+                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                }
+            }
+
+            JsonResult action = (JsonResult)base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
+
+            if (groupId != 0000)
+            {               
+
+                Type t = action.Data.GetType();
+                PropertyInfo redirect = t.GetProperty("redirect");
+                PropertyInfo success = t.GetProperty("success");
+                string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                if ((redirectValue != null && redirectValue == "/cart") || successValue)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
+                    });
+                }
+            }
+                        
+            return action;
+            
+        }
+
+        //Add to cart without leaving page while using amalgamation pricing on galleries
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AddProductToCart_Amalgamation(int productId, int shoppingCartTypeId, int quantity)
+        {
+            //check if item in cart already
+            ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            Product product = productService.GetProductById(productId);
+            ShoppingCartItem item = _shoppingCartService.FindShoppingCartItemInTheCart(shoppingCart.ToList(), ShoppingCartType.ShoppingCart, product);
+           
+
+            if (item != null)
+            {
+                if (quantity == 0)
+                {                   
+                        _shoppingCartService.DeleteShoppingCartItem(item);                  
+                }
+                else
+                {
+                    _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer, item.Id, item.AttributesXml, item.CustomerEnteredPrice, null, null, quantity);
+                }
+            }
+            else{
+                base.AddProductToCart_Catalog(productId, shoppingCartTypeId, quantity);
+            }
+
+            return Json(new
+            {
+                qty = quantity,
+            });
+
+        }
+        
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AmalgamationBarUpdate(int categoryId, int featuredProductId)
+        {
+           
+            ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+
+            int totalCartons = 0;
+            decimal cartTotalPrice = 0.00M;
+            decimal eachPrice = 0;
+            string amountToNextTier = "";
+            string tierNextEach = "";
+            int unitsPerCarton = 100; // will need to be dynamic at some point
+
+            //total cartons
+            ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
+            foreach (ShoppingCartItem item in shoppingCart)
+            {
+                IList<ProductCategory> productsCategories = categoryService.GetProductCategoriesByProductId(item.Product.Id);
+
+                foreach (var category in productsCategories)
+                {
+                    if(category.Category.Id == categoryId)
+                    {
+                        totalCartons += item.Quantity;
+                        break; 
+                    }
+                }
+                
+            }
+
+            //total price
+            Product featuredProduct = productService.GetProductById(featuredProductId);
+            ICollection<TierPrice> tiers = featuredProduct.TierPrices;
+            int t = 0;
+            TierPrice tierForPrice = null;
+            TierPrice tierForNextDiscount = null;
+            
+            foreach (var tier in tiers)
+            {
+                                
+                if(totalCartons >= tier.Quantity)
+                {
+                    tierForPrice = tier;
+
+                    if(tiers.Count == t) //customer is getting final tier pricing, best price
+                    {
+                        tierForNextDiscount = tier;
+                        break;
+                    }
+                }
+                else
+                {
+                    if(tierForPrice != null && tierForNextDiscount == null)
+                    {
+                        tierForNextDiscount = tier;
+                    }
+                    else
+                    {
+                        //default featured price will be used
+                    }
+
+                    break;
+                }
+                                
+                t++;
+            }
+            //qty to next tier
+            if(tierForPrice != null && tierForNextDiscount != null)
+            {
+                amountToNextTier = tierForPrice == tierForNextDiscount ? "best" : (tierForNextDiscount.Quantity - totalCartons).ToString();
+
+                //each price
+                tierNextEach = amountToNextTier != "best" ? (tierForNextDiscount.Price / unitsPerCarton).ToString("#.#0") : "best";
+            }
+
+            //check if qty is not high enough for tier pricing
+            cartTotalPrice = tierForPrice != null ? totalCartons * tierForPrice.Price : totalCartons * featuredProduct.Price;
+
+            //each price
+            eachPrice = tierForPrice != null ? tierForPrice.Price / unitsPerCarton : featuredProduct.Price / unitsPerCarton;   
+
+            return Json(new
+            {
+                totalCartons = totalCartons,
+                cartTotalPrice = cartTotalPrice.ToString("0.#0"),
+                eachPrice = eachPrice.ToString("#.#0"),
+                tierNext = amountToNextTier,
+                tierNextEach = tierNextEach,
+
+            });
+
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AmalgamationCartCategoryTotal(int categoryId, int productId)
+        {
+
+            ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+            int cartTotal = 0;
+            int singleTotal = 0;
+
+            ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
+            foreach (ShoppingCartItem item in shoppingCart)
+            {
+                IList<ProductCategory> productsCategories = categoryService.GetProductCategoriesByProductId(item.Product.Id);
+
+                if(item.Product.Id == productId)
+                {
+                    singleTotal = item.Quantity;
+                } 
+
+                foreach (var category in productsCategories)
+                {
+                    if (category.Category.Id == categoryId)
+                    {
+                        cartTotal += item.Quantity;
+                        break;
+                    }
+                }
+
+            }
+
+
+
+            return Json(new
+            {
+                cartTotal = cartTotal,
+                singleTotal = singleTotal,
+            });
+
+        }
+
         #region Custom Submit Cart For Edit
         [HttpPost]
         [ValidateInput(false)]
@@ -314,7 +536,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 string optionsAttributesXml = string.Empty;
                 if (Convert.ToBoolean(editActive.ToLower()))
                 {
-                    _cartService.UpdateShoppingCartItem(customer, Convert.ToInt32(cartItemId), "", 0, quantity: 0);
+                    _shoppingCartService.UpdateShoppingCartItem(customer, Convert.ToInt32(cartItemId), "", 0, quantity: 0);
                     optionsAttributesXml = productXml; 
                 }
                 else
@@ -324,14 +546,14 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     optionsAttributesXml = GetOptionsAttributes(product, options);
                 }
                 var attributesXml = GetProductAttributes(product,  formOptions, dataJson, cartImageSrc, optionsAttributesXml);
-                warnings = _cartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
+                warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: Convert.ToInt32(quantity));
 
                 var cart = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
 
-                var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
+                var orderItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
 
                 if (warnings.Count > 0)
                 {
@@ -638,7 +860,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
                 else
                 {
-                    warnings = _cartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
+                    warnings = _shoppingCartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
                 }
 
                 response = (SubmitItemResponse)responseJSON.Data;

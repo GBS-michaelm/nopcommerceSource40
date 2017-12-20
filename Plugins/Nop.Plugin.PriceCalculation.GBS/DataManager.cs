@@ -5,16 +5,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 /// <summary>
 /// Summary description for DBManager
 /// </summary>
 /// 
-namespace Nop.Plugin.Checkout.DataAccess.GBS
+namespace Nop.Plugin.PriceCalculation.DataAccess.GBS
 {
     public class DBManager
     {
@@ -35,26 +31,25 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             {
                 return "Row Not Found";
             }
-
+            
         }
 
 
         private DbConnection dbConnection = null;
-
+        
         public DBManager()
         {
             this.dbConnection = new SqlConnection();
             dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
         }
-        public DBManager(string connectionString)
+        public DBManager( string connectionString)
         {
             this.dbConnection = new SqlConnection();
 
             if (!string.IsNullOrEmpty(connectionString))
             {
                 dbConnection.ConnectionString = connectionString;
-            }
-            else
+            } else
             {
                 dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
             }
@@ -81,7 +76,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
         }
 
-
+                           
 
         public DataView GetDataView(String sqlQuery)
         {
@@ -112,10 +107,10 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
                 {
                     Close();
                 }
-
+               
             }
 
-
+           
 
         }
 
@@ -170,7 +165,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 
                     return dv;
                 }
-
+                
 
             }
             catch (SqlException ex)

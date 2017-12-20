@@ -44,6 +44,9 @@
     </Reference>
     <Reference Include="Nop.Services">
       <HintPath>..\..\Libraries\Nop.Services\bin\Debug\Nop.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Nop.Web">
+      <HintPath>..\..\Presentation\Nop.Web\bin\Nop.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nop.Web.Framework">
@@ -67,12 +70,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
+    <Compile Include="Controllers\AccessoryPageController.cs" />
     <Compile Include="Controllers\GatewayPageController.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="Domain\Accessory.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="Infrastructure\BusinessLogicRouteProvider.cs" />
+    <Compile Include="Models\AccessoryPageBoxModel.cs" />
+    <Compile Include="Models\AccessoryPageCategoryAccessoriesModel.cs" />
+    <Compile Include="Models\AccessoryPageModel.cs" />
     <Compile Include="Models\GatewayPageProductBoxModel.cs" />
     <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

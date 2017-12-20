@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Catalog\GBSPriceCalculationService.cs" />
     <Compile Include="Controllers\PriceCalculationConfigurationGBSController.cs" />
+    <Compile Include="DataManager.cs" />
     <Compile Include="GBSPriceCalculationSettings.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />

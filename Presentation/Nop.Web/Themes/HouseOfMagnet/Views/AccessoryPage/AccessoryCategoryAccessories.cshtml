@@ -1,0 +1,69 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.BusinessLogic.GBS.Models.AccessoryPageCategoryAccessoriesModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@{
+
+    Layout = "";
+
+}
+
+
+<div id="accessoryOuter" class='pricing bottommargin clearfix accessory-wrap'>
+
+    <div id="accessoryInnerWrap">
+        @{
+            foreach (var item in Model.accessoryBoxes)
+            {
+
+                @Html.Partial("AccessoryCategoryAccessory", item)
+
+            }
+        }
+    </div>
+
+    <div id="accessoryGoToCart"><p>Don't need accessories? <a href="/cart">Proceed to your cart.</a></p></div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        var obj = jQuery.parseJSON('{ "outer": "#accessoryOuter" , "inner": "#accessoryInnerWrap" }');
+        CustomResize();
+        
+        function CustomResize() {
+            $(window).resize(obj, function () {
+
+                var $c = $('.container'),
+                    $w = $(obj.outer),
+                    totalWidth = $('.footer').outerWidth(),
+                    wellWidth = $c.outerWidth(),
+                    diff = totalWidth - wellWidth,
+                    marg = -Math.floor(diff / 2) + 'px';
+
+                console.log("footer width: " + $('.footer').outerWidth());
+                console.log("container width: " + $c.outerWidth());
+                console.log("");
+
+                $w.each(function () {
+                    $(this).css({
+                        'margin-left': marg,
+                        'margin-right': marg
+                    });
+                })
+
+                $(obj.inner).width($(".container").width());
+                
+            });
+
+            $(window).resize();
+        }
+    });
+    
+</script>
