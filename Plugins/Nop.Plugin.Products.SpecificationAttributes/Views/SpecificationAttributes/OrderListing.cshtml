@@ -1,4 +1,16 @@
-﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+﻿@using Nop.Plugin.Products.SpecificationAttributes.Models;
+
+@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+<div class="pager clearfix">
+    @{
+
+        var pager = Html.Pager(new OrderHistoryPagingFilteringModel()).QueryParam("pagenumber");
+    }
+    @if (!pager.IsEmpty())
+            {
+        @pager
+    }
+</div>
 
 <div class="tabcontainer order-details-page">
 
