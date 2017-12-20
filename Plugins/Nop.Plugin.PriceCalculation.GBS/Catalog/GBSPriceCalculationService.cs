@@ -79,7 +79,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 amalgamationDic.Add("@CategoryId", categoryIds);               
                 DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
 
-                if(amalgamationDataView.Count > 0)
+                if(amalgamationDataView != null && amalgamationDataView.Count > 0)
                 {
                     List<int> amalgamationMasterCategoryList = new List<int>(); //used if multiple master category id are returned
                     int masterCategoryId; //used to get featured product id
