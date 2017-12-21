@@ -1,7 +1,7 @@
 ﻿@model NewsItemModel
 @using Nop.Web.Models.News;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
@@ -16,9 +16,7 @@
         <h1>@Model.Title</h1>
     </div>
     <div class="page-body">
-        <div class="news-date">
-            @Model.CreatedOn.ToString("D")
-        </div>
+
         @Html.Widget("newsitem_page_before_body", Model.Id)
         <div class="news-body">
             @Html.Raw(Model.Full)
