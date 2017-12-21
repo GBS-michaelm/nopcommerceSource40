@@ -126,9 +126,9 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.CustomValues.Add("PO Number", form["PurchaseOrderNumber"]);
-            paymentInfo.CustomValues.Add("PO Name", form["PurchaseOrderName"]);
-            paymentInfo.CustomValues.Add("PO Phone", form["PurchaseOrderPhoneNumber"]);
+            //paymentInfo.CustomValues.Add("PO Number", form["PurchaseOrderNumber"]);
+            //paymentInfo.CustomValues.Add("PO Name", form["PurchaseOrderName"]);
+            //paymentInfo.CustomValues.Add("PO Phone", form["PurchaseOrderPhoneNumber"]);
             _httpContext.Session["purchaseOrderNumber"] = form["PurchaseOrderNumber"];
             _httpContext.Session["purchaseOrderName"] = form["PurchaseOrderName"];
             _httpContext.Session["purchaseOrderPhoneNumber"] = form["PurchaseOrderPhoneNumber"];

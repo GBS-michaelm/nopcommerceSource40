@@ -39,5 +39,9 @@ namespace Nop.Plugin.Order.GBS.Models
         [NopResourceDisplayName("Plugins.Order.GBS.Fields.IntranetBaseAddress")]
         public string IntranetBaseAddress { get; set; }
         public bool IntranetBaseAddress_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Order.GBS.Fields.LegacyOrdersInOrderHistory")]
+        public bool LegacyOrdersInOrderHistory { get; set; }
+        public bool LegacyOrdersInOrderHistory_OverrideForStore { get; set; }
     }
 }

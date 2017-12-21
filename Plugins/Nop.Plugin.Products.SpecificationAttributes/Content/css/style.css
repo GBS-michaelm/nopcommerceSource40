@@ -192,7 +192,7 @@
 .head-col4 {
     float: right;
     text-align: right;
-    width: 170px;
+    width: 175px;
 }
 
 .order-label {
@@ -293,7 +293,7 @@
     padding: 5px 0px 10px 0px;
 }
 
-.buyinagain {
+.buyitagain {
     background: #43686a;
     border: 0px;
     border-bottom: 3px solid rgba(0, 0, 0, 0.15);
@@ -305,7 +305,7 @@
     font-size: 12px;
 }
 
-    .buyinagain:hover {
+    .buyitagain:hover {
         background-color: #1abc9c;
         color: #fff;
     }
@@ -397,7 +397,7 @@
 
 .account-page .order-details-page .picture {
     width: 120px;
-    height: 120px;
+    height: auto;
 }
 
 .account-page .order-details-page .Vertical {
@@ -461,13 +461,13 @@ table.orderdetails-list {
     padding: 10px 0px 0px 0px;
 }
 
-.orderdetails-list .product-item .picture img {
+/*.orderdetails-list .product-item .picture img {
     height: 151px;
     left: 40px;
     position: absolute;
     top: 35px;
     width: 199px;
-}
+}*/
 
 .totalsection {
     box-shadow: none !important;
@@ -558,8 +558,8 @@ table.orderdetails-list {
             }
     }
 
-.buyinagain {
-    display: none;
+.buyitagain {
+  //  display: none;
 }
 .productlist-right ul li {
     display: none;

@@ -1,0 +1,179 @@
+﻿@model CategoryModel
+@{
+    //page class
+    Html.AppendPageCssClassParts("html-category-page");
+    
+    DBManager manager = new DBManager();
+    ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+    var categoryId = Model.Id;
+    var featuredProductId = 0;
+
+
+
+    DataView amalgamationDataView = cacheManager.Get("amalgamationFeaturedTier" + categoryId, 60, () =>
+    {
+        Dictionary<string, Object> amalgamationDic = new Dictionary<string, Object>();
+        amalgamationDic.Add("@CategoryId", categoryId);
+
+        string amalgamationDataQuery = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
+        DataView innerAmalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+
+        return innerAmalgamationDataView;
+    });
+
+    if (amalgamationDataView.Count > 0)
+    {
+        featuredProductId = Int32.Parse(amalgamationDataView[0]["FeaturedProductId"].ToString());
+    }
+
+}
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Framework.Themes
+@using System.Data;
+@using Nop.Core.Caching;
+@using Nop.Plugin.Checkout.DataAccess.GBS;
+@using Nop.Services.Catalog;
+
+
+@{ 
+    int groupId = 0;
+
+    ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var specAttrs = specService.GetProductSpecificationAttributes(featuredProductId);
+
+    //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+    foreach (var item in specAttrs)
+    {
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+        {
+            groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+        }
+    }
+       
+    
+    string accessoriesUrl = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = featuredProductId });
+    string barType = Model.CustomProperties["BarType"].ToString();
+    string sectionLeftContent = "";
+
+    switch (barType)
+    {
+        case "Browse":
+            string browseUrl = Model.CustomProperties["ParentBrowseURL"].ToString();
+            sectionLeftContent = "<a id='browseUrl' href='" + @browseUrl + "' class='button button-rounded button-reveal button-green button-small tright'>Browse More</a>";
+            break;
+
+        case "Gallery":
+            sectionLeftContent = "<img id='amalgmationGreen' src='/Content/Images/Green-triangle_icon.png' alt='greenWarningImage' />";
+            break;
+
+        default:
+            sectionLeftContent = "<img id='amalgmationGreen' src='/Content/Images/Green-triangle_icon.png' alt='greenWarningImage' />";
+            break;
+    }
+
+}
+
+<div id="AmalgamationBarNav">
+    <div id="AmalgamationBarWrap" data-category-id="@categoryId" data-featured-id="@featuredProductId" data-cur-cart-count="">
+        <div id="AmalgamationBarLeftSection">
+            @Html.Raw(sectionLeftContent)
+            @*<img id="amalgmationGreen" src="/Content/Images/Green-triangle_icon.png" alt="greenWarningImage" />*@
+        </div>
+        <div id="AmalgamationBarMidSection">
+            <h3 id="currentTierText">You've added 0 cartons for $0.00 (0&cent; ea)</h3>
+            <h3 id="nextTierText">Add 0 more and pay just 0&cent; each</h3>
+        </div>
+        <div id="AmalgamationBarRightSection">
+            <a id="accessoriesUrl" href="@accessoriesUrl" class="button button-rounded button-reveal button-small button-green tright">Next</a>
+        </div>
+    </div>
+</div>
+
+@*<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(".amalgamation-bar-handler").unbind().click(function () {
+
+            //var addToCartButton = $(this);
+            var currentCategoryId = $("#AmalgamationBarWrap").data('category-id');
+            var currentFeaturedProductId = $("#AmalgamationBarWrap").data('featured-id');
+            UpdateAmalgamationBar(currentCategoryId, currentFeaturedProductId);
+    
+        })
+
+        //check on init load if page should display amalgamation bar(items for amalgamtion already exist in cart)
+        $('.amalgamation-dropdown').unbind().each(function (index, value) {
+
+            var curInCart = $(this).val();
+
+            console.log("cur in cart " + curInCart);
+
+            if (curInCart > 0) {
+                $(".amalgamation-bar-handler").click();
+                return false; //break out of loop
+            }
+
+        });
+                
+    });
+
+
+    function UpdateAmalgamationBar(currentCategoryId, currentFeaturedProductId) {
+      
+        var link = "amalgamationbar/" + currentCategoryId + "/" + currentFeaturedProductId + "";
+
+
+        $.ajax({
+            type: "POST",
+            url: link,
+            cache: false,
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                console.log("success");
+                console.log(msg); //entire object
+                //console.log(msg.qty);
+                
+                var priceEach = msg.eachPrice > 1 ? "$" + msg.eachPrice : msg.eachPrice.replace(".", "") + "&cent;";
+
+                //fill bar with data
+                $("#currentTierText").html("You've added " + msg.totalCartons + " cartons for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
+
+                //check for BEST PRICING 
+                if (msg.tierNext == "best") {
+                    $("#nextTierText").html("You have the best price in the market!");
+                }
+                else {
+
+                    var nextPrice = msg.tierNextEach > 1 ? "$" + msg.tierNextEach : msg.tierNextEach.replace(".", "") + "&cent;";
+                    $("#nextTierText").html("Add " + msg.tierNext + " and pay just " + nextPrice + "");
+                }
+                        
+            },
+            error: function (msg) {
+                console.log("error");
+                console.log(msg);
+                console.log(msg.d);
+            },
+            complete: function (data) {
+
+            },
+
+        });
+
+        if (!$("#amalgamationBarSection").is(":visible")) {
+            $("#amalgamationBarSection").show();
+        }
+        
+
+    }
+
+
+
+
+</script>*@

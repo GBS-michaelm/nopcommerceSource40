@@ -140,6 +140,11 @@
       <Name>Nop.Web</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Order.GBS\Nop.Plugin.Order.GBS.csproj">
+      <Project>{ae79e188-83b5-490c-a7cb-733383122457}</Project>
+      <Name>Nop.Plugin.Order.GBS</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\style.css">

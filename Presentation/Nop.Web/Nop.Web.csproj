@@ -1489,6 +1489,7 @@
     <Content Include="Themes\GoGBS\Content\js\jquery.js" />
     <Content Include="Themes\GoGBS\Content\js\plugins.js" />
     <Content Include="Themes\GoGBS\GoGBS-Theme.png" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-amalgamation.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\animate.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\bootstrap-theme.min.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\bootstrap.min.css" />
@@ -1501,6 +1502,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.dev.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\fonts\Simple-Line-Icons.svg" />
     <Content Include="Themes\HouseOfMagnet\Content\css\gbscustom.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-accessory.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
@@ -1712,6 +1714,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\images\wishlist-white-icon.png" />
     <Content Include="Themes\HouseOfMagnet\Content\img\glyphicons-halflings-white.png" />
     <Content Include="Themes\HouseOfMagnet\Content\img\glyphicons-halflings.png" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\amalgamation.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\bootstrap.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
@@ -2442,7 +2445,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ProductTagsAll.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Search.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TopMenu.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Vendor.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\VendorAll.cshtml" />
@@ -2588,9 +2590,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Error.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Header.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\OldInternetExplorerWarning.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AddressAttributes.cshtml" />
@@ -2990,7 +2990,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
-
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
@@ -3000,7 +2999,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
-
     <Content Include="Themes\AtomicEnvelopes\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
@@ -3011,7 +3009,19 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-tabs.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\ShoppingCart\_OrderReviewData.cshtml" />
     <Content Include="Themes\AtomicEnvelopes\Views\ShoppingCart\_OrderReviewData.cshtml" />
-
+    <Content Include="Themes\SimplexTheme\Views\GBSOrder\DetailsLegacy.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GBSOrder\DetailsLegacy.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryPage.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessories.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessory.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\CrossSellProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\AmalgamationProductsInGridOrLines.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-amalgamation.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxAmalgamation.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_AmalgamationBar.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AmalgamationAddToCart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOne_subcategories.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.SubcategoryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

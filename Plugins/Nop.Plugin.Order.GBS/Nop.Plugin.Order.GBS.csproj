@@ -95,13 +95,16 @@
     <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="CustomTokenProvider.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="Factories\GBSOrderModelFactory.cs" />
     <Compile Include="GBSOrderSettings.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Models\CanvasProductModel.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="MyOrderServicePlugin.cs" />
+    <Compile Include="Orders\OrderExtensions.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
+    <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

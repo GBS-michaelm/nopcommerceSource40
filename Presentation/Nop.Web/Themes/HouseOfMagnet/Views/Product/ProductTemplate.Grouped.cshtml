@@ -2,6 +2,13 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@using Nop.Web.Framework.Themes
+@using Nop.Plugin.DataAccess.GBS;
+@using System.Data;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Web.Factories;
+
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -12,6 +19,12 @@
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
     Html.AppendPageCssClassParts("html-product-details-page");
+
+
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/amalgamation.js");
+
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-amalgamation.css", themeName));
 
     var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
 
@@ -42,7 +55,56 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
     }
+
+
 }
+@{
+    ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+    ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
+    DBManager manager = new DBManager();
+
+
+    IList<ProductCategory> productCategories = categoryService.GetProductCategoriesByProductId(Model.Id);
+    string categoryIds = "";
+    for (int i = 0; i < productCategories.Count; i++)
+    {
+        if (i < productCategories.Count && i != 0)
+        {
+            categoryIds += "," + productCategories[i].CategoryId.ToString();
+        }
+        else
+        {
+            categoryIds += productCategories[i].CategoryId.ToString();
+        }
+    }
+    string amalgamationDataQuery = "EXEC usp_SelectGBSAmalgamationMaster @categoryId";
+    Dictionary<string, Object> amalgamationDic = new Dictionary<string, Object>();
+    amalgamationDic.Add("@CategoryId", categoryIds);
+    DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+    bool amalgamation = false;
+    int amalgamationCategoryId = 00;
+
+    if (amalgamationDataView.Count > 0)
+    {
+        amalgamationCategoryId = Int32.Parse(amalgamationDataView[0]["masterCategoryId"].ToString());
+        amalgamation = true;
+    }
+    int featuredProductId = 00;
+    string featuredProductDataQuery = "usp_SelectGBSCustomCategoryData @categoryId";
+    Dictionary<string, Object> featuredProductDic = new Dictionary<string, Object>();
+    featuredProductDic.Add("@CategoryId", amalgamationCategoryId);
+    DataView featuredProductDataView = manager.GetParameterizedDataView(featuredProductDataQuery, featuredProductDic);
+
+    if(featuredProductDataView.Count > 0)
+    {
+        featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
+    }
+
+
+}
+
+
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
@@ -118,7 +180,7 @@
                                             @if (!String.IsNullOrWhiteSpace(variant.Name))
                                             {
                                                 <h4 class="variant-name">
-                                                    @variant.Name
+                                                    @variant.ShortDescription
                                                 </h4>
                                             }
                                             <div class="product-variant-wrapper">
@@ -153,19 +215,76 @@
                                                     @{
                                                         var dataDictAddToCart = new ViewDataDictionary();
                                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                                        @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
-                                                    }
+
+                                                        bool amalgamateThis = false;
+
+                                                        if (amalgamation)
+                                                        {
+
+                                                            //check amalgamation of specific product
+                                                            //also check products pack type. For now we assume ONLY CARTON types can be amalgamated
+
+                                                            //check if variant.id has category that is in the same group of the current pages products master category
+
+                                                            string type = "";
+
+                                                            var specAttrs = specService.GetProductSpecificationAttributes(variant.Id);
+
+                                                            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+                                                            foreach (var spec in specAttrs)
+                                                            {
+                                                                if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
+                                                                {
+                                                                    type = spec.SpecificationAttributeOption.Name;
+
+                                                                    if (type == "Carton")
+                                                                    {
+                                                                        amalgamateThis = true;
+                                                                        break;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        break;
+                                                                    }
+
+                                                                }
+
+                                                            }
+
+                                                            if (amalgamateThis)
+                                                            {
+                                                                variant.AddToCart.CustomProperties.Add("masterCategoryId", amalgamationCategoryId);
+                                                                variant.AddToCart.CustomProperties.Add("featuredProductId", featuredProductId);
+                                                                
+                                                                @Html.Partial("_AmalgamationAddToCart", variant.AddToCart, dataDictAddToCart)
+                                                            }
+
+                                                            else
+                                                            {
+
+                                                                            @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                                                    }
+
+                                                                }
                                                     <!--rental info-->
                                                     @{
-                                                        var dataDictRental = new ViewDataDictionary();
-                                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
-                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                                    var dataDictRental = new ViewDataDictionary();
+                                                                    dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                                                    @Html.Partial("_RentalInfo", variant, dataDictRental)
                                                     }
                                                     <!--attributes-->
                                                     @{
-                                                        var dataDictAttributes = new ViewDataDictionary();
-                                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                                    var dataDictAttributes = new ViewDataDictionary();
+                                                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                                    @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                                     }
 
                                                     <div class="form-group overview-buttons">
@@ -238,4 +357,25 @@
             </div>
                                                             }
     </div>
+
+
+    <div id="amalgamationBarSection" style="display: none;">
+        @{
+
+            if (amalgamation)
+            {
+
+                Category category = categoryService.GetCategoryById(@amalgamationCategoryId);
+                ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+                CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+                catalogPagingFilteringModel.PageSize = 1;
+                CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+                categoryModel.CustomProperties.Add("BarType", "Browse");              
+                categoryModel.CustomProperties.Add("ParentBrowseURL", categoryModel.SeName);
+
+                @Html.Partial("_AmalgamationBar", categoryModel);
+            }
+        }
+    </div>
+
 </div>

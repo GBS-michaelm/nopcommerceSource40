@@ -49,12 +49,148 @@
     //dynamic chart most likely
     string chart = "";
 
-    if (@Model.Name.Contains("Specialty"))
+    if (@Model.Name.ToLower().Contains("specialty"))
     {
         chart = "hom_specialty_magnets_product_options_chart";
     }
+	
+	    else if (@Model.Name.ToLower().Contains("notepads"))
+    {
+        chart = "hom_notepads_product_options_chart";
+    }
+	
+		    else if (@Model.Name.ToLower().Contains("calendars"))
+    {
+        chart = "hom_calendars_product_options_chart";
+    }
 
+
+		    else if (@Model.Name.ToLower().Contains("golf"))
+    {
+        chart = "hom_golf_product_options_chart";
+    }
+	
+			    else if (@Model.Name.ToLower().Contains("nascar"))
+    {
+        chart = "hom_nascar_product_options_chart";
+    }
+			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+    {
+        chart = "hom_calendar_pads_product_options_chart";
+    }
 }
+
+
+@{ 
+    //feature content to load
+   string featcont = "";
+
+    if (@Model.Name.ToLower().Contains("specialty"))
+    {
+        featcont = "hom_featcont_gateway_specialty";
+    }
+	
+	    else if (@Model.Name.ToLower().Contains("notepads"))
+    {
+        featcont = "hom_featcont_gateway_notepads";
+    }
+	
+		    else if (@Model.Name.ToLower().Contains("calendars"))
+    {
+        featcont = "hom_featcont_gateway_calendars";
+    }
+
+
+		    else if (@Model.Name.ToLower().Contains("golf"))
+    {
+        featcont = "hom_featcont_gateway_golf";
+    }
+	
+			    else if (@Model.Name.ToLower().Contains("nascar"))
+    {
+        featcont = "hom_featcont_gateway_nascar";
+    }
+			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+    {
+        featcont = "hom_featcont_gateway_calendar_pads";
+    }
+}
+
+
+
+@{ 
+    //foreground image class name
+   string fgclass = "";
+
+    if (@Model.Name.ToLower().Contains("specialty"))
+    {
+        fgclass = "fg_gateway_specialty";
+    }
+	
+	    else if (@Model.Name.ToLower().Contains("notepads"))
+    {
+        fgclass = "fg_gateway_notepads";
+    }
+	
+		    else if (@Model.Name.ToLower().Contains("calendars"))
+    {
+        fgclass = "fg_gateway_calendars";
+    }
+
+
+		    else if (@Model.Name.ToLower().Contains("golf"))
+    {
+        fgclass = "fg_gateway_golf";
+    }
+	
+			    else if (@Model.Name.ToLower().Contains("nascar"))
+    {
+        fgclass = "fg_gateway_nascar";
+    }
+			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+    {
+        fgclass = "fg_gateway_calendar_pads";
+    }
+}
+
+
+@{ 
+    //Specific Ad Banners
+   string bannerad = "";
+
+    if (@Model.Name.ToLower().Contains("specialty"))
+    {
+        bannerad = "hom_gateway_banner_specialty";
+    }
+	
+	    else if (@Model.Name.ToLower().Contains("notepads"))
+    {
+        bannerad = "hom_gateway_banner_notepads";
+    }
+	
+		    else if (@Model.Name.ToLower().Contains("calendars"))
+    {
+        bannerad = "hom_gateway_banner_calendars";
+    }
+
+
+		    else if (@Model.Name.ToLower().Contains("golf"))
+    {
+        bannerad = "hom_gateway_banner_golf";
+    }
+	
+			    else if (@Model.Name.ToLower().Contains("nascar"))
+    {
+        bannerad = "hom_gateway_banner_nascar";
+    }
+			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+    {
+        bannerad = "hom_gateway_banner_calendar_pads";
+    }
+}
+
+
+
 
 @{
 
@@ -149,9 +285,18 @@
         </div>
     </div>  
    
-    <div>@*salewidgethere*@</div>
-    <div id="gateway-body" style="background-color : @backgroundColor;">
-        <div id="gateway-body-inner">
+   @{
+    //Loading specific banner ads
+
+    if (!string.IsNullOrEmpty(@bannerad))
+    {
+        <div id="banner-ad">@Html.Action("TopicBlock", "Topic", new { systemName = @bannerad.ToString() }) </div>
+    }
+	}
+	
+    <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
+    <div id="gateway-body" class="bgstretchouter" style="background-color : @backgroundColor; background-image: url(@backgroundImage);">
+        <div id="gateway-body-inner" class="bgstretchinner">
            <input id="cssChange" type="hidden" value="" />
            <input id="originalBodyHeight" type="hidden" value="" />
 
@@ -171,8 +316,8 @@
                             </p>
                         }
                     </div>
-                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
-                    <div id="gatewayBackgroundImage" style="background-image: url(@backgroundImage)"></div>               
+                    <img id="gatewayForegroundImage" class="@fgclass" src="@foregroundImage" />
+                             
                 </div>           
             </div>
             <p id="gatewayBottomText">
@@ -186,18 +331,15 @@
             
         $(document).ready(function () {                          
                 
-            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
             $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
-                               
-            var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
-            CustomResize();
-                
-            obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+                     
+					 
+			var  obj = jQuery.parseJSON('{ "outer": ".bgstretchouter" , "inner": ".bgstretchinner" }');
             CustomResize();
 
             function CustomResize() {
                 $(window).resize(obj, function () {
-                                                                       
+                  console.log("outer" + obj.outer);                                                     
                     var $c = $('.container'),
                         $w = $(obj.outer),
                         totalWidth = $('.footer').outerWidth(),
@@ -218,26 +360,16 @@
                 $(window).resize();
             }                              
                 
-            $("#gateway-inner").height($("#gateway-body").height());
-                
+                          
             $("#cssChange").click();
                 
             //remove topic header
             $("#chartWrap div.panel-heading").remove();
-                
+            $("#featcont div.panel-heading").remove();
+			 $("#gateway-sales-banner div.panel-heading").remove();
             $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
 
-            function HeightHandle() {
-                    
-                console.log("height handle called");
-
-                var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
-                    
-                $("#gateway-body").height(newHeight);
-                $("#gateway-inner").height(newHeight);
-            }
-
-            $(window).resize(HeightHandle);
+            
 
 
 
@@ -259,6 +391,17 @@
             </div>
         </div>
     }
+	
+	
+	    if (!string.IsNullOrEmpty(@featcont))
+    {
+        <div id="featcont">
+            <div id="featcontSection">
+                @Html.Action("TopicBlock", "Topic", new { systemName = @featcont.ToString() })
+            </div>
+        </div>
+    }
+	
 
     @*<div id="videoAndQuantityCalculatorWrap">
         <div id="innerVidAndWQtyCalc">

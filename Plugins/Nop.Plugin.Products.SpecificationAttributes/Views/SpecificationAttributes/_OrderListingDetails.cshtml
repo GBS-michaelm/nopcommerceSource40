@@ -1,5 +1,15 @@
 ﻿@model Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel
 @using Nop.Plugin.DataAccess.GBS;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Catalog;
+@using Nop.Core;
+@using Nop.Services.Stores;
+@{ 
+    var _productService = EngineContext.Current.Resolve<IProductService>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
+    var _storeService = EngineContext.Current.Resolve<IStoreService>();
+}
 
 <div class="order-list">
     <span class="hidden"> @Model.Monthvalue</span>
@@ -23,10 +33,20 @@
                 </div>*@
             </div>
             <div class="head-col4">
-                <div class="order-label" >@T("Account.CustomerOrders.OrderNumber"): @DBManager.getGBSOrderID(@Model.Id)<span id="@DBManager.getGBSOrderID(@Model.Id)" class="hidden">@Model.Id</span></div>
+                <div class="order-label">@T("Account.CustomerOrders.OrderNumber"): @if (@Model.CustomProperties.ContainsKey("orderNo") ){@Model.CustomProperties["orderNo"]}<span id="@if (@Model.CustomProperties.ContainsKey("orderNo") ){@Model.CustomProperties["orderNo"]}" class="hidden">@Model.Id</span></div>
                 <div class="order-links">
-                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })">Order Details</a> |
-                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })">Invoice</a>
+
+                    @*ToDo - check if legacy, then call different action on GBSOrderController to get legacy order data and return normal order details view*@
+
+                    @if (@Model.CustomProperties.ContainsKey("isLegacy") &&  Convert.ToBoolean(@Model.CustomProperties["isLegacy"])){
+                            <a href = "@Url.RouteUrl("OrderDetailsL", new { orderId = Model.Id })" > Order Details </a > <span>|</span>
+                            <a href = "@Url.RouteUrl("GetOrderPdfInvoiceL", new { orderId = Model.Id })" > Invoice </a >
+                        }
+                        else
+                        {
+                            <a href = "@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" > Order Details </a > <span>|</span>
+                            <a href = "@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" > Invoice </a >
+                        }
                 </div>
             </div>
         </div>
@@ -36,7 +56,7 @@
                     <div class="orderstatus">
                         @T("Account.CustomerOrders.OrderStatus"):
                         @if (@Model.OrderStatus != "Cancelled")
-                        {
+                            {
                             <strong class="space"> @Model.ShippingStatus  </strong>
                             if (@Model.ShippingStatus.Contains(@T("enums.nop.core.domain.Shipping.ShippingStatus.Shipped").ToString()))
                             {                                
@@ -74,11 +94,44 @@
                                 <div class="product-unit-price">@item.UnitPrice</div>
                                 <div>
                                     @if (Model.IsReOrderAllowed)
+                                    {
+                                        if (@Model.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(@Model.CustomProperties["isLegacy"]))
                                         {
-                                        @*<input type="button" value="Buy it Again" class="buyinagain" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = order.Id })    ')" />*@
-                                        <input type="button" value="View Order Details" class="buyinagain" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })   ')" />
-
+                                            var product = _productService.GetProductBySku(item.Sku);
+                                            if (product != null)
+                                            {
+                                                var stores = _storeMappingService.GetStoresIdsWithAccess<Nop.Core.Domain.Catalog.Product>(_productService.GetProductBySku(item.Sku));
+                                                var NCCStore = _storeService.GetAllStores().Where(x => x.Name == "Note Card Cafe").FirstOrDefault();
+                                                var HOMStore = _storeService.GetAllStores().Where(x => x.Name == "House of Magnets").FirstOrDefault();
+                                                if (_storeContext.CurrentStore.Id == HOMStore.Id)
+                                                {
+                                                    if (stores.Where(x => x == HOMStore.Id).Any())
+                                                    {
+                                                    <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })   ')" />
+                                                    }
+                                                    else if (stores.Where(x => x == NCCStore.Id).Any())
+                                                    {
+                                                    <a class="" target="_blank" href="@NCCStore.Url@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })">Buy it again at Note Card Café</a>
+                                                    }
+                                                }
+                                                else if (_storeContext.CurrentStore.Id == NCCStore.Id)
+                                                {
+                                                    if (stores.Where(x => x == NCCStore.Id).Any())
+                                                    {
+                                                        <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })   ')" />
+                                                    }
+                                                    else if (stores.Where(x => x == HOMStore.Id).Any())
+                                                    {
+                                                        <a class="" target="_blank" href="@HOMStore.Url@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = true })">Buy it again at House of Magnets</a>
+                                                    }
+                                                }
+                                            }
                                         }
+                                        else
+                                        {
+                                        <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = false })   ')" />
+                                        }
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -87,7 +140,14 @@
             <div class="productlist-right">
                     <ul>
                         <li>
-                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            @if (@Model.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(@Model.CustomProperties["isLegacy"]))
+                            {
+                                <a href="@Url.RouteUrl("OrderDetailsL", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Id })" class="btn btn-primary details-order-button">Order Details</a>
+                            }
                         </li>
                         <li>
                             <a href="#">Track Package</a>
