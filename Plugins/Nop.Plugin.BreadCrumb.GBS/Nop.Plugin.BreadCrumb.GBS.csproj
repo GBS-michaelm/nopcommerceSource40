@@ -48,11 +48,6 @@
       <HintPath>..\..\Libraries\Nop.Core\bin\Debug\Nop.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Nop.Services, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Nop.Services\bin\Debug\Nop.Services.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Nop.Web.Framework, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Presentation\Nop.Web.Framework\bin\Debug\Nop.Web.Framework.dll</HintPath>
@@ -98,6 +93,10 @@
       <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
       <Name>Nop.Data</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
+      <Project>{210541ad-f659-47da-8763-16f36c5cd2f4}</Project>
+      <Name>Nop.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
       <Project>{4f1f649c-1020-45be-a487-f416d9297ff3}</Project>
