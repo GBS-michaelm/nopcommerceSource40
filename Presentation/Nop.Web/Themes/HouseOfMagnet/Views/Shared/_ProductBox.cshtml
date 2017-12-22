@@ -42,7 +42,7 @@
     <div class="caption">
         <div class="details">
             <h3 class="product-title">
-                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
+                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.ShortDescription</a>
             </h3>
  	    @Html.Widget("product_artist_name", Model.Id)            
             <div class="prices">

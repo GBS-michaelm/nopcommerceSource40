@@ -2445,7 +2445,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ProductTagsAll.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Search.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TopMenu.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Vendor.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\VendorAll.cshtml" />
@@ -2591,9 +2590,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Error.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Header.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\OldInternetExplorerWarning.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AddressAttributes.cshtml" />
@@ -2993,7 +2990,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
-
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
@@ -3003,7 +2999,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
-
     <Content Include="Themes\AtomicEnvelopes\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
@@ -3025,6 +3020,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxAmalgamation.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AmalgamationBar.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AmalgamationAddToCart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOne_subcategories.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.SubcategoryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
