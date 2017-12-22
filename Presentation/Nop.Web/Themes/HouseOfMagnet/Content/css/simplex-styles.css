@@ -9386,6 +9386,11 @@ ul.info li label {
     border: none;
 }
 
+.footer .topic-html-content a {
+    color: #ffffff;
+    font-weight: bold;
+}
+
     .footer .topic-html-content a:hover {
         color: #77AEB1;
     }
@@ -9404,14 +9409,12 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 }
 
 /*** Pre-header Styles ***/
-.pre-header-promo-text {
-}
 
 .pre-header-back-link {
     display: none;
 }
 
-.topic-html-content a {
+.pre-header-promo-text .topic-html-content a {
     color: #ffffff;
     font-weight: bold;
 }

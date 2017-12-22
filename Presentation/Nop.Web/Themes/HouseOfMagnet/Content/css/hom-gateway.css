@@ -275,6 +275,16 @@ body {
 #chartWrap .topic-html-content {
 	border: none;
 }
+#chartWrap .topic-html-content a {
+    color: #012d5c;
+}
+#chartWrap .table td, #chartWrap .table th {
+    text-align: center;
+}
+
+#chartWrap .table td:first-child {
+    text-align: left;
+}​
 .container #videoAndQuantityCalculatorWrap {
 	height: 480px;
 	padding-top: 28px;
