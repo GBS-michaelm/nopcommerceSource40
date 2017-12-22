@@ -38,6 +38,7 @@
     <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GBSShippingServiceClient">
       <HintPath>..\..\Libraries\GBS\GBSShippingServiceClient.dll</HintPath>
