@@ -3008,6 +3008,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxAmalgamation.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AmalgamationBar.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AmalgamationAddToCart.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_FeaturedProductTierPrices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

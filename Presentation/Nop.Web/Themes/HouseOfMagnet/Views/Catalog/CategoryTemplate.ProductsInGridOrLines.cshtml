@@ -39,6 +39,8 @@
 @{ 
     //bool amalgamation = false;
     string productBoxLink = "";
+    int masterCategoryId = 0;
+    int featuredProductId = 0;
 }
 @{ 
 
@@ -50,9 +52,20 @@
     DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
     bool amalgamation = false;
 
-
     if (amalgamationDataView.Count > 0)
     {
+        masterCategoryId = Int32.Parse(amalgamationDataView[0]["masterCategoryId"].ToString());
+
+        string featuredProductDataQuery = "usp_SelectGBSCustomCategoryData @categoryId";
+        Dictionary<string, Object> featuredProductDic = new Dictionary<string, Object>();
+        featuredProductDic.Add("@CategoryId", masterCategoryId);
+        DataView featuredProductDataView = manager.GetParameterizedDataView(featuredProductDataQuery, featuredProductDic);
+
+        if (featuredProductDataView.Count > 0)
+        {
+            featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
+        }
+
         //amalgamation = true;
         productBoxLink = "_ProductBoxAmalgamation";
         amalgamation = true;
@@ -63,7 +76,6 @@
     }
 
 }
-
 
 @Html.Widget("categorydetails_after_breadcrumb", Model.Id)
 
@@ -145,6 +157,9 @@
                     <div class="product-grid">
                         @foreach (var item in Model.FeaturedProducts)
                         {
+                            item.CustomProperties.Add("featuredProductId", featuredProductId);
+                            item.CustomProperties.Add("masterCategoryId", masterCategoryId);
+
                             <div class="item-box product-grid col-xs-12 col-sm-4 col-md-4 product-align">
                                 <div class="thumbnail">                                   
                                     @Html.Partial(productBoxLink, item)                                                                       
@@ -187,6 +202,9 @@
                 <div class="row">  
                     @foreach (var product in Model.Products)
                     {
+                        product.CustomProperties.Add("featuredProductId", featuredProductId);
+                        product.CustomProperties.Add("masterCategoryId", masterCategoryId);
+
                         <div class="item-box">
                             <div class="thumbnail">
                                 @Html.Partial(productBoxLink, product)

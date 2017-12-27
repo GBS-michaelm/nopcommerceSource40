@@ -366,6 +366,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
            
             ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
 
             int totalCartons = 0;
             decimal cartTotalPrice = 0.00M;
@@ -373,10 +374,31 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             string amountToNextTier = "";
             string tierNextEach = "";
             int unitsPerCarton = 100; // will need to be dynamic at some point
+            string packType = "Carton";
 
             //total cartons
             ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
-            foreach (ShoppingCartItem item in shoppingCart)
+            List<ShoppingCartItem> AmalgamationList = new List<ShoppingCartItem>();
+
+            foreach (var item in shoppingCart)
+            {
+                var specAttrs = specService.GetProductSpecificationAttributes(item.ProductId);
+                foreach (var spec in specAttrs)
+                {
+                    string type = "";
+                    if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
+                    {
+                        type = spec.SpecificationAttributeOption.Name;
+                        if (type != "Carton")
+                        {
+                            //cartItemList.Remove(item);
+                            AmalgamationList.Add(item);
+                        }
+                    }
+                }
+            }
+
+            foreach (ShoppingCartItem item in AmalgamationList)
             {
                 IList<ProductCategory> productsCategories = categoryService.GetProductCategoriesByProductId(item.Product.Id);
 
@@ -460,11 +482,32 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         {
 
             ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
             int cartTotal = 0;
             int singleTotal = 0;
 
             ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
-            foreach (ShoppingCartItem item in shoppingCart)
+            List<ShoppingCartItem> AmalgamationList = new List<ShoppingCartItem>();
+            foreach (var item in shoppingCart)
+            {
+                var specAttrs = specService.GetProductSpecificationAttributes(item.ProductId);
+                foreach (var spec in specAttrs)
+                {
+                    string type = "";
+                    if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
+                    {
+                        type = spec.SpecificationAttributeOption.Name;
+                        if (type != "Carton")
+                        {
+                            //cartItemList.Remove(item);
+                            AmalgamationList.Add(item);
+                        }
+                    }
+                }
+            }
+                        
+            foreach (ShoppingCartItem item in AmalgamationList)
             {
                 IList<ProductCategory> productsCategories = categoryService.GetProductCategoriesByProductId(item.Product.Id);
 

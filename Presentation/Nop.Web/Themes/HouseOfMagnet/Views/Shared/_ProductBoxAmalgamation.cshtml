@@ -38,12 +38,14 @@
     ICollection<ShoppingCartItem> shoppingCart = workContext.CurrentCustomer.ShoppingCartItems;
     IProductService productService = EngineContext.Current.Resolve<IProductService>();
 
-
+    var featuredId = Model.CustomProperties["featuredProductId"];
+    var masterCategoryId = Model.CustomProperties["masterCategoryId"];
 
     var amalgamationID = 00;
 
+    //Products are grouped, the carton product must be found 
     IList<Product> associatedProductList = productService.GetAssociatedProducts(Model.Id);
-    if(associatedProductList.Count > 0)
+    if (associatedProductList.Count > 0)
     {
         ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
 
@@ -61,11 +63,13 @@
                 {
                     type = spec.SpecificationAttributeOption.Name;
 
-                    if(type == "Carton")
+                    if (type == "Carton")
                     {
                         amalgamationID = groupedproduct.Id;
+                        Model.CustomProperties.Add("ButtonId", amalgamationID);
                         break;
-                    }else
+                    }
+                    else
                     {
                         break;
                     }
@@ -75,45 +79,46 @@
             }
         }
     }
-    else{
+    else
+    {
         amalgamationID = Model.Id;
     }
 
     Product product = productService.GetProductById(amalgamationID);
 
-    ShoppingCartItem item = shoppingCartService.FindShoppingCartItemInTheCart(shoppingCart.ToList(), ShoppingCartType.ShoppingCart, product);
+    ShoppingCartItem cartitem = shoppingCartService.FindShoppingCartItemInTheCart(shoppingCart.ToList(), ShoppingCartType.ShoppingCart, product);
     bool inCart = false;
-    var dropdownId = "dropdown-qty-" + amalgamationID;
+    //var dropdownId = "dropdown-qty-" + amalgamationID;
 
-    StringBuilder sb = new StringBuilder();
-    if (item != null)
+    //StringBuilder sb = new StringBuilder();
+    if (cartitem != null)
     {
-        sb.Append("<select id='" + dropdownId + "' class='amalgamation-dropdown dropdown in-cart' data-productid='" + amalgamationID + "'>");
-        sb.Append("<option value='0'>Quantity</option>");
+        //    sb.Append("<select id='" + dropdownId + "' class='amalgamation-dropdown dropdown in-cart' data-productid='" + amalgamationID + "'>");
+        //    sb.Append("<option value='0'>Quantity</option>");
         inCart = true;
     }
-    else
-    {
-        sb.Append("<select id='" + dropdownId + "' class='amalgamation-dropdown dropdown' data-productid='" + amalgamationID + "'>");
-        sb.Append("<option selected='selected' value='0'>Quantity</option>");
-    }
+    //else
+    //{
+    //    sb.Append("<select id='" + dropdownId + "' class='amalgamation-dropdown dropdown' data-productid='" + amalgamationID + "'>");
+    //    sb.Append("<option selected='selected' value='0'>Quantity</option>");
+    //}
 
-    for (int i = 1; i < 101; i++)
-    {
-        if(inCart && item.Quantity == i)
-        {
-            sb.Append("<option selected='selected' value='" + i + "'>" + i + "</option>");
-        }else
-        {
-            sb.Append("<option value='" + i + "'>" + i + "</option>");
-        }
+    //for (int i = 1; i < 101; i++)
+    //{
+    //    if(inCart && item.Quantity == i)
+    //    {
+    //        sb.Append("<option selected='selected' value='" + i + "'>" + i + "</option>");
+    //    }else
+    //    {
+    //        sb.Append("<option value='" + i + "'>" + i + "</option>");
+    //    }
 
-    }
-    sb.Append("</select>");
+    //}
+    //sb.Append("</select>");
 }
 
 <div class="product-item clearfix" data-productid="@amalgamationID">
-    @Html.Widget("product_listing_widget", Model.Id)
+    @Html.Widget("product_listing_widget", amalgamationID)
     <div class="picture">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
@@ -134,7 +139,7 @@
             <h3 class="product-title">
                 <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
             </h3>
- 	    @Html.Widget("product_artist_name", Model.Id)            
+ 	    @Html.Widget("product_artist_name", amalgamationID)            
             <div class="prices">
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
@@ -185,7 +190,7 @@
                     <div class="amalgamation-buttons-details">
                         <input type="button" value="@T("Products.Details")" class="btn btn-primary product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />
                     </div>
-                    
+
 
                     @if (!Model.ProductPrice.DisableBuyButton)
                     {
@@ -200,38 +205,108 @@
                         }
                         var buttonId = "amalgamationButton" + @amalgamationID;
 
-                        <div class="amalgamation-dropdown-cart-wrap">
-                            <div class="qty-wrap">
-                               @Html.Raw(sb.ToString())
+                        //<div class="amalgamation-dropdown-cart-wrap">
+                        //@*<div class="qty-wrap">
+                        //   @Html.Raw(sb.ToString())
+
+                        //</div>*@
+                        <div class="add-to-cart">
+                            <div class="add-to-cart-panel">
+                                <div class="quantity-box">
+                                    <div class="enter-quantity">
+                                        Enter Quantity:
+                                        @*@Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }, ":")*@
+                                    </div>
+                                    @*@if (Model.AllowedQuantities.Count > 0)
+                            {
+                                @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown form-control" })
+                            }*@
+                                    @*else
+
+                            {*@
+                                    <div class="addtocart-quantity-box amal-qty-box">
+                                        @*@Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.ProductId })*@
+                                        @{
+                                            var empty = 0;
+
+                                            if (cartitem != null)
+                                            {
+                                                @Html.TextBoxFor(model => cartitem.Quantity, new { @class = " qty-input amalgamation-qty-input form-control amalgamation-textbox in-cart group-amalgamation-textbox", @data_productid = amalgamationID, @data_initqty = @cartitem.Quantity, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => @empty, new { @class = " qty-input amalgamation-qty-input form-control  amalgamation-textbox group-amalgamation-textbox", @data_productid = amalgamationID, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                            }
+                                        }
+
+                                        <span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.FieldIdFor(model => model.CustomProperties["ButtonId"] ));"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                        <span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.FieldIdFor(model => model.CustomProperties["ButtonId"]));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    </div>
+                                    @*//when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)*@
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $("#@Html.FieldIdFor(model => amalgamationID)").keydown(function (event) {
+                                                if (event.keyCode == 13) {
+                                                    //$("#add-to-cart-button-@Model.Id").click();
+                                                    //$("#add-to-cart-button-@Model.Id").click();
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    @*}*@
+                                </div>
                             </div>
-                            <div class="amalgamation-add-to-cart">
-                          
-                                    @{                                            
-
-                                        if (inCart)
-                                        {
-                                            <div id="@buttonId" class="amalgamation-button-in-cart">
-                                                <i class="amalgamation-check fa fa-check"></i><input id="@amalgamationID" type="button"  data-cart-type="@shoppingCartTypeId" value="In Cart" class="btn btn-primary amalgamation-product-box-add-to-cart-button in-cart amalgamation-bar-handler" data-cartlink=""  />   @*onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;"*@
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div id="@buttonId" class="amalgamation-button">
-                                                <i class="amalgamation-check"></i><input id="@amalgamationID" type="button" data-cart-type="@shoppingCartTypeId" value="@(addToCartText)" class="btn  amalgamation-product-box-add-to-cart-button amalgamation-bar-handler" data-cartlink="" /> @*onclick=""*@
-                                            </div>
-                                        }
-                                    }
-
-                                            </div>
-                            @*<a onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@(addToCartText)</a>*@
                         </div>
-                    }	
+                            <div class="amalgamation-add-to-cart">
+
+                                @{
+
+                                    if (inCart)
+                                    {
+                                        <div id="@buttonId" class="amalgamation-button-in-cart">
+                                            <input id="@amalgamationID" type="button" data-cart-type="@shoppingCartTypeId" value="In Cart" class="button amalgamation-btn amalgamation-btn-incart amalgamation-product-box-add-to-cart-button in-cart amalgamation-bar-handler" data-cartlink="" />   @*onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;"*@
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div id="@buttonId" class="amalgamation-button">
+                                            <input id="@amalgamationID" type="button" data-cart-type="@shoppingCartTypeId" value="@(addToCartText)" class="button amalgamation-btn amalgamation-product-box-add-to-cart-button amalgamation-bar-handler" data-cartlink="" /> @*onclick=""*@
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                                            @*<a onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@(addToCartText)</a>*@
+                                            @*</div>*@
+                                    }
                 </div>
                 @*@Html.Widget("productbox_addinfo_after", Model.Id)*@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
 
+    $(document).ready(function () {
+
+        var done = false;
+        var everythingLoaded = setInterval(function () {
+            if (/loaded|complete/.test(document.readyState) && !done) {
+                clearInterval(everythingLoaded);
+                $(".amalgamation-qty-input").each(function (index) {
+
+                    AmalgamationChangeQuantity(this);
+
+                });
+                //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+                done = true;
+            }
+        }, 100);
+
+    });
+
+
+    </script>
 
     @*<script type="text/javascript">
         $(document).ready(function () {
@@ -242,25 +317,25 @@
                 var cartType = $("#" + productId).data('cart-type');
                 var qty = $(this).val();
                 var obj = jQuery.parseJSON('{ "productId": "' + productId + '","cartType": "' + cartType + '" , "quantity": "' + qty + '" }');
-                    
+
                 var dropdown = $(this);
                 var addToCartButton = $("#" + productId);
                 var buttonStyling = $('#amalgmationButton' + productId);
 
                 //change button text to update unless they dont have an in cart class tag then leave as add to cart
                 if (dropdown.hasClass('in-cart')) {
-                                                                           
+
                     dropdown.removeClass('in-cart');
 
                     addToCartButton.removeClass('in-cart');
                     addToCartButton.addClass('readyforcart');
                     addToCartButton.val('Update'); //button text
-                    
+
                     buttonStyling.addClass('amalgmation-button');
                     buttonStyling.removeClass('amalgmation-button-in-cart');
                     buttonStyling.css('opacity', 1);
                     buttonStyling.find('i').removeClass('fa fa-check');
-                    
+
                 }
 
                 if (!dropdown.hasClass('in-cart')) {
@@ -270,22 +345,22 @@
                     buttonStyling.css('opacity', 1);
 
                 }
-                
+
                 CreateCartLink(obj);
-                              
-                                               
+
+
             });
 
             $(".amalgamtion-product-box-add-to-cart-button").unbind().click(function () {
 
                 var addToCartButton = $(this);
                 //ignore button clicks on items already in cart that havent had their quantities changed
-                if (!addToCartButton.hasClass('in-cart') && addToCartButton.hasClass('readyforcart')) {                   
-                    AmalgamationAddToCart(addToCartButton);                  
+                if (!addToCartButton.hasClass('in-cart') && addToCartButton.hasClass('readyforcart')) {
+                    AmalgamationAddToCart(addToCartButton);
                 }
-                
+
             });
-       
+
         });
 
         //call to change cart link when a quantity is changed
@@ -296,7 +371,7 @@
             //var finalLink = link;
 
 
-            
+
             $("#" + obj.productId).attr('data-cartlink', link);
 
             $("#" + obj.productId).data('cartlink', link);
@@ -309,13 +384,13 @@
 
         //function UpdateCartLink(obj) {
         //    //modify cart
-            
 
-            
+
+
         //}
 
         function AmalgamationAddToCart(addToCartButton) {
-            
+
             var dropdown = $("#dropdown-qty-" + addToCartButton.attr('id'));
             var buttonStyling = $('#amalgmationButton' + addToCartButton.attr('id'));
             var link = addToCartButton.data('cartlink');
@@ -347,14 +422,14 @@
                         buttonStyling.find('i').removeClass('fa fa-check');
 
                     } else {
-                        //Set Text to In Cart and set to green stlying                       
+                        //Set Text to In Cart and set to green stlying
                         dropdown.addClass('in-cart');
 
                         addToCartButton.val("In Cart");
                         addToCartButton.removeClass('readyforcart');
 
                         buttonStyling.addClass('amalgmation-button-in-cart');
-                        buttonStyling.removeClass('amalgmation-button');                        
+                        buttonStyling.removeClass('amalgmation-button');
                         buttonStyling.find('i').addClass('fa fa-check');
 
                     }
