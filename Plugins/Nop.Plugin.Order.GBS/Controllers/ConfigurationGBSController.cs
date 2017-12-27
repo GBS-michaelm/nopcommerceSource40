@@ -53,6 +53,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 GBSStoreNamePrepend = GBSOrderSettings.GBSStoreNamePrepend,
                 HOMConnectionString = GBSOrderSettings.HOMConnectionString,
                 IntranetBaseAddress = GBSOrderSettings.IntranetBaseAddress,
+                LegacyOrdersInOrderHistory = GBSOrderSettings.LegacyOrdersInOrderHistory,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -67,6 +68,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 model.GBSStoreNamePrepend_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.GBSStoreNamePrepend, storeScope);
                 model.HOMConnectionString_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.HOMConnectionString, storeScope);
                 model.IntranetBaseAddress_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope);
+                model.LegacyOrdersInOrderHistory_OverrideForStore = _settingService.SettingExists(GBSOrderSettings, x => x.LegacyOrdersInOrderHistory, storeScope);
             }
 
             return View("~/Plugins/Order.GBS/Views/OrderGBS/Configure.cshtml", model);
@@ -94,6 +96,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             GBSOrderSettings.GBSStoreNamePrepend = model.GBSStoreNamePrepend;
             GBSOrderSettings.HOMConnectionString = model.HOMConnectionString;
             GBSOrderSettings.IntranetBaseAddress = model.IntranetBaseAddress;
+            GBSOrderSettings.LegacyOrdersInOrderHistory = model.LegacyOrdersInOrderHistory;
 
 
             /* We do not clear cache after each setting update.
@@ -139,6 +142,11 @@ namespace Nop.Plugin.Order.GBS.Controllers
                 _settingService.SaveSetting(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSOrderSettings, x => x.IntranetBaseAddress, storeScope);
+
+            if (model.LegacyOrdersInOrderHistory_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSOrderSettings, x => x.LegacyOrdersInOrderHistory, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSOrderSettings, x => x.LegacyOrdersInOrderHistory, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

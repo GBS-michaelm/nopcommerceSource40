@@ -1,7 +1,10 @@
 ﻿@model CategoryModel
 @{
+    //may need to be able to edit the layout link as well
     Layout = "~/Views/Shared/_ColumnsTwo-listing.cshtml";
-    
+
+
+
     //title
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     //meta
@@ -9,6 +12,11 @@
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
     Html.AppendPageCssClassParts("html-category-page");
+
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/amalgamation.js");
+
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-amalgamation.css", themeName));
 
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
@@ -23,11 +31,51 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@using Nop.Plugin.DataAccess.GBS;
+@using System.Data;
+@using Nop.Web.Framework.Themes
 @*category breadcrumb*@
 
+@{ 
+    //bool amalgamation = false;
+    string productBoxLink = "";
+    int masterCategoryId = 0;
+    int featuredProductId = 0;
+}
+@{ 
 
+    DBManager manager = new DBManager();
 
+    string amalgamationDataQuery = "EXEC usp_SelectGBSAmalgamationMaster @categoryId";
+    Dictionary<string, Object> amalgamationDic = new Dictionary<string, Object>();
+    amalgamationDic.Add("@CategoryId", Model.Id);
+    DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+    bool amalgamation = false;
 
+    if (amalgamationDataView.Count > 0)
+    {
+        masterCategoryId = Int32.Parse(amalgamationDataView[0]["masterCategoryId"].ToString());
+
+        string featuredProductDataQuery = "usp_SelectGBSCustomCategoryData @categoryId";
+        Dictionary<string, Object> featuredProductDic = new Dictionary<string, Object>();
+        featuredProductDic.Add("@CategoryId", masterCategoryId);
+        DataView featuredProductDataView = manager.GetParameterizedDataView(featuredProductDataQuery, featuredProductDic);
+
+        if (featuredProductDataView.Count > 0)
+        {
+            featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
+        }
+
+        //amalgamation = true;
+        productBoxLink = "_ProductBoxAmalgamation";
+        amalgamation = true;
+    }
+    else
+    {
+        productBoxLink = "_ProductBox";
+    }
+
+}
 
 @Html.Widget("categorydetails_after_breadcrumb", Model.Id)
 
@@ -109,9 +157,12 @@
                     <div class="product-grid">
                         @foreach (var item in Model.FeaturedProducts)
                         {
+                            item.CustomProperties.Add("featuredProductId", featuredProductId);
+                            item.CustomProperties.Add("masterCategoryId", masterCategoryId);
+
                             <div class="item-box product-grid col-xs-12 col-sm-4 col-md-4 product-align">
-                                <div class="thumbnail">
-                                    @Html.Partial("_ProductBox", item)
+                                <div class="thumbnail">                                   
+                                    @Html.Partial(productBoxLink, item)                                                                       
                                 </div>
                             </div>
                         }
@@ -151,9 +202,12 @@
                 <div class="row">  
                     @foreach (var product in Model.Products)
                     {
+                        product.CustomProperties.Add("featuredProductId", featuredProductId);
+                        product.CustomProperties.Add("masterCategoryId", masterCategoryId);
+
                         <div class="item-box">
                             <div class="thumbnail">
-                                @Html.Partial("_ProductBox", product)
+                                @Html.Partial(productBoxLink, product)
                             </div>
                         </div>
                     }
@@ -173,4 +227,17 @@
             @Html.Widget("categorydetails_bottom", Model.Id)
         </div>
     </div>
+
+    <div id="amalgamationBarSection" style="display: none;">
+        @{
+            if (amalgamation)
+            {
+
+                Model.CustomProperties.Add("BarType", "Gallery");
+
+                @Html.Partial("_AmalgamationBar");
+            }
+        }
+    </div>
+    
 </div>

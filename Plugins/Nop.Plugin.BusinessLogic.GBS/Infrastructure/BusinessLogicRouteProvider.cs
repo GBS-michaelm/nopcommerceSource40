@@ -24,6 +24,16 @@ namespace Nop.Plugin.BusinessLogic.GBS.Infrastructure
                             new { controller = "GatewayPage", action = "GatewayCatalogProducts" },
                             new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
 
+            routes.MapLocalizedRoute("AccessoryPage",
+                            "accessory/{groupId}/{productId}",
+                            new { controller = "AccessoryPage", action = "AccessoryPage" },
+                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("AccessoryCategories",
+                            "accessory/AccessoryCategories/{groupid}",
+                            new { controller = "AccessoryPage", action = "AccessoryCategories" },
+                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
+
         }
 
 

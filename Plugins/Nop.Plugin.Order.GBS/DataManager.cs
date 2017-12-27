@@ -218,6 +218,100 @@ namespace Nop.Plugin.DataAccess.GBS
 
 
         }
+        public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    return cmd.ExecuteScalar();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Close();
+            }
+
+        }
+        public SqlDataReader GetParameterizedDataReader(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    return cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Close();
+                throw ex;
+            }
+            finally
+            {
+                //Close();
+            }
+
+        }
+        public string GetParameterizedJsonString(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlDataReader reader = GetParameterizedDataReader(query, myDict))
+                {
+                    string jsonString = "";
+                    while (reader.Read())
+                    {
+                        jsonString += reader.GetValue(0).ToString();
+                    }
+                    return jsonString;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Close();
+                throw ex;
+            }
+            finally
+            {
+                Close();
+            }
+
+        }
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
         {
             try

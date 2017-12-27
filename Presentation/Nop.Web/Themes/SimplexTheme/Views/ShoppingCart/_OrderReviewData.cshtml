@@ -168,9 +168,64 @@
  
                     }
 
-                    @if (Model.PaymentMethod == "Purchase Order" || Model.PaymentMethod == "Monthly Billing")
+                    @if (Model.PaymentMethod == "Purchase Order")
                     {
-                        if (Model.CustomValues != null)
+                        if (HttpContext.Current.Session["purchaseOrderNumber"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["purchaseOrderNumber"]
+                                </span>
+                            </li>
+                        }
+                        if (HttpContext.Current.Session["purchaseOrderName"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["purchaseOrderName"]
+                                </span>
+                            </li>
+                        }
+                        if (HttpContext.Current.Session["purchaseOrderPhoneNumber"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["purchaseOrderPhoneNumber"]
+                                </span>
+                            </li>
+                        }
+
+                        <li>&nbsp;</li>
+                    }
+                    else if (Model.PaymentMethod == "Monthly Billing")
+                    {
+                        if (HttpContext.Current.Session["monthlyBillingName"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["monthlyBillingName"]
+                                </span>
+                            </li>
+                        }
+                        if (HttpContext.Current.Session["monthlyBillingPhoneNumber"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["monthlyBillingPhoneNumber"]
+                                </span>
+                            </li>
+                        }
+                        if (HttpContext.Current.Session["monthlyBillingReference"] != null)
+                        {
+                            <li class="custom-value">
+                                <span class="value">
+                                    @HttpContext.Current.Session["monthlyBillingReference"]
+                                </span>
+                            </li>
+                        }
+
+
+                        @*if (Model.CustomValues != null)
                         {
                             foreach (var item in Model.CustomValues)
                             {
@@ -180,7 +235,7 @@
                                     </span>
                                 </li>
                             }
-                        }
+                        }*@
 
                         <li>&nbsp;</li>
                     }

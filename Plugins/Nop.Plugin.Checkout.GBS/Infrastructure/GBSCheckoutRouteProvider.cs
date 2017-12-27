@@ -25,6 +25,12 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
 
         public void RegisterRoutes(RouteCollection routes)
         {
+            routes.MapLocalizedRoute("BuyItAgain",
+                            "buyitagain/{orderItemId}/{isLegacy}",
+                            new { controller = "GBSShoppingCart", action = "BuyItAgain" },
+                            new { orderItemId = @"\d+", isLegacy = @"^(true|false)$" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             ////register base NopCommerce routes since we are overriding this method
             //_baseRouteProvider.RegisterRoutes(routes);
 
@@ -37,6 +43,31 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                             "shoppingcart/productdetails_attributechange",
                             new { controller = "GBSShoppingCart", action = "MyPDA" },
                             new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+                        
+            routes.MapLocalizedRoute("GBSAddProductToCart-Details",
+                            "addproducttocart/details/{productId}/{shoppingCartTypeId}",
+                            new { controller = "GBSShoppingCart", action = "AddProductToCart_Details" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("GBSAddProductToCart-Amalgamation",
+                            "addproducttocart/amalgamation/{productId}/{shoppingCartTypeId}/{quantity}",
+                            new { controller = "GBSShoppingCart", action = "AddProductToCart_Amalgamation" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("GBS-AmalgamationCartCategoryTotal",
+                            "amalgamationgetcarttotal/{categoryId}/{productId}",
+                            new { controller = "GBSShoppingCart", action = "AmalgamationCartCategoryTotal" },
+                            new { categoryId = @"\d+", productId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("GBS-AmalgamationBar",
+                            "amalgamationbar/{categoryId}/{featuredProductId}",
+                            new { controller = "GBSShoppingCart", action = "AmalgamationBarUpdate" },
+                            new { categoryId = @"\d+", featuredProductId = @"\d+" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             //routes.MapLocalizedRoute("GBSOrderSummary",
             //             "ordersummary/",
             //             new { controller = "GBSShoppingCart", action = "OrderSummary" },
@@ -120,8 +151,15 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                            "estimateshippingtotal/",
                            new { controller = "Checkout", action = "EstimateShippingTotal" },
                            new[] { "Nop.Plugin.Checkout.GBS.Controllers" });
-           
 
+            routes.MapLocalizedRoute("GBSSubmitItem",
+                           "shoppingcart/submititem",
+                           new { controller = "GBSShoppingCart", action = "SubmitItem" },
+                           new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+            routes.MapLocalizedRoute("GBSSetProductOptions",
+                          "shoppingcart/setproductoptions",
+                          new { controller = "GBSShoppingCart", action = "SetProductOptions" },
+                          new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
 
 
         }

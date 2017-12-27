@@ -14,6 +14,8 @@ using Nop.Services.Messages;
 using Nop.Core.Plugins;
 using Nop.Services.Custom.Common;
 using Nop.Services.Common;
+using Nop.Plugin.Order.GBS.Factories;
+using Nop.Web.Factories;
 
 namespace Nop.Services.Order.GBS
 {
@@ -23,7 +25,7 @@ namespace Nop.Services.Order.GBS
         {
             get
             {
-                return 1;
+                return 2;
             }
         }
 
@@ -48,6 +50,8 @@ namespace Nop.Services.Order.GBS
                 builder.RegisterType<GBSOrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
                 builder.RegisterType<CustomTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSOrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSOrderService>().As<IOrderService>().InstancePerLifetimeScope();
 
             }
 
