@@ -1616,7 +1616,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
 }
 
 .vendor-grid .product-category-item .picture .title, .manufacturer-grid .product-category-item .picture .title, .sub-category-grid .product-category-item .picture .title {
-    width: 150px;
+
     bottom: 50px;
 }
 
@@ -2671,9 +2671,6 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
     clear: both;
 }
 
-.topic-html-content {
-    border: 1px solid #ddd;
-}
 
     .topic-html-content .panel-heading {
         margin-bottom: 0px;
@@ -7692,7 +7689,11 @@ doesnotexist:-o-prefocus, .new-wrapper.register-block legend, doesnotexist:-o-pr
 
 .account-page .order-details-page .picture a {
     width: 120px;
-    height: 120px;
+    /*height: 120px;*/
+    background-size: 100%;
+    float: left;
+    position: relative;
+    background-repeat: no-repeat;
 }
 
 /* SAFARI STYLE */
@@ -9385,6 +9386,11 @@ ul.info li label {
     border: none;
 }
 
+.footer .topic-html-content a {
+    color: #ffffff;
+    font-weight: bold;
+}
+
     .footer .topic-html-content a:hover {
         color: #77AEB1;
     }
@@ -9403,14 +9409,12 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 }
 
 /*** Pre-header Styles ***/
-.pre-header-promo-text {
-}
 
 .pre-header-back-link {
     display: none;
 }
 
-.topic-html-content a {
+.pre-header-promo-text .topic-html-content a {
     color: #ffffff;
     font-weight: bold;
 }
@@ -11300,4 +11304,12 @@ body hr {
     .shopnow {
         display: inline-block;
     }
+}
+
+.orderdetails-list .name img {
+    border: 0 none;
+    border: 0 none;
+    margin-top: 31px;
+    width: 161px;
+    z-index: -1;
 }

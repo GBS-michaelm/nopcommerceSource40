@@ -25,6 +25,12 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
 
         public void RegisterRoutes(RouteCollection routes)
         {
+            routes.MapLocalizedRoute("BuyItAgain",
+                            "buyitagain/{orderItemId}/{isLegacy}",
+                            new { controller = "GBSShoppingCart", action = "BuyItAgain" },
+                            new { orderItemId = @"\d+", isLegacy = @"^(true|false)$" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             ////register base NopCommerce routes since we are overriding this method
             //_baseRouteProvider.RegisterRoutes(routes);
 
@@ -145,8 +151,15 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                            "estimateshippingtotal/",
                            new { controller = "Checkout", action = "EstimateShippingTotal" },
                            new[] { "Nop.Plugin.Checkout.GBS.Controllers" });
-           
 
+            routes.MapLocalizedRoute("GBSSubmitItem",
+                           "shoppingcart/submititem",
+                           new { controller = "GBSShoppingCart", action = "SubmitItem" },
+                           new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+            routes.MapLocalizedRoute("GBSSetProductOptions",
+                          "shoppingcart/setproductoptions",
+                          new { controller = "GBSShoppingCart", action = "SetProductOptions" },
+                          new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
 
 
         }

@@ -2,6 +2,14 @@
 @*@using Nop.Plugin.DataAccess.GBS;*@
 @using Nop.Web.Models.Order
 
+@using Nop.Core.Infrastructure;
+@using Nop.Plugin.Widgets.CustomersCanvas.Services
+
+@{
+
+    var _ccService = EngineContext.Current.Resolve<ICcService>();
+
+}
 @*@functions {
 
     Nop.Plugin.DataAccess.GBS.DBManager manager = new DBManager();
@@ -52,7 +60,7 @@
         @Html.Widget("orderdetails_page_top", Model.Id)
         <div class="order-overview">
             <div class="order-number">
-                <h4>@T("Order.Order#")@Model.Id</h4>
+				<h4>@T("Order.Order#")@Model.CustomValues["Order Number"]</h4>
                 @*<h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>*@   @*This need to put back, and above line need to commented            -----------   Naveed *@
             </div>
             <ul class="order-details order-overview-content">
@@ -636,13 +644,29 @@
                                                 <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                        @Html.Widget("orderdetails_product_line", item.Id)
+                                        @{  if (!_ccService.IsProductForCc(item.ProductId) )
+                                            {
+
+                                                    @Html.Widget("orderdetails_product_line_product", item.Id)
+                                            }
+                                            else 
+                                            {
+                                                @Html.Widget("orderdetails_product_line", item.Id)
+                                            }
+                                        }
                                     </td>
                                     <td class="a-left">
                                         <div class="product-tile"><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></div>
+
                                         @if (Model.ShowSku)
                                         {
                                             <span class="sku-number">SKU: @item.Sku</span>
+
+                                        }
+                                        @if (Model.IsReOrderAllowed)
+                                        {
+
+                                            <input type="button" value="Buy It Again" class="buyitagain" onclick="setLocation('@Url.RouteUrl("BuyItAgain", new { orderItemId = item.Id, isLegacy = false })   ')" />
 
                                         }
 
@@ -850,7 +874,7 @@
                         @if (Model.IsReOrderAllowed)
                         {
                             @*<input type="button" value="@T("Order.Reorder")" class="btn btn-primary re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" />*@
-<a onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" class="button button-3d button-rounded button-darkgreen"><i class="icon-cart"></i>@T("Order.Reorder")</a>
+                            @*<a onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" class="button button-3d button-rounded button-darkgreen"><i class="icon-cart"></i>@T("Order.Reorder")</a>*@
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {

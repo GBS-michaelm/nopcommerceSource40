@@ -113,7 +113,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Controllers
             _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                 updatecartitem.Id, attributesXml, customerEnteredPriceConverted, null, null, quantity);
 
-            //var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
+            var orderItem = _cartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
 
             return Json(new { status = "success" }); //itemId = orderItem.Id, designId = designId 
         }

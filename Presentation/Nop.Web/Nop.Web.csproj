@@ -1719,6 +1719,10 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\iframe-custom-submit.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Themes\HouseOfMagnet\Content\js\iframe-data.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
@@ -2441,7 +2445,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ProductTagsAll.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Search.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\SearchBox.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TopMenu.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Vendor.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\VendorAll.cshtml" />
@@ -2587,9 +2590,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Error.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml.bak" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Header.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\OldInternetExplorerWarning.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AddressAttributes.cshtml" />
@@ -2989,6 +2990,15 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\ChildCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\TeamCompanyGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-team-company.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Gluon.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Chili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Canvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\GluonProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\ChiliProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\CanvasProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartCanvas.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddtoCartChili.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_AddToCartGluon.cshtml" />
     <Content Include="Themes\AtomicEnvelopes\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\Gateway.cshtml" />
@@ -2999,6 +3009,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-sports-team-tabs.cshtml" />
     <Content Include="Themes\AdhesiveMagnets\Views\ShoppingCart\_OrderReviewData.cshtml" />
     <Content Include="Themes\AtomicEnvelopes\Views\ShoppingCart\_OrderReviewData.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\GBSOrder\DetailsLegacy.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GBSOrder\DetailsLegacy.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryPage.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessory.cshtml" />
@@ -3009,6 +3021,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AmalgamationBar.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AmalgamationAddToCart.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_FeaturedProductTierPrices.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOne_subcategories.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.SubcategoryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
@@ -3235,7 +3249,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 		 Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->

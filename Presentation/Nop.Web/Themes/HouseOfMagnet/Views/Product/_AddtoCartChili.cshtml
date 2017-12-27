@@ -5,6 +5,9 @@
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
+    string pageID = "42";
+
+
 }
 @if (!Model.AddToCart.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)
 {
@@ -50,7 +53,7 @@
                         $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)").keydown(function (event) {
                                 if (event.keyCode == 13) {
-                                    $("#add-to-cart-button-" + pageID).click();
+                                    $("#add-to-cart-button-@Model.Id").click();
                                     return false;
                                 }
                             });
@@ -58,78 +61,112 @@
                         </script>
                     }
                 </div>
-                @{
 
+                <div class="product-add-button">
+                    @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
-                    string[] idArray = null;
-                    string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
+                    <button id="add-to-cart-button" type="button" class=" button button-rounded button-reveal button-small button-green tright" data-productid="@Model.AddToCart.ProductId" onclick="">
 
+                        <i class="icon-line-arrow-right"></i><span>Customize</span>
+                    </button>
 
-                    var addToCartText = "";
-                    if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
-                    {
-                        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
-                    }
-                    else
-                    {
-                        addToCartText = T("ShoppingCart.AddToCart").Text;
-                        if (Model.AddToCart.IsRental)
-                        {
-                            addToCartText = T("ShoppingCart.Rent").Text;
-                        }
-                        if (Model.AddToCart.AvailableForPreOrder)
-                        {
-                            addToCartText = T("ShoppingCart.PreOrder").Text;
-                        }
-                    }
-                    var data = Model.ProductSpecifications;
-                    string productType = string.Empty;
-                    foreach (var item in data)
-                    {
-                        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
-                        {
-                            TempData["iframeurl"] = item.ValueRaw;
-                            break;
-                        }
-                    }
-                    foreach (var item in data)
-                    {
-                        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
-                        {
-                            TempData["iframeheight"] = item.ValueRaw;
-                            break;
-                        }
-                    }
-                    TempData["pcode"] = Model.Sku;
-                    TempData["cartid"] = cartID;
-                    TempData["productid"] = Model.AddToCart.ProductId;
-                    string url = "/chili";
-                    <div class="product-add-button">
-                        @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
+                    @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
+                </div>
 
-                        <button id="add-to-cart-button" type="button" class=" button button-rounded button-reveal button-small button-green tright" data-productid="@Model.AddToCart.ProductId" onclick="window.location = '@url'">
-
-                            <i class="icon-line-arrow-right"></i><span>Customize</span>
-                        </button>
-
-                        @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
-                    </div>
-                }
             </div>
-                    }
+        }
         @Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)
     </div>
+
+
+
+    string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
+    string updateCartItemId = string.Empty;
+
+    var addToCartText = "";
+    if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+    {
+        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+    }
+    else
+    {
+        addToCartText = T("ShoppingCart.AddToCart").Text;
+        if (Model.AddToCart.IsRental)
+        {
+            addToCartText = T("ShoppingCart.Rent").Text;
+        }
+        if (Model.AddToCart.AvailableForPreOrder)
+        {
+            addToCartText = T("ShoppingCart.PreOrder").Text;
+        }
+    }
+    var data = Model.ProductSpecifications;
+    string productType = string.Empty;
+    foreach (var item in data)
+    {
+        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
+        {
+            TempData["iframeurl"] = item.ValueRaw;
+            break;
+        }
+    }
+    foreach (var item in data)
+    {
+        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
+        {
+            TempData["iframeheight"] = item.ValueRaw;
+            break;
+        }
+    }
+
+
+    if (Request.QueryString["updatecartitemid"] != null)
+    {
+        updateCartItemId = "&updatecartitemid=" + Request.QueryString["updatecartitemid"].ToString();
+    }
+
+
+    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
     <script type="text/javascript">
-        var done = false;
-        var everythingLoaded = setInterval(function () {
-            if (/loaded|complete/.test(document.readyState) && !done) {
-                clearInterval(everythingLoaded);
-                $(".qty-input").each(function (index) {
-                    ChangeQuantity1(this);
-                });
-                //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
-                done = true;
-            }
-        }, 100);
+    var done = false;
+    var everythingLoaded = setInterval(function () {
+        if (/loaded|complete/.test(document.readyState) && !done) {
+            clearInterval(everythingLoaded);
+            $(".qty-input").each(function (index) {
+                ChangeQuantity1(this);
+            });
+            //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+            done = true;
+        }
+    }, 100);
+
+
+
+    $(document).ready(function () {
+        var productAttr = JSON.parse(JSON.stringify(@Html.Raw(Json.Encode(Model.ProductAttributes))));
+        console.log(productAttr);
+        var jsonArray = {};
+        var option;
+        var jsonStr
+
+
+         $("#add-to-cart-button").click(function () {
+            // for (var i = 0; i < productAttr.length; i++) {
+            //     option = new Options(productAttr[i]);
+            //     CreateJson(jsonArray, option);
+            // }
+
+
+
+            //var jsonSend = JSON.stringify(jsonArray);
+            //TempData["productOptions"] = jsonSend;
+
+            SetProductOption("", htmlDecode("@url") + $(".qty-input").val());
+         });
+    });
     </script>
-                    }
+
+}

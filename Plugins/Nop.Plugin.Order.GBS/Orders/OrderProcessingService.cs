@@ -186,7 +186,7 @@ namespace Nop.Services.Custom.Orders
                 var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: processPaymentRequest.StoreId).ToList();
                 if (miscPlugins.Count > 0) {
 
-                    processPaymentRequest.CustomValues.Clear();
+                    //processPaymentRequest.CustomValues.Clear();
 
                     string address = _gbsOrderSettings.GBSOrderWebServiceAddress;
                     GBSOrderServiceClient myOrderService = new GBSOrderServiceClient();
