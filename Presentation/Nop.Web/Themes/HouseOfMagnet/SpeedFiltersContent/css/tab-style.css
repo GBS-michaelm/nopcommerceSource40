@@ -11,6 +11,8 @@
         background: #f6f6f6;
         margin: 0;
         border: none;
+        height: 100% !important;
+        width: 100% !important;
     }
 
     .fns-speedfilters .block .filtersGroupPanel {
@@ -61,8 +63,8 @@
 
 .fns-speedfilters .filter-data-block a.filter-item-unselected {
     background: url(../images/filters-checkbox.png) no-repeat scroll 0px 1px rgba(0, 0, 0, 0) !important;
-    color: #333333 !important;
-    padding-left: 20px !important;
+    color: lightgray !important;
+    padding-left: 19px !important;
     font-size: 14px !important;
 }
 
@@ -70,5 +72,36 @@
     background: url(../images/filters-checkbox-checked.png) no-repeat scroll 0px 1px rgba(0, 0, 0, 0) !important;
     padding-left: 19px !important;
     color: #B80705 !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
+}
+.sidebar-title{
+ display: none;
+}
+.listing-page .sidebar {
+    padding-top: 16px !important;
+}
+.title-block {
+    border-left: none !important;
+}
+.title-block .title {
+    color: #444;
+    font-size: 18px;
+    text-transform: capitalize;
+    font-weight: 600;
+    font-family: Raleway, sans-serif;
+}
+.fns-speedfilters .title-block .clear-filter-options-all {
+    display: block !important;
+    color: #444;
+    font-size: 14px;
+    text-transform: capitalize;
+    font-weight: normal;
+    font-family: Raleway, sans-serif;
+    text-decoration: underline;
+}
+.fns-speedfilters .filter-data-block li{
+    padding: 1px !important;
+}
+.fns-speedfilters .block .title .clearfilter{
+    display: none !important;
 }
