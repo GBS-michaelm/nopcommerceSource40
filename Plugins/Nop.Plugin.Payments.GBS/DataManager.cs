@@ -161,7 +161,10 @@ namespace Nop.Plugin.Payments.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
 
@@ -193,7 +196,10 @@ namespace Nop.Plugin.Payments.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 

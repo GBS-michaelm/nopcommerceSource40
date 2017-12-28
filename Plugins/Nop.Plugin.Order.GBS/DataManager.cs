@@ -176,7 +176,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
@@ -215,7 +218,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict)
@@ -340,7 +346,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 
@@ -372,7 +381,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 

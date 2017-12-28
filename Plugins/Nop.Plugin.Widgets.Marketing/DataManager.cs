@@ -138,7 +138,10 @@ namespace Nop.Plugin.Widgets.Marketing
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
 
@@ -170,7 +173,10 @@ namespace Nop.Plugin.Widgets.Marketing
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 

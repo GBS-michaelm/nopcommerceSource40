@@ -172,7 +172,10 @@ namespace Nop.Plugin.PriceCalculation.DataAccess.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
@@ -211,7 +214,10 @@ namespace Nop.Plugin.PriceCalculation.DataAccess.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
@@ -242,7 +248,10 @@ namespace Nop.Plugin.PriceCalculation.DataAccess.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 
@@ -274,7 +283,10 @@ namespace Nop.Plugin.PriceCalculation.DataAccess.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 

@@ -494,7 +494,7 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             //        ModelState.Add(item.Key, item.Value);
             //    }
             //}
-            if (_baseNopCheckoutController.ModelState.IsValid)
+            if (_baseNopCheckoutController.ModelState.IsValid && ModelState.IsValid)
             {
                 return retVal;
             }
@@ -809,14 +809,30 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                 }
 
-
                 //If we got this far, something failed, redisplay form
                 model = PrepareBillingAddressModel(cart,
                     selectedCountryId: model.NewAddress.CountryId,
                     overrideAttributesXml: customAttributes);
                 return View(model);
             }
-            return _baseNopCheckoutController.NewBillingAddress(model, form);
+            ActionResult retVal = _baseNopCheckoutController.NewBillingAddress(model, form);
+
+            if (_baseNopCheckoutController.ModelState.IsValid && ModelState.IsValid)
+            {
+                return retVal;
+            }
+
+            //If we got this far, something failed, redisplay form
+            var customAttributesOuter = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var cartOuter = _workContext.CurrentCustomer.ShoppingCartItems
+            .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            .LimitPerStore(_storeContext.CurrentStore.Id)
+            .ToList();
+            model = _checkoutModelFactory.PrepareBillingAddressModel(cartOuter,
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributesOuter);
+            return View(model);
+            //return _baseNopCheckoutController.NewBillingAddress(model, form);
         }
 
         #endregion

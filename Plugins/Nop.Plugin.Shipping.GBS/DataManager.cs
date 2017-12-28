@@ -208,7 +208,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
 
@@ -240,7 +243,10 @@ namespace Nop.Plugin.DataAccess.GBS
             {
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
     }
 }
