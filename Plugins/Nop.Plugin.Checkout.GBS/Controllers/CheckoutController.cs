@@ -486,17 +486,13 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
-            //foreach (var item in _baseNopCheckoutController.ModelState)
-            //{
-            //    if (!ModelState.ContainsKey(item.Key))
-            //    {
-            //        ModelState.Add(item.Key, item.Value);
-            //    }
-            //}
-            if (_baseNopCheckoutController.ModelState.IsValid && ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return retVal;
+                ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
+                if (_baseNopCheckoutController.ModelState.IsValid)
+                {
+                    return retVal;
+                }
             }
 
             //If we got this far, something failed, redisplay form
@@ -815,11 +811,13 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     overrideAttributesXml: customAttributes);
                 return View(model);
             }
-            ActionResult retVal = _baseNopCheckoutController.NewBillingAddress(model, form);
-
-            if (_baseNopCheckoutController.ModelState.IsValid && ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return retVal;
+                ActionResult retVal = _baseNopCheckoutController.NewBillingAddress(model, form);
+                if (_baseNopCheckoutController.ModelState.IsValid)
+                {
+                    return retVal;
+                }
             }
 
             //If we got this far, something failed, redisplay form
