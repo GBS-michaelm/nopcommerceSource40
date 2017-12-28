@@ -84,6 +84,8 @@
         amalgamationID = Model.Id;
     }
 
+    var EnteredQuantity = amalgamationID;
+
     Product product = productService.GetProductById(amalgamationID);
 
     ShoppingCartItem cartitem = shoppingCartService.FindShoppingCartItemInTheCart(shoppingCart.ToList(), ShoppingCartType.ShoppingCart, product);
@@ -231,16 +233,17 @@
 
                                             if (cartitem != null)
                                             {
-                                                @Html.TextBoxFor(model => cartitem.Quantity, new { @class = " qty-input amalgamation-qty-input form-control amalgamation-textbox in-cart group-amalgamation-textbox", @data_productid = amalgamationID, @data_initqty = @cartitem.Quantity, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                                @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input amalgamation-qty-input form-control amalgamation-textbox in-cart group-amalgamation-textbox", @data_productid = amalgamationID, @data_initqty = @cartitem.Quantity, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
                                             }
                                             else
                                             {
-                                                @Html.TextBoxFor(model => @empty, new { @class = " qty-input amalgamation-qty-input form-control  amalgamation-textbox group-amalgamation-textbox", @data_productid = amalgamationID, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                                @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input amalgamation-qty-input form-control  amalgamation-textbox group-amalgamation-textbox", @data_productid = amalgamationID, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
                                             }
                                         }
 
-                                        <span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.FieldIdFor(model => model.CustomProperties["ButtonId"] ));"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                        <span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.FieldIdFor(model => model.CustomProperties["ButtonId"]));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                        @*<span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity ));"><i class="fa fa-plus" aria-hidden="true"></i></span>*@
+                                        <span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" ><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                        <span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
                                     </div>
                                     @*//when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)*@
                                     <script type="text/javascript">

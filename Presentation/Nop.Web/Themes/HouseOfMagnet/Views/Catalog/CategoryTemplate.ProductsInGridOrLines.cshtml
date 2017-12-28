@@ -161,8 +161,14 @@
                             item.CustomProperties.Add("masterCategoryId", masterCategoryId);
 
                             <div class="item-box product-grid col-xs-12 col-sm-4 col-md-4 product-align">
-                                <div class="thumbnail">                                   
-                                    @Html.Partial(productBoxLink, item)                                                                       
+                                <div class="thumbnail">
+                                    
+                                    @{
+                                        var dataDictAddToCart = new ViewDataDictionary();
+                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", item.Id);
+                                    }
+                                                                  
+                                    @Html.Partial(productBoxLink, item, dataDictAddToCart)                                                                       
                                 </div>
                             </div>
                         }
@@ -207,7 +213,12 @@
 
                         <div class="item-box">
                             <div class="thumbnail">
-                                @Html.Partial(productBoxLink, product)
+                                @{ 
+                                    var dataDictAddToCart = new ViewDataDictionary();
+                                    dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", product.Id);
+                                }
+                                
+                                @Html.Partial(productBoxLink, product, dataDictAddToCart)
                             </div>
                         </div>
                     }

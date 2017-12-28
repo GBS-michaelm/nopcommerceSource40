@@ -1,7 +1,9 @@
 ﻿
     $(document).ready(function () {
              
-        
+        $(".increase-quantity").click(function () {
+            AmalIncreaseTextBoxQuantity(e);
+        });
 
 
         //$(".amalgamation-textbox").unbind().change(function () {
@@ -89,6 +91,10 @@
 
         });
         
+
+
+
+
         //LoadBar();
                 
     });
