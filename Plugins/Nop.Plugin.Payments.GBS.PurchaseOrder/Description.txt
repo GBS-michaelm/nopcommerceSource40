@@ -7,3 +7,4 @@ Author: Clint Treadway
 DisplayOrder: 1
 FileName: Nop.Plugin.Payments.GBS.PurchaseOrder.dll
 Description: This plugin allows paying with Purchase Orders
+LimitedToCustomerRoles: 8
