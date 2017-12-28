@@ -1,5 +1,6 @@
 ﻿using Nop.Web.Framework.Controllers;
 using System.Web.Mvc;
+using System.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                         accessoryBox.isFeatured = accessory.isFeatured;
                         accessoryBox.description = accessory.Description;
                         accessoryBox.featuredProductId = accessory.featuredProductId;
-                        accessoryBox.categoryPageLink = accessory.SeName;
+                        accessoryBox.categoryPageLink = "http://" + System.Web.HttpContext.Current.Request.Url.Authority + "/" + accessory.SeName;
                         accessoryBox.displayOrder = accessory.displayOrder;
 
                         accessoryCategoryBlocks.accessoryBoxes.Add(accessoryBox);

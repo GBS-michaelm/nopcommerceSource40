@@ -45,22 +45,22 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             Category category = categoryService.GetCategoryById(accessoryId);
             this.Name = category.Name;
             this.parentCategoryId = category.ParentCategoryId;
+            ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+            CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+            catalogPagingFilteringModel.PageSize = 1;
+            CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+            this.SeName = categoryModel.SeName;
             IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
             this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
 
             if (lightVer == false)
-            {
-                ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
-                CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
-                catalogPagingFilteringModel.PageSize = 1;
-                this.PagingFilteringContext = catalogPagingFilteringModel;
-                CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+            {                                              
+                this.PagingFilteringContext = catalogPagingFilteringModel;                
                 this.Name = categoryModel.Name;
                 this.Description = categoryModel.Description;
                 this.MetaKeywords = categoryModel.MetaKeywords;
                 this.MetaDescription = categoryModel.MetaDescription;
-                this.MetaTitle = categoryModel.MetaTitle;
-                this.SeName = categoryModel.SeName;
+                this.MetaTitle = categoryModel.MetaTitle;               
                 this.PictureModel = categoryModel.PictureModel;
                 this.PagingFilteringContext = categoryModel.PagingFilteringContext;
                 this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
