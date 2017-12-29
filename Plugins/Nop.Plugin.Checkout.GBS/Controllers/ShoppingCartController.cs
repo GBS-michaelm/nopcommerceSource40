@@ -389,8 +389,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             decimal eachPrice = 0;
             string amountToNextTier = "";
             string tierNextEach = "";
-            int unitsPerCarton = 9999; //not fully implemented
-            string packType = "Carton"; //not fully implemented
+            int unitsPerCarton = 9999; //not fully implemented, needs spec attr
+            string packType = "Carton";
 
             //total cartons
             ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
