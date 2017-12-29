@@ -438,8 +438,8 @@ function AmalDecreaseTextBoxQuantity(e) {
         qtyValue = qtyValue - 1;
     }
         
-    document.getElementById(e.id).value = qtyValue;
-    
+    document.getElementById(e.id).value = qtyValue;  
+        
     $(".amalgamation-textbox").trigger("input");
 
     return true;
@@ -463,8 +463,18 @@ function AmalDecreaseTextBoxQuantityGallery(e) {
     }
 
     $(e).val(qtyValue);
-
-    $("#" + e.attr('id')).trigger("input");
+    
+    var initQty = $(e).data('initqty');
+    //handle opacity on entering 0 on init load
+    console.log("init: " + initQty + " qtyVal: " + qtyValue);
+    if (initQty == 0 && qtyValue == 0 && !$(e).hasClass('in-cart')) {
+        var idHandle = $(e).data('productid');
+        //$("#" + idHandle).removeClass('readyforcart');
+        var buttonStyling = $('#amalgamationButton' + idHandle);
+        buttonStyling.css('opacity', .3);
+    } else {
+        $("#" + e.attr('id')).trigger("input");
+    }  
 
     return true;
 }

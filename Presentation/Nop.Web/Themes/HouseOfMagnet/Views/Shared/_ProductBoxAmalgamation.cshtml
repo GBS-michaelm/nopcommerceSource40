@@ -239,7 +239,7 @@
                                             }
                                             else
                                             {
-                                                @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input amalgamation-qty-input form-control  amalgamation-textbox group-amalgamation-textbox amal-group", @data_productid = amalgamationID, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                                @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input amalgamation-qty-input form-control  amalgamation-textbox group-amalgamation-textbox amal-group", @data_productid = amalgamationID, @data_initqty = 0, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
                                             }
                                         }
 
