@@ -8,14 +8,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 namespace Nop.Plugin.DataAccess.GBS
 {
     public class DataManager
     {
-        
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
         public static ProductGBSModel GetGBSShippingCategory(int pID, string tableName)
         {
             ProductGBSModel productgbsModel = new ProductGBSModel();
@@ -135,6 +134,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
                 catch (Exception ex)
                 {
+                    _logger.Error("SQL Exception in Shipping Datamanager GetDataView", ex);
                     return null;
                 }
                 finally
@@ -206,6 +206,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Shipping Datamanager GetParameterizedDataView", ex);
                 return null;
             }
             finally
@@ -241,6 +242,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
+                _logger.Error("SQL Exception in Shipping Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
             finally

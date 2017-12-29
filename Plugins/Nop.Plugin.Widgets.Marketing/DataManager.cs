@@ -5,12 +5,14 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using Nop.Core.Data;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Widgets.Marketing
 {
     public class DBManager
     {
-
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
         private DbConnection dbConnection = null;
 
         public DBManager()
@@ -65,6 +67,7 @@ namespace Nop.Plugin.Widgets.Marketing
 
                 catch (Exception ex)
                 {
+                    _logger.Error("SQL Exception in Marketing Datamanager GetDataView", ex);
                     return null;
                 }
                 finally
@@ -136,6 +139,7 @@ namespace Nop.Plugin.Widgets.Marketing
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Marketing Datamanager GetParameterizedDataView", ex);
                 return null;
             }
             finally
@@ -171,6 +175,7 @@ namespace Nop.Plugin.Widgets.Marketing
             }
             catch (Exception ex)
             {
+                _logger.Error("SQL Exception in Marketing Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
             finally

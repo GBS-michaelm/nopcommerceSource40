@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Core.Data;
 
 namespace Nop.Plugin.Payments.GBS
 {
     public class DBManager
     {
-
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
         public static string getGBSOrderID(int nopID)
         {
             DBManager dbmanager = new DBManager();
@@ -88,6 +87,7 @@ namespace Nop.Plugin.Payments.GBS
 
                 catch (Exception ex)
                 {
+                    _logger.Error("SQL Exception in Payments Datamanager GetDataView", ex);
                     return null;
                 }
                 finally
@@ -159,6 +159,7 @@ namespace Nop.Plugin.Payments.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Payments Datamanager GetParameterizedDataView", ex);
                 return null;
             }
             finally
@@ -194,6 +195,7 @@ namespace Nop.Plugin.Payments.GBS
             }
             catch (Exception ex)
             {
+                _logger.Error("SQL Exception in Payments Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
             finally

@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 /// <summary>
 /// Summary description for DBManager
@@ -18,6 +16,8 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 {
     public class DBManager
     {
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
+
 
         public static string getGBSOrderID(int nopID)
         {
@@ -106,6 +106,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 
                 catch (Exception ex)
                 {
+                    _logger.Error("SQL Exception in Checkout Datamanager GetDataView", ex);
                     return null;
                 }
                 finally
@@ -175,6 +176,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView", ex);
                 return null;
             }
             finally
@@ -217,6 +219,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView", ex);
                 return null;
             }
             finally
@@ -251,6 +254,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (Exception ex)
             {
+                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
             finally
@@ -286,6 +290,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
             finally
