@@ -1,4 +1,6 @@
 ﻿using Nop.Core.Data;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 {
     public class DBManager
     {
+        public ILogger _logger = EngineContext.Current.Resolve<ILogger>();
 
         public static string getGBSOrderID(int nopID)
         {
@@ -101,6 +104,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 
                 catch (Exception ex)
                 {
+                    _logger.Error("SQL Exception in Business Logic Datamanager GetDataView", ex);
                     return null;
                 }
                 finally
@@ -170,9 +174,13 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView", ex);
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
@@ -209,9 +217,13 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView", ex);
                 return null;
             }
-
+            finally
+            {
+                Close();
+            }
 
         }
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
@@ -240,7 +252,12 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (Exception ex)
             {
+                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
+            }
+            finally
+            {
+                Close();
             }
 
         }
@@ -272,9 +289,13 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
+                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData", ex);
                 throw ex;
             }
-
+            finally
+            {
+                Close();
+            }
         }
 
 

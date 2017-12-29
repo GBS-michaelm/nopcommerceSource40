@@ -486,17 +486,13 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
-            //foreach (var item in _baseNopCheckoutController.ModelState)
-            //{
-            //    if (!ModelState.ContainsKey(item.Key))
-            //    {
-            //        ModelState.Add(item.Key, item.Value);
-            //    }
-            //}
-            if (_baseNopCheckoutController.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return retVal;
+                ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
+                if (_baseNopCheckoutController.ModelState.IsValid)
+                {
+                    return retVal;
+                }
             }
 
             //If we got this far, something failed, redisplay form
@@ -809,14 +805,32 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                 }
 
-
                 //If we got this far, something failed, redisplay form
                 model = PrepareBillingAddressModel(cart,
                     selectedCountryId: model.NewAddress.CountryId,
                     overrideAttributesXml: customAttributes);
                 return View(model);
             }
-            return _baseNopCheckoutController.NewBillingAddress(model, form);
+            if (ModelState.IsValid)
+            {
+                ActionResult retVal = _baseNopCheckoutController.NewBillingAddress(model, form);
+                if (_baseNopCheckoutController.ModelState.IsValid)
+                {
+                    return retVal;
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            var customAttributesOuter = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var cartOuter = _workContext.CurrentCustomer.ShoppingCartItems
+            .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            .LimitPerStore(_storeContext.CurrentStore.Id)
+            .ToList();
+            model = _checkoutModelFactory.PrepareBillingAddressModel(cartOuter,
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributesOuter);
+            return View(model);
+            //return _baseNopCheckoutController.NewBillingAddress(model, form);
         }
 
         #endregion

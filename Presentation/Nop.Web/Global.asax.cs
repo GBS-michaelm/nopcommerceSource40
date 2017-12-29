@@ -20,6 +20,9 @@ using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Mvc;
+using System.Reflection;
+using System.Diagnostics;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Web
 {
@@ -243,6 +246,40 @@ namespace Nop.Web
             {
                 //don't throw new exception if occurs
             }
+        }
+        protected void Application_End()
+        {
+            HttpRuntime runtime = (HttpRuntime)typeof(System.Web.HttpRuntime).InvokeMember("_theRuntime", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField, null, null, null);
+
+            if (runtime == null)
+                return;
+
+            string shutDownMessage = (string)runtime.GetType().InvokeMember("_shutDownMessage", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
+
+            string shutDownStack = (string)runtime.GetType().InvokeMember("_shutDownStack", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
+
+
+            if (!EventLog.SourceExists(".NET Runtime"))
+            {
+                EventLog.CreateEventSource(".NET Runtime", "Application");
+            }
+
+            EventLog log = new EventLog();
+            log.Source = ".NET Runtime";
+            log.WriteEntry(String.Format("\r\n\r\n_shutDownMessage={0}\r\n\r\n_shutDownStack={1}",
+                                            shutDownMessage,
+                                            shutDownStack),
+                                            EventLogEntryType.Error);
+
+            //log
+            var logger = EngineContext.Current.Resolve<ILogger>();
+
+            logger.InsertLog(LogLevel.Information,
+                             "Application end",
+                             String.Format("_shutDownMessage={0}\r\n\r\n_shutDownStack={1}",
+                                            shutDownMessage,
+                                            shutDownStack),
+                             null);
         }
     }
 }
