@@ -1,9 +1,13 @@
 ﻿
     $(document).ready(function () {
              
-        $(".increase-quantity").click(function () {
-            AmalIncreaseTextBoxQuantity(e);
+        $(".increase-quantity.amal-group").click(function () {
+            AmalIncreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('productid') + "_EnteredQuantity"));
         });
+
+        $(".decrease-quantity.amal-group").click(function () {
+            AmalDecreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('textboxid') + "_EnteredQuantity"));
+        })
 
 
         //$(".amalgamation-textbox").unbind().change(function () {
@@ -95,7 +99,7 @@
 
 
 
-        //LoadBar();
+        LoadBar();
                 
     });
 
@@ -201,7 +205,7 @@
 
                 }
                                 
-                //UpdateBar();
+                UpdateBar();
 
             },
             error: function (msg) {
@@ -236,14 +240,18 @@ function UpdateAmalgamationBar(currentCategoryId, currentFeaturedProductId) {
             console.log("success");
             console.log(msg); //entire object
             //console.log(msg.qty);
-            
-            //add pack type
-
+                        
             var priceEach = msg.eachPrice > 1 ? "$" + msg.eachPrice : msg.eachPrice.replace(".", "") + "&cent;";
 
             //fill bar with data
-            $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType + " for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
-
+            //single
+            if (msg.totalCartons == 1) {
+                $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType.toLowerCase() + " for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
+            }//multiple
+            else {
+                $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType.toLowerCase() + "s for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
+            }
+            
             //check for BEST PRICING 
             if (msg.tierNext == "best") {
                 $("#nextTierText").html("You have the best price in the market!");
@@ -387,9 +395,14 @@ function AmalgamationChangeQuantity(e) {
 
 function AmalIncreaseTextBoxQuantity(e) {
 
-    console.log("increase: " );
+    console.log("increase: ");
+
+    //var e = $(this);
 
     var id = document.getElementById(e.id).value;
+
+    //var id = $(e).val();
+
     var featuredProductId = $(e).data('featuredproductid');
     if (id <= 0)
         id = 0;   
@@ -418,6 +431,25 @@ function AmalIncreaseTextBoxQuantity(e) {
     return true;
 }
 
+function AmalIncreaseTextBoxQuantityGallery(e) {
+
+    console.log("increase: ");
+
+    var id = $(e).val();
+    var featuredProductId = $(e).data('featuredproductid');
+    if (id <= 0)
+        id = 0;
+    //console.log("id: " + id);
+
+    var quantity = parseInt(id) + 1;
+    var qtyValue = parseInt(id);
+    qtyValue = qtyValue + 1;    
+    $(e).val(qtyValue);      
+    $("#" + e.attr('id')).trigger("input");
+    
+    return true;
+}
+
 function AmalDecreaseTextBoxQuantity(e) {
 
     var id = document.getElementById(e.id).value;
@@ -436,6 +468,30 @@ function AmalDecreaseTextBoxQuantity(e) {
     document.getElementById(e.id).value = qtyValue;
     
     $(".amalgamation-textbox").trigger("input");
+
+    return true;
+}
+
+function AmalDecreaseTextBoxQuantityGallery(e) {
+
+    console.log("decrease: ");
+
+    var id = $(e).val();
+
+    if (id <= 0)
+        id = 0;
+
+    var qtyValue = parseInt(id);
+    if (id <= 0) {
+        qtyValue = 0;
+    }
+    else {
+        qtyValue = qtyValue - 1;
+    }
+
+    $(e).val(qtyValue);
+
+    $("#" + e.attr('id')).trigger("input");
 
     return true;
 }

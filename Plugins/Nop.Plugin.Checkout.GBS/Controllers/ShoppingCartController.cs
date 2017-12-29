@@ -389,8 +389,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             decimal eachPrice = 0;
             string amountToNextTier = "";
             string tierNextEach = "";
-            int unitsPerCarton = 100; // will need to be dynamic at some point
-            string packType = "Carton";
+            int unitsPerCarton = 9999; //not fully implemented
+            string packType = "Carton"; //not fully implemented
 
             //total cartons
             ICollection<ShoppingCartItem> shoppingCart = _workContext.CurrentCustomer.ShoppingCartItems;
@@ -405,15 +405,32 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
                     {
                         type = spec.SpecificationAttributeOption.Name;
-                        if (type != "Carton")
+                        if (type == "Carton")
                         {
                             //cartItemList.Remove(item);
                             AmalgamationList.Add(item);
                         }
                     }
+                    //get carton units per
+                    if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Quantity Per Carton")
+                    {
+                        unitsPerCarton = Int32.Parse(spec.SpecificationAttributeOption.Name);
+                    }
                 }
             }
+            //check if units per value was found else set a default of 100
+            unitsPerCarton = unitsPerCarton == 9999 ? 100 : unitsPerCarton;
 
+            //use featured products pack type
+            var featuredSpecAttrs = specService.GetProductSpecificationAttributes(featuredProductId);
+            foreach (var spec in featuredSpecAttrs)
+            {
+                if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
+                {
+                    packType = spec.SpecificationAttributeOption.Name;
+                }                
+            }
+            
             foreach (ShoppingCartItem item in AmalgamationList)
             {
                 IList<ProductCategory> productsCategories = categoryService.GetProductCategoriesByProductId(item.Product.Id);
@@ -487,6 +504,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 eachPrice = eachPrice.ToString("#.#0"),
                 tierNext = amountToNextTier,
                 tierNextEach = tierNextEach,
+                packType = packType,
 
             });
 
@@ -514,7 +532,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
                     {
                         type = spec.SpecificationAttributeOption.Name;
-                        if (type != "Carton")
+                        if (type == "Carton")
                         {
                             //cartItemList.Remove(item);
                             AmalgamationList.Add(item);
