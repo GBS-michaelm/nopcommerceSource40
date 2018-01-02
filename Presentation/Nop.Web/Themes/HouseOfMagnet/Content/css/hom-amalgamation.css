@@ -175,10 +175,58 @@
     margin-right: 10px !important;
 }
 
-.amal-qty-box {
-    margin-top: 0px !important;
+.add-to-cart.amal-group {
+    width: 100%;
+    display: block;
+    margin-left: 45px;
 }
 
+.caption.amal-group {
+    min-height: 147px;
+}
+
+.amal-qty-box {
+    margin-top: 0px !important;
+    width: 85px;
+    height: 40px;
+}
+
+.qty-input.form-control.amal-group {
+    width: 60%;
+    height: 100%;
+    float: left;
+}
+
+.increase-quantity.amal-group {
+    border: 1px solid #ddd;
+    cursor: pointer;
+    float: left;
+    font-size: 10px;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 20px;
+    color: #999;
+}
+
+.decrease-quantity.amal-group {
+    border: 1px solid #ddd;
+    cursor: pointer;
+    float: left;
+    font-size: 10px;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 20px;
+    color: #999;
+}
+
+.amalgamation-add-to-cart.amal-group {
+    margin-top: -20px;
+    margin-left: 5px !important;
+}
 
 
 /*canvas styles*/
