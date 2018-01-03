@@ -901,8 +901,9 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             {
                 if (_workContext.CurrentCustomer.BillingAddress == null)
                 {
-                    Address add = new Address();
-                    add.Address1 = "1912 John Towers Ave";
+                    Address add = new Address();                    
+                    add.Company = "Graphic Business Solutions";
+                    add.Address1 = "1912 John Towers Ave.";
                     add.City = "El Cajon";
                     add.CreatedOnUtc = DateTime.Now;
                     add.Email = _workContext.CurrentCustomer.Email;
