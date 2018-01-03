@@ -1,9 +1,13 @@
 ﻿
     $(document).ready(function () {
              
-        $(".increase-quantity").click(function () {
-            AmalIncreaseTextBoxQuantity(e);
+        $(".increase-quantity.amal-group").click(function () {
+            AmalIncreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('productid') + "_EnteredQuantity"));
         });
+
+        $(".decrease-quantity.amal-group").click(function () {
+            AmalDecreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('textboxid') + "_EnteredQuantity"));
+        })
 
 
         //$(".amalgamation-textbox").unbind().change(function () {
@@ -95,7 +99,7 @@
 
 
 
-        //LoadBar();
+        LoadBar();
                 
     });
 
@@ -104,8 +108,8 @@
             var currentCategoryId = $("#AmalgamationBarWrap").data('category-id');
             var currentFeaturedProductId = $("#AmalgamationBarWrap").data('featured-id');
 
-            console.log("catid: " + currentCategoryId);
-            console.log("featuredId: " + currentFeaturedProductId);
+            //console.log("catid: " + currentCategoryId);
+            //console.log("featuredId: " + currentFeaturedProductId);
 
             UpdateAmalgamationBar(currentCategoryId, currentFeaturedProductId);
                
@@ -201,7 +205,7 @@
 
                 }
                                 
-                //UpdateBar();
+                UpdateBar();
 
             },
             error: function (msg) {
@@ -236,14 +240,18 @@ function UpdateAmalgamationBar(currentCategoryId, currentFeaturedProductId) {
             console.log("success");
             console.log(msg); //entire object
             //console.log(msg.qty);
-            
-            //add pack type
-
+                        
             var priceEach = msg.eachPrice > 1 ? "$" + msg.eachPrice : msg.eachPrice.replace(".", "") + "&cent;";
 
             //fill bar with data
-            $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType + " for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
-
+            //single
+            if (msg.totalCartons == 1) {
+                $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType.toLowerCase() + " for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
+            }//multiple
+            else {
+                $("#currentTierText").html("You've added " + msg.totalCartons + " " + msg.packType.toLowerCase() + "s for $" + msg.cartTotalPrice + " (" + priceEach + " ea)");
+            }
+            
             //check for BEST PRICING 
             if (msg.tierNext == "best") {
                 $("#nextTierText").html("You have the best price in the market!");
@@ -294,9 +302,11 @@ function AmalgamationIncreaseQuantity(e, curCartQty, initLoad, singleTotal) {
     var featuredProductId = $(textbox).data('featuredproductid');
     //var curCartQty = GetCurCartCountForThisCategory($(dropDown).data('master-category-id'));
 
-    console.log("id: " + id);
-    console.log("productId: " + productId);
-    console.log("curCartQty: " + curCartQty);
+    //console.log("id: " + id);
+    //console.log("productId: " + productId);
+    //console.log("curCartQty: " + curCartQty);
+
+    console.log("increase 1");
 
     if (id <= 0)
         id = 0;
@@ -314,10 +324,12 @@ function AmalgamationIncreaseQuantity(e, curCartQty, initLoad, singleTotal) {
     if (initLoad == true) {
         qtyForTier = parseInt(curCartQty);
     } else {
+        //removing # from cart
         if (singleTotal > quantity) {
             qtyForTier = parseInt(curCartQty) - (parseInt(singleTotal) - parseInt(quantity));
-        } else {
-            qtyForTier = parseInt(curCartQty) + parseInt(quantity);
+        }//increasing # in cart
+        else {
+            qtyForTier = parseInt(curCartQty) + (parseInt(quantity) - parseInt(singleTotal));
         }               
     }
 
@@ -348,73 +360,66 @@ function AmalgamationIncreaseQuantity(e, curCartQty, initLoad, singleTotal) {
     //    $(".amalgamation-textbox").trigger("input");
     //}
 
+    console.log("increase 1 final price ea" + pricechange);
+
     return true;
 }
 
 function AmalgamationChangeQuantity(e) {
-    //var id = document.getElementById(e.id).value;
-    //var id = $e.val();
+    console.log("AmalgamationChangeQuantity");
+    
     var textbox = e;
     var id = $(textbox).attr('id');
-    console.log("id: " + id);
-    console.log($(textbox).val());
-
-    //var pricechange = document.getElementById("pricescript").textContent;
-    //var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
-    //if (id <= 0)
-    //    return 0;
-
-    //var isPriceChange = GetTierPrice(id, e.dataset.productid);
-    //pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
-
+    
     var qtyValue = 0;
 
     if ($(textbox).hasClass('in-cart')) {
         qtyValue = parseInt($(textbox).data('initqty'));
     }
-
-    // qtyValue = qtyValue + 1;
-    //var final = parseFloat(qtyValue * pricechange).toFixed(2);
-
+    
     document.getElementById(e.id).value = qtyValue;
-    //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
-    //$(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
-    //document.getElementById("newprice").textContent = "$"+final;
-    //$(".price-value-" + e.dataset.productid).text("$" + final);
-
+    
     return true;
 }
 
 function AmalIncreaseTextBoxQuantity(e) {
 
-    console.log("increase: " );
+    console.log("AmalIncreaseTextBoxQuantity");
 
     var id = document.getElementById(e.id).value;
+
     var featuredProductId = $(e).data('featuredproductid');
     if (id <= 0)
         id = 0;   
-
-    console.log("id: " + id);
-
+   
     var quantity = parseInt(id) + 1;
-
-    var pricechange = $(".pricescript-value-" + e.dataset.productid).text();
-
-    var isPriceChange = GetTierPrice(quantity, featuredProductId); //e.dataset.productid
-    pricechange = isPriceChange > 0 ? isPriceChange : pricechange;
-
+    
     var qtyValue = parseInt(id);
     qtyValue = qtyValue + 1;
 
-    var final = parseFloat(qtyValue * pricechange).toFixed(2);
-    document.getElementById(e.id).value = qtyValue;
+    $(e).val(qtyValue);       
 
-    $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
+    $("#" + $(e).attr('id')).trigger("input");
 
-    $(".price-value-" + e.dataset.productid).text("$" + final);
+    return true;
+}
 
-    $(".amalgamation-textbox").trigger("input");
+function AmalIncreaseTextBoxQuantityGallery(e) {
 
+    console.log("increase gal: ");
+
+    var id = $(e).val();
+    var featuredProductId = $(e).data('featuredproductid');
+    if (id <= 0)
+        id = 0;
+    //console.log("id: " + id);
+
+    var quantity = parseInt(id) + 1;
+    var qtyValue = parseInt(id);
+    qtyValue = qtyValue + 1;    
+    $(e).val(qtyValue);      
+    $("#" + e.attr('id')).trigger("input");
+    
     return true;
 }
 
@@ -433,9 +438,43 @@ function AmalDecreaseTextBoxQuantity(e) {
         qtyValue = qtyValue - 1;
     }
         
-    document.getElementById(e.id).value = qtyValue;
-    
+    document.getElementById(e.id).value = qtyValue;  
+        
     $(".amalgamation-textbox").trigger("input");
+
+    return true;
+}
+
+function AmalDecreaseTextBoxQuantityGallery(e) {
+
+    console.log("decrease: ");
+
+    var id = $(e).val();
+
+    if (id <= 0)
+        id = 0;
+
+    var qtyValue = parseInt(id);
+    if (id <= 0) {
+        qtyValue = 0;
+    }
+    else {
+        qtyValue = qtyValue - 1;
+    }
+
+    $(e).val(qtyValue);
+    
+    var initQty = $(e).data('initqty');
+    //handle opacity on entering 0 on init load
+    console.log("init: " + initQty + " qtyVal: " + qtyValue);
+    if (initQty == 0 && qtyValue == 0 && !$(e).hasClass('in-cart')) {
+        var idHandle = $(e).data('productid');
+        //$("#" + idHandle).removeClass('readyforcart');
+        var buttonStyling = $('#amalgamationButton' + idHandle);
+        buttonStyling.css('opacity', .3);
+    } else {
+        $("#" + e.attr('id')).trigger("input");
+    }  
 
     return true;
 }
