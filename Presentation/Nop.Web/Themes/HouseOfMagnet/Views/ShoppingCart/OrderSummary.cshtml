@@ -258,6 +258,18 @@
                                         </div>
                                     }
                                 }
+                                else if (item.AttributeInfo.Contains("CANVAS"))
+                                {
+                                    if (item.AttributeInfo.Contains("399"))
+                                    {
+                                        var editCartItemUrl = "/canvas?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
+
+
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                }
                                 else if (Model.IsEditable && item.AllowItemEditing)
                                 {
                                     var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
