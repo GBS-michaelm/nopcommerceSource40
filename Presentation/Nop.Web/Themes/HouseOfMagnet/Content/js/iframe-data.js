@@ -133,22 +133,29 @@ var CreateJson = function (array, options) {
 
 var AddItem = function (dataJson, cartItemId, qty, prodId, cartImageSrc, editActive) {
     console.log(dataJson);
-    $('.ajax-loading-block-window').show();
-    $.ajax({
-        cache: false,
-        url: "shoppingcart/submititem?productId=" + prodId + "&dataJson=" + dataJson + "&quantity=" + qty + "&cartImageSrc=" + cartImageSrc + "&editActive=" + editActive + "&formOptions={}&cartItemId=" + cartItemId ,
-        type: "post",
-        success: function (data) {
-       
-            window.location = '/cart';
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            $('.ajax-loading-block-window').hide('slow');
-            console.log(xhr);
-            console.log(ajaxOptions);
-            console.log(thrownError);
-        }
-    });
+    try 
+    {
+        $.ajax({
+            cache: false,
+            url: "shoppingcart/submititem?productId=" + prodId + "&dataJson=" + dataJson + "&quantity=" + qty + "&cartImageSrc=" + cartImageSrc + "&editActive=" + editActive + "&formOptions={}&cartItemId=" + cartItemId,
+            type: "post",
+            success: function (data) {
+
+                window.location = '/cart';
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                window.location = '/cart';
+                console.log(xhr);
+                console.log(ajaxOptions);
+                console.log(thrownError);
+            }
+        });
+    }
+    catch (ex)
+    {
+        console.log(ex);
+        window.location = '/cart';
+    }
 }
 
 var SetProductOption = function (input, url) {

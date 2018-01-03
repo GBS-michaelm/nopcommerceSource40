@@ -901,11 +901,17 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             {
                 if (_workContext.CurrentCustomer.BillingAddress == null)
                 {
-                    Address add = new Address();
-                    add.Address1 = "1912 John Towers Ave";
+                    Address add = new Address();                    
+                    add.Company = "Graphic Business Solutions";
+                    add.Address1 = "1912 John Towers Ave.";
                     add.City = "El Cajon";
                     add.CreatedOnUtc = DateTime.Now;
-                    add.Email = "info@gogbs.com";
+                    add.Email = _workContext.CurrentCustomer.Email;
+                    add.ZipPostalCode = "92020";
+                    add.StateProvince = _stateProvinceService.GetStateProvinceByAbbreviation("CA");
+                    add.StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation("CA").Id;
+                    add.Country = _countryService.GetCountryByTwoLetterIsoCode("US");
+                    add.CountryId = _countryService.GetCountryByTwoLetterIsoCode("US").Id;
                     _workContext.CurrentCustomer.BillingAddress = add;
                 }
                 var result = _baseNopCheckoutController.ConfirmOrder();
