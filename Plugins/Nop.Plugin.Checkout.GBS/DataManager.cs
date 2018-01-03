@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Summary description for DBManager
@@ -106,7 +107,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Checkout Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Checkout Datamanager GetDataView - query : " + sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -176,7 +177,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -219,7 +220,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Checkout Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -254,7 +255,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
@@ -290,7 +291,7 @@ namespace Nop.Plugin.Checkout.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Checkout Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
