@@ -1,4 +1,5 @@
-﻿using Nop.Core.Data;
+﻿using Newtonsoft.Json;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using System;
@@ -104,7 +105,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Business Logic Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Business Logic Datamanager GetDataView - query : " + sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -174,7 +175,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -217,7 +218,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -252,7 +253,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
@@ -289,7 +290,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Business Logic Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally

@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Widgets.Marketing
 {
@@ -67,7 +68,7 @@ namespace Nop.Plugin.Widgets.Marketing
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Marketing Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Marketing Datamanager GetDataView - query : "+sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -133,13 +134,10 @@ namespace Nop.Plugin.Widgets.Marketing
                     return dv;
                 }
 
-
-
-
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Marketing Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Marketing Datamanager GetParameterizedDataView - query : "+ query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -175,7 +173,7 @@ namespace Nop.Plugin.Widgets.Marketing
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Marketing Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Marketing Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally

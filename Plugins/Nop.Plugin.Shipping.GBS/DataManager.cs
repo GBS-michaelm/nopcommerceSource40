@@ -10,6 +10,8 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using Newtonsoft.Json;
+
 namespace Nop.Plugin.DataAccess.GBS
 {
     public class DataManager
@@ -134,7 +136,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Shipping Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Shipping Datamanager GetDataView - query : " + sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -206,7 +208,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Shipping Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Shipping Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -242,7 +244,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Shipping Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Shipping Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
