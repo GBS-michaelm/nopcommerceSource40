@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Core.Data;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Payments.GBS
 {
@@ -87,7 +88,7 @@ namespace Nop.Plugin.Payments.GBS
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Payments Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Payments Datamanager GetDataView - query : " + sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -159,7 +160,7 @@ namespace Nop.Plugin.Payments.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Payments Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Payments Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -195,7 +196,7 @@ namespace Nop.Plugin.Payments.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Payments Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Payments Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally

@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Summary description for DBManager
@@ -103,7 +104,7 @@ namespace Nop.Plugin.DataAccess.GBS
 
                 catch (Exception ex)
                 {
-                    _logger.Error("SQL Exception in Order Datamanager GetDataView", ex);
+                    _logger.Error("SQL Exception in Order Datamanager GetDataView - query : " + sqlQuery, ex);
                     return null;
                 }
                 finally
@@ -173,7 +174,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -216,7 +217,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataView", ex);
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
             }
             finally
@@ -250,7 +251,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager GetParameterizedScalar", ex);
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedScalar - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
@@ -284,7 +285,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataReader", ex);
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataReader - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 Close();
                 throw ex;
             }
@@ -312,7 +313,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager GetParameterizedJsonString", ex);
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedJsonString - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 Close();
                 throw ex;
             }
@@ -348,7 +349,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (Exception ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Order Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
@@ -384,7 +385,7 @@ namespace Nop.Plugin.DataAccess.GBS
             }
             catch (SqlException ex)
             {
-                _logger.Error("SQL Exception in Order Datamanager SetParameterizedQueryNoData", ex);
+                _logger.Error("SQL Exception in Order Datamanager SetParameterizedQueryNoData - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 throw ex;
             }
             finally
