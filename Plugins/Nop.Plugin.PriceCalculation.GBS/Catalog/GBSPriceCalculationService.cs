@@ -76,10 +76,10 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 //    }
                 //}
 
-                List<string> categoryIdsList = new List<string>();
+                List<int> categoryIdsList = new List<int>();
                 foreach (var category in productCategories)
                 {
-                    categoryIdsList.Add(category.CategoryId.ToString());
+                    categoryIdsList.Add(category.CategoryId);
                 }
 
                 //eventually current packtype will need to be an attribute passed in
