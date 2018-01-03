@@ -29,7 +29,6 @@ SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
 Nop.Plugin.Shipping.GBS
-Catalogs.GBS
 Products.SpecificationAttributes
 BreadCrumb.GBS
 BusinessLogic.GBS
