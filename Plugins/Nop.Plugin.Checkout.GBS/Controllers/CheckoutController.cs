@@ -486,13 +486,10 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            if (ModelState.IsValid)
+            if (model.PickUpInStore ||(!model.PickUpInStore && ModelState.IsValid))
             {
                 ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
-                if (_baseNopCheckoutController.ModelState.IsValid)
-                {
-                    return retVal;
-                }
+                return retVal;
             }
 
             //If we got this far, something failed, redisplay form
