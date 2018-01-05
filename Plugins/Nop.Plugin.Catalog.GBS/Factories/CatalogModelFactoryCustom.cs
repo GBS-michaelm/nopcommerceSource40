@@ -179,7 +179,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                     Name = category.GetLocalized(x => x.Name),
                     SeName = category.GetSeName(),
                     IncludeInTopMenu = category.IncludeInTopMenu,
-                    ProductsCount = _productService.GetNumberOfProductsInCategory(cats, _storeContext.CurrentStore.Id)                    
+                    ProductsCount = _productService.GetNumberOfProductsInCategory(cats, _storeContext.CurrentStore.Id)
                 };
 
 
@@ -204,9 +204,13 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 if (loadSubCategories)
                 {
                     var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
-                    categoryModel.SubCategories.AddRange(subCategories);
+                    if (subCategories.Count > 0)
+                    {
+                        categoryModel.SubCategories.AddRange(subCategories);
+                    }
                 }
-                result.Add(categoryModel);
+                if (categoryModel.ProductsCount > 0 || categoryModel.SubCategories.Count > 0) { 
+                result.Add(categoryModel); }
             }
 
             return result;

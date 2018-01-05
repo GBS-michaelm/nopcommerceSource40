@@ -131,5 +131,24 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/CategoryNavigation.cshtml", model);
             }
         }
+
+        public static bool HasSubcategoryProducts(CategorySimpleModelCustom category)
+        {
+            if (category.SubCategories.Any())
+            {
+                foreach (var subcategory in category.SubCategories)
+                {
+                    if (subcategory.ProductsCount > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return HasSubcategoryProducts(subcategory);
+                    }
+                }
+            }
+            return false;
+        }       
     }
 }
