@@ -77,7 +77,7 @@
     <Compile Include="CategoryNavigationSettings.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\WidgetsCategoryNavigationController.cs" />
-    <Compile Include="DependencyRegistrar.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Factories\CatalogModelFactoryCustom.cs" />
     <Compile Include="Factories\ICatalogModelFactoryCustom.cs" />
     <Compile Include="Models\CategoryNavigationModelCustom.cs" />
