@@ -13,7 +13,13 @@ namespace Nop.Plugin.Catalog.GBS
                             "SportsTeamsList",
                             new { controller = "GBSCatalog", action = "SportsTeamsList" },
                             new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
+
+            routes.MapLocalizedRoute("SportsTeamsTest",
+                                "SportsTeamsTest",
+                                new { controller = "GBSCatalog", action = "SportsTeamsTest" },
+                                new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
         }
+
         public int Priority
         {
             get
