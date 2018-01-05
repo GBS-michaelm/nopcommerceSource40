@@ -68,6 +68,7 @@
     <Compile Include="Domain\Accessory.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
+    <Compile Include="Domain\NameBadge.cs" />
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="Infrastructure\BusinessLogicRouteProvider.cs" />
     <Compile Include="Models\AccessoryPageBoxModel.cs" />
