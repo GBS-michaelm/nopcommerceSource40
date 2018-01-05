@@ -1,4 +1,4 @@
-﻿Group: Widgets
+﻿Group: GBS
 FriendlyName: Nop.Plugin.Catalog.GBS
 SystemName: Nop.Plugin.Catalog.GBS
 Version: 3.90
