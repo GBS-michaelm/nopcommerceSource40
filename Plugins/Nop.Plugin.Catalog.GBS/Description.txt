@@ -1,6 +1,6 @@
 ﻿Group: Widgets
 FriendlyName: Nop.Plugin.Catalog.GBS
-SystemName: Nop.Plugin.Catalog.GBS
+SystemName: Catalog.GBS
 Version: 3.90
 SupportedVersions: 3.90
 Author: nopCommerce team
