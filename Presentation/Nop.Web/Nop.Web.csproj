@@ -3095,6 +3095,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_FeaturedProductTierPrices.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOne_subcategories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.SubcategoryGrid.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\NameBadge.cshtml" />
     <Content Include="Themes\PurplePizza\theme.config" />
     <Content Include="Themes\PurplePizza\Views\Catalog\Search.cshtml" />
     <Content Include="Themes\PurplePizza\Views\Catalog\SearchBox.cshtml" />
