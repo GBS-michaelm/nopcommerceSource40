@@ -186,7 +186,7 @@ namespace Nop.Services.Custom.Orders
                 var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: processPaymentRequest.StoreId).ToList();
                 if (miscPlugins.Count > 0) {
 
-                    processPaymentRequest.CustomValues.Clear();
+                    //processPaymentRequest.CustomValues.Clear();
 
                     string address = _gbsOrderSettings.GBSOrderWebServiceAddress;
                     GBSOrderServiceClient myOrderService = new GBSOrderServiceClient();
@@ -299,15 +299,8 @@ namespace Nop.Services.Custom.Orders
                         //string addPhoneNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
                         //_httpContext.Session.Remove("customerPhoneNumber");
 
-                        Dictionary<string, string> paramDic = new Dictionary<string, string>();
-                        paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
-                        paramDic.Add("@gbsOrderID", gbsOrderId);
-                        //paramDic.Add("@contactPhone", addPhoneNum);
-                        //string insert = "INSERT INTO tblNOPOrder (nopID, gbsOrderID) ";
-                        //insert += "VALUES ('" + myResult.PlacedOrder.Id + "', '" + gbsOrderId + "')";
-                        //string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@contactPhone";
-                        string insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
-                        manager.SetParameterizedQueryNoData(insert, paramDic);
+                        string insert = "";
+
 
                         ICcService ccService = EngineContext.Current.Resolve<ICcService>();
                         
@@ -506,6 +499,12 @@ namespace Nop.Services.Custom.Orders
                             }
                         }
 
+                        //Make saving to tblNopOrder last operation so that migration only pulls data after all other dependendent data is committed.
+                        Dictionary<string, string> paramDic = new Dictionary<string, string>();
+                        paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
+                        paramDic.Add("@gbsOrderID", gbsOrderId);
+                        insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
+                        manager.SetParameterizedQueryNoData(insert, paramDic);
 
                         _httpContext.Session.Remove("customerPhoneNumber");
                         _httpContext.Session.Remove("purchaseOrderNumber");

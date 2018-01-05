@@ -317,7 +317,7 @@
 
         self._raise = function (cb) {
             if (cb !== null && typeof (cb) === 'function') {
-                var args = Array.prototype.slice.call(arguments);
+                var args = Array.prototype.slice.call(arguments); 
                 args.shift();
                 cb.apply(self, args);
             }

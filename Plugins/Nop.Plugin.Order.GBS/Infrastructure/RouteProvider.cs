@@ -18,6 +18,15 @@ namespace Nop.Plugin.Order.GBS.Infrastructure
                             "order/CopyFilesToProduction",
                             new { controller = "GBSOrder", action = "CopyFilesToProduction" },
                             new[] { "Nop.Plugin.Order.GBS.Controllers" });
+            routes.MapLocalizedRoute("OrderDetailsL",
+                            "orderdetailsL/{orderId}",
+                            new { controller = "GBSOrder", action = "DetailsLegacy" },
+                            new { orderId = @"\d+" },
+                            new[] { "Nop.Plugin.Order.GBS.Controllers" });
+            routes.MapLocalizedRoute("GetOrderPdfInvoiceL",
+                            "orderdetailsL/pdf/{orderId}",
+                            new { controller = "GBSOrder", action = "GetPdfInvoiceLegacy" },
+                            new[] { "Nop.Plugin.Order.GBS.Controllers" });
         }
 
         public int Priority

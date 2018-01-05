@@ -39,6 +39,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string _logoPicturePath = "";
         private string _aboutYourMarketCenter = "";       
         private string _forgroundColor = "#000000";
+        private List<int> _childCompanyIds = new List<int>();
         
         public Company(int companyId)
         {
@@ -75,7 +76,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
-            DataView companyDataView = cacheManager.Get("sportsTeam" + companyId, 60, () => {
+            DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
                 companyDic.Add("@CategoryId", companyId);
 
@@ -83,6 +84,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
                 return innerCompanyDataView;
+            });
+
+            DataView childCompanyDataView = cacheManager.Get("childCompanies" + companyId, 60, () => {
+                Dictionary<string, Object> childCategoryDic = new Dictionary<string, Object>();
+                childCategoryDic.Add("@CategoryId", companyId);
+
+                string childCategoryDataQuery = "EXEC usp_SelectGBSChildCategoryData @CategoryId";
+                DataView innerChildCompanyDataView = manager.GetParameterizedDataView(childCategoryDataQuery, childCategoryDic);
+
+                return innerChildCompanyDataView;
+                 
             });
 
 
@@ -99,6 +111,16 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.foregroundColor = !string.IsNullOrEmpty(companyDataView[0]["ForegroundColor"].ToString()) ? companyDataView[0]["ForegroundColor"].ToString() : _forgroundColor;
 
             }
+            //list of all child company ids that match the company typeid 1
+            if (childCompanyDataView.Count > 0)
+            {
+                for (int i = 0; i < childCompanyDataView.Count; i++)
+                {
+                    childCompanyIds.Add(Int32.Parse(childCompanyDataView[i]["categoryId"].ToString()));
+                }
+            }
+
+
 
         }
         
@@ -111,6 +133,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string logoPicturePath { get { return _logoPicturePath; } set { _logoPicturePath = value; } }
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
-        
+
+        public List<int> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
+
+
     }
 }

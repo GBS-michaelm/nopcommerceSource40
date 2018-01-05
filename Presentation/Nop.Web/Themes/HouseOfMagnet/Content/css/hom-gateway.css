@@ -1,425 +1,394 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
-
-       body {
-        }
-
-        #selectTeamDiv {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 380px;
-            float: left;
-        }
-
-        #selectTeamDiv a {
-            color: #1767d6;
-            font-weight: bold;
-        }
-
-        #selectTeamDiv p {
-            float: left;
-        }
-        
-        #gateway-body {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            clear : both;
-            position: relative;
-            z-index: 0;
-            min-height: 850px;
-            /*height: 900px;*/
-            height: fit-content;
-            /*background-repeat: repeat-x;*/
-        }
-
-        #gateway-body-inner {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            min-height: 850px;
-            height: inherit;
-            /*position : absolute;*/
-            z-index: 1;
-            /*left : 250px;*/
-        }
-
-        #topInner {
-            display: block;
-            height: fit-content;
-        }
-
-        #topInner p {
-            position: relative;
-            top: 29px;
-            left: 8%;
-            color: white;
-            font-size: 26pt;
-            font-weight: bold;
-            width : fit-content;
-        }
-
-        #gatewayLayersContainer {
-            position: relative;
-            top: 0;
-            left: 0;
-            height: fit-content;
-            background-size: contain;
-        }
-
-        #sportImage {
-            height : inherit;
-            z-index: 1;
-            float : right;
-            position: relative;
-            top: -923px;
-        }
-
-
-        #bottomInner {
-            display: block;
-            height: fit-content;
-        }
-
-        #bottomInner p {
-            position: relative;
-            top: 29px;
-            color: white;
-            font-size: 23pt;
-            font-weight: bold;
-            text-align: center;
-        }       
-
-        #bottomInnerTabs p {
-            position: relative;
-            top: 0px;
-            color: white;
-            font-size: 23pt;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .gateway-h1 {
-            padding-left: 0px !important;
-        }
-
-        .gateway-h2-wrap {
-            display: block;
-            width: 558px;
-            height: 62px;
-        }
-
-        .gateway-h2 {
-            line-height: 27px;
-            margin-bottom: -7px !important;
-            font-size: 17pt;
-            color: #808080;
-        }
-
-        .gateway-title {
-            padding-top: 0px;
-        }
-
-            .gateway-title p {
-                margin-bottom: -7px;
-            }
-
-            .gateway-title h1 {
-                padding-left: 0px;
-            }
-
-        
-
-        #gatewayWYSIWYG {
-            z-index: 2;
-        }
-
-        #gatewayWYSIWYG .Baseball-QuickCard .detailimg {
-                position: absolute;
-                top: 14px;
-                left: 59px;
-                width: 85px;
-        }
-
-        #gatewayWYSIWYG .Baseball-QuickCard {
-            display: block;
-            margin-right: auto;
-            margin-left: auto;
-            float: none;
-            width : 243px;
-        }
-
-        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class .detailimg {
-                    position: relative;
-                    top: 43px;
-                    left: -20px;
-                    width: 85px;
-        }
-
-        #gatewayWYSIWYG .Baseball-Full-Magnets-First-Class {
-            display: block;
-            margin-right: auto;
-            margin-left: auto;
-            float: none;
-            width : 243px;
-        }
-
-        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet .detailimg {
-                    position: relative;
-                    top: 14px;
-                    left: -20px;
-                    width: 84px;
-        }
-        #gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet {
-            display: block;
-            margin-right: auto;
-            margin-left: auto;
-            float: none;
-            width : 241px;
-        }
-
-
-        #gatewayWYSIWYG .Baseball-QuickStix .detailimg {
-                position: absolute;
-                top: 14px;
-                left: 63px;
-                width: 85px;
-        }
-
-        #gatewayWYSIWYG .Baseball-QuickStix {
-            display: block;
-            margin-right: auto;
-            margin-left: auto;
-            float: none;
-            width : 241px;
-        }
-
-        
-
-        #gatewayWYSIWYG .pricing-features {
-            clear: both;
-        }
-
-
-        .regular-wysiwyg {
-            position: relative;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 85%;
-            top: 4%;
-            z-index: 4;
-        }
-
-        .sports-wysiwyg {
-            position: relative;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 85%;
-            top: 32px;
-            z-index: 5;
-        }
-
-
-
-        
-
-        .gateway-foreground-specialty {
-            position: relative;
-            top: -918px;
-            /* left: 628px; */
-            left: 57%;
-            width: 44%;
-            max-height: 860px;
-            z-index: 2;
-        }
-
-        .gateway-foreground-sports {
-            position: relative;
-            top: -880px;
-            left: 750px;
-            z-index: 3;
-        }
-
-        .gateway-foreground-sports-team {
-            position: relative;
-            top: -842px;
-            left: 750px;
-            z-index: 3;
-        }
-
-        .gateway-foreground-sports-multirow {
-            top: -1515px;
-        }
-
-        #gatewayBackgroundImage {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: -81px;
-            left: 0px;
-            background-repeat: repeat-y;
-            z-index: 0;
-            background-size: contain;
-        }
-
-        .gateway-title {
-            border-left: 10px #012d5c solid !important;
-        }
-
-        .gateway-pricing {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .pricing-features li {
-            font-size: 16px;
-            padding: 2px 0;
-        }
-
-        .button-blue {
-            background-color: #012d5c;
-        }
-
-        .button-3d.button-blue:hover, .button-border.button-blue.button-fill:before, .button-border.button-blue:hover, .button-reveal.button-blue:hover {
-            background-color: #6c8baa !important;
-        }
-
-        #chartWrap {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            clear: both;
-        }
-
-            #chartWrap .topic-html-content {
-                border: none;
-            }
-
-        .container #videoAndQuantityCalculatorWrap {
-            height: 480px;
-            padding-top: 28px;
-        }
-
-        #videoAndQuantityCalculatorWrap {
-            background-color: #F5F5F5;
-        }
-
-            #videoAndQuantityCalculatorWrap .topic-html-content {
-                border: none;
-            }
-
-        #innerVidAndWQtyCalc {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-
-        /* !!!!TABS CSS HERE!!!! */
-        *, *:before, *:after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        #teamSelect {
-            position: relative;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            height: 702px;
-            font: 14px/1 'Open Sans', sans-serif;
-            top: 19px;
-            z-index: 5;
-        }
-
-            #teamSelect a {
-                color: #1767d6;
-                font-weight: bold;
-                text-decoration: underline !important;
-                margin-right: 50px;
-            }
-
-            #teamSelect p {
-                margin: 0 0 20px;
-                line-height: 2.3;
-                float: left;
-            }
-
-            #teamSelect main {
-                min-width: 320px;
-                max-width: 1085px;
-                min-height: 315px;
-                /*max-height : 80%;*/
-                padding: 38px;
-                padding-top: 0px;
-                margin: 0 auto;
-            }
-
-        #innerMain {
-            background-color: white;
-            height: 100%;
-        }
-
-        #teamSelect #label1 {
-            margin-left: 50px;
-        }
-
-        #teamSelect section {
-            display: none;
-            padding: 20px 0 0;
-            background-color: white;
-            min-height: 315px;
-            max-height: 655px;
-            padding-left: 60px;
-            overflow-y: auto;
-            clear: both;
-        }
-
-        #teamSelect input {
-            display: none;
-        }
-
-        label.gateway-label {
-            display: inline-block;
-            margin: 0 0 -1px;
-            padding: 12px 21px;
-            font-weight: 600;
-            text-align: center;
-            border: 1px #bbb solid;
-            background-color: #F2F2F2;
-        }
-
-        label:before {
-            font-family: fontawesome;
-            font-weight: normal;
-            margin-right: 10px;
-        }
-
-        /*label[for*='1']:before { content: '\f1cb'; }
+body {
+}
+#selectTeamDiv {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 380px;
+	float: left;
+}
+#selectTeamDiv a {
+	color: #1767d6;
+	font-weight: bold;
+}
+#selectTeamDiv p {
+	float: left;
+}
+#gateway-body {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	clear : both;
+	position: relative;
+	z-index: 0;
+	min-height: 850px;
+	/*height: 900px;*/
+	height: fit-content;/*background-repeat: repeat-x;*/
+}
+#gateway-body-inner {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 850px;
+	height: inherit;
+	/*position : absolute;*/
+	z-index: 1;/*left : 250px;*/
+}
+#topInner {
+	display: block;
+	height: fit-content;
+}
+#topInner p {
+	position: relative;
+	top: 29px;
+	left: 8%;
+	color: white;
+	font-size: 26pt;
+	font-weight: bold;
+	width : fit-content;
+}
+#gatewayLayersContainer {
+	position: relative;
+	top: 0;
+	left: 0;
+	background-size: contain;
+}
+#sportImage {
+	height : inherit;
+	z-index: 1;
+	float : right;
+	position: relative;
+	top: -923px;
+}
+#bottomInner {
+	display: block;
+	height: fit-content;
+}
+#bottomInner p {
+	position: relative;
+	top: 29px;
+	color: white;
+	font-size: 23pt;
+	font-weight: bold;
+	text-align: center;
+}
+#bottomInnerTabs p {
+	position: relative;
+	top: 0px;
+	color: white;
+	font-size: 23pt;
+	font-weight: bold;
+	text-align: center;
+}
+.gateway-h1 {
+	padding-left: 0px !important;
+}
+.gateway-h2-wrap {
+	width: 65%;
+}
+.gateway-h2 {
+	line-height: 27px;
+	margin-bottom: -7px !important;
+	font-size: 17pt;
+	color: #808080;
+}
+.gateway-title {
+	padding-top: 0px;
+}
+.gateway-title p {
+	margin-bottom: -7px;
+}
+.gateway-title h1 {
+	padding-left: 0px;
+}
+#gatewayTopText {
+	color: #ffffff;
+	font-family: 'Lato', sans-serif;
+	font-size: 28px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	padding-top: 30px;
+	margin-left: 20px;
+}
+#gatewayBottomText {
+	color: #ffffff;
+	font-family: 'Lato';
+	font-size: 28px;
+	font-weight: bold;
+	text-align: center;
+}
+#gatewayWYSIWYG {
+	z-index: 2;
+}
+#gatewayWYSIWYG .Baseball-QuickCard .detailimg {
+	position: absolute;
+	top: 14px;
+	left: 59px;
+	width: 85px;
+}
+#gatewayWYSIWYG .Baseball-QuickCard {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	float: none;
+	width : 243px;
+}
+#gatewayWYSIWYG .Baseball-Full-Magnets-First-Class .detailimg {
+	position: relative;
+	top: 43px;
+	left: -20px;
+	width: 85px;
+}
+#gatewayWYSIWYG .Baseball-Full-Magnets-First-Class {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	float: none;
+	width : 243px;
+}
+#gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet .detailimg {
+	position: relative;
+	top: 14px;
+	left: -20px;
+	width: 84px;
+}
+#gatewayWYSIWYG .Baseball-Full-Magnets-Quick-Magnet {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	float: none;
+	width : 241px;
+}
+#gatewayWYSIWYG .Baseball-QuickStix .detailimg {
+	position: absolute;
+	top: 14px;
+	left: 63px;
+	width: 85px;
+}
+#gatewayWYSIWYG .Baseball-QuickStix {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	float: none;
+	width : 241px;
+}
+#gatewayWYSIWYG .pricing-features {
+	clear: both;
+}
+.regular-wysiwyg {
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 85%;
+	top: 4%;
+	z-index: 4;
+}
+.sports-wysiwyg {
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 85%;
+	top: 32px;
+	z-index: 5;
+}
+#gateway-inner {
+	height: 680px;
+}
+#gatewayForegroundImage {
+	position: relative;
+	top: -918px;
+	/* left: 628px; */
+	left: 57%;
+	width: 44%;
+	max-height: 860px;
+	z-index: 0;
+}
+.fg_gateway_calendars {
+	position: relative;
+	top: -1070px;
+	left: 63%;
+	width: 44%;
+	max-height: 860px;
+	z-index: 0;
+}
+.gateway-foreground-sports {
+	position: relative;
+	top: -880px;
+	left: 750px;
+	z-index: 3;
+}
+.gateway-foreground-sports-team {
+	position: relative;
+	top: -842px;
+	left: 750px;
+	z-index: 3;
+}
+.gateway-foreground-sports-multirow {
+	top: -1515px;
+}
+#gatewayBackgroundImage {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: -81px;
+	left: 0px;
+	background-repeat: repeat-y;
+	z-index: 0;
+	background-size: contain;
+}
+.bgstretchinner {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.gateway-title {
+	border-left: 10px #012d5c solid !important;
+}
+.gateway-pricing {
+	font-size: 24px;
+	font-weight: bold;
+}
+.gateway-sales-banner .topic-html-content {
+	border: none;
+}
+.pricing-features li {
+	font-size: 16px;
+	padding: 2px 0;
+}
+.button-blue {
+	background-color: #012d5c;
+}
+.button-3d.button-blue:hover, .button-border.button-blue.button-fill:before, .button-border.button-blue:hover, .button-reveal.button-blue:hover {
+	background-color: #6c8baa !important;
+}
+#chartWrap {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+	margin-top: 30px;
+}
+#chartWrap .topic-html-content {
+	border: none;
+}
+#chartWrap .topic-html-content a {
+    color: #012d5c;
+}
+#chartWrap .table td, #chartWrap .table th {
+    text-align: center;
+}
+
+#chartWrap .table td:first-child {
+    text-align: left;
+}​
+.container #videoAndQuantityCalculatorWrap {
+	height: 480px;
+	padding-top: 28px;
+}
+#videoAndQuantityCalculatorWrap {
+	background-color: #F5F5F5;
+}
+#videoAndQuantityCalculatorWrap .topic-html-content {
+	border: none;
+}
+#innerVidAndWQtyCalc {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+/* !!!!TABS CSS HERE!!!! */
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+#teamSelect {
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	height: 702px;
+	font: 14px/1 'Open Sans', sans-serif;
+	top: 19px;
+	z-index: 5;
+}
+#teamSelect a {
+	color: #1767d6;
+	font-weight: bold;
+	text-decoration: underline !important;
+	margin-right: 50px;
+}
+#teamSelect p {
+	margin: 0 0 20px;
+	line-height: 2.3;
+	float: left;
+}
+#teamSelect main {
+	min-width: 320px;
+	max-width: 1085px;
+	min-height: 315px;
+	/*max-height : 80%;*/
+	padding: 38px;
+	padding-top: 0px;
+	margin: 0 auto;
+}
+#innerMain {
+	background-color: white;
+	height: 100%;
+}
+#teamSelect #label1 {
+	margin-left: 50px;
+}
+#teamSelect section {
+	display: none;
+	padding: 20px 0 0;
+	background-color: white;
+	min-height: 315px;
+	max-height: 655px;
+	padding-left: 60px;
+	overflow-y: auto;
+	clear: both;
+}
+#teamSelect input {
+	display: none;
+}
+label.gateway-label {
+	display: inline-block;
+	margin: 0 0 -1px;
+	padding: 12px 21px;
+	font-weight: 600;
+	text-align: center;
+	border: 1px #bbb solid;
+	background-color: #F2F2F2;
+}
+label:before {
+	font-family: fontawesome;
+	font-weight: normal;
+	margin-right: 10px;
+}
+/*label[for*='1']:before { content: '\f1cb'; }
 label[for*='2']:before { content: '\f17d'; }
 label[for*='3']:before { content: '\f16b'; }
 label[for*='4']:before { content: '\f1a9'; }*/
 
-        label:hover {
-            color: #888;
-            cursor: pointer;
-        }
-
-        #teamSelect input:checked + label {
-            color: #555;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-left: none;
-            border-bottom: none;
-            border-right: 1px solid #fff;
-            background-color: white;
-        }
-
-        /*#content1,
+label:hover {
+	color: #888;
+	cursor: pointer;
+}
+#teamSelect input:checked + label {
+	color: #555;
+	border: 1px solid #ddd;
+	border-top: none;
+	border-left: none;
+	border-bottom: none;
+	border-right: 1px solid #fff;
+	background-color: white;
+}
+/*#content1,
 #content2,
 #content3,
 #content4 {
@@ -428,53 +397,41 @@ label[for*='4']:before { content: '\f1a9'; }*/
 
 
 
-        #tab1:checked ~ #content1,
-        #tab2:checked ~ #content2,
-        #tab3:checked ~ #content3,
-        #tab4:checked ~ #content4,
-        #tab5:checked ~ #content5,
-        #tab6:checked ~ #content6,
-        #tab7:checked ~ #content7 {
-            display: block;
-        }
-
-
+#tab1:checked ~ #content1,  #tab2:checked ~ #content2,  #tab3:checked ~ #content3,  #tab4:checked ~ #content4,  #tab5:checked ~ #content5,  #tab6:checked ~ #content6,  #tab7:checked ~ #content7 {
+	display: block;
+}
 
 @media only screen and (max-width : 992px) {
-    .gateway-foreground-specialty {
-        top: -2803px;
-    }
-
-
-
-    #innerVidAndWQtyCalc {
-        width: 498px !important;
-    }
-
-    .container #videoAndQuantityCalculatorWrap {
-        height: 890px;
-    }
-
+.gateway-foreground-specialty {
+	top: -2803px;
+}
+#gateway-inner {
+	height: inherit;
+}
+#innerVidAndWQtyCalc {
+	width: 498px !important;
+}
+.container #videoAndQuantityCalculatorWrap {
+	height: 890px;
+}
 }
 
 @media screen and (max-width: 650px) {
-  label {
-    font-size: 0;
-  }
-  label:before {
-    margin: 0;
-    font-size: 18px;
-  }
-
-  .gateway-foreground-specialty {
-        top: -2833px;
-    }
-  
-
+label {
+	font-size: 0;
+}
+label:before {
+	margin: 0;
+	font-size: 18px;
+}
+#gatewayForegroundImage {
+	top: -2833px;
+	display: none;
+}
 }
 
 @media screen and (max-width: 400px) {
-  label {
-    padding: 15px;
-  }
+label {
+	padding: 15px;
+}
 }

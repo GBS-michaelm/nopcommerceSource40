@@ -29,14 +29,13 @@ SevenSpikes.Nop.Plugins.MegaMenu
 Products.SpecificationAttributes
 Nop.Plugin.Api
 Nop.Plugin.Shipping.GBS
-Catalogs.GBS
 Products.SpecificationAttributes
 BreadCrumb.GBS
 BusinessLogic.GBS
 Order.GBS
 Checkout.GBS
+Logging.GBS
 Widgets.Marketing
 Payments.GBS.MonthlyBilling
 Payments.GBS.PurchaseOrder
-Logging.GBS
-Nop.Plugin.Catalog.GBS
+FoxNetSoft.Plugin.Misc.SpeedFilters

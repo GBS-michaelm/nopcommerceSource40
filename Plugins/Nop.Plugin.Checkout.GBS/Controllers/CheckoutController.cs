@@ -486,16 +486,9 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
-            //foreach (var item in _baseNopCheckoutController.ModelState)
-            //{
-            //    if (!ModelState.ContainsKey(item.Key))
-            //    {
-            //        ModelState.Add(item.Key, item.Value);
-            //    }
-            //}
-            if (_baseNopCheckoutController.ModelState.IsValid)
+            if (model.PickUpInStore ||(!model.PickUpInStore && ModelState.IsValid))
             {
+                ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
                 return retVal;
             }
 
@@ -809,14 +802,32 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                 }
 
-
                 //If we got this far, something failed, redisplay form
                 model = PrepareBillingAddressModel(cart,
                     selectedCountryId: model.NewAddress.CountryId,
                     overrideAttributesXml: customAttributes);
                 return View(model);
             }
-            return _baseNopCheckoutController.NewBillingAddress(model, form);
+            if (ModelState.IsValid)
+            {
+                ActionResult retVal = _baseNopCheckoutController.NewBillingAddress(model, form);
+                if (_baseNopCheckoutController.ModelState.IsValid)
+                {
+                    return retVal;
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            var customAttributesOuter = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var cartOuter = _workContext.CurrentCustomer.ShoppingCartItems
+            .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            .LimitPerStore(_storeContext.CurrentStore.Id)
+            .ToList();
+            model = _checkoutModelFactory.PrepareBillingAddressModel(cartOuter,
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributesOuter);
+            return View(model);
+            //return _baseNopCheckoutController.NewBillingAddress(model, form);
         }
 
         #endregion
@@ -887,11 +898,17 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             {
                 if (_workContext.CurrentCustomer.BillingAddress == null)
                 {
-                    Address add = new Address();
-                    add.Address1 = "1912 John Towers Ave";
+                    Address add = new Address();                    
+                    add.Company = "Graphic Business Solutions";
+                    add.Address1 = "1912 John Towers Ave.";
                     add.City = "El Cajon";
                     add.CreatedOnUtc = DateTime.Now;
-                    add.Email = "info@gogbs.com";
+                    add.Email = _workContext.CurrentCustomer.Email;
+                    add.ZipPostalCode = "92020";
+                    add.StateProvince = _stateProvinceService.GetStateProvinceByAbbreviation("CA");
+                    add.StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation("CA").Id;
+                    add.Country = _countryService.GetCountryByTwoLetterIsoCode("US");
+                    add.CountryId = _countryService.GetCountryByTwoLetterIsoCode("US").Id;
                     _workContext.CurrentCustomer.BillingAddress = add;
                 }
                 var result = _baseNopCheckoutController.ConfirmOrder();

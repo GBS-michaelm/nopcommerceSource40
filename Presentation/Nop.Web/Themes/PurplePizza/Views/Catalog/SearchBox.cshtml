@@ -1,26 +1,26 @@
 ﻿@model SearchBoxModel
 @using Nop.Web.Models.Catalog;
-@using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { @class = "navbar-form navbar-left", id = "small-search-box-form"}))
+@using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { id = "small-search-box-form" }))
 {
-    <div class="form-group">
-        <input type="text" class="search-nav form-control" id="small-searchterms" autocomplete="off" placeholder="@T("Search.SearchBox.Tooltip")" name="q" />
-        @Html.Widget("searchbox_before_search_button")
-        @*<input type="submit" class="btn search-box-button" value="Search" />*@
-        <a onclick="document.getElementById('small-search-box-form').submit();" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>Search</a>
-        @if (Model.SearchTermMinimumLength > 0)
-        {
-            <script type="text/javascript">
-                $("#small-search-box-form").submit(function(event) {
+    <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" />
+    @Html.Widget("searchbox_before_search_button")
+    <input checked="checked" id="adv" name="adv" type="checkbox" value="true" hidden/>
+    <input checked="checked" id="sid" name="sid" type="checkbox" value="true" hidden />
+    <input type="submit" class="button-1 search-box-button" value="@T("Search.Button")" />
+    if (Model.SearchTermMinimumLength > 0)
+    {
+        <script type="text/javascript">
+            $("#small-search-box-form").submit(function(event) {
                 if ($("#small-searchterms").val() == "") {
                     alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Search.EnterSearchTerms").Text))');
                     $("#small-searchterms").focus();
                     event.preventDefault();
                 }
             });
-            </script>
-        }
-        @if (Model.AutoCompleteEnabled)
-        {
+        </script>
+    }
+    if (Model.AutoCompleteEnabled)
+    {
         <text>
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -41,13 +41,12 @@
                             t = htmlEncode(t);
                             return $("<li></li>")
                                 .data("item.autocomplete", item)
-                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)" + t + "</a>")
-                            .appendTo(ul);
-                    };
+                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                                .appendTo(ul);
+                        };
                 });
             </script>
         </text>
-        }
-        @Html.Widget("searchbox")
-    </div>
+    }
+    @Html.Widget("searchbox")
 }

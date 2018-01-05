@@ -24,6 +24,8 @@
     else
     {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/thumbnail.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/thumbnail-responsive.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles-responsive.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/canvas.css", themeName));
@@ -34,6 +36,10 @@
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/animate.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-icons.css", themeName));
+
+        // Custom Css for Speed Filter plugin
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/tab-style.css", themeName));
+
         Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/plugins.js");
     }
     if (isIeEightOrLess)

@@ -126,9 +126,9 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.CustomValues.Add("Monthly Billing Name", form["MonthlyBillingName"]);
-            paymentInfo.CustomValues.Add("Monthly Billing Phone", form["MonthlyBillingPhoneNumber"]);
-            paymentInfo.CustomValues.Add("Monthly Billing Reference", form["MonthlyBillingReference"]);
+            //paymentInfo.CustomValues.Add("Monthly Billing Name", form["MonthlyBillingName"]);
+            //paymentInfo.CustomValues.Add("Monthly Billing Phone", form["MonthlyBillingPhoneNumber"]);
+            //paymentInfo.CustomValues.Add("Monthly Billing Reference", form["MonthlyBillingReference"]);
             _httpContext.Session["monthlyBillingName"] = form["MonthlyBillingName"];
             _httpContext.Session["monthlyBillingPhoneNumber"] = form["MonthlyBillingPhoneNumber"];
             _httpContext.Session["monthlyBillingReference"] = form["MonthlyBillingReference"];

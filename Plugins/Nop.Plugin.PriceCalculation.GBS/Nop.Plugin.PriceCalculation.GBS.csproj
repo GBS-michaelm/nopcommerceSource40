@@ -34,6 +34,7 @@
     <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="itextsharp">
       <HintPath>..\..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
@@ -46,11 +47,6 @@
     <Reference Include="Nop.Core, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\Nop.Core\bin\Debug\Nop.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Nop.Services, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Nop.Services\bin\Debug\Nop.Services.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nop.Web.Framework, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -76,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Catalog\GBSPriceCalculationService.cs" />
     <Compile Include="Controllers\PriceCalculationConfigurationGBSController.cs" />
+    <Compile Include="DataManager.cs" />
     <Compile Include="GBSPriceCalculationSettings.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
@@ -107,6 +104,11 @@
     <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
       <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
       <Name>Nop.Data</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
+      <Project>{210541ad-f659-47da-8763-16f36c5cd2f4}</Project>
+      <Name>Nop.Services</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">

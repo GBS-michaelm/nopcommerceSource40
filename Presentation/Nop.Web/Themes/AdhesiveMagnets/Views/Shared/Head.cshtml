@@ -21,9 +21,12 @@
     {
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/styles.css", themeName));
     }
-    
+
     //add jQuery UI css file
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+
+    // Custom Css for Speed Filter plugin
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/tab-style.css", themeName));
 
     if (browser.Browser == "IE" && browser.MajorVersion == 8)
     {

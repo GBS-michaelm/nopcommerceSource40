@@ -22,7 +22,7 @@ class CcWidget {
             img = $("td.product-picture img", row);
         }
         if (img != null) {
-       //     img.attr("style", "max-width: 80px; max-height: 80px");
+         //   img.attr("style", "max-width: 80px; max-height: 80px");
             img.attr("src", imageSource);
         }
     }
@@ -118,3 +118,4 @@ class CcWidget {
 
 const ccWidget = new CcWidget();
 ccWidget.init();
+ 
