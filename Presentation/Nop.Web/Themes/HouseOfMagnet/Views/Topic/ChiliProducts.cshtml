@@ -113,12 +113,19 @@
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
     var imageUrl = '';
     var check = true;
-
+    var iframe = document.getElementById('chili-iframe');
 
     // Listen to message from child window
     eventer(messageEvent, function (e) {
-        var cartImageSrc = "http://chili.houseofmagnets.com" + JSON.parse(e.data)[320];
-        AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
+        console.log(e);
+        if(e.data == "VALIDATE")
+        {
+           iframe.contentWindow.postMessage("TEST", "*");
+        } else {
+            var cartImageSrc = (JSON.parse(e.data).hasOwnProperty('399') || JSON.parse(e.data).hasOwnProperty('misc3')) ? "http://chili.houseofmagnets.com" + JSON.parse(e.data)[320] : "undefined";
+            AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
+        }
+    
 
     }, false);
 </script>

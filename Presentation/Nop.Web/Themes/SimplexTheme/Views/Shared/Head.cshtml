@@ -36,6 +36,10 @@
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/animate.css", themeName));
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-icons.css", themeName));
+
+        // Custom Css for Speed Filter plugin
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/tab-style.css", themeName));
+
         Html.AddScriptParts("~/Themes/SimplexTheme/Content/js/plugins.js");
     }
     if (isIeEightOrLess)

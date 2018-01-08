@@ -144,7 +144,15 @@
                                     @if (item.AttributeInfo.Contains("CustomImgUrl"))
                                     {
                                         string url = imgUrlDict[item.Id];
-                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
+                                        if (!url.Contains("undefined"))
+                                        {
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Widget("product_details_widget", item.ProductId)
+                                        }
+
                                     }
                                     else
                                     {
@@ -225,9 +233,9 @@
                                         <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                     </div>
                                 }
-                                @if (item.AttributeInfo.Contains("chili"))
+                                @if (item.AttributeInfo.Contains("CHILI"))
                                 {
-                                    if (!item.AttributeInfo.Contains("WE-DESIGN") && !item.AttributeInfo.Contains("PREVIOUS-JOB"))
+                                    if (item.AttributeInfo.Contains("399"))
                                     {
                                         var editCartItemUrl = "/chili?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
@@ -238,11 +246,23 @@
                                     }
 
                                 }
-                                else if (item.AttributeInfo.Contains("gluon"))
+                                else if (item.AttributeInfo.Contains("GLUON"))
                                 {
-                                    if (!item.AttributeInfo.Contains("WE-DESIGN") && !item.AttributeInfo.Contains("PREVIOUS-JOB"))
+                                    if (item.AttributeInfo.Contains("399"))
                                     {
                                         var editCartItemUrl = "/gluon?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
+
+
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                }
+                                else if (item.AttributeInfo.Contains("CANVAS"))
+                                {
+                                    if (item.AttributeInfo.Contains("399"))
+                                    {
+                                        var editCartItemUrl = "/canvas?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
 
                                         <div class="edit-item">

@@ -65,7 +65,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 model.NoOfChildren_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.NoOfChildren, storeScope);
                 model.IsActive_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.IsActive, storeScope);
             }
-            return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/Configure.cshtml", model);
+            return View("~/Plugins/Catalog.GBS/Views/Configure.cshtml", model);
         }
 
         [AdminAuthorize]
@@ -101,6 +101,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [ChildActionOnly]
+        [OutputCache(Duration = 3600, VaryByParam = "none")]
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
@@ -123,13 +124,32 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             if (categoryNavigationSettings.IsActive)
             {
                 var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
-                return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
+                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
             }
             else
             {
                 var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-                return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/CategoryNavigation.cshtml", model);
+                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
             }
         }
+
+        public static bool HasSubcategoryProducts(CategorySimpleModelCustom category)
+        {
+            if (category.SubCategories.Any())
+            {
+                foreach (var subcategory in category.SubCategories)
+                {
+                    if (subcategory.ProductsCount > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return HasSubcategoryProducts(subcategory);
+                    }
+                }
+            }
+            return false;
+        }       
     }
 }

@@ -31,7 +31,7 @@ namespace Nop.Plugin.Order.GBS
         /// <param name="routeValues">Route values</param>
         public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            if (widgetZone == "categorydetails_top")
+            if (widgetZone == "order_addPhoneNumber_widget") 
             {
                     actionName = "AddPhoneNumber";
                     controllerName = "GBSOrder";

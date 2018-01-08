@@ -61,9 +61,9 @@
 @{
     ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
     ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    IProductService productService = EngineContext.Current.Resolve<IProductService>();
 
     DBManager manager = new DBManager();
-
 
     IList<ProductCategory> productCategories = categoryService.GetProductCategoriesByProductId(Model.Id);
     string categoryIds = "";
@@ -90,15 +90,17 @@
         amalgamationCategoryId = Int32.Parse(amalgamationDataView[0]["masterCategoryId"].ToString());
         amalgamation = true;
     }
-    int featuredProductId = 00;
+    int featuredProductId = 9999;
     string featuredProductDataQuery = "usp_SelectGBSCustomCategoryData @categoryId";
     Dictionary<string, Object> featuredProductDic = new Dictionary<string, Object>();
     featuredProductDic.Add("@CategoryId", amalgamationCategoryId);
     DataView featuredProductDataView = manager.GetParameterizedDataView(featuredProductDataQuery, featuredProductDic);
+    Product featuredProduct = null;
 
-    if(featuredProductDataView.Count > 0)
+    if (featuredProductDataView.Count > 0)
     {
         featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
+        featuredProduct = productService.GetProductById(featuredProductId); //allow access to products tier price chart    
     }
 
 
@@ -180,7 +182,7 @@
                                             @if (!String.IsNullOrWhiteSpace(variant.Name))
                                             {
                                                 <h4 class="variant-name">
-                                                    @variant.Name
+                                                    @variant.ShortDescription
                                                 </h4>
                                             }
                                             <div class="product-variant-wrapper">
@@ -217,6 +219,7 @@
                                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
 
                                                         bool amalgamateThis = false;
+                                                        
 
                                                         if (amalgamation)
                                                         {
@@ -319,7 +322,17 @@
 
                                             </div>
                                             <!--delivery-->
-                                            @Html.Partial("_ProductTierPrices", @variant.TierPrices)
+                                            @{
+                                                if (@featuredProductId != 9999 && amalgamation == true)
+                                                {
+                                                    @Html.Partial("_FeaturedProductTierPrices", @featuredProduct)
+                                                }
+                                                else
+                                                {
+                                                    @Html.Partial("_ProductTierPrices", @variant.TierPrices)
+                                                }
+                                            }
+                                            
                                             @*@Html.Partial("_DeliveryInfo", variant)*@
                                         </div>
                                                             }
@@ -372,7 +385,7 @@
                 CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
                 categoryModel.CustomProperties.Add("BarType", "Browse");              
                 categoryModel.CustomProperties.Add("ParentBrowseURL", categoryModel.SeName);
-
+                
                 @Html.Partial("_AmalgamationBar", categoryModel);
             }
         }
