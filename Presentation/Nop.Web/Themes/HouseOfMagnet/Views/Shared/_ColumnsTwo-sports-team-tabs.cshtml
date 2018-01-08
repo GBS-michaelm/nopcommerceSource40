@@ -278,7 +278,7 @@
                         <label id='label@(i + 1)' class='gateway-label' for='tab@(i + 1)'> @teamCategories[i].Name </label>
 
                         }
-                        @for (int j = 0; j < teamCategories.Count; j++)
+                        @*@for (int j = 0; j < teamCategories.Count; j++)
                         {
 
                             IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[j].Id);
@@ -311,9 +311,9 @@
                                             }
                                     
                                 </section>
-                        }
+                        }*@
                         
-                           @*@Html.Action("SportsTeamsList", "GBSCatalog", new { model = teamCategories, sportsTeamId = Model.Id })*@  
+                           @Html.Action("SportsTeamsList", "GBSCatalog", new { model = teamCategories, sportsTeamId = Model.Id })  
                            @*@Html.Action("SportsTeamsTest", "GBSCatalog")*@     
                         
                     </main>
