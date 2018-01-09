@@ -101,7 +101,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 3600, VaryByParam = "none")]
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
