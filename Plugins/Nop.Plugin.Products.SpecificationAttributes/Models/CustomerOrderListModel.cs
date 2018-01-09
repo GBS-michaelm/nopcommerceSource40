@@ -15,6 +15,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Models
             CancelRecurringPaymentErrors = new List<string>();
         }
 
+        public PagerModel PagerModel { get; set; }
         public IList<OrderDetailsModel> Orders { get; set; }
         public IList<RecurringOrderModel> RecurringOrders { get; set; }
         public IList<string> CancelRecurringPaymentErrors { get; set; }
@@ -27,9 +28,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Models
             public OrderDetailsModel()
             {
                 Items = new List<OrderItemModel>();
-              //  ShippingAddress = new AddressModel();
+                //  ShippingAddress = new AddressModel();
             }
-         //   public AddressModel ShippingAddress { get; set; }
+            //   public AddressModel ShippingAddress { get; set; }
+
+            public string CustomOrderNumber { get; set; }
             public string ShipTo { get; set; }
             public IList<OrderItemModel> Items { get; set; }
             public bool IsReOrderAllowed { get; set; }
@@ -52,6 +55,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Models
             public int TotalCycles { get; set; }
             public int CyclesRemaining { get; set; }
             public int InitialOrderId { get; set; }
+            public string InitialOrderNumber { get; set; }
+            public bool CanRetryLastPayment { get; set; }
             public bool CanCancel { get; set; }
         }
         public partial class OrderItemModel : BaseNopEntityModel

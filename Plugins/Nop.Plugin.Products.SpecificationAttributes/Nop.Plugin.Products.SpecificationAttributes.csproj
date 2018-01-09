@@ -36,6 +36,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>False</Private>
@@ -109,7 +113,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="Controllers\SpecificationAttributesController.cs" />
+    <Compile Include="DependencyRegister.cs" />
+    <Compile Include="ModelFactory\OrderModelFactory.cs" />
     <Compile Include="Setttings.cs" />
     <Compile Include="Models\CustomerOrderListModel.cs" />
     <Compile Include="ProductSpecificationAttributeProcessor.cs" />
