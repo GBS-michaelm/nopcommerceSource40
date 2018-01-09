@@ -121,16 +121,16 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                     }
                 }
             }
-            if (categoryNavigationSettings.IsActive)
-            {
+            //if (categoryNavigationSettings.IsActive)
+            //{
                 var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
                 return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
-            }
-            else
-            {
-                var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
-            }
+            //}
+            //else
+            //{
+            //    var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
+            //    return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
+            //}
         }
 
         public static bool HasSubcategoryProducts(CategorySimpleModelCustom category)
