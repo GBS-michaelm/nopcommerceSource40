@@ -25,6 +25,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        public readonly IStoreContext _storeContext;
 
         public WidgetsCategoryNavigationController(ICatalogModelFactoryCustom catalogModelFactoryCustom,                        
             ICategoryService categoryService,
@@ -32,7 +33,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IStoreContext storeContext)
         {                        
             this._categoryService = categoryService;
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
@@ -42,6 +44,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._storeContext = storeContext;
         }
 
 
@@ -105,7 +108,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.CurrentStore.Id;
             var categoryNavigationSettings = _settingService.LoadSetting<CategoryNavigationSettings>(storeScope);
             int currentCategoryId = 0;
             int currentProductId = 0;
