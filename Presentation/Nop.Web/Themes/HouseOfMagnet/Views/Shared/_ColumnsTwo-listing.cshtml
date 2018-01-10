@@ -6,13 +6,8 @@
 @using Nop.Services.Stores
 @using Nop.Core
 @{
-    PluginDescriptor requestQuotePlugin = EngineContext.Current.Resolve<IPluginFinder>().GetPluginDescriptorBySystemName("Catalog.GBS");
-    bool IsRequestQuotePluginInstalled = requestQuotePlugin != null && requestQuotePlugin.Installed;
-
-    var _storeService = EngineContext.Current.Resolve<IStoreService>();
-    var _workContext = EngineContext.Current.Resolve<IWorkContext>();
-    var storeScope = EngineContext.Current.Resolve<WidgetsCategoryNavigationController>().GetActiveStoreScopeConfiguration(_storeService, _workContext);
-    var categoryNavigationSettings = EngineContext.Current.Resolve<ISettingService>().LoadSetting<CategoryNavigationSettings>(storeScope);
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var categoryNavigationSettings = EngineContext.Current.Resolve<ISettingService>().LoadSetting<CategoryNavigationSettings>(_storeContext.CurrentStore.Id);
 }
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -25,7 +20,6 @@
     {
         currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
     }
-
 
     //current manufacturer ID
     int currentManufacturerId = 0;
