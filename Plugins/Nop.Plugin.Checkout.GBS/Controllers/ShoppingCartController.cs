@@ -449,7 +449,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //total price
             Product featuredProduct = productService.GetProductById(featuredProductId);
             ICollection<TierPrice> tiers = featuredProduct.TierPrices;
-            int t = 0;
+            int t = 1;
             TierPrice tierForPrice = null;
             TierPrice tierForNextDiscount = null;
             
@@ -463,7 +463,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     if(tiers.Count == t) //customer is getting final tier pricing, best price
                     {
                         tierForNextDiscount = tier;
-                        break;
+                        //break;
                     }
                 }
                 else

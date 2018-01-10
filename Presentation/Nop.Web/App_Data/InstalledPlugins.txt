@@ -39,3 +39,5 @@ Widgets.Marketing
 Payments.GBS.MonthlyBilling
 Payments.GBS.PurchaseOrder
 FoxNetSoft.Plugin.Misc.SpeedFilters
+Nop.Plugin.Catalog.GBS
+Catalog.GBS

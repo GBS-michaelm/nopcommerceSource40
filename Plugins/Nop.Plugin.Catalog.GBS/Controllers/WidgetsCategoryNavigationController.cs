@@ -25,6 +25,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        public readonly IStoreContext _storeContext;
 
         public WidgetsCategoryNavigationController(ICatalogModelFactoryCustom catalogModelFactoryCustom,                        
             ICategoryService categoryService,
@@ -32,7 +33,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IStoreContext storeContext)
         {                        
             this._categoryService = categoryService;
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
@@ -42,6 +44,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._storeContext = storeContext;
         }
 
 
@@ -65,7 +68,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 model.NoOfChildren_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.NoOfChildren, storeScope);
                 model.IsActive_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.IsActive, storeScope);
             }
-            return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/Configure.cshtml", model);
+            return View("~/Plugins/Catalog.GBS/Views/Configure.cshtml", model);
         }
 
         [AdminAuthorize]
@@ -101,10 +104,11 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [ChildActionOnly]
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.CurrentStore.Id;
             var categoryNavigationSettings = _settingService.LoadSetting<CategoryNavigationSettings>(storeScope);
             int currentCategoryId = 0;
             int currentProductId = 0;
@@ -123,13 +127,32 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             if (categoryNavigationSettings.IsActive)
             {
                 var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
-                return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
+                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
             }
             else
             {
                 var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-                return View("~/Plugins/Nop.Plugin.Catalog.GBS/Views/CategoryNavigation.cshtml", model);
+                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
             }
         }
+
+        public static bool HasSubcategoryProducts(CategorySimpleModelCustom category)
+        {
+            if (category.SubCategories.Any())
+            {
+                foreach (var subcategory in category.SubCategories)
+                {
+                    if (subcategory.ProductsCount > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return HasSubcategoryProducts(subcategory);
+                    }
+                }
+            }
+            return false;
+        }       
     }
 }

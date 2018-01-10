@@ -17,9 +17,8 @@
                 return true;
             }
         }
-
         return false;
-    }
+    } 
 }
 @helper RenderCategoryLine(CategorySimpleModel category)
 {
@@ -56,12 +55,12 @@
 }
 @if (Model.Categories.Count > 0)
 {
-    <div class="block block-category-navigation">
-        <div class="title">
+    <div class="block block-category-navigation well box-shadow-wrapper">
+        <div class="title main-title">
             <strong>@T("Categories")</strong>
         </div>
         <div class="listbox">
-            <ul class="list">
+            <ul class="nav nav-list">
                 @foreach (var category in Model.Categories)
                 {
                     @RenderCategoryLine(category)
