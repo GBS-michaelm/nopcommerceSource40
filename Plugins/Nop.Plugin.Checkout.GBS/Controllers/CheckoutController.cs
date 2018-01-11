@@ -486,13 +486,10 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
             }
 
-            if (ModelState.IsValid)
+            if (model.PickUpInStore ||(!model.PickUpInStore && ModelState.IsValid))
             {
                 ActionResult retVal = _baseNopCheckoutController.NewShippingAddress(model, form);
-                if (_baseNopCheckoutController.ModelState.IsValid)
-                {
-                    return retVal;
-                }
+                return retVal;
             }
 
             //If we got this far, something failed, redisplay form
@@ -901,8 +898,9 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
             {
                 if (_workContext.CurrentCustomer.BillingAddress == null)
                 {
-                    Address add = new Address();
-                    add.Address1 = "1912 John Towers Ave";
+                    Address add = new Address();                    
+                    add.Company = "Graphic Business Solutions";
+                    add.Address1 = "1912 John Towers Ave.";
                     add.City = "El Cajon";
                     add.CreatedOnUtc = DateTime.Now;
                     add.Email = _workContext.CurrentCustomer.Email;

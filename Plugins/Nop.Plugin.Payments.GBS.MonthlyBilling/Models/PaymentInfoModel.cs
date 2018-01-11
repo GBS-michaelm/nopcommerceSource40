@@ -6,15 +6,15 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Models
 {
     public class PaymentInfoModel : BaseNopModel
     {
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.MonthlyBillingReference")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.MonthlyBillingReference")]
         [AllowHtml]
         public string MonthlyBillingReference { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.MonthlyBillingName")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.MonthlyBillingName")]
         [AllowHtml]
         public string MonthlyBillingName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.MonthlyBillingPhoneNumber")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.MonthlyBillingPhoneNumber")]
         [AllowHtml]
         public string MonthlyBillingPhoneNumber { get; set; }
     }

@@ -114,3 +114,17 @@
 .fns-speedfilters .block .title .clearfilter{
     display: none !important;
 }
+
+.fns-speedfilters li {
+    line-height: 30px;
+}
+.fns-speedfilters .title.arrow-up-down {
+    background-image: none;
+    background-color: #f6f6f6 !important;
+}
+
+@media all and (max-width: 768px) {
+.fns-speedfilters .title-block p.title {
+    display: none;
+    }
+}

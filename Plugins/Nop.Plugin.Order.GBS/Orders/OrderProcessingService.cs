@@ -282,6 +282,12 @@ namespace Nop.Services.Custom.Orders
                             _httpContext.Session.Remove("monthlyBillingReference");
                         }
                     }
+                    //add impersonation if exists
+                    if (_workContext.OriginalCustomerIfImpersonated != null)
+                    {
+                        processPaymentRequest.CustomValues["CSR id"] = _workContext.OriginalCustomerIfImpersonated.Id;
+                        //processPaymentRequest.CustomValues["CSR email"] = _workContext.OriginalCustomerIfImpersonated.Email;
+                    }
 
                 }
 

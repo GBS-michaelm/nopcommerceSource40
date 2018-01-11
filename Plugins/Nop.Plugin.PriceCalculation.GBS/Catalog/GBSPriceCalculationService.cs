@@ -57,7 +57,6 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 #region Amalgamation
 
                 //AMALGAMTION is only for products that use cartons at this point
-
                 DBManager manager = new DBManager();
                 ICategoryService iCategoryService = EngineContext.Current.Resolve<ICategoryService>();
                 ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
@@ -65,16 +64,22 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 //usp check amalgamation
 
                 IList<ProductCategory> productCategories = iCategoryService.GetProductCategoriesByProductId(product.Id);
-                string categoryIds = "";
-                for (int i = 0; i < productCategories.Count; i++)
-                {                    
-                    if(i < productCategories.Count && i != 0)
-                    {
-                         categoryIds += "," + productCategories[i].CategoryId.ToString();
-                    }else
-                    {
-                        categoryIds += productCategories[i].CategoryId.ToString();
-                    }
+                //string categoryIds = "";
+                //for (int i = 0; i < productCategories.Count; i++)
+                //{                    
+                //    if(i < productCategories.Count && i != 0)
+                //    {
+                //         categoryIds += "," + productCategories[i].CategoryId.ToString();
+                //    }else
+                //    {
+                //        categoryIds += productCategories[i].CategoryId.ToString();
+                //    }
+                //}
+
+                List<int> categoryIdsList = new List<int>();
+                foreach (var category in productCategories)
+                {
+                    categoryIdsList.Add(category.CategoryId);
                 }
 
                 //eventually current packtype will need to be an attribute passed in
@@ -87,93 +92,102 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                         curProductPackType = spec.SpecificationAttributeOption.Name;
                     }
                 }
-                
+                                
                 string amalgamationDataQuery = "EXEC usp_SelectGBSAmalgamationMaster @categoryId";
-                Dictionary<string, string> amalgamationDic = new Dictionary<string, string>();
-                amalgamationDic.Add("@CategoryId", categoryIds);               
-                DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+                Dictionary<string, object> amalgamationDic = new Dictionary<string, object>();
+                amalgamationDic.Add("@CategoryId", "");
 
-
-
-                if(amalgamationDataView != null && amalgamationDataView.Count > 0 && curProductPackType == "Carton")
+                foreach (var cat in categoryIdsList)
                 {
-                    ICollection<ShoppingCartItem> cartItemList = customer.ShoppingCartItems;
-                    if(cartItemList != null)
+                    amalgamationDic["@CategoryId"] = cat;
+                    DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+
+                    if (amalgamationDataView != null && amalgamationDataView.Count > 0 && curProductPackType == "Carton")
                     {
-                        List<int> amalgamationMasterCategoryList = new List<int>(); //used if multiple master category id are returned
-                        int masterCategoryId; //used to get featured product id
-                        int amalgamationGroupId; //group that holds all the associated category ids
-                        int bestPriceProductId;
-                        int qty = 0;
-
-                        for (int i = 0; i < amalgamationDataView.Count; i++)
+                        ICollection<ShoppingCartItem> cartItemList = customer.ShoppingCartItems;
+                        if (cartItemList != null)
                         {
-                            //add all return master Ids 
-                            amalgamationMasterCategoryList.Add(Int32.Parse(amalgamationDataView[i]["masterCategoryId"].ToString()));
-                        }
+                            List<int> amalgamationMasterCategoryList = new List<int>(); //used if multiple master category id are returned
+                            int masterCategoryId; //used to get featured product id
+                            int amalgamationGroupId; //group that holds all the associated category ids
+                            int bestPriceProductId;
+                            int qty = 0;
 
-                        int[] masterIdProductIdGroupId = GetRealMasterId(amalgamationMasterCategoryList);
-                        masterCategoryId = masterIdProductIdGroupId[0];
-                        bestPriceProductId = masterIdProductIdGroupId[1];
-                        amalgamationGroupId = masterIdProductIdGroupId[2];
-
-                        List<int> categoryGroupMembersIds = GetCategoryGroupIds(amalgamationGroupId);
-
-                        Dictionary<int, int> qtyEachDic = new Dictionary<int, int>();
-                        
-                        //remove items that don't use the carton packtype
-                        List<ShoppingCartItem> AmalgamationList = new List<ShoppingCartItem>();
-                        foreach (var item in cartItemList)
-                        {
-                            var specAttrs = specService.GetProductSpecificationAttributes(item.ProductId);
-                            foreach (var spec in specAttrs)
+                            for (int i = 0; i < amalgamationDataView.Count; i++)
                             {
-                                string type = "";
-                                if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
-                                {
-                                    type = spec.SpecificationAttributeOption.Name;
-                                    if (type == "Carton")
-                                    {
-                                        //cartItemList.Remove(item);
-                                        AmalgamationList.Add(item);
-                                    }
-                                }
+                                //add all return master Ids 
+                                amalgamationMasterCategoryList.Add(Int32.Parse(amalgamationDataView[i]["masterCategoryId"].ToString()));
                             }
-                        }
-                                                
-                        for (int i = 0; i < categoryGroupMembersIds.Count; i++)
-                        {
-                            foreach (ShoppingCartItem item in AmalgamationList)
-                            {
-                                IList<ProductCategory> cartProductCategories = iCategoryService.GetProductCategoriesByProductId(item.ProductId);
 
-                                foreach (ProductCategory cartCategory in cartProductCategories)
+                            int[] masterIdProductIdGroupId = GetRealMasterId(amalgamationMasterCategoryList);
+                            masterCategoryId = masterIdProductIdGroupId[0];
+                            bestPriceProductId = masterIdProductIdGroupId[1];
+                            amalgamationGroupId = masterIdProductIdGroupId[2];
+
+                            List<int> categoryGroupMembersIds = GetCategoryGroupIds(amalgamationGroupId);
+
+                            Dictionary<int, int> qtyEachDic = new Dictionary<int, int>();
+
+                            //remove items that don't use the carton packtype
+                            List<ShoppingCartItem> AmalgamationList = new List<ShoppingCartItem>();
+                            foreach (var item in cartItemList)
+                            {
+                                var specAttrs = specService.GetProductSpecificationAttributes(item.ProductId);
+                                foreach (var spec in specAttrs)
                                 {
-                                    if (cartCategory.CategoryId == categoryGroupMembersIds[i])
+                                    string type = "";
+                                    if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "Pack Type")
                                     {
-                                        if (!qtyEachDic.ContainsKey(item.Id))
+                                        type = spec.SpecificationAttributeOption.Name;
+                                        if (type == "Carton")
                                         {
-                                            qtyEachDic.Add(item.Id, item.Quantity);
+                                            //cartItemList.Remove(item);
+                                            AmalgamationList.Add(item);
                                         }
-
                                     }
                                 }
-
                             }
+
+                            for (int i = 0; i < categoryGroupMembersIds.Count; i++)
+                            {
+                                foreach (ShoppingCartItem item in AmalgamationList)
+                                {
+                                    IList<ProductCategory> cartProductCategories = iCategoryService.GetProductCategoriesByProductId(item.ProductId);
+
+                                    foreach (ProductCategory cartCategory in cartProductCategories)
+                                    {
+                                        if (cartCategory.CategoryId == categoryGroupMembersIds[i])
+                                        {
+                                            if (!qtyEachDic.ContainsKey(item.Id))
+                                            {
+                                                qtyEachDic.Add(item.Id, item.Quantity);
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                            }
+
+                            foreach (KeyValuePair<int, int> pair in qtyEachDic)
+                            {
+                                qty += pair.Value;
+                            }
+
+                            //qty = 20;
+
+                            product = _productService.GetProductById(bestPriceProductId);
+                            quantity = qty;
                         }
 
-                        foreach (KeyValuePair<int, int> pair in qtyEachDic)
-                        {
-                            qty += pair.Value;
-                        }
+                        break;
 
-                        //qty = 20;
+                    }
 
-                        product = _productService.GetProductById(bestPriceProductId);
-                        quantity = qty;
-                    }                  
-                   
                 }
+                              
+                
+                
 
 
                 //get quantity by finding the number of items that belong to the same alamgamation category

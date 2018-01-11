@@ -51,32 +51,47 @@
 
     if (@Model.Name.ToLower().Contains("specialty"))
     {
-        chart = "hom_specialty_magnets_product_options_chart";
+        chart = "hom_gateway_chart_specialty_magnets";
     }
 	
 	    else if (@Model.Name.ToLower().Contains("notepads"))
     {
-        chart = "hom_notepads_product_options_chart";
+        chart = "hom_gateway_chart_notepads";
     }
 	
 		    else if (@Model.Name.ToLower().Contains("calendars"))
     {
-        chart = "hom_calendars_product_options_chart";
+        chart = "hom_gateway_chart_calendars";
     }
-
 
 		    else if (@Model.Name.ToLower().Contains("golf"))
     {
-        chart = "hom_golf_product_options_chart";
+        chart = "hom_gateway_chart_golf";
     }
 	
 			    else if (@Model.Name.ToLower().Contains("nascar"))
     {
-        chart = "hom_nascar_product_options_chart";
+        chart = "hom_gateway_chart_nascar";
     }
-			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+			    else if (@Model.Name.ToLower().Contains("pad magnets"))
     {
-        chart = "hom_calendar_pads_product_options_chart";
+        chart = "hom_gateway_chart_calendar_pads";
+    }
+				    else if (@Model.Name.ToLower().Contains("partial magnets"))
+    {
+        chart = "hom_gateway_chart_calendar_partial";
+    }
+					    else if (@Model.Name.ToLower().Contains("full magnets"))
+    {
+        chart = "hom_gateway_chart_calendar_full";
+    }
+						    else if (@Model.Name.ToLower().Contains("partial magnets"))
+    {
+        chart = "hom_gateway_chart_calendar_partial";
+    }
+							    else if (@Model.Name.ToLower().Contains("envelopes"))
+    {
+        chart = "hom_gateway_chart_envelopes";
     }
 }
 
@@ -110,9 +125,21 @@
     {
         featcont = "hom_featcont_gateway_nascar";
     }
-			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+			    else if (@Model.Name.ToLower().Contains("pad magnets"))
     {
         featcont = "hom_featcont_gateway_calendar_pads";
+    }
+				    else if (@Model.Name.ToLower().Contains("full magnets"))
+    {
+        featcont = "hom_featcont_gateway_calendar_fulls";
+    }
+					    else if (@Model.Name.ToLower().Contains("partial magnets"))
+    {
+        featcont = "hom_featcont_gateway_calendar_partial";
+    }
+						    else if (@Model.Name.ToLower().Contains("envelopes"))
+    {
+        featcont = "hom_featcont_gateway_envelopes";
     }
 }
 
@@ -147,9 +174,21 @@
     {
         fgclass = "fg_gateway_nascar";
     }
-			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+			    else if (@Model.Name.ToLower().Contains("pad magnets"))
     {
         fgclass = "fg_gateway_calendar_pads";
+    }
+				    else if (@Model.Name.ToLower().Contains("partial magnets"))
+    {
+        fgclass = "fg_gateway_calendar_partial";
+    }
+				    else if (@Model.Name.ToLower().Contains("full magnets"))
+    {
+        fgclass = "fg_gateway_calendar_full";
+    }
+					    else if (@Model.Name.ToLower().Contains("envelopes"))
+    {
+        fgclass = "fg_gateway_envelopes";
     }
 }
 
@@ -183,9 +222,21 @@
     {
         bannerad = "hom_gateway_banner_nascar";
     }
-			    else if (@Model.Name.ToLower().Contains("calendar pads"))
+			    else if (@Model.Name.ToLower().Contains("pad magnets"))
     {
         bannerad = "hom_gateway_banner_calendar_pads";
+    }
+				    else if (@Model.Name.ToLower().Contains("partial magnets"))
+    {
+        bannerad = "hom_gateway_banner_calendar_partial";
+    }
+				    else if (@Model.Name.ToLower().Contains("full magnets"))
+    {
+        bannerad = "hom_gateway_banner_calendar_full";
+    }
+					    else if (@Model.Name.ToLower().Contains("envelopes"))
+    {
+        bannerad = "hom_gateway_banner_envleopes";
     }
 }
 
