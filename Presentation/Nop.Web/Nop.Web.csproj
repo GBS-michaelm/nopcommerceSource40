@@ -3043,6 +3043,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\_FeaturedProductTierPrices.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsOne_subcategories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.SubcategoryGrid.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\_LoginModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

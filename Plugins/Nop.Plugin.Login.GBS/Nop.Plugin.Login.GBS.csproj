@@ -67,9 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\LoginConfigurationGBSController.cs" />
+    <Compile Include="Controllers\GBSLoginController.cs" />
     <Compile Include="GBSLoginSettings.cs" />
+    <Compile Include="Infrastructure\GBSLoginRouteProvider.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
+    <Compile Include="Models\ResponseModel.cs" />
     <Compile Include="MyLoginServicePlugin.cs" />
     <Compile Include="Customers\CustomerRegistrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
