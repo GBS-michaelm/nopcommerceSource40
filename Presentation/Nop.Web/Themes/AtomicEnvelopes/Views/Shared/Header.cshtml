@@ -13,15 +13,15 @@
 <div class="header">
     @Html.Widget("header")
     <div class="header-upper">
-       <div class="header-selectors-wrapper">
-	  $3.95 Shipping on All Orders!
-            
+        <div class="header-selectors-wrapper">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "atm_pre-header-promo-text" })
+
             @Html.Action("TaxTypeSelector", "Common")
-            
+
             @Html.Action("CurrencySelector", "Common")
-            
+
             @Html.Action("LanguageSelector", "Common")
-            
+
             @Html.Widget("header_selectors")
         </div>
         <div class="header-links-wrapper">

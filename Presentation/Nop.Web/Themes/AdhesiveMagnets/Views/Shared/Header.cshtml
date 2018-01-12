@@ -14,7 +14,7 @@
     @Html.Widget("header")
     <div class="header-upper">
        <div class="header-selectors-wrapper">
-	  $3.95 Shipping on All Orders!
+           @Html.Action("TopicBlock", "Topic", new { systemName = "adh_pre-header-promo-text" })
             
             @Html.Action("TaxTypeSelector", "Common")
             
