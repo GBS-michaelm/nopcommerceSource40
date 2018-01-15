@@ -428,7 +428,9 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                 if (!string.IsNullOrEmpty(model.NewAddress.ZipPostalCode))
                 {
-                    Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
+                    //Regex regex = new Regex(@"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$");
+                    Regex regex = new Regex(@"(^\d{5}(-\d{4})?$)|(^[abceghjklmnprstvxyABCEGHJKLMNPRSTVXY]{1}\d{1}[a-zA-Z]{1} *\d{1}[a-zA-Z]{1}\d{1}$)");
+
                     match = regex.Match(model.NewAddress.ZipPostalCode);
                     if (!match.Success)
                     {
