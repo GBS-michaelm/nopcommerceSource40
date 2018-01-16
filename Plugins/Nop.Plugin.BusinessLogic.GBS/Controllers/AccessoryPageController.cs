@@ -37,6 +37,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             return View("AccessoryPage", model);
         }
 
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult AccessoryCategories(int groupId)
         {
             var iCategoryService = EngineContext.Current.Resolve<ICategoryService>();

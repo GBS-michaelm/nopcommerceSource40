@@ -7243,3 +7243,17 @@ pre {
     .item-box .product-title a:hover {
         color: #7c0000;
     }
+.pre-header-promo-text {
+    height: 45px;
+    vertical-align: middle;
+}
+
+    .pre-header-promo-text topic-block {
+        margin: 0;
+    }
+
+    .pre-header-promo-text .topic-block-body p {
+        line-height: 45px;
+        font-size: 14px;
+        margin: 0;
+    }
