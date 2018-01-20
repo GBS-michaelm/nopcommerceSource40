@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-   
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -27,13 +27,124 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <br />
+                        <p><b> <i>You can use the following keywords: </i> </b> </p>
+
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 200px;">Keyword</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<order_id>")) </code> </td>
+                                    <td>order id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<order_guid>")) </code> </td>
+                                    <td>order guid</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<store_id> ")) </code></td>
+                                    <td>current store id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<customer_id>")) </code> </td>
+                                    <td>customer id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<affiliate_id> "))</code></td>
+                                    <td> affiliate id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_id> "))</code></td>
+                                    <td>  product id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_name> "))</code></td>
+                                    <td>  product name</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_sku> "))</code></td>
+                                    <td>  product sku</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_vendorId> "))</code></td>
+                                    <td>  vendor id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_guid> "))</code></td>
+                                    <td>  order item guid</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_index> "))</code></td>
+                                    <td> item index in order</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_quantity> "))</code></td>
+                                    <td>  quantity</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<specattr_"))<i>NAME</i>@Html.Raw(Html.Encode(">"))</code></td>
+                                    <td>  value of specifcation attribute by name </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br />
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DesignFileName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DesignFileName)
+                    </div>
+                </div>
+                <br />
+
+                @{
+                    var isExpand = (Model.IsOrderExportButton == true) ? "true" : "false";
+                    var isCollapse = (Model.IsOrderExportButton == true) ? "collapse in" : "collapse";
+                }
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsOrderExportButton)
+                    </div>
+                    <div class="col-md-9">
+                        <label data-toggle="collapse" data-target="#orderPathGroupDiv" aria-expanded="@isExpand" aria-controls="orderPathGroupDiv">
+                            @Html.NopEditorFor(model => model.IsOrderExportButton)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group @isCollapse" aria-expanded="@isExpand" id="orderPathGroupDiv">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.OrderExportPath)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.OrderExportPath)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
                         &nbsp;
                     </div>
                     <div class="col-md-9">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
-                
+
                 <br /> <hr /> <br />
 
                 <div class="form-group">
@@ -53,7 +164,7 @@
             </div>
         </div>
     </div>
-}
+                    }
 <script>
     function ccUpdateFonts() {
         var link = '@Url.Action("ReloadLocalFonts", "CcConfig")';

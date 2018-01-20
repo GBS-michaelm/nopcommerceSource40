@@ -21,6 +21,8 @@ using Nop.Services.Logging;
 using Nop.Core.Domain.Logging;
 using Nop.Plugin.Widgets.CustomersCanvas.Domain;
 using Nop.Plugin.Widgets.CustomersCanvas.Infrastructure;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.Widgets.CustomersCanvas.Services
 {
@@ -38,6 +40,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
         private readonly IRepository<CcDesign> _ccDesignRepository;
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
+        private readonly IOrderService _orderService;
         #endregion
 
         #region ctor
@@ -49,7 +52,8 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
             ILogger logger,
             IRepository<CcDesign> ccDesignRepository,
             IProductService productService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IOrderService orderService)
         {
             _settingService = settingService;
             _pluginFinder = pluginFinder;
@@ -61,6 +65,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
             _ccDesignRepository = ccDesignRepository;
             _productService = productService;
             _storeContext = storeContext;
+            _orderService = orderService;
         }
         #endregion
 
@@ -282,7 +287,8 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
                 {
                     proofImages = JsonConvert.DeserializeObject<string[]>(design.ImageUrl);
                 }
-            } catch (Exception ex) { }
+            }
+            catch (Exception ex) { }
 
             var ccResult = new CcResult()
             {
@@ -306,7 +312,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
         public string GetEditorDefinition(Product product)
         {
             var productSpecificationAttribute = product.ProductSpecificationAttributes.FirstOrDefault(
-                spec => 
+                spec =>
                     spec.SpecificationAttributeOption.SpecificationAttributeId ==
                     _customersCanvasSettings.EditorDefinitionSpecificationAttributeId);
 
@@ -349,7 +355,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
             var editors = new List<EditorData>();
             foreach (var editorFolder in editorFolders)
             {
-                if(EditorData.IsValidEditorFolder(editorFolder))
+                if (EditorData.IsValidEditorFolder(editorFolder))
                 {
                     editors.Add(new EditorData(editorFolder));
                 }
@@ -365,7 +371,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
             {
                 return editor;
             }
-            
+
             _logger.InsertLog(LogLevel.Error, string.Format("GetEditor: Editor file not found. Title: {0}", title));
             throw new Exception("Editor file not found");
         }
@@ -380,11 +386,11 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
                 {
                     return config;
                 }
-                
+
                 _logger.InsertLog(LogLevel.Error, string.Format("GetConfig: Config file not found. EditorName: {0} configName: {1}", editorName, configName));
                 throw new Exception("Config file not found");
             }
-            
+
             _logger.InsertLog(LogLevel.Error, string.Format("GetConfig:  Editor file not found. EditorName: {0} configName: {1}", editorName, configName));
             throw new Exception("Editor file not found");
         }
@@ -410,12 +416,58 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
                         ccAttributeList.Add(option.Value.name.Value);
                     }
                 }
+                if (cfg.config["steps"] != null)
+                {
+                    var steps = cfg.config["steps"];
+                    if (steps["editor"] != null)
+                    {
+                        var editor = steps["editor"];
+                        if (editor["optionNames"] != null)
+                        {
+                            var optionNames = editor["optionNames"];
+                            foreach (dynamic option in optionNames)
+                            {
+                                ccAttributeList.Add(option.Value);
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex) { }
+
             ccAttributeList.Add("CcId");
 
             return ccAttributeList;
         }
         #endregion
+        public string FormatOrderTokenString(Core.Domain.Orders.OrderItem item, string str)
+        {
+            var order = _orderService.GetOrderById(item.OrderId);
+            var product = _productService.GetProductById(item.ProductId);
+            var index = order.OrderItems.ToList().IndexOf(item);
+            var result = str
+               .Replace("<order_id>", order.Id.ToString())
+               .Replace("<order_guid>", order.OrderGuid.ToString())
+               .Replace("<store_id>", order.StoreId.ToString())
+               .Replace("<customer_id>", order.CustomerId.ToString())
+               .Replace("<affiliate_id>", order.AffiliateId.ToString())
+               .Replace("<product_id>", product.Id.ToString())
+               .Replace("<product_name>", product.Name ?? "")
+               .Replace("<product_sku>", product.Sku ?? "")
+               .Replace("<product_vendorId>", product.VendorId.ToString())
+               .Replace("<item_guid>", item.OrderItemGuid.ToString())
+               .Replace("<item_index>", index.ToString())
+               .Replace("<item_quantity>", item.Quantity.ToString());
+
+            foreach (var spec in product.ProductSpecificationAttributes)
+            {
+                var specName = spec.SpecificationAttributeOption.Name;
+                var specValue = spec.CustomValue;
+                result = result.Replace("<specattr_" + specName + ">", specValue);
+            }
+            result = result.Replace(" ", "");
+            return result;
+        }
+
     }
 }

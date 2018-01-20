@@ -55,7 +55,10 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Controllers
             var model = new CcSettingsViewModel
             {
                 ServerHostUrl = customersCanvasSettings.ServerHostUrl,
-                ActiveStoreScopeConfiguration = storeScope
+                ActiveStoreScopeConfiguration = storeScope,
+                DesignFileName = customersCanvasSettings.DesignFileName,
+                IsOrderExportButton = customersCanvasSettings.IsOrderExportButton,
+                OrderExportPath = customersCanvasSettings.OrderExportPath
             };
             if (storeScope > 0)
             {
@@ -68,21 +71,33 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Controllers
         [HttpPost]
         [AdminAuthorize]
         [ChildActionOnly]
+        [ValidateInput(false)]
         public ActionResult Configure(CcSettingsViewModel model)
         {
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customersCanvasSettings = _settingService.LoadSetting<CcSettings>(storeScope);
             customersCanvasSettings.ServerHostUrl = model.ServerHostUrl;
-
             if (model.ServerHostUrl_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(customersCanvasSettings, x => x.ServerHostUrl, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(customersCanvasSettings, x => x.ServerHostUrl, storeScope);
 
+            customersCanvasSettings.DesignFileName = model.DesignFileName;
+            _settingService.SaveSetting(customersCanvasSettings, x => x.DesignFileName, storeScope, false);
+
+            customersCanvasSettings.IsOrderExportButton = model.IsOrderExportButton;
+            _settingService.SaveSetting(customersCanvasSettings, x => x.IsOrderExportButton, storeScope, false);
+
+            if (!model.IsOrderExportButton)
+            {
+                model.OrderExportPath = "";
+            }
+            customersCanvasSettings.OrderExportPath = model.OrderExportPath;
+            _settingService.SaveSetting(customersCanvasSettings, x => x.OrderExportPath, storeScope, false);
+
             _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-
             return Configure();
         }
 
@@ -98,11 +113,11 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Controllers
         public ActionResult ReloadLocalFonts()
         {
             var CustomersCanvasSecurityKey = System.Configuration.ConfigurationManager.AppSettings["CustomersCanvasApiSecurityKey"];
-            
+
             if (CustomersCanvasSecurityKey == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError,
-                    _localizationService.GetResource("Plugins.Widgets.CustomersCanvas.CustomersCanvasApiKeyWarning"));
+                    _localizationService.GetResource("Plugins.Widgets.CustomersCanvas.Config.CustomersCanvasApiKeyWarning"));
             }
 
             try
