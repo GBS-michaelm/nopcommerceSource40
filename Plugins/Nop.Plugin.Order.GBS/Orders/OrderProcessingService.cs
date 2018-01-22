@@ -316,7 +316,7 @@ namespace Nop.Services.Custom.Orders
                             bool isCCProduct = ccService.IsProductForCc(item.ProductId);
                             if (isCCProduct)
                             {
-                                ProcessCanvasProducts(item, extendedOrderItem, ccFiles);
+                                ProcessCanvasProducts(item, extendedOrderItem, ccFiles, false);
                             }
                             extendedOrderItems.Add(extendedOrderItem);
                         }
@@ -396,7 +396,7 @@ namespace Nop.Services.Custom.Orders
             return designId;
         }
 
-        public void ProcessCanvasProducts(OrderItem item, ExtendedOrderItem extendedOrderItem, List<ProductFileModel> ccFiles)
+        public void ProcessCanvasProducts(OrderItem item, ExtendedOrderItem extendedOrderItem, List<ProductFileModel> ccFiles, bool failedOrder)
         {
             var customer = _workContext.CurrentCustomer;
             var ccResult = ccService.GetCcResult(item.AttributesXml);
@@ -419,7 +419,12 @@ namespace Nop.Services.Custom.Orders
                         string productType = dataName.Split('-').First<string>().ToLower();
                         ccProduct.product.productType = productType + "-" + index;
                         ccProduct.product.hiResPDFURL = cc;
+
                         ccProduct.product.sourceReference = item.Id.ToString();
+                        if (failedOrder)
+                        {
+                            ccProduct.product.sourceReference = extendedOrderItem.ccID.ToString();
+                        }
                         ccProduct.requestSessionID = HttpContext.Current.Session.SessionID;
 
                         #region NoteCard Processing
@@ -456,9 +461,14 @@ namespace Nop.Services.Custom.Orders
                                 Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
                                 if (failedOrder)
                                 {
-                                    product.product.sourceReference = Convert.ToString(0);
+                                    paramDicEx.Add("@nopOrderItemID", Convert.ToString(0));
+                                    paramDicEx.Add("@ccID", product.product.sourceReference);
                                 }
-                                paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
+                                else
+                                {
+                                    paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
+                                    paramDicEx.Add("@ccID", "");
+                                }
                                 paramDicEx.Add("@ProductType", product.product.productType);
                                 paramDicEx.Add("@FileName", product.product.productionFileName);
                                 paramDicEx.Add("@gbsOrderID", gbsOrderID);
@@ -466,7 +476,7 @@ namespace Nop.Services.Custom.Orders
 
                                 //insert = "INSERT INTO tblNOPProductionFiles (nopOrderItemID, ProductType,FileName) ";
                                 //insert += "VALUES ('" + product.product.sourceReference + "', '" + product.product.productType + "', '" + product.product.productionFileName + "')";
-                                var insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName,@gbsOrderID";
+                                var insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName,@gbsOrderID,@ccID";
                                 manager.SetParameterizedQueryNoData(insert, paramDicEx);
                             }
                             else
@@ -1049,7 +1059,7 @@ namespace Nop.Services.Custom.Orders
                 bool isCCProduct = ccService.IsProductForCc(item.ProductId);
                 if (isCCProduct)
                 {
-                    ProcessCanvasProducts(convertSiToOi(item), extendedOrderItem, ccFiles);
+                    ProcessCanvasProducts(convertSiToOi(item), extendedOrderItem, ccFiles, true);
                 }
                 extendedOrderItems.Add(extendedOrderItem);
             }
@@ -1065,6 +1075,7 @@ namespace Nop.Services.Custom.Orders
             OrderItem oi = new OrderItem();
             oi.AttributesXml = si.AttributesXml;
             //oi.Id = si.Id;
+            oi.OrderItemGuid = Guid.NewGuid();
             oi.Product = si.Product;
             oi.ProductId = si.ProductId;
             oi.Quantity = si.Quantity;
