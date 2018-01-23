@@ -169,8 +169,8 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 //load categories if null passed
                 //we implemeneted it this way for performance optimization - recursive iterations (below)
                 //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            }            
+               allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             List<int> BlackList = new List<int>();
             try
