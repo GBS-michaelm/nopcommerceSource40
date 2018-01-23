@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -61,9 +61,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Tax.FixedOrByCountryStateZip", "Plugins\Nop.Plugin.Tax.FixedOrByCountryStateZip\Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj", "{493761CB-5190-4283-8C6C-A8CEB5450CAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Checkout.GBS", "Plugins\Nop.Plugin.Checkout.GBS\Nop.Plugin.Checkout.GBS.csproj", "{AA134DB0-58E9-4E18-A990-B32DECB6BDAA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AE79E188-83B5-490C-A7CB-733383122457} = {AE79E188-83B5-490C-A7CB-733383122457}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Login.GBS", "Plugins\Nop.Plugin.Login.GBS\Nop.Plugin.Login.GBS.csproj", "{B9A54F6C-3FF0-4532-9C43-FDF453057401}"
 EndProject
@@ -72,9 +69,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.PriceCalculation.GBS", "Plugins\Nop.Plugin.PriceCalculation.GBS\Nop.Plugin.PriceCalculation.GBS.csproj", "{DD307F83-573B-46E3-B3B8-EE041EB3B5F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Products.SpecificationAttributes", "Plugins\Nop.Plugin.Products.SpecificationAttributes\Nop.Plugin.Products.SpecificationAttributes.csproj", "{A7E8C298-64DC-4C87-AF21-E4E2891E53DD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AE79E188-83B5-490C-A7CB-733383122457} = {AE79E188-83B5-490C-A7CB-733383122457}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.GBS", "Plugins\Nop.Plugin.Shipping.GBS\Nop.Plugin.Shipping.GBS.csproj", "{C7CA47DE-6694-49C4-9FA2-C4ED8F7D1803}"
 EndProject
@@ -98,7 +92,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Order.GBS", "Plu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAllProducts", "Plugins\Nop.Plugin.DiscountRules.HasAllProducts\Nop.Plugin.DiscountRules.HasAllProducts.csproj", "{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Catalog.GBS", "Plugins\Nop.Plugin.Catalog.GBS\Nop.Plugin.Catalog.GBS.csproj", "{4CE2D650-1213-4A22-A389-8825885EC516}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasCategory", "Plugins\Nop.Plugin.DiscountRules.HasCategory\Nop.Plugin.DiscountRules.HasCategory.csproj", "{2632BC9B-9359-4707-9D8F-D112D4463417}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -514,18 +508,18 @@ Global
 		{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}.Release|x86.ActiveCfg = Release|Any CPU
 		{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}.Release|x86.Build.0 = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Debug|x86.Build.0 = Debug|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|x86.ActiveCfg = Release|Any CPU
-		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|x86.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|x86.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|x86.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -573,7 +567,7 @@ Global
 		{47EE4150-45BC-4B65-8383-F0C069B6E7E5} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{AE79E188-83B5-490C-A7CB-733383122457} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
-		{4CE2D650-1213-4A22-A389-8825885EC516} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{2632BC9B-9359-4707-9D8F-D112D4463417} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE149CF7-63BA-47B5-A6D0-85D344969A2C}
