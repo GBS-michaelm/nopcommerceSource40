@@ -12,9 +12,18 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Model
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Widgets.CustomersCanvas.ServerHostUrl")]
+        [NopResourceDisplayName("Plugins.Widgets.CustomersCanvas.Config.ServerHostUrl")]
         [AllowHtml]
-        public string ServerHostUrl { get;  set; }
+        public string ServerHostUrl { get; set; }
         public bool ServerHostUrl_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.CustomersCanvas.Config.DesignFileName")]
+        public string DesignFileName { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.CustomersCanvas.Config.IsOrderExportButton")]
+        public bool IsOrderExportButton { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.CustomersCanvas.Config.OrderExportPath")]
+        public string OrderExportPath { get; set; }
     }
 }

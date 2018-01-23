@@ -420,7 +420,7 @@ namespace Nop.Plugin.Payments.GBS
             catch(Exception ex)
             {
                 _logger.Error("Payment Plugin Error : " + ex.Message, ex, null);
-                throw new Exception("Payment Plugin Exception", ex);
+                throw new Exception("Payment Plugin Exception: "+ex.Message, ex);
             }
 
             return result;

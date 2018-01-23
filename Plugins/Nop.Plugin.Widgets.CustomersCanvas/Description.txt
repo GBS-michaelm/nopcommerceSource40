@@ -1,9 +1,9 @@
 ﻿Group: Widgets
-FriendlyName: CustomersCanvas
+FriendlyName: Aurigma Personalization Plugin
 SystemName: Widgets.CustomersCanvas
-Version: 1.0
+Version: 1.1.1
 SupportedVersions: 3.90
 Author: Aurigma Inc.
 DisplayOrder: 1
 FileName: Nop.Plugin.Widgets.CustomersCanvas.dll
-Description: This plugin allow to configure products with CustomersCanvas.
+Description: Using this plugin you can associate your products with Customer's Canvas (https://customerscanvas.com) to allow your users personalizing them. It works great for personalizable products like business printing, photo products, custom apparel, drinkware and many more. 

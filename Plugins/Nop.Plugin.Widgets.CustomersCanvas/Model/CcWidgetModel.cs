@@ -22,6 +22,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Model
         public CcDesign CcData { get; set; }
         public int Quantity { get; set; }
         public UserModel User { get; set; }
+        public string Language { get; set; }
     }
 
     public class UserModel

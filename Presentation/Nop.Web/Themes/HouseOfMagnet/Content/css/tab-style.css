@@ -94,7 +94,7 @@
 }
 .title-block .title {
     color: #444;
-    font-size: 18px;
+    font-size: 16px;
     text-transform: capitalize;
     font-weight: 600;
     font-family: Raleway, sans-serif;
@@ -102,7 +102,7 @@
 .fns-speedfilters .title-block .clear-filter-options-all {
     display: block !important;
     color: #444;
-    font-size: 14px;
+    font-size: 12px;
     text-transform: capitalize;
     font-weight: normal;
     font-family: Raleway, sans-serif;

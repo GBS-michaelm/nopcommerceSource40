@@ -50,139 +50,56 @@ namespace Nop.Plugin.Widgets.CustomersCanvas
 
         public override void Install()
         {
-            
+
 
             var settings = new CcSettings
             {
                 ServerHostUrl = @"",
-                
+
             };
             InstallAttributes(settings);
-            
+
 
             _settingService.SaveSetting(settings);
 
-            // todo remove excess resources
             #region language resources
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CustomersCanvasApiKeyWarning",
-                "Please, set the CustomersCanvasApiSecurityKey value in Nopcommerce web.config appSettings");
-
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportDownloadError",
+                "Download error. See System -> Log for details.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportFinish",
+                "PDF files are successfully exported.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportEmpty",
+                "No designs in the selected orders!");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportPathWarning",
+                "Error! Set existing path where exported PDF files should be saved in the Aurigma Personalization Plugin settings!");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportButton",
+                "Get PDF designs from orders");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.DesignButton",
-                "Customize Card");
+                "Personalize");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditor.SelectFromList",
-               "Aurigma Editor");
+                "Choose editor");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditorConfig.SelectFromList",
-               "Editor's Config");
+                "Choose config");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditorConfig.RemoveEditorConfigAttributes",
-              "Remove Editor and Config Attributes");
+                "Clear editor and config");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditorConfig.RemoveEditorConfigAttributesConfirm",
-             "Delete Editor and Config Attributes for this product?");
-
+                "Are you sure you want to delete editor and config attributes for this product?");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.UpdateFonts",
-             "Reload CustomersCanvas fonts");
+                "Reload Customer's Canvas fonts");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.UpdateFontsButton",
-             "Reload");
-           
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ServerHostUrl.Hint",
-                "URL of Customer`s Canvas instance");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ServerHostUrl",
-                "Server host URL.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CreateDesignPageTitle",
-                "Create your design");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.FinishDesign",
-                "Order product");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.DesignNow",
-                "Design now");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SaveProject",
-                "Save project");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowLabel",
-                "Project name:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.UniqueProjectNameWarning",
-                "Project with the name <PROJECT NAME> exists.\n" +
-                "Click OK if you want to overwrite the existing project.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.UserNotRegistered",
-                "User not registered");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowTitle",
-                "Please name your project");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowButton",
-                "OK");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ReviewYourBook",
-                "Review Your Product");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Approval",
-                "Approval");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ApprovalText",
-                "The product will be printed exactly as it appears above. By clicking the \"Approve\" button below, I agree that spelling, content and layout are correct.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ApproveButton",
-                "Approve →");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.MakeSomeChangesButton",
-                "← I want to make some changes");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.BootDesigner",
-                "Product designer");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Enabled",
-                "Enabled:");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom",
-                "Set product template from:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom.IndividualFiles",
-                "individual design files");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom.Folder",
-                "folder with design files");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFolderName",
-                "Product template folder name:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFilePage1",
-                "Design template name for page1:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFilePage2",
-                "Design template name for page2:");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom",
-                "Set mockup template from:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom.IndividualFiles",
-                "individual mockup files");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom.Folder",
-                "folder with mockup files");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFolderName",
-                "Mockup template folder name:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFile1",
-                "Mockup template name for page1:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFile2",
-                "Mockup template name for page2:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType",
-                "Set mockup type:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType.Front",
-               "Foreground mockup");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType.Down",
-               "Background mockup");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Bleed",
-                "Bleed area mm.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Margin",
-                "Margin area mm.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.AdvancedModeDisabled",
-                "Simple mode only:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.EditorConfiguration",
-                "EditorConfiguration:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.ProductDefinition",
-                "ProductDefinition:");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.ShowAdvancedOptions",
-                "Show advanced options");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.HideAdvancedOptions",
-                "Hide advanced options");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ErrorMessage",
-                "We’re sorry, a system error occurred. We apologize for the interruption to your work. Please contact our customer service team for assistance on info@example.com ");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ContinueWithoutSaving", "Continue without saving");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SaveBeforeEdit", "You need to save the product before you can add Customer's Canvas settings");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.UploadImages", "Upload user images");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.DownloadImages.All", "Download user images (all found)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.DownloadImages.Selected", "Download user images (selected)");
+                "Reload");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.ServerHostUrl.Hint",
+                "URL of your Customer's Canvas instance");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.ServerHostUrl",
+                "Customer's Canvas URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.config.DesignFileName",
+                "File name template the exported PDF files (without extension)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.CustomersCanvasApiKeyWarning",
+                "Set the CustomersCanvasApiSecurityKey value in Nopcommerce web.config appSettings. It should be the same as specified in your Customer's Canvas instance.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.IsOrderExportButton",
+                "Add 'Get PDF designs from orders' button to Admin Order List view");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.OrderExportPath",
+               "Path to the folder for the exported PDF files");
 
             #endregion
 
@@ -197,6 +114,11 @@ namespace Nop.Plugin.Widgets.CustomersCanvas
             _settingService.DeleteSetting<CcSettings>();
 
             #region language resources
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportDownloadError");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportFinish");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportEmpty");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportButton");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.OrderExportPathWarning");
 
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.DesignButton");
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditor.SelectFromList");
@@ -204,64 +126,17 @@ namespace Nop.Plugin.Widgets.CustomersCanvas
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditorConfig.RemoveEditorConfigAttributes");
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CcEditorConfig.RemoveEditorConfigAttributesConfirm");
 
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.CustomersCanvasApiKeyWarning");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.DesignFileName");
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.UpdateFonts");
             this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.UpdateFontsButton");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.ServerHostUrl");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.ServerHostUrl.Hint");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.IsOrderExportButton");
+            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Config.OrderExportPath");
 
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ServerHostUrl");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ServerHostUrl.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.CreateDesignPageTitle");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.FinishDesign");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.DesignNow");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SaveProject");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowLabel");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowTitle");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SetProjectNameWindowButton");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.UniqueProjectNameWarning");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ReviewYourBook");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Approval");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ApprovalText");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ApproveButton");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.MakeSomeChangesButton");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.BootDesigner");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Enabled");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom.IndividualFiles");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetDesignFrom.Folder");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFolderName");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFilePage1");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.DesignFilePage2");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom.IndividualFiles");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.SetMockupFrom.Folder");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFolderName");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFile1");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupFile2");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType.Front");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType.Down");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.MockupType");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Bleed");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.Margin");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.AdvancedModeDisabled");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.EditorConfiguration");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.ProductDefinition");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.ShowAdvancedOptions");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ProductEdit.HideAdvancedOptions");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ErrorMessage");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.ContinueWithoutSaving");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.SaveBeforeEdit");
-
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.UploadImages");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.DownloadImages.All");
-            this.DeletePluginLocaleResource("Plugins.Widgets.CustomersCanvas.Order.DownloadImages.Selected");
             #endregion
-            
+
             base.Uninstall();
         }
 
@@ -480,22 +355,23 @@ namespace Nop.Plugin.Widgets.CustomersCanvas
         #region IAdminMenuPlugin
         public void ManageSiteMap(SiteMapNode rootNode)
         {
-            var menuItem = new SiteMapNode()
-            {
-                SystemName = "CustomersCanvas",
-                Title = "CustomersCanvas Editors",
-                ControllerName = "CcEditor",
-                ActionName = "Index",
-                Visible = true,
-                RouteValues = new RouteValueDictionary() { { "area", null } },
-            };
+            // todo
+            //var menuItem = new SiteMapNode()
+            //{
+            //    Title = "Personalization Plugin Editors",
+            //    SystemName = "CustomersCanvas",
+            //    ControllerName = "CcEditor",
+            //    ActionName = "Index",
+            //    Visible = true,
+            //    RouteValues = new RouteValueDictionary() { { "area", null } },
+            //};
 
-            // если сделать группу и подгруппу
-            //var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
-            //if (pluginNode != null)
-            //    pluginNode.ChildNodes.Add(menuItem);
-            //else
-                rootNode.ChildNodes.Add(menuItem);
+            //// если сделать группу и подгруппу
+            ////var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
+            ////if (pluginNode != null)
+            ////    pluginNode.ChildNodes.Add(menuItem);
+            ////else
+            //rootNode.ChildNodes.Add(menuItem);
         }
         #endregion
     }

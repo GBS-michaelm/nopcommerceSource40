@@ -110,7 +110,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Extensions.dll</HintPath>
       <Private>False</Private>
@@ -123,7 +126,10 @@
       <HintPath>..\..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Primitives.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
       <Private>False</Private>
@@ -188,6 +194,8 @@
     <Compile Include="Controllers\Product\CcProductController.cs" />
     <Compile Include="Data\CcDesignObjectContext.cs" />
     <Compile Include="Infrastructure\CustomerLoginConsumer.cs" />
+    <Compile Include="Infrastructure\CustomViewEngine.cs" />
+    <Compile Include="Model\CcOrderListViewModel.cs" />
     <Compile Include="Model\CcOrderModel.cs" />
     <Compile Include="Model\CcCartReturnToEditReplacementModel.cs" />
     <Compile Include="Model\ICcCartScriptItem.cs" />
@@ -209,7 +217,7 @@
     <Compile Include="CcPlugin.cs" />
     <Compile Include="Infrastructure\AdminTabConsumer.cs" />
     <Compile Include="Infrastructure\CcDependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\RouteConfig.cs" />
+    <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Model\CcSettingsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICcService.cs" />
@@ -275,7 +283,7 @@
     <Content Include="Editors\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="logo.jpg">
+    <Content Include="logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\bootstrap\bootstrap.min.js">
@@ -405,6 +413,9 @@
     <Content Include="Views\Product\_HideAttributes.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\Order\AdminList.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\FlipBook\ccFlipBook.ts">
