@@ -3120,7 +3120,7 @@
     <Content Include="Themes\PurplePizza\Views\ShoppingCart\OrderSummary.cshtml" />
     <Content Include="Themes\PurplePizza\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\GBSCatalog\SportsTeamsList.cshtml" />
-
+    <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

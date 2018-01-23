@@ -82,7 +82,7 @@
 
     string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
     string updateCartItemId = string.Empty;
-
+    string sku = string.Empty;
     var addToCartText = "";
     if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
     {
@@ -125,8 +125,14 @@
         updateCartItemId = "&updatecartitemid=" + Request.QueryString["updatecartitemid"].ToString();
     }
 
-
-    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+    if(Model.Sku.Contains("-G") && Model.Name.ToLower().Contains("envelopes"))
+    {
+        sku = Model.Sku.Replace("-G", "CU");
+    } else
+    {
+        sku = Model.Sku;
+    }
+    string url = "/chili?sku=" + sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
