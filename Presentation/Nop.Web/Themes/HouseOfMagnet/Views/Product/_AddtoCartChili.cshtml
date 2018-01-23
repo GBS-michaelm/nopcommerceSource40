@@ -125,14 +125,14 @@
         updateCartItemId = "&updatecartitemid=" + Request.QueryString["updatecartitemid"].ToString();
     }
 
-    if(Model.Sku.Contains("-G") && Model.Name.ToLower().Contains("envelopes"))
-    {
-        sku = Model.Sku.Replace("-G", "CU");
-    } else
-    {
-        sku = Model.Sku;
-    }
-    string url = "/chili?sku=" + sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+    //if(Model.Sku.Contains("-G") && Model.Name.ToLower().Contains("envelopes"))
+    //{
+    //    sku = Model.Sku.Replace("-G", "CU");
+    //} else
+    //{
+    //    sku = Model.Sku;
+    //}
+    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
