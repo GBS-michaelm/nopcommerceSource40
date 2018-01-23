@@ -188,6 +188,8 @@
     <Compile Include="Controllers\Product\CcProductController.cs" />
     <Compile Include="Data\CcDesignObjectContext.cs" />
     <Compile Include="Infrastructure\CustomerLoginConsumer.cs" />
+    <Compile Include="Infrastructure\CustomViewEngine.cs" />
+    <Compile Include="Model\CcOrderListViewModel.cs" />
     <Compile Include="Model\CcOrderModel.cs" />
     <Compile Include="Model\CcCartReturnToEditReplacementModel.cs" />
     <Compile Include="Model\ICcCartScriptItem.cs" />
@@ -209,7 +211,7 @@
     <Compile Include="CcPlugin.cs" />
     <Compile Include="Infrastructure\AdminTabConsumer.cs" />
     <Compile Include="Infrastructure\CcDependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\RouteConfig.cs" />
+    <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Model\CcSettingsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICcService.cs" />
@@ -275,7 +277,7 @@
     <Content Include="Editors\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="logo.jpg">
+    <Content Include="logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\bootstrap\bootstrap.min.js">
@@ -405,6 +407,9 @@
     <Content Include="Views\Product\_HideAttributes.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\Order\AdminList.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\FlipBook\ccFlipBook.ts">

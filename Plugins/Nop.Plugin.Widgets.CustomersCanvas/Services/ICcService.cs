@@ -80,6 +80,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Services
         ConfigData GetConfig(string editorName, string configName);
         #endregion
 
+        string FormatOrderTokenString(Core.Domain.Orders.OrderItem item, string str);
         string RemoveAttrMappings(string attributesXml, IEnumerable<int> productAttributesIds);
     }
 }

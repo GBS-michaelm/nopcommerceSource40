@@ -60,6 +60,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             model.AllCategory = categoryNavigationSettings.AllCategory;
             model.NoOfChildren = categoryNavigationSettings.NoOfChildren;
             model.IsActive = categoryNavigationSettings.IsActive;
+            model.BlackList = categoryNavigationSettings.BlackList;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -67,6 +68,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 model.AllCategory_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.AllCategory, storeScope);
                 model.NoOfChildren_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.NoOfChildren, storeScope);
                 model.IsActive_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.IsActive, storeScope);
+                model.BlackList_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.BlackList, storeScope);
+
             }
             return View("~/Plugins/Catalog.GBS/Views/Configure.cshtml", model);
         }
@@ -86,6 +89,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             categoryNavigationSettings.AllCategory = model.AllCategory;
             categoryNavigationSettings.NoOfChildren = model.NoOfChildren;
             categoryNavigationSettings.IsActive = model.IsActive;
+            categoryNavigationSettings.BlackList = model.BlackList;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -94,6 +98,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.AllCategory, model.AllCategory_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.NoOfChildren, model.NoOfChildren_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.IsActive, model.IsActive_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.BlackList, model.BlackList_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();

@@ -12,6 +12,11 @@ namespace Nop.Plugin.Widgets.CustomersCanvas
         public string ServerHostUrl { get; set; }
         public int CcIdAttributeId { get; set; }
 
+        public string DesignFileName { get; set; }
+
+        public bool IsOrderExportButton { get; set; }
+        public string OrderExportPath { get; set; }
+
         public int EditorDefinitionSpecificationAttributeId { get; set; }
         public int EditorDefinitionSpecificationOptionId { get; set; }
 

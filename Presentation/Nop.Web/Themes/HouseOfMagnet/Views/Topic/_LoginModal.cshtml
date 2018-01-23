@@ -1,0 +1,197 @@
+﻿@model LoginModel
+@using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using System.Collections.Specialized;
+@{
+//Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+//var previousUrl = string.Empty;
+//try
+//{
+//    previousUrl = System.Web.HttpContext.Current.Request.UrlReferrer.AbsolutePath;
+//}
+//catch (Exception ex)
+//{
+//    previousUrl = "";
+//}
+//bool previousUrlCheck = (previousUrl.ToString().ToLower().Contains("/cart")) ? true : false;
+//NameValueCollection queryDict = new NameValueCollection();
+//queryDict.Add("returnUrl", "/cart");
+//RouteValueDictionary routeDict = new RouteValueDictionary();
+//routeDict.Add("returnUrl", "/cart");
+
+
+////register URL with return URL (if specified)
+//var registerUrl = Url.RouteUrl("Register");
+//if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+//{
+//    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+//    registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + HttpUtility.UrlEncode(this.Context.Request.QueryString["returnUrl"]), null);
+//}
+
+
+}
+
+<style>
+   .form-horizontal .control-label {
+    text-align: left !important;
+
+    }
+</style>
+<div class="modal fade" id="loginModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Returning Customer</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-sm-12 col-md-12">
+
+                
+                            <div class="form-fields form-horizontal">
+
+
+
+                                    <div class="message-error">
+                                        <div id="valid-error-summary" class="validation-summary-errors alert alert-danger" style="display:none">
+                                            <span>Login was unsuccessful. Please correct the errors and try again.</span>
+                                            <ul>
+                                                <li style="display:none"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @if (Model.UsernamesEnabled)
+                                    {
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Username, new { @class = "col-xs-12 col-sm-12 col-md-12 control-label" })
+                                            <div class="col-md-12">
+                                                @Html.TextBoxFor(m => m.Username, new { @class = "username form-control", autofocus = "autofocus" })
+                                                
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Email, new { @class = "col-xs-12 col-sm-12 col-md-12 control-label" })
+                                            <div class="col-md-12">
+                                                @Html.TextBoxFor(m => m.Email, new { @class = "email form-control", autofocus = "autofocus" })
+                                                <span class="field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true" id="valid-email" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Password, new { @class = "col-xs-12 col-sm-12 col-md-12 control-label" })
+                                        <div class="col-md-12">
+                                            @Html.PasswordFor(m => m.Password, new { @class = "password form-control", id = "txt-password" })
+                                            <span class="field-validation-error" data-valmsg-for="Password" data-valmsg-replace="true" id="valid-password" style="display:none;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="remember-me">
+                                            <div class="checkbox">
+                                                <label for="accept-privacy-policy">
+                                                    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "checkbox" })
+                                                    @Html.LabelFor(m => m.RememberMe, new { @class = "remember-text" })
+                                                </label>
+                                                <span class="forgot-password">
+                                                    @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (Model.DisplayCaptcha)
+                                    {
+                                        <div class="form-group">
+                                            <div class="captcha-box col-md-6">
+                                                @Html.Raw(Html.GenerateCaptcha())
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @* <input class="btn btn-primary login-button" type="submit" value="@T("Account.Login.LoginButton")" />*@
+                                            <button type="button" id="btn-login" class="button button-3d button-rounded button-darkgreen"><i class="icon-line2-login"></i>@T("Account.Login.LoginButton")</button>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn-login").click(function () {
+            //$("#loginModal").modal();
+            Login();
+        })
+    });
+
+    function Login() {
+
+        if ($("#txt-password").val() != "" && $("#Email").val() != '') {
+            $.ajax({
+                cache: false,
+                url: "/gbslogin/loginmodal?password=" + $("#txt-password").val() + "&email=" + $("#Email").val(),
+                type: "post",
+                success: function (data) {
+                    console.log(data.message);
+                    switch (data.message.toLowerCase())
+                    {
+                        case "success":
+                            SendEmailAfterVerification($("#Email").val());
+                            $("#loginModal").modal("toggle");
+                            $("#hdn-authenticated").val("True");
+                            $("#hdn-customer-email").val($("#Email").val());
+                            break;
+                        case "wrong password":
+                            $("#valid-error-summary").show();
+                            $("#valid-error-summary").html("Login was unsuccessful. Please correct the errors and try again.");
+                            break;
+                        case "customer not exist":
+                            $("#valid-error-summary").show();
+                            $("#valid-error-summary").html("Login was unsuccessful. Please correct the errors and try again.");
+                            break;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(thrownError);
+                }
+            });
+        }
+        else {
+            if ($("#Email").val() == "")
+            {
+                $("#valid-email").show();
+                $("#valid-email").html("Please enter your email");
+            }
+            if ($("#txt-password").val() == "") {
+                $("#valid-password").show();
+                $("#valid-password").html("Please enter your password");
+            }
+        }
+    }
+    function LoginModel(Email, Password, Username, UsernamesEnabled,CheckoutAsGuest, RememberMe, DisplayCaptcha)
+    {
+        this.Email = Email;
+        this.Password = Password;
+        this.Username = Username;
+        this.UsernamesEnabled = UsernamesEnabled
+        this.CheckoutAsGuest = CheckoutAsGuest;
+        this.RememberMe = RememberMe;
+        this.DisplayCaptcha = DisplayCaptcha;
+    }
+</script>
