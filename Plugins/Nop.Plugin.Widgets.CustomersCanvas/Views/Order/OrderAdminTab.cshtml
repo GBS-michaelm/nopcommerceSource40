@@ -1,7 +1,12 @@
-﻿@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcOrderModel
-@using Nop.Core.Domain.Tax;
-@using Nop.Core.Domain.Catalog;
-
+﻿@using Nop.Core.Infrastructure;
+@using Nop.Admin.Extensions;
+@using Nop.Admin.Helpers;
+@using Nop.Services.Media;
+@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcOrderModel
+@{
+    var _pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
+    var _productAttributeParser = EngineContext.Current.Resolve<Nop.Services.Catalog.IProductAttributeParser>();
+}
 <div class="panel-group">
     <table class="table table-hover table-bordered text-center">
         <col />
@@ -21,29 +26,26 @@
                     @T("Admin.Orders.Products.Quantity")
                 </th>
                 <th>
-                   Design
+                    Design
                 </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Items)
             {
+                var orderItemPicture = item.Product.GetProductPicture(item.AttributesXml, _pictureService, _productAttributeParser);
+                var PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+
                 <tr>
                     <td style="text-align: center; width: 15%;">
-                        <img src="@item.PictureThumbnailUrl" alt="" title="" />
+                        <img src="@PictureThumbnailUrl" alt="" title="" />
                     </td>
                     <td style="text-align: left; width: 15%;">
-                        <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
-                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                        {
-                            <p>
-                                @Html.Raw(item.AttributeInfo)
-                            </p>
-                        }
+                        <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.Product.Name</a></em>
                     </td>
                     <td style="width: 15%;">
                         <div>@item.Quantity</div>
-                     </td>
+                    </td>
 
                     <td style="width: 55%;">
                         @{
@@ -59,7 +61,8 @@
 
                             foreach (var url in Model.CcResult.ElementAt(index).HiResUrls)
                             {
-                                <div><a target="_blank" href="@url">Download pdf</a></div>
+                                var link = url + "/" + Model.CcResult.ElementAt(index).HiResOutputName;
+                                <div><a target="_blank" href="@link">Download pdf</a></div>
                             }
                         }
                     </td>

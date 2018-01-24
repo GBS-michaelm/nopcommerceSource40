@@ -63,7 +63,11 @@ namespace Nop.Services.Custom.Orders
         private readonly ILogger _logger;
         private readonly IProductAttributeFormatter  _productAttributeFormatter;
         private readonly HttpContextBase _httpContext;
-
+        private readonly ITaxService _taxService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly ICustomerService _customerService;
+        DBManager manager = new DBManager();
+        ICcService ccService = EngineContext.Current.Resolve<ICcService>();
 
         public GBSOrderProcessingService(
             ISettingService settingService,
@@ -166,6 +170,9 @@ namespace Nop.Services.Custom.Orders
             this._logger = logger;
             this._productAttributeFormatter = productAttributeFormatter;
             this._httpContext = httpContext;
+            this._taxService = taxService;
+            this._priceCalculationService = priceCalculationService;
+            this._customerService = customerService;
         }
 
         private void SaveGBSOrderID(string gbsOrderId, int NOPOrderID)
@@ -283,6 +290,7 @@ namespace Nop.Services.Custom.Orders
                         }
                     }
 
+
                 }
 
 
@@ -291,20 +299,13 @@ namespace Nop.Services.Custom.Orders
                 if (miscPlugins.Count > 0)
                 {
                     
-                    DBManager manager = new DBManager();
+
 
                     if (myResult.PlacedOrder != null)
                     {
 
-                        //string addPhoneNum = _httpContext.Session["customerPhoneNumber"] == null ? "" : _httpContext.Session["customerPhoneNumber"].ToString();
-                        //_httpContext.Session.Remove("customerPhoneNumber");
-
                         string insert = "";
-
-
-                        ICcService ccService = EngineContext.Current.Resolve<ICcService>();
                         
-
                         List<ExtendedOrderItem> extendedOrderItems = new List<ExtendedOrderItem>();
                         List<ProductFileModel> ccFiles = new List<ProductFileModel>();
 
@@ -312,198 +313,34 @@ namespace Nop.Services.Custom.Orders
                         {
                             ExtendedOrderItem extendedOrderItem = new ExtendedOrderItem();
                             extendedOrderItem.OrderItemID = item.Id;
-
                             bool isCCProduct = ccService.IsProductForCc(item.ProductId);
                             if (isCCProduct)
                             {
-                                var ccResult = ccService.GetCcResult(item.AttributesXml);
-                                var mappings = _productAttributeParser.ParseProductAttributeMappings(item.AttributesXml);
-                                var mapping = mappings.FirstOrDefault(x => x.ProductAttributeId == _customersCanvasSettings.CcIdAttributeId);
-                                if (mapping == null)
-                                    _logger.Error("Custom product does not have a ccID", null, customer);
-
-                                var values = _productAttributeParser.ParseValues(item.AttributesXml, mapping.Id);
-                                if (values == null || !values.Any())
-                                    _logger.Error("Custom product ccID does not have a value", null, customer);
-
-                                var selectedGreetingOption = GetGreetingOption(item);
-                                var selectedGreetingOrientation = "H";
-                                if (selectedGreetingOption.ToLower() == "yes")
-                                {
-                                     selectedGreetingOrientation = GetGreetingOrientation(item);
-                                }
-                                else if (selectedGreetingOption.ToLower() == "not found")
-                                {
-                                    _logger.Error("Greeting Option Selection not found for item: " + item.Product.Sku + "and orderid: " + item.OrderId, null, customer);
-                                }
-
-                                var selectedReturnAddressOption = GetReturnAddressEnvelopeOption(item);
-                                var selectedReturnAddressSide = "F";
-                                if (selectedReturnAddressOption.ToLower() == "yes")
-                                {
-                                    selectedReturnAddressSide = GetReturnAddressEnvelopeSide(item);
-                                }
-                                else if (selectedReturnAddressOption.ToLower() == "not found")
-                                {
-                                    _logger.Error("Return Address Option Selection not found for item: " +  item.Product.Sku + "and orderid: " + item.OrderId, null, customer);
-                                }
-
-                                var selectedCoverOrientation = GetCoverOrientation(item);
-                                var selectedBackOrientation = GetBackOrientation(item);
-
-
-                                var designId = Convert.ToInt32(values.First());
-                                var design = ccService.GetDesign(designId);
-                                dynamic designData = JsonConvert.DeserializeObject<Object>(design.Data);
-                                extendedOrderItem.ccID = designId;
-                                foreach(dynamic data in designData)
-                                {
-                                    string dataName = (string)data.Name;
-                                    string stateID = (string)data;
-                                    foreach (string cc in ccResult.HiResUrls)
-                                    {
-                                        if (cc.Contains(stateID))
-                                        {
-                                            bool add = true;
-                                            ProductFileModel ccProduct = new ProductFileModel();
-                                            ccProduct.product.productCode = item.Product.Sku;
-                                            var index = cc.Split('/').Last<string>().Split('_').First<string>();
-                                            string productType = dataName.Split('-').First<string>().ToLower();
-                                            ccProduct.product.productType = productType + "-"+index;
-                                            ccProduct.product.hiResPDFURL = cc;
-                                            ccProduct.product.sourceReference = item.Id.ToString();
-                                            ccProduct.requestSessionID = HttpContext.Current.Session.SessionID;
-
-                                            #region NoteCard Processing
-                                            #region Eliminate unneeded print files
-                                            if (ccProduct.product.productType.ToLower() == "notecard-1" && selectedGreetingOption.ToLower() == "no") {
-                                                //customer did not select a custom greeting so don't add the print file
-                                                add = false;
-                                            }
-                                            if (productType == "envelope" && selectedReturnAddressOption.ToLower() == "no")
-                                            {
-                                                //customer did not select a custom envelope so don't add the print file
-                                                add = false;
-                                            } else if (productType == "envelope")
-                                            {
-                                                //if they did select a custom envelope, then add only the side they selected.
-                                                if ((selectedReturnAddressSide == "F" && ccProduct.product.productType.ToLower() == "envelope-1") || (selectedReturnAddressSide == "B" && ccProduct.product.productType.ToLower() == "envelope-0"))
-                                                {
-                                                    add = false;
-                                                }
-                                            }
-
-                                            #endregion Eliminate unneeded print files
-
-                                            #region   Reset product types, orientation, color model and surface selections
-
-                                            if (ccProduct.product.productType.ToLower() == "notecard-0")
-                                            {
-                                                //Card Front
-                                                ccProduct.product.orientation = selectedCoverOrientation;
-                                                ccProduct.product.productType = "notecard";
-                                                ccProduct.product.surface = "front";
-                                            }
-                                            if (ccProduct.product.productType.ToLower() == "notecard-1")
-                                            {
-                                                //Card Greeting
-                                                ccProduct.product.orientation = selectedGreetingOrientation;
-                                                ccProduct.product.productType = "notecard";
-                                                ccProduct.product.surface = "greeting";
-                                                ccProduct.product.imprintColor = "1";
-                                            }
-                                            if (ccProduct.product.productType.ToLower() == "notecard-2")
-                                            {
-                                                //Card Back
-                                                ccProduct.product.orientation = selectedBackOrientation;
-                                                ccProduct.product.productType = "notecard";
-                                                ccProduct.product.surface = "back";
-                                            }
-                                            if (productType == "envelope" )
-                                            {
-                                                ccProduct.product.productType = "envelope";
-                                                ccProduct.product.surface = selectedReturnAddressSide;
-                                                ccProduct.product.imprintColor = "1";
-                                            }
-                                            #endregion Reset product types, orientation and surface selections
-                                            if (add)
-                                            {
-                                                ccFiles.Add(ccProduct);
-                                            }
-                                            #endregion NoteCard Processing
-
-                                        }
-                                    }
-
-                                }
-
-
+                                ProcessCanvasProducts(item, extendedOrderItem, ccFiles, false);
                             }
                             extendedOrderItems.Add(extendedOrderItem);
                         }
 
+                        //save to tblNopOrder
+                        SaveExtendedOrdertItems(extendedOrderItems);
 
-
-
-                        foreach(var item in extendedOrderItems)
-                        {
-
-                            Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
-                            paramDicEx.Add("@nopOrderItemID", item.OrderItemID.ToString());
-                            paramDicEx.Add("@ccID", item.ccID.ToString());
-                            
-                           //insert = "INSERT INTO tblNOPOrderItem (nopOrderItemID, ccID) ";
-                           //insert += "VALUES ('" + item.OrderItemID + "', '" + item.ccID + "')";
-                           insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
-                            manager.SetParameterizedQueryNoData(insert, paramDicEx);
-
-                        }
 
                         //call file service to save files
-                        string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
-                        GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
-                        if (ccFiles.Count > 0)
-                        {
-                            List<List<ProductFileModel>> chunksOf3 = SplitList(ccFiles,3);
-                            foreach (var ccFilesOf3 in chunksOf3)
-                            {
-                                try
-                                {
-                                    string response = FileService.CopyFilesToProduction(ccFilesOf3, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
-                                    List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
-                                    foreach (ProductFileModel product in responseFiles)
-                                    {
-                                        if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception"))
-                                        {
-                                            Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
-                                            paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
-                                            paramDicEx.Add("@ProductType", product.product.productType);
-                                            paramDicEx.Add("@FileName", product.product.productionFileName);
+                        SaveProductionFiles(ccFiles, gbsOrderId,false);
 
-                                            //insert = "INSERT INTO tblNOPProductionFiles (nopOrderItemID, ProductType,FileName) ";
-                                            //insert += "VALUES ('" + product.product.sourceReference + "', '" + product.product.productType + "', '" + product.product.productionFileName + "')";
-                                            insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName";
-                                            manager.SetParameterizedQueryNoData(insert, paramDicEx);
-                                        }
-                                        else
-                                        {
-                                            _logger.Error("Error with product filename" + response, null, customer);
-                                        }
-                                    }
-
-                                }
-                                catch (Exception eee)
-                                {
-                                    _logger.Error("Error accesing File Service", eee, customer);
-                                }
-                            }
-                        }
 
                         //Make saving to tblNopOrder last operation so that migration only pulls data after all other dependendent data is committed.
-                        Dictionary<string, string> paramDic = new Dictionary<string, string>();
+                        Dictionary<string, Object> paramDic = new Dictionary<string, Object>();
                         paramDic.Add("@nopID", myResult.PlacedOrder.Id.ToString());
                         paramDic.Add("@gbsOrderID", gbsOrderId);
                         insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID";
+                        //add impersonation if exists
+                        if (_workContext.OriginalCustomerIfImpersonated != null)
+                        {
+                            paramDic.Add("@impersonator", _workContext.OriginalCustomerIfImpersonated.Id);
+                            insert = "EXEC Insert_tblNOPOrder @nopID,@gbsOrderID,@impersonator";
+
+                        }
                         manager.SetParameterizedQueryNoData(insert, paramDic);
 
                         _httpContext.Session.Remove("customerPhoneNumber");
@@ -519,8 +356,6 @@ namespace Nop.Services.Custom.Orders
                     {
                         PlaceOrderContainter orderContainer = this.PreparePlaceOrderDetails(processPaymentRequest);
                         SaveFailedOrder(processPaymentRequest, orderContainer, myResult); 
-
-
                     }
                 }          
 
@@ -529,11 +364,239 @@ namespace Nop.Services.Custom.Orders
             catch (Exception ex)
             {
                 _logger.Error("Error in Order Service", ex, customer);
+                PlaceOrderContainter orderContainer = this.PreparePlaceOrderDetails(processPaymentRequest);
+                SaveFailedOrder(processPaymentRequest, orderContainer, myResult, ex);
                 throw ex;
             }
 
             return myResult;
 
+        }
+
+        public int getCCIdFromItem(string xml)
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            var mappings = _productAttributeParser.ParseProductAttributeMappings(xml);
+            var mapping = mappings.FirstOrDefault(x => x.ProductAttributeId == _customersCanvasSettings.CcIdAttributeId);
+            if (mapping == null)
+                _logger.Error("Custom product does not have a ccID", null, customer);
+
+            var values = _productAttributeParser.ParseValues(xml, mapping.Id);
+            if (values == null || !values.Any())
+                _logger.Error("Custom product ccID does not have a value", null, customer);
+
+
+
+            #region NoteCard Processing
+            //old region. put in ProcessNotecards
+            #endregion NoteCard Processing
+
+            var designId = Convert.ToInt32(values.First());
+            return designId;
+        }
+
+        public void ProcessCanvasProducts(OrderItem item, ExtendedOrderItem extendedOrderItem, List<ProductFileModel> ccFiles, bool failedOrder)
+        {
+            var customer = _workContext.CurrentCustomer;
+            var ccResult = ccService.GetCcResult(item.AttributesXml);
+
+            var designId = getCCIdFromItem(item.AttributesXml);
+            var design = ccService.GetDesign(designId);
+            dynamic designData = JsonConvert.DeserializeObject<Object>(design.Data);
+            extendedOrderItem.ccID = designId;
+            foreach (dynamic data in designData)
+            {
+                string dataName = (string)data.Name;
+                string stateID = (string)data;
+                foreach (string cc in ccResult.HiResUrls)
+                {
+                    if (cc.Contains(stateID))
+                    {
+                        ProductFileModel ccProduct = new ProductFileModel();
+                        ccProduct.product.productCode = item.Product.Sku;
+                        var index = cc.Split('/').Last<string>().Split('_').First<string>();
+                        string productType = dataName.Split('-').First<string>().ToLower();
+                        ccProduct.product.productType = productType + "-" + index;
+                        ccProduct.product.hiResPDFURL = cc;
+
+                        ccProduct.product.sourceReference = item.Id.ToString();
+                        if (failedOrder)
+                        {
+                            ccProduct.product.sourceReference = extendedOrderItem.ccID.ToString();
+                        }
+                        ccProduct.requestSessionID = HttpContext.Current.Session.SessionID;
+
+                        #region NoteCard Processing
+                        ProcessNotecards(ccFiles, ccProduct, productType, item);
+                        #endregion NoteCard Processing
+
+                    }
+                }
+
+            }
+
+        }
+
+
+        public void SaveProductionFiles (List<ProductFileModel> ccFiles, string gbsOrderID, bool failedOrder)
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            string fileServiceaddress = _gbsOrderSettings.GBSPrintFileWebServiceAddress;
+            GBSFileService.GBSFileServiceClient FileService = new GBSFileService.GBSFileServiceClient();
+            if (ccFiles.Count > 0)
+            {
+                List<List<ProductFileModel>> chunksOf3 = SplitList(ccFiles, 3);
+                foreach (var ccFilesOf3 in chunksOf3)
+                {
+                    try
+                    {
+                        string response = FileService.CopyFilesToProduction(ccFilesOf3, fileServiceaddress, _gbsOrderSettings.LoginId, _gbsOrderSettings.Password);
+                        List<ProductFileModel> responseFiles = JsonConvert.DeserializeObject<List<ProductFileModel>>(response);
+                        foreach (ProductFileModel product in responseFiles)
+                        {
+                            if (!String.IsNullOrEmpty(product.product.productionFileName) && !product.product.productionFileName.ToLower().Contains("exception"))
+                            {
+                                Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
+                                if (failedOrder)
+                                {
+                                    paramDicEx.Add("@nopOrderItemID", Convert.ToString(0));
+                                    paramDicEx.Add("@ccID", product.product.sourceReference);
+                                }
+                                else
+                                {
+                                    paramDicEx.Add("@nopOrderItemID", product.product.sourceReference);
+                                    paramDicEx.Add("@ccID", "");
+                                }
+                                paramDicEx.Add("@ProductType", product.product.productType);
+                                paramDicEx.Add("@FileName", product.product.productionFileName);
+                                paramDicEx.Add("@gbsOrderID", gbsOrderID);
+
+
+                                //insert = "INSERT INTO tblNOPProductionFiles (nopOrderItemID, ProductType,FileName) ";
+                                //insert += "VALUES ('" + product.product.sourceReference + "', '" + product.product.productType + "', '" + product.product.productionFileName + "')";
+                                var insert = "EXEC Insert_tblNOPProductionFiles @nopOrderItemID,@ProductType,@FileName,@gbsOrderID,@ccID";
+                                manager.SetParameterizedQueryNoData(insert, paramDicEx);
+                            }
+                            else
+                            {
+                                _logger.Error("Error with product filename" + response, null, customer);
+                            }
+                        }
+
+                    }
+                    catch (Exception eee)
+                    {
+                        _logger.Error("Error accesing File Service", eee, customer);
+                    }
+                }
+            }
+
+        }
+
+        public void SaveExtendedOrdertItems (List<ExtendedOrderItem> items)
+        {
+
+            foreach (var item in items)
+            {
+
+                Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
+                paramDicEx.Add("@nopOrderItemID", item.OrderItemID.ToString());
+                paramDicEx.Add("@ccID", item.ccID.ToString());
+
+                var insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
+                manager.SetParameterizedQueryNoData(insert, paramDicEx);
+
+            }
+        }
+
+        public void ProcessNotecards(List<ProductFileModel> ccFiles, ProductFileModel ccProduct, string productType, OrderItem item)
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            var selectedGreetingOption = GetGreetingOption(item);
+            var selectedGreetingOrientation = "H";
+            if (selectedGreetingOption.ToLower() == "yes")
+            {
+                selectedGreetingOrientation = GetGreetingOrientation(item);
+            }
+            else if (selectedGreetingOption.ToLower() == "not found")
+            {
+                _logger.Error("Greeting Option Selection not found for item: " + item.Product.Sku + "and orderid: " + item.OrderId, null, customer);
+            }
+
+            var selectedReturnAddressOption = GetReturnAddressEnvelopeOption(item);
+            var selectedReturnAddressSide = "F";
+            if (selectedReturnAddressOption.ToLower() == "yes")
+            {
+                selectedReturnAddressSide = GetReturnAddressEnvelopeSide(item);
+            }
+            else if (selectedReturnAddressOption.ToLower() == "not found")
+            {
+                _logger.Error("Return Address Option Selection not found for item: " + item.Product.Sku + "and orderid: " + item.OrderId, null, customer);
+            }
+
+            var selectedCoverOrientation = GetCoverOrientation(item);
+            var selectedBackOrientation = GetBackOrientation(item);
+            bool add = true;
+            #region Eliminate unneeded print files
+            if (ccProduct.product.productType.ToLower() == "notecard-1" && selectedGreetingOption.ToLower() == "no")
+            {
+                //customer did not select a custom greeting so don't add the print file
+                add = false;
+            }
+            if (productType == "envelope" && selectedReturnAddressOption.ToLower() == "no")
+            {
+                //customer did not select a custom envelope so don't add the print file
+                add = false;
+            }
+            else if (productType == "envelope")
+            {
+                //if they did select a custom envelope, then add only the side they selected.
+                if ((selectedReturnAddressSide == "F" && ccProduct.product.productType.ToLower() == "envelope-1") || (selectedReturnAddressSide == "B" && ccProduct.product.productType.ToLower() == "envelope-0"))
+                {
+                    add = false;
+                }
+            }
+
+            #endregion Eliminate unneeded print files
+
+            #region   Reset product types, orientation, color model and surface selections
+
+            if (ccProduct.product.productType.ToLower() == "notecard-0")
+            {
+                //Card Front
+                ccProduct.product.orientation = selectedCoverOrientation;
+                ccProduct.product.productType = "notecard";
+                ccProduct.product.surface = "front";
+            }
+            if (ccProduct.product.productType.ToLower() == "notecard-1")
+            {
+                //Card Greeting
+                ccProduct.product.orientation = selectedGreetingOrientation;
+                ccProduct.product.productType = "notecard";
+                ccProduct.product.surface = "greeting";
+                ccProduct.product.imprintColor = "1";
+            }
+            if (ccProduct.product.productType.ToLower() == "notecard-2")
+            {
+                //Card Back
+                ccProduct.product.orientation = selectedBackOrientation;
+                ccProduct.product.productType = "notecard";
+                ccProduct.product.surface = "back";
+            }
+            if (productType == "envelope")
+            {
+                ccProduct.product.productType = "envelope";
+                ccProduct.product.surface = selectedReturnAddressSide;
+                ccProduct.product.imprintColor = "1";
+            }
+            #endregion Reset product types, orientation and surface selections
+            if (add)
+            {
+                ccFiles.Add(ccProduct);
+            }
         }
 
         public static List<List<T>> SplitList<T>(List<T> me, int size = 50)
@@ -762,14 +825,14 @@ namespace Nop.Services.Custom.Orders
 
             return productSpecsDict;
         }
-        protected void SaveFailedOrder(ProcessPaymentRequest paymentRequest, PlaceOrderContainter orderContainer, PlaceOrderResult placeOrderResult)
+        protected void SaveFailedOrder(ProcessPaymentRequest paymentRequest, PlaceOrderContainter orderContainer, PlaceOrderResult placeOrderResult, Exception theException = null)
         {
+            NopResourceDisplayName orderNumberKeyGBS = new NopResourceDisplayName(("Account.CustomerOrders.OrderNumber"));
+            string GBSOrderID = (string)paymentRequest.CustomValues[orderNumberKeyGBS.DisplayName];
+
             string insert = "";
             try
             {
-                NopResourceDisplayName orderNumberKeyGBS = new NopResourceDisplayName(("Account.CustomerOrders.OrderNumber"));
-
-                string GBSOrderID = (string)paymentRequest.CustomValues[orderNumberKeyGBS.DisplayName];
                 int StoreID = paymentRequest.StoreId;
                 int CustomerId = paymentRequest.CustomerId;
                 int BillingAddressId = orderContainer.Customer.BillingAddress != null ? orderContainer.Customer.BillingAddress.Id : 0;
@@ -846,6 +909,10 @@ namespace Nop.Services.Custom.Orders
                 {
                     errors += ": "+error;
                 }
+                if (theException != null)
+                {
+                    errors += "Exception Message: " + theException.Message + " Exception Stacktrace: " + theException.StackTrace;
+                }
 
                 DBManager manager = new DBManager();
                 Dictionary<string, Object> paramDic = new Dictionary<string, Object>();
@@ -903,22 +970,45 @@ namespace Nop.Services.Custom.Orders
                 _logger.Error("Error in Order Service saving FailedOrder - insert = "+ insert, ex, customer);
             }
 
+
+            var cart = orderContainer.Cart;
+
             try
             {
 
                 DBManager manager = new DBManager();
-                var cart = orderContainer.Cart;
                 //var cart = _workContext.CurrentCustomer.ShoppingCartItems;
                 //var cartQuery = from item in cart where item.ShoppingCartType == ShoppingCartType.ShoppingCart && item.StoreId == paymentRequest.StoreId select item;
-                NopResourceDisplayName orderNumberKeyGBS = new NopResourceDisplayName(("Account.CustomerOrders.OrderNumber"));
                 foreach (ShoppingCartItem item in cart) {
-                    string GBSOrderID = (string)paymentRequest.CustomValues[orderNumberKeyGBS.DisplayName];
+                    decimal taxRate;
+                    List<DiscountForCaching> scDiscounts;
+                    decimal discountAmount;
+                    var scUnitPrice = _priceCalculationService.GetUnitPrice(item);
+                    int? maximumDiscountQty;
+                    var scSubTotal = _priceCalculationService.GetSubTotal(item, true, out discountAmount, out scDiscounts, out maximumDiscountQty);
                     int StoreID = paymentRequest.StoreId;
                     int CustomerId = paymentRequest.CustomerId;
                     int ProductID = item.ProductId;
                     int Quantity = item.Quantity;
                     string AttributesXml = item.AttributesXml != null ? item.AttributesXml : String.Empty;
                     var AttributeDescription = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, orderContainer.Customer);
+                    Customer customer = _customerService.GetCustomerById(CustomerId);
+
+                    decimal discountAmountInclTax = _taxService.GetProductPrice(item.Product, discountAmount, true, customer, out taxRate);
+                    decimal discountAmountExclTax = _taxService.GetProductPrice(item.Product, discountAmount, false, customer, out taxRate);
+                    decimal OriginalProductCost = _priceCalculationService.GetProductCost(item.Product, item.AttributesXml);
+                    decimal PriceInclTax = _taxService.GetProductPrice(item.Product, scSubTotal, true, customer, out taxRate);
+                    decimal PriceExclTax = _taxService.GetProductPrice(item.Product, scSubTotal, true, customer, out taxRate);
+                    DateTime? RentalEndDateUtc = item.RentalEndDateUtc;
+                    DateTime? RentalStartDateUtc = item.RentalStartDateUtc;
+                    decimal UnitPriceExclTax = _taxService.GetProductPrice(item.Product, scUnitPrice, false, customer, out taxRate);
+                    decimal UnitPriceInclTax = _taxService.GetProductPrice(item.Product, scUnitPrice, true, customer, out taxRate);
+                    int ccID = 0;
+                    bool isCCProduct = ccService.IsProductForCc(item.ProductId);
+                    if (isCCProduct)
+                    {
+                        ccID = getCCIdFromItem(item.AttributesXml);
+                    }
 
 
 
@@ -931,7 +1021,18 @@ namespace Nop.Services.Custom.Orders
                     paramDic.Add("@AttributesXml", AttributesXml);
                     paramDic.Add("@AttributeDescription", AttributeDescription);
 
-                    insert = "EXEC usp_InsertFailedOrderItems @GBSOrderID,@StoreID,@CustomerId,@ProductID,@Quantity,@AttributesXml,@AttributeDescription";
+                    paramDic.Add("@discountAmountInclTax", discountAmountInclTax);
+                    paramDic.Add("@discountAmountExclTax", discountAmountExclTax);
+                    paramDic.Add("@OriginalProductCost", OriginalProductCost);
+                    paramDic.Add("@PriceInclTax", PriceInclTax);
+                    paramDic.Add("@PriceExclTax", PriceExclTax);
+                    //paramDic.Add("@RentalEndDateUtc", RentalEndDateUtc);
+                    //paramDic.Add("@RentalStartDateUtc", RentalStartDateUtc);
+                    paramDic.Add("@UnitPriceExclTax", UnitPriceExclTax);
+                    paramDic.Add("@UnitPriceInclTax", UnitPriceInclTax);
+                    paramDic.Add("@ccID", ccID);
+
+                    insert = "EXEC usp_InsertFailedOrderItems @GBSOrderID,@StoreID,@CustomerId,@ProductID,@Quantity,@AttributesXml,@AttributeDescription,@discountAmountInclTax,@discountAmountExclTax,@OriginalProductCost,@PriceInclTax,@PriceExclTax,@UnitPriceExclTax,@UnitPriceInclTax,@ccID";
 
                     manager.SetParameterizedQueryNoData(insert, paramDic);
 
@@ -946,11 +1047,44 @@ namespace Nop.Services.Custom.Orders
                 _logger.Error("Error in Order Service saving FailedOrderItem - insert = " + insert, ex, customer);
             }
 
+            //upload and process files.
+
+            List<ExtendedOrderItem> extendedOrderItems = new List<ExtendedOrderItem>();
+            List<ProductFileModel> ccFiles = new List<ProductFileModel>();
+
+            foreach (ShoppingCartItem item in cart)
+            {
+                ExtendedOrderItem extendedOrderItem = new ExtendedOrderItem();
+                extendedOrderItem.OrderItemID = item.Id;
+                bool isCCProduct = ccService.IsProductForCc(item.ProductId);
+                if (isCCProduct)
+                {
+                    ProcessCanvasProducts(convertSiToOi(item), extendedOrderItem, ccFiles, true);
+                }
+                extendedOrderItems.Add(extendedOrderItem);
+            }
+
+
+            //call file service to save files
+            SaveProductionFiles(ccFiles, GBSOrderID, true);
 
 
         }
+        public OrderItem convertSiToOi(ShoppingCartItem si)
+        {
+            OrderItem oi = new OrderItem();
+            oi.AttributesXml = si.AttributesXml;
+            //oi.Id = si.Id;
+            oi.OrderItemGuid = Guid.NewGuid();
+            oi.Product = si.Product;
+            oi.ProductId = si.ProductId;
+            oi.Quantity = si.Quantity;
+            oi.RentalEndDateUtc = si.RentalEndDateUtc;
+            oi.RentalStartDateUtc = si.RentalStartDateUtc;
+            return oi;
+        }
     }
-    class ExtendedOrderItem
+    public class ExtendedOrderItem
     {
         public int ID { get; set; }
         public int OrderItemID { get; set; }

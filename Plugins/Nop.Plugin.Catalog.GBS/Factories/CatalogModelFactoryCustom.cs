@@ -16,6 +16,7 @@ using Nop.Services.Stores;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Plugin.Catalog.GBS.Models;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -31,6 +32,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         private readonly ICacheManager _cacheManager;        
 
         private readonly CategoryNavigationSettings _categoryNavigationSettings;
+        private readonly ILogger _logger;
 
 
         #endregion
@@ -38,6 +40,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         #region Constructors
 
         public CatalogModelFactoryCustom(
+            ILogger logger,
             ICategoryService categoryService,        
             IProductService productService,         
             IWorkContext workContext,
@@ -46,6 +49,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             ICacheManager cacheManager,                  
             CategoryNavigationSettings categoryNavigationSettings)
         {
+            this._logger = logger;
             this._categoryService = categoryService;            
             this._productService = productService;          
             this._workContext = workContext;
@@ -165,11 +169,26 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 //load categories if null passed
                 //we implemeneted it this way for performance optimization - recursive iterations (below)
                 //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            }            
+               allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
+            List<int> BlackList = new List<int>();
+            try
+            {
+                if (!string.IsNullOrEmpty(_categoryNavigationSettings.BlackList))
+                {
+                    BlackList = _categoryNavigationSettings.BlackList.Split(',').Select(int.Parse).ToList();
+
+                }
+            }catch (Exception ex)
+            {
+                _logger.Error("BlackList misconfigured in Catalog Plugin - ",ex);
+            }
             foreach (var category in categories)
             {
+                if (BlackList.Contains(category.Id)) {
+                    continue;
+                }
                 var cats = new List<int>();
                 cats.Add(category.Id);
 

@@ -33,7 +33,7 @@
 
 .cart .product-picture img {
     border: 0px;
-    z-index: -1;
+   /* z-index: -1;*/
 }
 .product-slider .related-products-grid .sliderinner .item-box .thumbnail .pictures a{background-repeat: no-repeat;    width: 100%;    height: 100%;}
 /***** START OF BASEBALL FULL MAGNETS FIRST CLASS *******/

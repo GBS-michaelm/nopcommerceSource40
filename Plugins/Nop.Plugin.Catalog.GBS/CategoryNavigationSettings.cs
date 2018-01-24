@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 namespace Nop.Plugin.Catalog.GBS
 {
     public class CategoryNavigationSettings : ISettings
-    {        
+    {
         public bool AllCategory { get; set; }
-        public int NoOfChildren { get; set; }        
+        public int NoOfChildren { get; set; }
         public bool IsActive { get; set; }
+        public string BlackList { get; set; }
     }
 }

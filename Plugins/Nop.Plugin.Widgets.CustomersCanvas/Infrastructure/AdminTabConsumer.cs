@@ -21,7 +21,7 @@ namespace Nop.Plugin.Widgets.CustomersCanvas.Infrastructure
 
                 if (!string.IsNullOrEmpty(objectId.ToString()))
                 {
-                    string tabName = "Editor Setting";
+                    string tabName = "Personalization Settings";
 
                     var productController = EngineContext.Current.Resolve<CcProductController>();
                     var tabContent = productController.ProductAdminTabString(Convert.ToInt32(objectId));
