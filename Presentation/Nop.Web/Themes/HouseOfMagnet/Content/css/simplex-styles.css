@@ -613,7 +613,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
 
 /*---- LEFT NAV OVERRIDES STYLES ---- */
 .left-nav {
-    background: url(/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Themes/DefaultClean/Content/images/filters-toggle.png) no-repeat left center !important;
+    background: url(../images/filters-toggle.png) no-repeat left center !important;
     left: 12px;
 }
 

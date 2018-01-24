@@ -18,11 +18,34 @@
     Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/bootstrap/bootstrap.min.js");
 }
 
-@{ 
+@{
     Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/aurigma.css");
 }
 
 <script type="text/javascript">
+
+    function Version(versionNumber) {
+        var components = versionNumber.split(".");
+        if (components.length < 3) {
+            throw "The version number " + versionNumber + " is incorrect! It should have format x.y.z";
+        }
+        Object.defineProperty(this, 'major', {
+            value: components[0],
+            writable: false,
+            enumerable: true
+        });
+        Object.defineProperty(this, 'minor', {
+            value: components[1],
+            writable: false,
+            enumerable: true
+        });
+        Object.defineProperty(this, 'revision', {
+            value: components[2],
+            writable: false,
+            enumerable: true
+        });
+    }
+
     $(document).ready(function () {
 
         // When RequireJS-compatible modules are inserted through <script>, you have to add require.js reference only in the end. That's why we dynamically load it only when the page is loaded completely.
@@ -40,22 +63,25 @@
                 var editorJson = JSON.parse(@Html.Raw(Json.Encode(Model.Editor)));
                 var config = JSON.parse(@Html.Raw(Json.Encode(Model.Config)));
 
-                if (typeof (editorJson.styles) === 'object' && Array.isArray(editorJson.styles)) {
-                    editorJson.styles.forEach(function (style) {
-                        resources.loadLink("@Url.Content(Model.Path)/styles/" + style, "stylesheet", "text/css");
-                    });
-                }
+                var editorVersion = new Version(editorJson.version);
+                if (editorVersion.major < 1) {
+                    if (typeof (editorJson.styles) === 'object' && Array.isArray(editorJson.styles)) {
+                        editorJson.styles.forEach(function (style) {
+                            resources.loadLink("@Url.Content(Model.Path)/styles/" + style, "stylesheet", "text/css");
+                        });
+                    }
 
-                // TODO: Consider removing it - only non-RequireJS scripts should be connected this way
-                if (typeof (editorJson.imports) === 'object' && Array.isArray(editorJson.imports)) {
-                    editorJson.imports.forEach(function (imported) {
-                        // if we meet a HTML file there, we consider it as a Polymer component and import it in a Polymer way.
-                        if (imported.endsWith(".html")) {
-                            resources.loadLink("@Url.Content(Model.Path)/imports/" + imported, "import");
-                        } else {
-                            resources.loadScript("@Url.Content(Model.Path)/imports/" + imported);
-                        }
-                    });
+                    // TODO: Consider removing it - only non-RequireJS scripts should be connected this way
+                    if (typeof (editorJson.imports) === 'object' && Array.isArray(editorJson.imports)) {
+                        editorJson.imports.forEach(function (imported) {
+                            // if we meet a HTML file there, we consider it as a Polymer component and import it in a Polymer way.
+                            if (imported.endsWith(".html")) {
+                                resources.loadLink("@Url.Content(Model.Path)/imports/" + imported, "import");
+                            } else {
+                                resources.loadScript("@Url.Content(Model.Path)/imports/" + imported);
+                            }
+                        });
+                    }
                 }
 
                 var editorModuleName = !!editorJson.entry ? editorJson.entry : "editor.js";
@@ -71,7 +97,7 @@
 
                 requirePlugin([editorModuleName], function (editor) {
                     editorLoaderModel.ProductDetails.updateCartItemId = editorLoaderModel.UpdateCartItemId;
-
+                    config.config.language = '@Model.Language';
                     driver.init(editorLoaderModel.ProductDetails, editor, config, editorLoaderModel.PluginSettings, null, editorLoaderModel.Quantity, editorLoaderModel.User);
                     driver.orders.current.data = editorLoaderModel.CcData != null ? JSON.parse(editorLoaderModel.CcData.Data) : null;
                     var editorid = "#editor-parent-for-productid-@Model.ProductDetails.Id";

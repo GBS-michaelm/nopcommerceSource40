@@ -126,62 +126,62 @@
     var teamCategories = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
 
 
-    teamSectionStringBuilder.Append("<main>");
+    //teamSectionStringBuilder.Append("<main>");
 
-    for(int i = 0; i < teamCategories.Count; i++)
-    {
-        if(i == 0)
-        {
-            teamSectionStringBuilder.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
-        }
-        else
-        {
-            teamSectionStringBuilder.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs'>");
-        }
+    //for(int i = 0; i < teamCategories.Count; i++)
+    //{
+    //    if(i == 0)
+    //    {
+    //        teamSectionStringBuilder.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
+    //    }
+    //    else
+    //    {
+    //        teamSectionStringBuilder.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs'>");
+    //    }
 
-        teamSectionStringBuilder.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + teamCategories[i].Name + "</label>");
+    //    teamSectionStringBuilder.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + teamCategories[i].Name + "</label>");
 
-    }
-    for (int i = 0; i < teamCategories.Count; i++)
-    {
+    //}
+    //for (int i = 0; i < teamCategories.Count; i++)
+    //{
 
-        IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[i].Id);
+    //    IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[i].Id);
 
-        List<SportsTeam> teams = sportsTeam.CreateSportsTeamListFromCategories(teamList);
+    //    List<SportsTeam> teams = sportsTeam.CreateSportsTeamListFromCategories(teamList);
 
-        var teamsInOrder = teams.OrderBy(x => x.Name).ToList();
+    //    var teamsInOrder = teams.OrderBy(x => x.Name).ToList();
 
-        teamSectionStringBuilder.Append("<section id='content" + (i + 1) + "'><p>");
-        int cur = 1;
+    //    teamSectionStringBuilder.Append("<section id='content" + (i + 1) + "'><p>");
+    //    int cur = 1;
 
-        foreach (var curTeam in teamsInOrder)
-        {
+    //    foreach (var curTeam in teamsInOrder)
+    //    {
 
-            //SportsTeam curTeam = new SportsTeam(team.Id);
-            
-            if (cur % 8 == 0)
-            {
-                teamSectionStringBuilder.Append("<p class='inner-team-list'>");
-            }
-            
-                teamSectionStringBuilder.Append("<a id='" + curTeam.Id + "' class='team-from-list' href='" + curTeam.SeName + "'>" + curTeam.Name + "</a><br />");
-            
-            if (cur % 8 == 7)
-            {
-                teamSectionStringBuilder.Append("</p>");
-            }
+    //        //SportsTeam curTeam = new SportsTeam(team.Id);
 
-            cur++;
-            
-        }
+    //        if (cur % 8 == 0)
+    //        {
+    //            teamSectionStringBuilder.Append("<p class='inner-team-list'>");
+    //        }
 
-        teamSectionStringBuilder.Append("</section>");
+    //            teamSectionStringBuilder.Append("<a id='" + curTeam.Id + "' class='team-from-list' href='" + curTeam.SeName + "'>" + curTeam.Name + "</a><br />");
 
-    }
+    //        if (cur % 8 == 7)
+    //        {
+    //            teamSectionStringBuilder.Append("</p>");
+    //        }
 
-    teamSectionStringBuilder.Append("</main>");
+    //        cur++;
 
-    string teamHtml = teamSectionStringBuilder.ToString();
+    //    }
+
+    //    teamSectionStringBuilder.Append("</section>");
+
+    //}
+
+    //teamSectionStringBuilder.Append("</main>");
+
+    //string teamHtml = teamSectionStringBuilder.ToString();
 
 
     //After Team Is Selected Category Data
@@ -241,71 +241,7 @@
 
     </div>
    
-    @{
-//StringBuilder teamHtml = new StringBuilder();
-//string rawTeam = "";
 
-//if (@hasTeams == true)
-//{
-//    //get specification attr list with teams
-//    //foreach specAttr, ex.professional team, college team, conference etc
-//    var specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-
-//    teamHtml.Append("<main>");
-
-//    //tabs
-//    for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-//    {
-//        IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-//        SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-
-//        teamHtml.Append("<input id='tab" + (i + 1) + "' type='radio' name='tabs' checked>");
-//        teamHtml.Append("<label id='label" + (i + 1) + "' class='gateway-label' for='tab" + (i + 1) + "'>" + specificationAttr.Name + "</label>");
-
-//    }
-
-//    //tab content
-//    for (int i = 0; i < specAttrAndCategoryDataView.Count; i++)
-//    {
-//        IPagedList<SpecificationAttribute> list = specService.GetSpecificationAttributes();
-//        SpecificationAttribute specificationAttr = list.FirstOrDefault(x => x.Id == (int)specAttrAndCategoryDataView[i]["SpecificationAttributeId"]);
-//        ICollection<SpecificationAttributeOption> optionList = specificationAttr.SpecificationAttributeOptions;                              
-
-//        teamHtml.Append("<section id='content" + (i + 1) + "'><p>");
-
-//        int cur = 1;
-//        foreach (var option in optionList)
-//        {
-
-//            if (cur % 8 == 0)
-//            {
-//                teamHtml.Append("<p class='inner-team-list'>");
-//            }
-//            else
-//            {
-//                teamHtml.Append("<a class='team-from-list' href='#'>" + option.Name + "</a><br />");
-//            }
-//            if (cur % 8 == 7)
-//            {
-//                teamHtml.Append("</p>");
-//            }
-
-//            cur++;
-
-//        }
-
-//        teamHtml.Append("</section>");
-//        //teamHtml.Append("<br />");
-
-//    }
-
-//    teamHtml.Append("</main>");
-
-
-//    rawTeam = teamHtml.ToString();
-
-//}
-    }
 
     
     <div id="selectTeamDiv" style="display: none">
@@ -326,7 +262,62 @@
             </div>
             <div id="gatewayLayersContainer">
                 <div id="teamSelect">
-                    @Html.Raw(teamHtml);
+                    <main>
+
+                        @for(int i = 0; i < teamCategories.Count; i++)
+                        {
+                            if(i == 0)
+                            { 
+                                <input id='tab@(i + 1)' type='radio' name='tabs' checked>
+                            }
+                            else
+                            {
+                                <input id='tab@(i + 1)' type='radio' name='tabs'>
+                            }
+
+                        <label id='label@(i + 1)' class='gateway-label' for='tab@(i + 1)'> @teamCategories[i].Name </label>
+
+                        }
+                        @for (int j = 0; j < teamCategories.Count; j++)
+                        {
+
+                            IList<Category> teamList = categoryService.GetAllCategoriesByParentCategoryId(teamCategories[j].Id);
+                            List<SportsTeam> teams = sportsTeam.CreateSportsTeamListFromCategories(teamList);
+                            var teamsInOrder = teams.OrderBy(x => x.Name).ToList();
+                            int cur = 1;
+                                <section id='content@(j + 1)'>
+                                    <p>
+
+                                            @foreach (var curTeam in teamsInOrder)
+                                            {
+
+                                                //SportsTeam curTeam = new SportsTeam(team.Id);
+
+                                                if (cur % 8 == 0)
+                                                {
+
+                                                @:<p class='inner-team-list'>
+                                                }
+
+                                                <a id='@curTeam.Id' class='team-from-list' href='@curTeam.SeName'> @curTeam.Name </a><br />
+
+                                                if (cur % 8 == 7)
+                                                {
+                                                    @:</p>
+                                                }
+
+                                                cur++;
+
+                                            }
+                                    
+                                </section>
+                        }
+                        
+                           @*@Html.Action("SportsTeamsList", "GBSCatalog", new { model = teamCategories, sportsTeamId = Model.Id })*@  
+                           @*@Html.Action("SportsTeamsTest", "GBSCatalog")*@     
+                        
+                    </main>
+
                 </div>
                 <div id="sportImage">
                     <img id="gatewayForegroundImage" class="" src="@foregroundImage" />

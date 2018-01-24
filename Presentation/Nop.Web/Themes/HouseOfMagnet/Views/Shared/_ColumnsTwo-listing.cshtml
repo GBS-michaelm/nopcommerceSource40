@@ -1,4 +1,15 @@
-﻿@{
+﻿@using Nop.Core.Plugins
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using Nop.Plugin.Catalog.GBS
+@using Nop.Plugin.Catalog.GBS.Controllers
+@using Nop.Services.Stores
+@using Nop.Core
+@{
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var categoryNavigationSettings = EngineContext.Current.Resolve<ISettingService>().LoadSetting<CategoryNavigationSettings>(_storeContext.CurrentStore.Id);
+}
+@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
 @{
@@ -9,7 +20,6 @@
     {
         currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
     }
-
 
     //current manufacturer ID
     int currentManufacturerId = 0;
@@ -99,8 +109,14 @@
         else
         {
             @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-            
+            if (categoryNavigationSettings.IsActive)
+            {
+                @Html.Widget("category_navigation_block", currentCategoryId + "," + currentProductId)
+            }
+            else
+            {
+                @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+            }
             @*@Html.Widget("left_side_column_after_category_navigation")
             @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
             @Html.Action("VendorNavigation", "Catalog")*@

@@ -103,33 +103,65 @@
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
     <div class="gluon-template"  style="overflow:hidden; height:1900px">
-        <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1900px; width:100%;"></iframe>
+        <iframe id="gluon-iframe" src="@T("hom.url")@page&id=@cartItemID" style="height:1900px; width:100%;"></iframe>
     </div>
 }
  <!--product attributes-->
 <script type="text/javascript">
-   
-    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-    var eventer = window[eventMethod];
-    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+
     var imageUrl = '';
-    var check = true;
- 
-    // Listen to message from child window
-    eventer(messageEvent, function (e) {
-        var cartImageSrc = (JSON.parse(e.data)[320] != "undefined" && JSON.parse(e.data).hasOwnProperty('399')) ? "http://gluon.houseofmagnets.com" + JSON.parse(e.data)[320] : "undefined";
-        AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
-        
+
+    var iframe = document.getElementById('chili-iframe');
+
+
+    window.addEventListener("message", function (e) {
+        addToCart(e);
     }, false);
 
+    function addToCart(e) {
+        var opc = false;
+        var opcAlt = false;
+        var previewDisplay;
+
+        if (e.data != "") {
+            var json = JSON.parse(e.data);
+            var cartImageSrc;
+            for (var i = 0; i < json["data"].length; i++) {
+                console.log(json["data"][i]);
+                switch (json["data"][i].option) {
+                    case 320:
+                        cartImageSrc = json["data"][i].value;
+                        break;
+                    case 399:
+                        opc = true;
+                        break
+                    default:
+                        break;
+                }
+
+            }
+            if (json.hasOwnProperty('misc3')) {
+                opcAlt = true;
+            }
+            if (cartImageSrc == '') {
+                previewDisplay = "undefined";
+            }
+            previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
+            AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
+
+        }
+    }
+
 </script>
+
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(document).ready(function () {
         if($("#hdn-iframe-data").val() != "")
         {
             $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
         }
     });
-</script>
+</script>*@
 
