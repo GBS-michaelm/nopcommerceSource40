@@ -4,7 +4,7 @@
     <div class="shopping-cart-link">
         <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
             <span class="cart-label">@T("ShoppingCart")</span>
-            <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.TotalProducts) @T("admin.currentcarts.totalitems")</span>
+            <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.Items.Count) @T("admin.currentcarts.totalitems")</span>
         </a>
     </div>
     <div class="flyout-cart-wrapper" id="flyout-cart-wrapper">
@@ -16,7 +16,7 @@
                 }
                 else
                 {
-                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts))))
+                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.Items.Count))))
                 }
             </div>
             @if (Model.TotalProducts > 0)

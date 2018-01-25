@@ -156,12 +156,14 @@
                             @if (Model.ShowProductImages)
                             {
                                 <td class="product-picture">
-                                    @if (item.AttributeInfo.Contains("CustomImgUrl"))
+                                    @if (imgUrlDict.ContainsKey(item.Id))
                                     {
                                         string url = imgUrlDict[item.Id];
                                         if (!url.Contains("undefined"))
                                         {
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
+                                            @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>*@
+                                            @Html.Widget("shoppingcart_custom_image", item.Id)
+
                                         }
                                         else
                                         {
