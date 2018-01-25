@@ -1,4 +1,4 @@
-﻿Group: GBS
+Group: GBS
 FriendlyName: Nop.Plugin.Catalog.GBS
 SystemName: Catalog.GBS
 Version: 3.90
@@ -6,4 +6,5 @@ SupportedVersions: 3.90
 Author: N.Anj
 DisplayOrder: 1
 FileName: Nop.Plugin.Catalog.GBS.dll
-Descriptin: This plugin is used for category navigation
+Description: 
+LimitedToStores: 6,7

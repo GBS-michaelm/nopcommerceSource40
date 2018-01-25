@@ -47,20 +47,20 @@
         if (Array.isArray(optionModel.Values)) {
             optionModel.Values.forEach(function (value) {
                 self.values[value.Name] = new OptionValue(value);
-		        switch (self.type) {
-		            case "color":
-		                if (value.ImageSquaresPictureModel != null && value.ImageSquaresPictureModel.FullSizeImageUrl != null) {
-		                    var url = value.ImageSquaresPictureModel.FullSizeImageUrl;
-		                    self.values[value.Name].image = url;
-		                } 
-		                self.values[value.Name].color = value.ColorSquaresRgb;
-				        break;
-		            case "image":
-		                var url = value.ImageSquaresPictureModel.FullSizeImageUrl;
-		                if (url != null)
-		                    self.values[value.Name].image = url; 
-		                break;
-		        }
+                switch (self.type) {
+                    case "color":
+                        if (value.ImageSquaresPictureModel != null && value.ImageSquaresPictureModel.FullSizeImageUrl != null) {
+                            var url = value.ImageSquaresPictureModel.FullSizeImageUrl;
+                            self.values[value.Name].image = url;
+                        }
+                        self.values[value.Name].color = value.ColorSquaresRgb;
+                        break;
+                    case "image":
+                        var url = value.ImageSquaresPictureModel.FullSizeImageUrl;
+                        if (url != null)
+                            self.values[value.Name].image = url;
+                        break;
+                }
             });
         }
 
@@ -95,14 +95,14 @@
         self.updateCartItemId = productModel.updateCartItemId;
         self.price = productModel.ProductPrice.PriceValue;
         self.sku = productModel.Sku;
-       
+
         self.skuPlaceholders = [];
         self.pricePlaceholders = [];
 
         productModel.ProductSpecifications.forEach(function (spec) {
             self.attributes[spec.SpecificationAttributeName] = new Attribute(spec);
         });
-        
+
         // TODO: Extract quantities through the productModel
         self.quantities = {
             min: -1,
@@ -120,7 +120,6 @@
         self._config = configuration.config;
 
         var processConfig = function (config, title) {
-
             var result = null;
             switch (true) {
                 case Array.isArray(config):
@@ -141,8 +140,12 @@
                     return config;
                 default:
                     result = config;
+                    if (result.toLowerCase().indexOf("#language#") > -1 && self._config.language) {
+                        result = result.replace("#language#", self._config.language);
+                    }
                     var placeholders = result.match(/%[^%]+%/g);
                     if (Array.isArray(placeholders)) {
+
                         placeholders.forEach(function (placeholder) {
                             if (placeholder.toLowerCase().indexOf('%product.sku%') >= 0) {
                                 self.skuPlaceholders.push({
@@ -170,12 +173,11 @@
                                     value = value[item];
                                 });
                                 value = value.name;
-                                if (!!self.attributes[value] && !!self.attributes[value].value)
-                                {
-                                	var ecommerceValue = self.attributes[value].value;
-                                	var elem = document.createElement('textarea');
-                                	elem.innerHTML = ecommerceValue;
-                                	replaceValue = elem.value;
+                                if (!!self.attributes[value] && !!self.attributes[value].value) {
+                                    var ecommerceValue = self.attributes[value].value;
+                                    var elem = document.createElement('textarea');
+                                    elem.innerHTML = ecommerceValue;
+                                    replaceValue = elem.value;
                                     doCommon = false;
                                 } else {
                                     placeholder = placeholder.replace(str, value);
@@ -241,7 +243,7 @@
 
         self.data = data;
         self.options = options;
-        
+
         self.product = product;
         self.price = null;
         self.images = images;
@@ -256,7 +258,7 @@
             }
 
             if (Object.prototype.toString.call(value) !== "[object Array]") {
-                value = [value];   
+                value = [value];
             }
             self.options[optionName] = new SelectedOption(_currentProduct.options[optionName], value);
             self.updatePrice();
@@ -269,7 +271,7 @@
             delete self.options[optionName]
         },
 
-        self.getOptionStr = function(option) {
+        self.getOptionStr = function (option) {
             var result = [];
             for (var i = 0; i < option.value.length; i++) {
                 var val = option.value[i];
@@ -277,12 +279,12 @@
                     if (Object.prototype.toString.call(val) === "[object String]") {
                         if (option.option)
                             result.push("product_attribute_" + option.option.id + "=" + encodeURIComponent(val));
-                        else 
+                        else
                             result.push("product_attribute_" + option.id + "=" + encodeURIComponent(val));
                     } else {
                         if (option.option)
                             result.push("product_attribute_" + option.option.id + "=" + val.id);
-                        else 
+                        else
                             result.push("product_attribute_" + option.id + "=" + val.id);
                     }
             }
@@ -290,24 +292,26 @@
         };
 
         self.updatePrice = function () {
-            
+
             var values = [];
             for (var i in this.options) {
                 values.push(this.getOptionStr(this.options[i]));
             }
             values.push("addtocart_" + this.product.id + ".EnteredQuantity=" + this.quantity);
-            
+
             var attributesStr = values.join("&");
-            
+
             self._raise(self.onPriceChanging);
             $.ajax({
                 cache: false,
-                url: ccWidgetBaseUrl + "shoppingcart/productdetails_attributechange?productId="+this.product.id+"&validateAttributeConditions=False&loadPicture=True",
+                url: ccWidgetBaseUrl + "shoppingcart/productdetails_attributechange?productId=" + this.product.id + "&validateAttributeConditions=False&loadPicture=True",
                 type: "post",
                 data: attributesStr,
                 success: function (data) {
-                    self.price = parseFloat(data.price.replace(/[^0-9\.]+/g, ""));
-                    self._raise(self.onPriceChanged, (self.price * self.quantity).toFixed(2), data.sku);
+                    if (data && data.price) {
+                        self.price = parseFloat(data.price.replace(/[^0-9\.]+/g, ""));
+                        self._raise(self.onPriceChanged, (self.price * self.quantity).toFixed(2), data.sku);
+                    }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     _notImplemented("update price failed responce handling not implemented");
@@ -317,30 +321,30 @@
 
         self._raise = function (cb) {
             if (cb !== null && typeof (cb) === 'function') {
-                var args = Array.prototype.slice.call(arguments); 
+                var args = Array.prototype.slice.call(arguments);
                 args.shift();
                 cb.apply(self, args);
             }
         }
 
         self.submit = function () {
-        	var self = this;
-        	var formOptions = self._getFormOptions();
-        	Object.keys(formOptions).forEach(function (attrKey) {
-        		if (formOptions[attrKey] == "") {
-        			delete formOptions[attrKey];
-        		}
-        	});
-        	var jsonOptions = JSON.stringify(this.options);
-        	Object.keys(this.options).forEach(function (optionName) {
-        		var attrName = "product_attribute_" + self.options[optionName].option.id;
-        		delete formOptions[attrName];
-        	});
+            var self = this;
+            var formOptions = self._getFormOptions();
+            Object.keys(formOptions).forEach(function (attrKey) {
+                if (formOptions[attrKey] == "") {
+                    delete formOptions[attrKey];
+                }
+            });
+            var jsonOptions = JSON.stringify(this.options);
+            Object.keys(this.options).forEach(function (optionName) {
+                var attrName = "product_attribute_" + self.options[optionName].option.id;
+                delete formOptions[attrName];
+            });
 
             var jsonData = JSON.stringify(this.data);
             var jsonImages = JSON.stringify(this.images);
             var jsonDownloadUrls = JSON.stringify(this.downloadUrls);
-	        var jsonformOptions = JSON.stringify(formOptions);
+            var jsonformOptions = JSON.stringify(formOptions);
 
             if (typeof (self.designId) !== undefined && self.designId > 0) {
                 $.ajax({
@@ -356,7 +360,7 @@
                         location.assign(ccWidgetBaseUrl + "cart");
                     },
                     error: function (xhr, textStatus, thrownError) {
-                    	console.error("filed to load" + this.url, xhr.status, thrownError, xhr.responseText);
+                        console.error("filed to load" + this.url, xhr.status, thrownError, xhr.responseText);
                     }
                 });
             }
@@ -373,40 +377,40 @@
                         location.assign(ccWidgetBaseUrl + "cart");
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                    	console.error("filed to load" + this.url, xhr.status, thrownError, xhr.responseText);
+                        console.error("filed to load" + this.url, xhr.status, thrownError, xhr.responseText);
                     }
                 });
             }
         }
 
-        self._getFormOptions = function() {
-		        function getQueryParameters(str) {
-			        return (str || document.location.search).replace(/(^\?)/, '').split("&").map(function(n) {
-				        return n = n.split("="), this[n[0]] = n[1], this
-			        }.bind({}))[0];
-		        }
+        self._getFormOptions = function () {
+            function getQueryParameters(str) {
+                return (str || document.location.search).replace(/(^\?)/, '').split("&").map(function (n) {
+                    return n = n.split("="), this[n[0]] = n[1], this
+                }.bind({}))[0];
+            }
 
-		        function getParameterByName(name, url) {
-			        if (!url) url = window.location.href;
-			        name = name.replace(/[\[\]]/g, "\\$&");
-			        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-				        results = regex.exec(url);
-			        if (!results) return null;
-			        if (!results[2]) return '';
-			        return decodeURIComponent(results[2].replace(/\+/g, " "));
-		        }
-				
-		        var queryParams = getQueryParameters();
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
 
-		        var optArray = {};
-		        Object.keys(queryParams).forEach(function (item) {
-			        var index = item.indexOf("product_attribute_");
-			        if (index> -1) {
-			        	optArray[item.substr(index)] = getParameterByName(item);
-			        }
-		        });
-		        return optArray;
-	        },
+            var queryParams = getQueryParameters();
+
+            var optArray = {};
+            Object.keys(queryParams).forEach(function (item) {
+                var index = item.indexOf("product_attribute_");
+                if (index > -1) {
+                    optArray[item.substr(index)] = getParameterByName(item);
+                }
+            });
+            return optArray;
+        },
 
         Object.defineProperty(this, "quantity", {
             get: function () {
@@ -416,7 +420,7 @@
                 self._quantity = value;
                 self.updatePrice();
             }
-        });        
+        });
     }
 
     var User = function (userModel) {
@@ -442,8 +446,8 @@
 
     return {
 
-        get info() { return _info; }, 
-      
+        get info() { return _info; },
+
         init: function (productModel, editor, config, pluginSettings, order, quantity, user) {
             _pluginSetting = new PluginSettings(pluginSettings);
             _currentProduct = new Product(productModel, editor, config);
@@ -478,20 +482,21 @@
                 get current() {
                     return _currentOrder;
                 },
-                create: function ()
-                {
+                create: function () {
                     _currentOrder = new Order(_currentProduct, {}, null, [], [], 1);
                     return _currentOrder;
                 },
-                find: function(id) {
+                find: function (id) {
                     _notImplemented("orders.find(id) method");
-                }            
+                }
             };
         },
 
         get user() {
             return _user;
+        },
+        get userId() {
+            return "nopcommerce_" + this.user.id;
         }
-
     };
 });

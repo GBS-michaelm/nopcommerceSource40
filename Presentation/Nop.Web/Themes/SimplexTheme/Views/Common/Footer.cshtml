@@ -54,27 +54,29 @@
                             </div>
                             
                             <ul class="nav nav-list">
-                               <li><a href="/"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                               
-								 @if (Model.NewsEnabled)
-                                {
-                                    <li><a href="@Url.RouteUrl("NewsArchive")"><i class="fa fa-angle-double-right"></i>@T("News")</a></li>
-                                }
+                                <li><a href="/"><i class="fa fa-angle-double-right"></i>Home</a></li>
+
+                                @if (Model.NewsEnabled)
+    {
+                            <li><a href="@Url.RouteUrl("NewsArchive")"><i class="fa fa-angle-double-right"></i>@T("News")</a></li>
+}
                                 @if (Model.BlogEnabled)
-                                {
-                                    <li><a href="@Url.RouteUrl("Blog")"><i class="fa fa-angle-double-right"></i>@T("Blog")</a></li>
-                                }
+    {
+                            <li><a href="@Url.RouteUrl("Blog")"><i class="fa fa-angle-double-right"></i>@T("Blog")</a></li>
+}
                                 @if (Model.ForumEnabled)
-                                {
-                                    <li><a href="@Url.RouteUrl("Boards")"><i class="fa fa-angle-double-right"></i>@T("Forum.Forums")</a></li>
-                                }
+    {
+                            <li><a href="@Url.RouteUrl("Boards")"><i class="fa fa-angle-double-right"></i>@T("Forum.Forums")</a></li>
+}
                                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
-                                {
-                                    <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
-                                }
-								<li><a href="/view-all-single-cards"><i class="fa fa-angle-double-right"></i>Single Note Cards</a></li>
-								<li><a href="/view-all-sets"><i class="fa fa-angle-double-right"></i>Note Card Sets</a></li>
-								<li><a href="/envelopes"><i class="fa fa-angle-double-right"></i>Envelopes</a></li>
+    {
+                            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
+}
+                                <li><a href="/view-all-single-cards"><i class="fa fa-angle-double-right"></i>Single Note Cards</a></li>
+                                <li><a href="/view-all-sets"><i class="fa fa-angle-double-right"></i>Note Card Sets</a></li>
+                                <li><a href="/envelopes"><i class="fa fa-angle-double-right"></i>Envelopes</a></li>
+                                <li><a href="https://www.houseofmagnets.com/email/ncc/current.html" target="_blank"><i class="fa fa-angle-double-right"></i>Current Email Promotion</a></li>
+                              
                             </ul>
                         </div>
                         <div class="column customer-service col-sm-4 col-md-4">

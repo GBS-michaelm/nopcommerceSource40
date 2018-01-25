@@ -7,6 +7,7 @@
 @using Nop.Core.Domain.Orders;
 @using Nop.Services.Catalog;
 @using Nop.Plugin.Checkout.GBS;
+@using System.Xml;
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
@@ -21,6 +22,7 @@
 
     /* This adds custom images to cart */
     Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    Dictionary<int, string> attrDict = new Dictionary<int, string>();
     var _workContext = EngineContext.Current.Resolve<IWorkContext>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
     var parser = EngineContext.Current.Resolve<IProductAttributeParser>();
@@ -51,6 +53,19 @@
             }
         }
     }
+
+    /* This stores all attribute XML into a dictionary */
+    var customer = _workContext.CurrentCustomer;
+
+    foreach (var item in cart)
+    {
+        if (!attrDict.ContainsKey(item.Id))
+        {
+            attrDict[item.Id] = item.AttributesXml;
+        }
+    }
+
+
 }
 
 <div class="order-summary-content">
@@ -233,9 +248,9 @@
                                         <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                     </div>
                                 }
-                                @if (item.AttributeInfo.Contains("CHILI"))
+                                @if (item.AttributeInfo.ToUpper().Contains("CHILI"))
                                 {
-                                    if (item.AttributeInfo.Contains("399"))
+                                    if (attrDict[item.Id].Contains("399"))
                                     {
                                         var editCartItemUrl = "/chili?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
@@ -244,11 +259,20 @@
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div>
                                     }
+                                    else
+                                    {
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
 
                                 }
-                                else if (item.AttributeInfo.Contains("GLUON"))
+                                else if (item.AttributeInfo.ToUpper().Contains("GLUON"))
                                 {
-                                    if (item.AttributeInfo.Contains("399"))
+                                    if (attrDict[item.Id].Contains("399"))
                                     {
                                         var editCartItemUrl = "/gluon?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
@@ -257,13 +281,31 @@
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div>
                                     }
+                                    else
+                                    {
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
                                 }
-                                else if (item.AttributeInfo.Contains("CANVAS"))
+                                else if (item.AttributeInfo.ToUpper().Contains("CANVAS"))
                                 {
-                                    if (item.AttributeInfo.Contains("399"))
+                                    if (attrDict[item.Id].Contains("399"))
                                     {
                                         var editCartItemUrl = "/canvas?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
+
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
 
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -598,7 +640,7 @@
     else
     {
         <div class="no-data">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "shopping_cart_empty_message" })
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_shopping_cart_empty_message" })
         </div>
         <div>
             @Html.Action("HomepageCategories", "Catalog")

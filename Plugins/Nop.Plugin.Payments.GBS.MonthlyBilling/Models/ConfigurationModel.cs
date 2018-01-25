@@ -7,15 +7,15 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Models
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.AdditionalFee")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
         public bool AdditionalFee_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.AdditionalFeePercentage")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.GBS.MonthlyBilling.ShippableProductRequired")]
+        [NopResourceDisplayName("Plugins.Payment.MonthlyBilling.ShippableProductRequired")]
         public bool ShippableProductRequired { get; set; }
         public bool ShippableProductRequired_OverrideForStore { get; set; }
     }
