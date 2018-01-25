@@ -7,4 +7,4 @@ Author: N.Anj
 DisplayOrder: 1
 FileName: Nop.Plugin.Catalog.GBS.dll
 Description: 
-LimitedToStores: 7
+LimitedToStores: 6,7
