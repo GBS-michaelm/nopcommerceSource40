@@ -22,6 +22,7 @@
 
     /* This adds custom images to cart */
     Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    Dictionary<int, string> iFrameDataDict = new Dictionary<int, string>();
     Dictionary<int, string> attrDict = new Dictionary<int, string>();
     var _workContext = EngineContext.Current.Resolve<IWorkContext>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
@@ -46,6 +47,14 @@
                         if (!imgUrlDict.ContainsKey(item.Id))
                         {
                             imgUrlDict.Add(item.Id, attrValues[0]);
+                        }
+                    }
+                    if (productAttributeMapping.ProductAttribute.Name == "IframeData")
+                    {
+                        attrValues = parser.ParseValues(item.AttributesXml, productAttributeMapping.Id);
+                        if (!iFrameDataDict.ContainsKey(item.Id))
+                        {
+                            iFrameDataDict.Add(item.Id, attrValues[0]);
                         }
                     }
 
@@ -250,7 +259,8 @@
                                         <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                     </div>
                                 }
-                                @if (item.AttributeInfo.ToUpper().Contains("CHILI"))
+                                @*@if (item.AttributeInfo.ToUpper().Contains("CHILI"))*@
+                                @if (iFrameDataDict[item.Id].Contains("CHILI"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -272,7 +282,7 @@
                                     }
 
                                 }
-                                else if (item.AttributeInfo.ToUpper().Contains("GLUON"))
+                                else if (iFrameDataDict[item.Id].Contains("GLUON"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -293,7 +303,7 @@
                                         </div>
                                     }
                                 }
-                                else if (item.AttributeInfo.ToUpper().Contains("CANVAS"))
+                                else if (iFrameDataDict[item.Id].Contains("CANVAS"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
