@@ -37,6 +37,7 @@ using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 using Nop.Services.Logging;
 using Nop.Services.Custom.Orders;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Widgets.CustomersCanvas.Services;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -76,6 +77,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly ILogger _logger;
         private readonly GBSOrderService _gbsOrderService;
         private readonly IProductAttributeParser parser = EngineContext.Current.Resolve<IProductAttributeParser>();
+        private readonly ICcService ccService = EngineContext.Current.Resolve<ICcService>();
 
 
 
@@ -472,7 +474,31 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 {
                                     ViewBag.fill = "";
                                 }
+                                if (widgetZone == "shoppingcart_custom_image")
+                                {
+                                    //replace envelope color with user selected color
+                                    var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
+                                    if (productAttributeMappings != null)
+                                    {
+                                        foreach (var productAttributeMapping in productAttributeMappings)
+                                        {
+                                            if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                            {
+                                                var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
+                                                var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                                if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                {
+                                                    ViewBag.fill = "background-color:" + optionValue;
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                                }
+                                            }
 
+                                        }
+                                    }
+                                }
                                 //Prodcut Detail
                                 if (widgetZone == "product_details_widget")
                                 {
@@ -820,6 +846,39 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                         {
                                             orderItemModel.DefaultColor = "";
                                         }
+
+                                        //replace envelope color with user selected color and Custom Canvas image.
+                                        productAttributeMappings = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+                                        if (productAttributeMappings != null)
+                                        {
+                                            foreach (var productAttributeMapping in productAttributeMappings)
+                                            {
+                                                if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                                {
+                                                    var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                                                    var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                    {
+                                                        orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                                    }
+                                                    else
+                                                    {
+                                                        orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                                    }
+                                                }
+                                                if (productAttributeMapping.ProductAttribute.Name == "CcId")
+                                                {
+                                                    var ccResult = ccService.GetCcResult(orderItem.AttributesXml);
+                                                    if (ccResult != null && ccResult.ProofUrls.Count() > 0)
+                                                    {
+                                                        orderItemModel.ImageUrl = ccResult.ProofUrls[0];
+                                                    }
+
+
+                                                }
+
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -980,6 +1039,29 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         else
                         {
                             ViewBag.fill = "";
+                        }
+                        //replace envelope color with user selected color
+                        var productAttributeMappings2 = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+                        if (productAttributeMappings2 != null)
+                        {
+                            foreach (var productAttributeMapping in productAttributeMappings2)
+                            {
+                                if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                {
+                                    var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                                    var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                    {
+                                        ViewBag.fill = "background-color:" + optionValue;
+                                    }
+                                    else
+                                    {
+                                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                    }
+                                }
+
+
+                            }
                         }
                         ViewBag.ProductId = product.Id;
                     }

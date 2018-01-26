@@ -32,7 +32,10 @@
                                     @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
                                         <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
                                     </a>*@
-                                    @Html.Widget("product_details_widget", item.ProductId)
+                                    @*@Html.Widget("product_details_widget", item.ProductId)*@
+                                    @Html.Widget("shoppingcart_custom_image", item.Id)
+
+
                                 </div>
                             }
                             <div class="product">

@@ -145,6 +145,11 @@
       <Name>Nop.Plugin.Order.GBS</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Widgets.CustomersCanvas\Nop.Plugin.Widgets.CustomersCanvas.csproj">
+      <Project>{54e3cfcc-b85d-43c0-a8e9-899341c8dbe0}</Project>
+      <Name>Nop.Plugin.Widgets.CustomersCanvas</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\style.css">
