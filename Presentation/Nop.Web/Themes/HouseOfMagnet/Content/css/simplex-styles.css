@@ -11313,3 +11313,19 @@ body hr {
     width: 161px;
     z-index: -1;
 }
+.buyitagain {
+    background: #43686a;
+    border: 0px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 8px 15px 7px 15px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+    .buyitagain:hover {
+        background-color: #1abc9c;
+        color: #fff;
+    }
