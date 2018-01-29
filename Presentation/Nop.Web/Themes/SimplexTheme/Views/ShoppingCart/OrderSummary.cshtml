@@ -40,7 +40,7 @@
         <div class="update-continue-button">
             <div class="common-buttons pull-right">
                 <div class="continue-shopping">
-                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black btn-order-summary-continue-shopping" />
+                    @*<input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" />*@
                 </div>
                 <div class="update-cart">
                     <button type="submit" name="checkout" value="checkout" class="button button-rounded button-reveal button-large button-green tright btn-order-summary-check-out-top"><i class="icon-line-arrow-right"></i> <span>@T("Checkout.Button")</span></button>
@@ -382,7 +382,7 @@
                 {
                     <div class="update-continue-button">
                         <div class="common-buttons pull-right">
-                            <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black" /></div>
+                            <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" /></div>
                             <div class="update-cart"><input type="submit" name="updatecart" onclick="ordertable();" value="@T("ShoppingCart.UpdateCart")" class="button button-3d button-small button-rounded button-teal" /></div>
                         </div>
                     </div>
