@@ -1515,7 +1515,6 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-accessory.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
-    <Content Include="Themes\HouseOfMagnet\Content\css\hom-name-badge.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\content.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\events.css" />
@@ -1734,7 +1733,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\HouseOfMagnet\Content\js\iframe-data.js" />
-    <Content Include="Themes\HouseOfMagnet\Content\js\namebadge.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
@@ -3122,10 +3120,9 @@
     <Content Include="Themes\PurplePizza\Views\ShoppingCart\OrderSummary.cshtml" />
     <Content Include="Themes\PurplePizza\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\GBSCatalog\SportsTeamsList.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Topic\NameBadgeIFrame.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-namebadge.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\_Empty.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\MarketCenterGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-marketcenter-gateway.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
