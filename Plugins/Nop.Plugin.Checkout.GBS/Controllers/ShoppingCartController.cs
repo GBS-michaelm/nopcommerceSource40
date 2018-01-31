@@ -304,23 +304,23 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             var groupId = 0000;
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             Product product = productService.GetProductById(productId);
-            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-            var specAttrs = specService.GetProductSpecificationAttributes(productId);
+            //ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            //var specAttrs = specService.GetProductSpecificationAttributes(productId);
 
-            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+            ////IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
                   
-            foreach (var item in specAttrs)
-            {
-                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
-                {
-                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
-                }
-            }
+            //foreach (var item in specAttrs)
+            //{
+            //    if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+            //    {
+            //        groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+            //    }
+            //}
 
             JsonResult action = (JsonResult)base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
 
-            if (groupId != 0000)
-            {               
+            //if (groupId != 0000)
+            //{               
 
                 Type t = action.Data.GetType();
                 PropertyInfo redirect = t.GetProperty("redirect");
@@ -330,16 +330,61 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                 if ((redirectValue != null && redirectValue == "/cart") || successValue)
                 {
-                    return Json(new
-                    {
-                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
-                    });
-                }
+
+                action = (JsonResult)CheckForAccessories(action, product);
+
+            //        return Json(new
+            //        {
+            //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
+            //        });
             }
+            //}
                         
             return action;
             
         }
+
+        public ActionResult CheckForAccessories(ActionResult action, Product product)
+        {
+            var groupId = 0000;
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            var specAttrs = specService.GetProductSpecificationAttributes(product.Id);
+
+            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+            foreach (var item in specAttrs)
+            {
+                if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+                {
+                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                }
+            }
+
+
+            if (groupId != 0000)
+            {
+
+                //Type t = action.Data.GetType();
+                //PropertyInfo redirect = t.GetProperty("redirect");
+                //PropertyInfo success = t.GetProperty("success");
+                //string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                //bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                //if ((redirectValue != null && redirectValue == "/cart") || successValue)
+                //{
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = product.Id }),
+                    });
+                //}
+            }else
+            {
+                return action;
+            }
+
+
+        }
+
 
         //Add to cart without leaving page while using amalgamation pricing on galleries
         [HttpPost]
@@ -953,7 +998,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         
         [HttpPost]
         [ValidateInput(false)]
-        public void NameBadgeIframeAddToCart(FormCollection form)
+        public ActionResult NameBadgeIframeAddToCart(FormCollection form)
         {
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
@@ -972,17 +1017,23 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             string customerName = "";
             string customerTitle = "";
             string companyName = "";
- 
-            foreach (var productId in idsArray)
+            string backStyle = "";
+            bool hasAccessories = false;
+            string redirect = "";
+            //int groupId = 0;
+            string productIdForAccessoryCheck = "";
+
+
+            foreach (var productIdIFrame in idsArray)
             {               
-                string checkId = form["accQTY" + productId];
+                string checkId = form["accQTY" + productIdIFrame];
                 if(!string.IsNullOrEmpty(checkId) && checkId != "0")
                 {
                     Product product = null;
                     
                     foreach (var codeCombo in codesArray)
                     {
-                        if(codeCombo.Contains(productId + "|"))
+                        if(codeCombo.Contains(productIdIFrame + "|"))
                         {
                             string[] productIdCodeSplit = codeCombo.Split('|');
                             //create to get nop product id
@@ -991,6 +1042,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             //get attribute mapping
                             ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
                             ProductAttributeMapping frameStyleMappy = null;
+                            ProductAttributeMapping magnetBackMapping = null;
                             
                             foreach (var attr in productAttributes)
                             {
@@ -998,6 +1050,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 {
                                     //productAttribute = attr.ProductAttribute;
                                     frameStyleMappy = attr;                                   
+                                }
+
+                                if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Name Badge Back")
+                                {
+                                    backStyle = form["text357"];
+                                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
                                 }
 
                                 if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Name Badge Company Name")
@@ -1033,7 +1091,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             }
 
                             //TODO determine which attribute option has been selected for frame color
-                            frameId = form["rp" + productId + "option"];
+                            frameId = form["rp" + productIdIFrame + "option"];
                             
                             //TODO
                             //check if rp[productCode]option  is for specific badge type or if option is 0
@@ -1048,11 +1106,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 foreach (var frameStyle in frameStyles)
                                 {
                                     //check if style of frame has quantity to add to cart
-                                    if(Int32.Parse(form["rp" + productId + "option" + frameStyle + "qty"]) > 0)
+                                    if(Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]) > 0)
                                     {
                                         //generate attr xml
                                         frameValue = GetFrameStyleValue(frameStyle);
-                                        frameQty = Int32.Parse(form["rp" + productId + "option" + frameStyle + "qty"]);
+                                        frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]);
 
                                         attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameValue, frameQty);
 
@@ -1066,7 +1124,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             {
                                 //adding only a single frame style
                                 frameValue = GetFrameStyleValue(frameId);
-                                frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                                frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameId + "qty"]);
 
                                 //for testing bad values
                                 //frameValue = "Spider Monkey";
@@ -1082,17 +1140,51 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             break;
 
                         }
-                    }
-                    
+                    }  
+
                 }
 
             }
+
+
+            string[] productAccessory = codesArray[0].Split('|');
+            productIdForAccessoryCheck = productAccessory[1];
+
+            Product accessoryProduct = productService.GetProductBySku(productIdForAccessoryCheck);
+
+            ActionResult action = null;
+            JsonResult redirectJson = (JsonResult)CheckForAccessories(action, accessoryProduct);
+
+
+
+
+
+            //check for accessories
+            //if (hasAccessories)
+            //{
+            //    redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId });
+            //}else
+            //{
+            //    redirect = Url.RouteUrl("ShoppingCart");
+            //}
+
+            if(redirectJson == null)
+            {
+                redirect = Url.RouteUrl("ShoppingCart");
+            }else
+            {
+                Type t = redirectJson.Data.GetType();
+                PropertyInfo redirectData = t.GetProperty("redirect");
+                string redirectLink = (string)redirectData.GetValue(redirectJson.Data);
+                redirect = redirectLink;
+            }
+
             //TODO
             //redirect to cart page after all name badges are added to cart
-            //return Json(new
-            //{
-            //    redirect = Url.RouteUrl("ShoppingCart"),
-            //});
+            return Json(new
+            {
+                redirect = redirect,
+            });
         }
         
         private string GetFrameStyleValue(string frameId)

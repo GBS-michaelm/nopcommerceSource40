@@ -3123,6 +3123,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\MarketCenterGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-marketcenter-gateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-namebadge.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\NameBadgeIFrame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
