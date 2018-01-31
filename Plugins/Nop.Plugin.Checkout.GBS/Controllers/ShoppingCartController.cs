@@ -1004,8 +1004,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
             IProductAttributeParser productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
             Customer customer = _workContext.CurrentCustomer;
-
-
+            
             string productIds = form["accChk"];
             string[] idsArray = productIds.Split(',');
             string productCodes = form["productCode"];
@@ -1017,13 +1016,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             string customerName = "";
             string customerTitle = "";
             string companyName = "";
-            string backStyle = "";
-            bool hasAccessories = false;
+            string backStyle = "";            
             string redirect = "";
-            //int groupId = 0;
             string productIdForAccessoryCheck = "";
-
-
+            
             foreach (var productIdIFrame in idsArray)
             {               
                 string checkId = form["accQTY" + productIdIFrame];
@@ -1042,13 +1038,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             //get attribute mapping
                             ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
                             ProductAttributeMapping frameStyleMappy = null;
-                            ProductAttributeMapping magnetBackMapping = null;
-                            
+                                                        
                             foreach (var attr in productAttributes)
                             {
                                 if (attr.ProductAttribute.Name == "Frame Style")
-                                {
-                                    //productAttribute = attr.ProductAttribute;
+                                {                                    
                                     frameStyleMappy = attr;                                   
                                 }
 
@@ -1145,8 +1139,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
 
             }
-
-
+            
             string[] productAccessory = codesArray[0].Split('|');
             productIdForAccessoryCheck = productAccessory[1];
 
@@ -1154,20 +1147,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
             ActionResult action = null;
             JsonResult redirectJson = (JsonResult)CheckForAccessories(action, accessoryProduct);
-
-
-
-
-
-            //check for accessories
-            //if (hasAccessories)
-            //{
-            //    redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId });
-            //}else
-            //{
-            //    redirect = Url.RouteUrl("ShoppingCart");
-            //}
-
+            
             if(redirectJson == null)
             {
                 redirect = Url.RouteUrl("ShoppingCart");
@@ -1178,9 +1158,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 string redirectLink = (string)redirectData.GetValue(redirectJson.Data);
                 redirect = redirectLink;
             }
-
-            //TODO
-            //redirect to cart page after all name badges are added to cart
+                        
             return Json(new
             {
                 redirect = redirect,
