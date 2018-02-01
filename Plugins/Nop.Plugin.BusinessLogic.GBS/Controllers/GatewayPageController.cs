@@ -84,6 +84,22 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         }
 
 
+        public ActionResult MarketCenterTabs(int marketCenterId)
+        {
+
+            MarketCenter marketCenter = new MarketCenter(marketCenterId);
+            Dictionary<string, string> tabs = new Dictionary<string, string>();
+
+            tabs = marketCenter.GetMarketCenterHtml();
+
+            //add tabs to list model with market center models inside
+
+            return View();
+
+        }
+
+
+        
     }
 
     
