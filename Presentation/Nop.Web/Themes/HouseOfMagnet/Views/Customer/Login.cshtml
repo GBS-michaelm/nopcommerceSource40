@@ -6,10 +6,25 @@
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
     var previousUrl = string.Empty;
+    var originalUrl = string.Empty;
+    if (!string.IsNullOrEmpty(this.Context.Session["originalUrl"] as String))
+    {
+        originalUrl = this.Context.Session["originalUrl"] as String;
+    }
     try
     {
         previousUrl = System.Web.HttpContext.Current.Request.UrlReferrer.AbsolutePath;
-    }catch(Exception ex)
+        if (!string.IsNullOrEmpty(originalUrl) && originalUrl != previousUrl)
+        {
+            if (previousUrl == "/login")
+            {
+                previousUrl = originalUrl;
+            }
+            this.Context.Session["originalUrl"] = previousUrl;
+
+        }
+    }
+    catch (Exception ex)
     {
         previousUrl = "";
     }
