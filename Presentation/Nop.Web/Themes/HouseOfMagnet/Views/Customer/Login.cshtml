@@ -14,15 +14,14 @@
     try
     {
         previousUrl = System.Web.HttpContext.Current.Request.UrlReferrer.AbsolutePath;
-        if (!string.IsNullOrEmpty(originalUrl) && originalUrl != previousUrl)
+        if (!string.IsNullOrEmpty(this.Context.Session["originalUrl"] as String) && originalUrl != previousUrl)
         {
             if (previousUrl == "/login")
             {
                 previousUrl = originalUrl;
             }
-            this.Context.Session["originalUrl"] = previousUrl;
-
         }
+        this.Context.Session["originalUrl"] = previousUrl;
     }
     catch (Exception ex)
     {
