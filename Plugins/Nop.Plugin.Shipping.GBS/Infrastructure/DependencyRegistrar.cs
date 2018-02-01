@@ -5,6 +5,7 @@ using Nop.Core.Infrastructure.DependencyManagement;
 //using Nop.Plugin.Shipping.GBS.Filters;
 using Nop.Core.Configuration;
 using Nop.Services.Shipping;
+using Nop.Plugin.Shipping.GBS.Services;
 
 namespace Nop.Plugin.Shipping.GBS.Infrastructure
 {
@@ -14,8 +15,10 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
         {
             //FilterProviders.Providers.Add(new NopFilterProvider());
             builder.RegisterType<GBSShippingComputationPlugin>().As<IShippingRateComputationMethod>().InstancePerRequest();
+            builder.RegisterType<GBSShippingService>().As<IShippingService>().InstancePerRequest();
+
         }
 
-        public int Order => 0;
+        public int Order => 2;
     }
 }

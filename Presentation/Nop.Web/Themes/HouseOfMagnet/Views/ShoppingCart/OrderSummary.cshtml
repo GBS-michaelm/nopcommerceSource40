@@ -260,7 +260,7 @@
                                     </div>
                                 }
                                 @*@if (item.AttributeInfo.ToUpper().Contains("CHILI"))*@
-                                @if (iFrameDataDict[item.Id].Contains("CHILI"))
+                                @if (iFrameDataDict.ContainsKey(item.Id) &&  iFrameDataDict[item.Id].Contains("CHILI"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -282,7 +282,7 @@
                                     }
 
                                 }
-                                else if (iFrameDataDict[item.Id].Contains("GLUON"))
+                                else if (iFrameDataDict.ContainsKey(item.Id) &&  iFrameDataDict[item.Id].Contains("GLUON"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -303,7 +303,7 @@
                                         </div>
                                     }
                                 }
-                                else if (iFrameDataDict[item.Id].Contains("CANVAS"))
+                                else if (iFrameDataDict.ContainsKey(item.Id) &&  iFrameDataDict[item.Id].Contains("CANVAS"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {

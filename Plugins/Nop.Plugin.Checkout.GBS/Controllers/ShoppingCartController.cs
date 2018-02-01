@@ -75,6 +75,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IDownloadService _downloadService;
         private readonly ILogger _logger;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IShippingRateComputationMethod gbsShipping = EngineContext.Current.Resolve<IShippingRateComputationMethod>();
 
         #endregion
 
@@ -196,6 +197,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             ViewBag.ShoppingCartModel = shoppingCartModel;
 
             var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
+            //var flatRate = gbsShipping.GetFixedRate(new GetShippingOptionRequest());
+            //if (String.IsNullOrEmpty(model.Shipping) && flatRate > 0)
+            //{
+            //    model.Shipping = _priceFormatter.FormatPrice((decimal)flatRate);
+            //}
             return PartialView("OrderTotals", model);
         }
 
