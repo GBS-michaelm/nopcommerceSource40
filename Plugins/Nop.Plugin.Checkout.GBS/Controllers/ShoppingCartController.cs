@@ -333,12 +333,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                 action = (JsonResult)CheckForAccessories(action, product);
 
-            //        return Json(new
-            //        {
-            //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
-            //        });
-            }
-            //}
+                //        return Json(new
+                //        {
+                //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
+                //        });
+                }
+                //}
                         
             return action;
             
