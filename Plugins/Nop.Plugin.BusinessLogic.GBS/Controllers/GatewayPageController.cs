@@ -81,29 +81,8 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                     return View();
             }
             
-        }
-
-
-        //market center, get all top companies and logos
-        public ActionResult GatewayMarketCenterCompanies(int marketCenterId)
-        {
-
-            //filter on companies where their parent id is the same as the marketcenter overvall id (marketCenterId)
-            //need to get all child data as well and build html for children popups behind the scenes
-            //3 a-z tabs of company list and a featured tab
-            MarketCenter marketCenter = new MarketCenter(marketCenterId);
-
-            string html = marketCenter.GetMarketCenterHtml();
-
-
-
-
-            return View();
-
-        }
-
-
+        }   
+        
     }
        
-
 }
