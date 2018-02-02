@@ -11290,3 +11290,9 @@ div .mega-menu {
     .button-link:focus span {
         color: black;
     }
+
+
+/*** Address pages **/
+#emailInput, #countryDropdown, .address-list .email {
+    display: none;
+}

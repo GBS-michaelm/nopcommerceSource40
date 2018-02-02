@@ -1,5 +1,11 @@
 ﻿@model AddressModel
 @using Nop.Web.Models.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+@{ 
+    var customer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+    Model.Email = customer.Email;
+}
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script type="text/javascript">
@@ -27,6 +33,10 @@
                     }
                 });
             });
+            if ($("#@Html.FieldIdFor(model => model.CountryId)").val() == 0) {
+                $("#@Html.FieldIdFor(model => model.CountryId) option[value=1]").prop('selected', 'selected').trigger('change');
+            }
+
         });
     </script>
 }
@@ -55,7 +65,7 @@
         </div>
 
         </div>
-    <div class="form-group">
+    <div id="emailInput"class="form-group">
         @Html.LabelFor(model => model.Email, new { @class = "control-label col-sm-2 col-md-2" })
         <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
         <div class="col-sm-6 col-md-6">
@@ -65,27 +75,63 @@
             <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
             @Html.ValidationMessageFor(model => model.Email)
         </div>
-        </div>
-    @if (Model.CompanyEnabled)
+    </div>
+    @if (Model.StreetAddressEnabled)
     {
         <div class="form-group">
-            @Html.LabelFor(model => model.Company, new { @class = "control-label col-sm-2 col-md-2" })
+            @Html.LabelFor(model => model.Address1, new { @class = "control-label col-sm-2 col-md-2" })
             <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
             <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Company, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.Address1, new { @class = "form-control" })
             </div>
             <div class="col-sm-4 col-md-4">
-                @if (Model.CompanyRequired)
+                @if (Model.StreetAddressRequired)
                 {
                     <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
                 }
-                @Html.ValidationMessageFor(model => model.Company)
+                @Html.ValidationMessageFor(model => model.Address1)
             </div>
-      </div>
+        </div>
+
     }
-    @if (Model.CountryEnabled)
+    @if (Model.StreetAddress2Enabled)
     {
         <div class="form-group">
+            @Html.LabelFor(model => model.Address2, new { @class = "control-label col-sm-2 col-md-2" })
+            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
+            <div class="col-sm-6 col-md-6">
+                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4 col-md-4">
+                @if (Model.StreetAddress2Required)
+                {
+                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+                }
+                @Html.ValidationMessageFor(model => model.Address2)
+            </div>
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.City, new { @class = "control-label col-sm-2 col-md-2" })
+            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
+            <div class="col-sm-6 col-md-6">
+                @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4 col-md-4">
+                @if (Model.CityRequired)
+                {
+                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+                }
+                @Html.ValidationMessageFor(model => model.City)
+            </div>
+        </div>
+    }
+
+    @if (Model.CountryEnabled)
+    {
+        <div id="countryDropdown" class="form-group">
             @Html.LabelFor(model => model.CountryId, new { @class = "control-label col-sm-2 col-md-2" })
             <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
             <div class="col-sm-6 col-md-6">
@@ -109,58 +155,7 @@
             </div>
         </div>       
     }
-    @if (Model.CityEnabled)
-    {
-         <div class="form-group">
-            @Html.LabelFor(model => model.City, new { @class = "control-label col-sm-2 col-md-2" })
-             <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-             <div class="col-sm-6 col-md-6">
-                 @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
-             </div>
-             <div class="col-sm-4 col-md-4">
-                 @if (Model.CityRequired)
-                 {
-                     <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                 }
-                 @Html.ValidationMessageFor(model => model.City)
-             </div>
-        </div>      
-    }
-    @if (Model.StreetAddressEnabled)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Address1, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Address1, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.StreetAddressRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.Address1)
-            </div>
-        </div>      
-        
-    }
-    @if (Model.StreetAddress2Enabled)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Address2, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.StreetAddress2Required)
-                {
-                   <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.Address2)
-            </div>
-       </div>    
-    }
+
     @if (Model.ZipPostalCodeEnabled)
     {
         <div class="form-group">
@@ -177,6 +172,23 @@
                 @Html.ValidationMessageFor(model => model.ZipPostalCode)
             </div>
       </div>   
+    }
+    @if (Model.CompanyEnabled)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Company, new { @class = "control-label col-sm-2 col-md-2" })
+            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
+            <div class="col-sm-6 col-md-6">
+                @Html.TextBoxFor(model => model.Company, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4 col-md-4">
+                @if (Model.CompanyRequired)
+                {
+                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+                }
+                @Html.ValidationMessageFor(model => model.Company)
+            </div>
+        </div>
     }
     @if (Model.PhoneEnabled)
     {
