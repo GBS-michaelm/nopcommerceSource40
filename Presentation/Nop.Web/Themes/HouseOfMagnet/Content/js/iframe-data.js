@@ -152,8 +152,8 @@ var AddItem = function (dataJson, cartItemId, qty, prodId, cartImageSrc, editAct
                 url: "shoppingcart/submititem?" + passJson,
                 type: "post",
                 success: function (data) {
-
-                    window.location = '/cart';
+                    console.log(data);
+                    window.location = data.redirect;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                  
