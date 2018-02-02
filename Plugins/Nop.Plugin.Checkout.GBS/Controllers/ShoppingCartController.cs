@@ -296,6 +296,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if we got here just return the base value;
             return base.ProductDetails_AttributeChange(productId, validateAttributeConditions, loadPicture, form);
         }
+
         [HttpPost]
         [ValidateInput(false)]
         public override ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
@@ -303,6 +304,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             var groupId = 0000;
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             Product product = productService.GetProductById(productId);
+
             //ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
             //var specAttrs = specService.GetProductSpecificationAttributes(productId);
 
@@ -433,6 +435,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 {
                     packType = spec.SpecificationAttributeOption.Name;
                 }                
+
             }
             
             foreach (ShoppingCartItem item in AmalgamationList)
@@ -1009,5 +1012,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         }
 
     }
+
 
 }

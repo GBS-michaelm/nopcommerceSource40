@@ -9221,8 +9221,8 @@ ul.info li label {
 
 .shopping-cart-page #checkout {
     position: relative;
-    bottom: 65px;
-    left: 134px;
+    bottom: 79px;
+    left: 93px;
 }
 
 .cart .sku-info {
@@ -11358,3 +11358,8 @@ body hr {
     .button-link:focus span {
         color: black;
     }
+
+/*** Address pages **/
+#emailInput, #countryDropdown, .address-list .email {
+    display: none;
+}

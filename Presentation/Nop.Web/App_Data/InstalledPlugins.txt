@@ -2,13 +2,12 @@ CurrencyExchange.ECB
 Misc.FacebookShop
 Payments.Manual
 Shipping.FixedRate
-Tax.FixedRate
+Tax.FixedOrByCountryStateZip
 Widgets.NivoSlider
 DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
-Tax.CountryStateZip
 Widgets.GoogleAnalytics
 Shipping.USPS
 Shipping.UPS

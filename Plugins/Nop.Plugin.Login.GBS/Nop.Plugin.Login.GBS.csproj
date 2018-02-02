@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Controllers\LoginConfigurationGBSController.cs" />
     <Compile Include="GBSLoginSettings.cs" />
+    <Compile Include="Infrastructure\GBSLoginRouteProvider.cs" />
     <Compile Include="Infrastructure\GBSDependencyRegistrar.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="MyLoginServicePlugin.cs" />
@@ -113,7 +114,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
