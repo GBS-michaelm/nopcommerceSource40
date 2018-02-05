@@ -19,8 +19,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         DBManager manager = new DBManager();
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
         ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-
-
+        
         int _id = 0;
         int _parentCategoryId = 0;
         string _h1 = "";
@@ -32,13 +31,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         string _backgroundColor = "";
         string _mainPicturePath;
         string _gatewayHtml = "";
-        //List<SubCategoryModel> _subCategories = new List<SubCategoryModel>();
-        List<MarketCenter> childCompanies = new List<MarketCenter>();
-
-
-
-        //public MarketCenter() { }
-        
+        bool _isTopCompany = false; //featuredCompany ??
+        List<MarketCenter> _childCompanies = new List<MarketCenter>();
+                        
         public MarketCenter(int marketCenterCategoryId)
         {
             
@@ -59,10 +54,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             this.PagingFilteringContext = categoryModel.PagingFilteringContext;
             this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
             this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-            //this.subCategories = (List<SubCategoryModel>)categoryModel.SubCategories;
+            this.SubCategories = categoryModel.SubCategories;
             this.FeaturedProducts = categoryModel.FeaturedProducts;
             this.Products = categoryModel.Products;
             this.parentCategoryId = _parentCategoryId;
+            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
 
 
             DataView marketCenterDataView = cacheManager.Get("marketCenter" + marketCenterCategoryId, 60, () => {
@@ -87,9 +84,34 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.foregroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["ForegroundPicturePath"].ToString()) ? marketCenterDataView[0]["ForegroundPicturePath"].ToString() : _foregroundImage;
                 this.backgroundColor = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundColor"].ToString()) ? marketCenterDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
                 this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
-                
+                this.isTopCompany = marketCenterDataView[0]["IsFeatured"] != null ? (bool)marketCenterDataView[0]["IsFeatured"] : isTopCompany = _isTopCompany;
             }
-            
+
+            #region child companies
+
+            //child companies handling
+            DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
+                Dictionary<string, Object> marketCenterChildCompanyDic = new Dictionary<string, Object>();
+                marketCenterChildCompanyDic.Add("@CategoryId", marketCenterCategoryId);
+
+                string marketCenterChildCompanyDataQuery = "EXEC usp_SelectMarketCenterChildren @categoryId";
+                DataView innerMarketCenterChildCompanyDataView = manager.GetParameterizedDataView(marketCenterChildCompanyDataQuery, marketCenterChildCompanyDic);
+
+                return innerMarketCenterChildCompanyDataView;
+            });
+
+            if(marketCenterChildCompanyDataView.Count > 0)
+            {
+                for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
+                {
+                    MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()));
+                    this.childCompanies.Add(marketCenter);
+                }
+            }
+
+            #endregion
+
+
         }
 
         public int id { get { return _id; } set { _id = value; } } 
@@ -103,36 +125,67 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string backgroundColor { get { return _backgroundColor; } set { _backgroundColor = value; } }
         public string mainPicturePath { get { return _mainPicturePath; } set { _mainPicturePath = value; } }
         public string gatewayHtml { get { return _gatewayHtml; } set { _gatewayHtml = value; } }
-        //public IList<SubCategoryModel> subCategories { get { return _subCategories; } set { _subCategories = (List<SubCategoryModel>)value; } }
-
-
+        public List<MarketCenter> childCompanies { get { return _childCompanies; } set { _childCompanies = value; } }
+        public bool isTopCompany { get { return _isTopCompany; } set { _isTopCompany = value; } }
+        
 
         public Dictionary<string, string> GetMarketCenterHtml()
         {
             ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
             Dictionary<string, string> marketCenterTabsDict = new Dictionary<string, string>();
+            List<MarketCenter> featuredMarketCenterList = new List<MarketCenter>();
             List<MarketCenter> alphaList1 = new List<MarketCenter>();
             List<MarketCenter> alphaList2 = new List<MarketCenter>();
             List<MarketCenter> alphaList3 = new List<MarketCenter>();
 
             //if top level and has children build popup with children links
             IList<Category> topLevelMarketCenters = categoryService.GetAllCategoriesByParentCategoryId(this.id);
-            foreach (var marketcenter in topLevelMarketCenters)
+            foreach (var marketcenterCategory in topLevelMarketCenters)
             {
-                //seperate market centers into alpha lists a-g h-p q-z
-                
-                
+                MarketCenter marketcenter = new MarketCenter(marketcenterCategory.Id);
 
+                char firstLetter = marketcenter.Name.ToUpper()[0];
+
+                //create featured company list
+                if (marketcenter.isTopCompany)
+                {
+                    featuredMarketCenterList.Add(marketcenter);
+                }
+
+                //seperate market centers into alpha lists a-g h-p q-z
+                if (firstLetter >= '0' && firstLetter <= '9')
+                {
+                    alphaList1.Add(marketcenter);
+                }
+                else if (firstLetter >= 'A' && firstLetter <= 'G')
+                {
+                    alphaList1.Add(marketcenter);
+                }
+                else if (firstLetter >= 'H' && firstLetter <= 'P')
+                {
+                    alphaList2.Add(marketcenter);
+                }
+                else if (firstLetter >= 'Q' && firstLetter <= 'Z')
+                {
+                    alphaList3.Add(marketcenter);
+                }
+                                
             }
 
             //call build for featured list
+            //top companies only (isFeatured)
+            string isfeatured = BuildFeaturedCompanyHtml(featuredMarketCenterList);
 
-
-            
             //call build html for each alpha list      
-            
+            string alpha1 = BuildTabHtml(alphaList1);
+            string alpha2 = BuildTabHtml(alphaList2);
+            string alpha3 = BuildTabHtml(alphaList3);
 
-
+            //add featured and alphas to dictionary
+            marketCenterTabsDict.Add("Featured Companies", isfeatured);
+            marketCenterTabsDict.Add("Companies A - G", alpha1);
+            marketCenterTabsDict.Add("Companies H - P", alpha2);
+            marketCenterTabsDict.Add("Companies Q - Z", alpha3);
 
             return marketCenterTabsDict;
 
@@ -153,22 +206,61 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             return tabHtml;
         }
         
-        private string BuildFeaturedCompanyHtml()
+        private string BuildFeaturedCompanyHtml(List<MarketCenter> marketcenterList)
         {
             string featuredHtml = "";
             StringBuilder featuredHtmlStringBuilder = new StringBuilder();
             //if top lvl and no children. Top level will take user to it's own page
+            foreach (var marketcenter in marketcenterList)
+            {
 
+                featuredHtmlStringBuilder.Append("<a id='a-mc-link-" + marketcenter.id + "' title='" + marketcenter.Name + "' ");
+                if(marketcenter.childCompanies.Count > 0)
+                {
 
+                    featuredHtmlStringBuilder.Append("class='mc-img-link fancybox' href='#window-offices-" + marketcenter.id + "' ");
+                    string childCompanyHtml = BuildChildCompanyHtml(marketcenter);
+                    featuredHtmlStringBuilder.Append(childCompanyHtml);
+                    
+                }else
+                {
+                    featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + marketcenter.SeName + "' >");
+                }
 
+                featuredHtmlStringBuilder.Append("<img src='" + marketcenter.mainPicturePath + "' alt='logo' />");
+                featuredHtmlStringBuilder.Append("</a>");
+
+            }
+            
             return featuredHtml;
+        }
+
+        private string BuildChildCompanyHtml(MarketCenter marketcenter)
+        {
+            string childCompanyHtml = "";
+            StringBuilder childCompanyStringBuilder = new StringBuilder();
+
+            childCompanyStringBuilder.Append("<div id='window-offices-" + marketcenter.id + "' class='dv-choose-office' >");
+            childCompanyStringBuilder.Append("    <h3>Choose an Office</h3>");
+            childCompanyStringBuilder.Append("    <div><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' /></div>");
+            childCompanyStringBuilder.Append("<div class='dv-office-list' ><ul id='ul-office-list-" + marketcenter.id + "' class='ul-office-list' >");
+            childCompanyStringBuilder.Append("<li><a href='" + marketcenter.SeName + "' >" + marketcenter.Name + "</a></li>");
+            foreach (var childCompany in marketcenter.childCompanies)
+            {
+                childCompanyStringBuilder.Append("<li><a href='" + childCompany.SeName + "' >" + childCompany.Name + "</a></li>");
+            }
+            childCompanyStringBuilder.Append("</div></ul>");
+            childCompanyStringBuilder.Append("<div class='dv-cant-find-office' >");
+            childCompanyStringBuilder.Append("<h3>Can't find your office?</h3>");
+            childCompanyStringBuilder.Append("<p>Every office can use <a href='" + marketcenter.SeName + "'>these branded templates</a> or ");
+            //childCompanyStringBuilder.Append("<a href='/marketcenter/market-center-request.aspx' >request templates</a> for your office.</p>"); //not sure about this now
+            childCompanyStringBuilder.Append("</div></div>");
+
+            childCompanyHtml = childCompanyStringBuilder.ToString();
+            return childCompanyHtml;
         }
 
 
     }
-
     
-
-
-
 }
