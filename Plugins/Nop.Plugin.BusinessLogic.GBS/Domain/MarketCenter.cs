@@ -178,32 +178,92 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //call build html for each alpha list      
             string alpha1 = BuildTabHtml(alphaList1);
-            string alpha2 = BuildTabHtml(alphaList2);
-            string alpha3 = BuildTabHtml(alphaList3);
+            //string alpha2 = BuildTabHtml(alphaList2);
+            //string alpha3 = BuildTabHtml(alphaList3);
 
             //add featured and alphas to dictionary
             marketCenterTabsDict.Add("Featured Companies", isfeatured);
             marketCenterTabsDict.Add("Companies A - G", alpha1);
-            marketCenterTabsDict.Add("Companies H - P", alpha2);
-            marketCenterTabsDict.Add("Companies Q - Z", alpha3);
+            //marketCenterTabsDict.Add("Companies H - P", alpha2);
+            //marketCenterTabsDict.Add("Companies Q - Z", alpha3);
 
             return marketCenterTabsDict;
 
         }
-
-
+        
         private string BuildTabHtml(List<MarketCenter> marketcenterList)
         {
             string tabHtml = "";
             StringBuilder tabHtmlStringBuilder = new StringBuilder();
             //if top lvl and no children. Top level will take user to it's own page
 
+            int numLines = 0;
+            char lastChar = marketcenterList[0].Name.ToUpper()[0];
+
+            tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
+
+            if (lastChar >= '0' && lastChar <= '9')
+            {
+                tabHtmlStringBuilder.Append("<li class='li-alpha-header' >#</li>");
+            }
+            else
+            {
+                tabHtmlStringBuilder.Append("<li class='li-alpha-header' >" + lastChar + "</li>");
+            }
+            
             foreach (var marketCenter in marketcenterList)
             {
 
+                char firstChar = marketCenter.Name.ToUpper()[0];
+
+                if (firstChar >= 'A' && firstChar != lastChar)
+                {
+                    tabHtmlStringBuilder.Append("<li class='li-blank' >&nbsp;<li>");
+                    tabHtmlStringBuilder.Append("<li class='li-alpha-header' >" + firstChar + "</li>");
+                    numLines++;
+                    lastChar = firstChar;
+                }
+
+                tabHtmlStringBuilder.Append(BuildInnerTabLink(marketCenter));
+                numLines++;
+
+                if (numLines >= 30)
+                {
+                    tabHtmlStringBuilder.Append("</ul>");
+                    tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
+                    numLines = 0;
+                }
+                
+            }
+            
+            tabHtmlStringBuilder.Append("</ul>");
+
+            tabHtml = tabHtmlStringBuilder.ToString();
+            return tabHtml;
+        }
+
+        private string BuildInnerTabLink(MarketCenter marketcenter)
+        {
+            string innerLink = "";
+            StringBuilder innerLinkStringBuilder = new StringBuilder();
+
+            innerLinkStringBuilder.Append("<li>");
+            innerLinkStringBuilder.Append("<a id='a-mc-link-" + marketcenter.id + "' title='" + marketcenter.Name + "' ");
+
+            if (marketcenter.childCompanies.Count > 0)
+            {
+                innerLinkStringBuilder.Append("class='mc-text-link fancybox' href='#window-offices-" + marketcenter.id + "' >");
+            }
+            else
+            {
+                innerLinkStringBuilder.Append("class='mc-text-link' href='" + marketcenter.SeName + "' >");
             }
 
-            return tabHtml;
+            innerLinkStringBuilder.Append(marketcenter.Name + "</a>");
+            innerLinkStringBuilder.Append("/li>");
+
+            innerLink = innerLinkStringBuilder.ToString();
+            return innerLink;
         }
         
         private string BuildFeaturedCompanyHtml(List<MarketCenter> marketcenterList)
@@ -231,7 +291,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 featuredHtmlStringBuilder.Append("</a>");
 
             }
-            
+
+            featuredHtml = featuredHtmlStringBuilder.ToString();
             return featuredHtml;
         }
 

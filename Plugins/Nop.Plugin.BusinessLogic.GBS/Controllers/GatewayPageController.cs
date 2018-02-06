@@ -93,8 +93,16 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             tabs = marketCenter.GetMarketCenterHtml();
 
             //add tabs to list model with market center models inside
-
-            return View();
+            MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
+            foreach (var tab in tabs)
+            {
+                MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
+                mctab.tabName = tab.Key;
+                mctab.html = tab.Value;
+                tabsContainer.MarketCenterTabsList.Add(mctab);
+            }
+                        
+            return View("MarketCenterGateway", tabsContainer);
 
         }
 
