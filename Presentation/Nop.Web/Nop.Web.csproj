@@ -3121,6 +3121,8 @@
     <Content Include="Themes\PurplePizza\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\GBSCatalog\SportsTeamsList.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_LoadingGif.cshtml" />
+    <Content Include="Themes\GoGBS\Views\Topic\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
