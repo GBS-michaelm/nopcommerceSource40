@@ -22,6 +22,7 @@
 
     /* This adds custom images to cart */
     Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    Dictionary<int, string> iFrameDataDict = new Dictionary<int, string>();
     Dictionary<int, string> attrDict = new Dictionary<int, string>();
     var _workContext = EngineContext.Current.Resolve<IWorkContext>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
@@ -46,6 +47,14 @@
                         if (!imgUrlDict.ContainsKey(item.Id))
                         {
                             imgUrlDict.Add(item.Id, attrValues[0]);
+                        }
+                    }
+                    if (productAttributeMapping.ProductAttribute.Name == "IframeData")
+                    {
+                        attrValues = parser.ParseValues(item.AttributesXml, productAttributeMapping.Id);
+                        if (!iFrameDataDict.ContainsKey(item.Id))
+                        {
+                            iFrameDataDict.Add(item.Id, attrValues[0]);
                         }
                     }
 
@@ -92,7 +101,7 @@
         <div class="update-continue-button">
             <div class="common-buttons pull-right">
                 <div class="continue-shopping">
-                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black btn-order-summary-continue-shopping" />
+                    @*<input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" />*@
                 </div>
                 <div class="update-cart">
                     <button type="submit" name="checkout" value="checkout" class="button button-rounded button-reveal button-large button-green tright btn-order-summary-check-out-top"><i class="icon-line-arrow-right"></i> <span>@T("Checkout.Button")</span></button>
@@ -156,12 +165,14 @@
                             @if (Model.ShowProductImages)
                             {
                                 <td class="product-picture">
-                                    @if (item.AttributeInfo.Contains("CustomImgUrl"))
+                                    @if (imgUrlDict.ContainsKey(item.Id))
                                     {
                                         string url = imgUrlDict[item.Id];
                                         if (!url.Contains("undefined"))
                                         {
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>
+                                            @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>*@
+                                            @Html.Widget("shoppingcart_custom_image", item.Id)
+
                                         }
                                         else
                                         {
@@ -248,7 +259,8 @@
                                         <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                     </div>
                                 }
-                                @if (item.AttributeInfo.ToUpper().Contains("CHILI"))
+                                @*@if (item.AttributeInfo.ToUpper().Contains("CHILI"))*@
+                                @if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("CHILI"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -270,7 +282,7 @@
                                     }
 
                                 }
-                                else if (item.AttributeInfo.ToUpper().Contains("GLUON"))
+                                else if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("GLUON"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -291,7 +303,7 @@
                                         </div>
                                     }
                                 }
-                                else if (item.AttributeInfo.ToUpper().Contains("CANVAS"))
+                                else if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("CANVAS"))
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
@@ -523,7 +535,7 @@
             {
                 <div class="update-continue-button">
                     <div class="common-buttons pull-right">
-                        <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black" /></div>
+                        <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" /></div>
                         <div class="update-cart"><input type="submit" name="updatecart" onclick="ordertable();" value="@T("ShoppingCart.UpdateCart")" class="button button-3d button-small button-rounded button-teal" /></div>
                     </div>
                 </div>

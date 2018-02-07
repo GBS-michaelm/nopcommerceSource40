@@ -36,6 +36,8 @@ using Nop.Plugin.Order.GBS.Controllers;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 using Nop.Services.Logging;
 using Nop.Services.Custom.Orders;
+using Nop.Core.Infrastructure;
+using Nop.Plugin.Widgets.CustomersCanvas.Services;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -74,6 +76,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly SpecificationAttributesSettings _specificationAttributesSettings;
         private readonly ILogger _logger;
         private readonly GBSOrderService _gbsOrderService;
+        private readonly IProductAttributeParser parser = EngineContext.Current.Resolve<IProductAttributeParser>();
+        private readonly ICcService ccService = EngineContext.Current.Resolve<ICcService>();
+
 
 
         public SpecificationAttributesController(
@@ -297,7 +302,6 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     return Content("");
 
 
-
                 /***** Unhide following code if GBS want to use image background on order detail page ******/
                 if (widgetZone == "orderdetails_product_line_product")
                 {
@@ -315,7 +319,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         }
                         else
                         {
-                            return OrderProductImage(orderitem.Product.Id);
+                            return OrderProductImage(orderitem);
                         }
                     }
                     return null;
@@ -329,8 +333,18 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 //    }
                 //    return null;
                 //}
+                Product product = null;
+                ShoppingCartItem shoppingCartItem = null;
+                if (widgetZone == "shoppingcart_custom_image")
+                {
+                    shoppingCartItem = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.Id == id).FirstOrDefault();
+                    product = shoppingCartItem.Product;
+                }
+                else
+                {
+                     product = _productService.GetProductById(id);
 
-                var product = _productService.GetProductById(id);
+                }
                 if (product == null)
                     return Content("");
 
@@ -339,7 +353,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     return ArtistProducts(product.Id);
                 }
 
-                if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget")
+                if (widgetZone == "product_listing_widget" || widgetZone == "product_details_widget" || widgetZone == "shoppingcart_custom_image")
                 {
                     var products = new List<Product>();
                     products.Add(product);
@@ -460,12 +474,57 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 {
                                     ViewBag.fill = "";
                                 }
+                                if (widgetZone == "shoppingcart_custom_image")
+                                {
+                                    //replace envelope color with user selected color
+                                    var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
+                                    if (productAttributeMappings != null)
+                                    {
+                                        foreach (var productAttributeMapping in productAttributeMappings)
+                                        {
+                                            if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                            {
+                                                var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
+                                                var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                                if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                {
+                                                    ViewBag.fill = "background-color:" + optionValue;
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                                }
+                                            }
 
+                                        }
+                                    }
+                                }
                                 //Prodcut Detail
                                 if (widgetZone == "product_details_widget")
                                 {
                                     var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
                                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
+                                }
+                                if (widgetZone == "shoppingcart_custom_image")
+                                {
+                                    var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+
+
+                                        var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
+                                        if (productAttributeMappings != null)
+                                        {
+                                            foreach (var productAttributeMapping in productAttributeMappings)
+                                            {
+                                                if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                                                {
+                                                    var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
+                                                    productDetailsModel.DefaultPictureModel.ImageUrl= attrValues[0];
+                                                }
+
+                                            }
+                                        }
+                                    return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
+
                                 }
                                 var productOverviewModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
                                 return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModel);
@@ -484,6 +543,28 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     {
                         var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
                         return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
+                    }
+                    //Shopping Cart
+                    if (widgetZone == "shoppingcart_custom_image")
+                    {
+                        var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+
+
+                        var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
+                        if (productAttributeMappings != null)
+                        {
+                            foreach (var productAttributeMapping in productAttributeMappings)
+                            {
+                                if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                                {
+                                    var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
+                                    productDetailsModel.DefaultPictureModel.ImageUrl = attrValues[0];
+                                }
+
+                            }
+                        }
+                        return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
+
                     }
                     var productOverviewModels = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModels);
@@ -635,6 +716,21 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                                 orderItemModel.ImageUrl = legacyOrderItem.legacyPicturePath;
                             }
+                            //add custom image
+                            var productAttributeMappings = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+                            if (productAttributeMappings != null)
+                            {
+                                foreach (var productAttributeMapping in productAttributeMappings)
+                                {
+                                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                                    {
+                                        var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                                        orderItemModel.ImageUrl = attrValues[0];
+                                    }
+
+                                }
+                            }
+
                             var specAttr = _specificationAttributeService.GetProductSpecificationAttributes(orderItem.Product.Id);
                             var imageSpecAttrOption = specAttr.Select(x => x.SpecificationAttributeOption);
                             if (imageSpecAttrOption.Any())
@@ -750,6 +846,39 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                         {
                                             orderItemModel.DefaultColor = "";
                                         }
+
+                                        //replace envelope color with user selected color and Custom Canvas image.
+                                        productAttributeMappings = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+                                        if (productAttributeMappings != null)
+                                        {
+                                            foreach (var productAttributeMapping in productAttributeMappings)
+                                            {
+                                                if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                                {
+                                                    var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                                                    var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                                    {
+                                                        orderItemModel.DefaultColor = "background-color:" + optionValue;
+                                                    }
+                                                    else
+                                                    {
+                                                        orderItemModel.DefaultColor = "background-image:url('" + optionValue + "')";
+                                                    }
+                                                }
+                                                if (productAttributeMapping.ProductAttribute.Name == "CcId")
+                                                {
+                                                    var ccResult = ccService.GetCcResult(orderItem.AttributesXml);
+                                                    if (ccResult != null && ccResult.ProofUrls.Count() > 0)
+                                                    {
+                                                        orderItemModel.ImageUrl = ccResult.ProofUrls[0];
+                                                    }
+
+
+                                                }
+
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -786,16 +915,16 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderProductImage(int additionalData)
+        public ActionResult OrderProductImage(OrderItem orderItem)
         {
-            var id = Convert.ToInt32(additionalData);
+            var id = orderItem.Product.Id;    //Convert.ToInt32(productId);
 
             if (id <= 0)
                 return Content("");
 
             //var orderitem = _orderService.GetOrderItemById(id);
             //var product = _productService.GetProductById(orderitem.ProductId);
-            var product = _productService.GetProductById(id);
+            var product = orderItem.Product;  //_productService.GetProductById(id);
 
             if (product == null)
                 return Content("");
@@ -911,6 +1040,29 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         {
                             ViewBag.fill = "";
                         }
+                        //replace envelope color with user selected color
+                        var productAttributeMappings2 = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+                        if (productAttributeMappings2 != null)
+                        {
+                            foreach (var productAttributeMapping in productAttributeMappings2)
+                            {
+                                if (productAttributeMapping.ProductAttribute.Name == "Envelope Color")
+                                {
+                                    var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                                    var optionValue = productAttributeMapping.ProductAttributeValues.Where(x => x.Id == Int32.Parse(attrValues[0])).FirstOrDefault().ColorSquaresRgb;
+                                    if (optionValue.Contains("#") && optionValue.Length == 7)
+                                    {
+                                        ViewBag.fill = "background-color:" + optionValue;
+                                    }
+                                    else
+                                    {
+                                        ViewBag.fill = "background-image:url('" + optionValue + "')";
+                                    }
+                                }
+
+
+                            }
+                        }
                         ViewBag.ProductId = product.Id;
                     }
                 }
@@ -920,6 +1072,20 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             products.Add(product);
             var productPicModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
             ViewBag.ProductId = product.Id;
+            //custom image
+            var productAttributeMappings = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
+            if (productAttributeMappings != null)
+            {
+                foreach (var productAttributeMapping in productAttributeMappings)
+                {
+                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                    {
+                        var attrValues = parser.ParseValues(orderItem.AttributesXml, productAttributeMapping.Id);
+                        productPicModel.DefaultPictureModel.ImageUrl = attrValues[0];
+                    }
+
+                }
+            }
             return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/OrderProductImage.cshtml", productPicModel);
         }
 

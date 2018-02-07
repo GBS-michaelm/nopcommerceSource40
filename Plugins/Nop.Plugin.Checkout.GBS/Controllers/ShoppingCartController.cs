@@ -304,11 +304,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             var groupId = 0000;
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             Product product = productService.GetProductById(productId);
+
             //ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
             //var specAttrs = specService.GetProductSpecificationAttributes(productId);
 
             ////IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
-                  
+
             //foreach (var item in specAttrs)
             //{
             //    if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
@@ -322,6 +323,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if (groupId != 0000)
             //{               
 
+
                 Type t = action.Data.GetType();
                 PropertyInfo redirect = t.GetProperty("redirect");
                 PropertyInfo success = t.GetProperty("success");
@@ -331,12 +333,14 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 if ((redirectValue != null && redirectValue == "/cart") || successValue)
                 {
 
+
                 action = (JsonResult)CheckForAccessories(action, product);
 
                 //        return Json(new
                 //        {
                 //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
                 //        });
+
                 }
                 //}
                         
@@ -377,14 +381,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                         redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = product.Id }),
                     });
                 //}
-            }else
-            {
-                return action;
             }
 
+            return action;
 
         }
-
 
         //Add to cart without leaving page while using amalgamation pricing on galleries
         [HttpPost]
@@ -474,6 +475,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 {
                     packType = spec.SpecificationAttributeOption.Name;
                 }                
+
             }
             
             foreach (ShoppingCartItem item in AmalgamationList)
@@ -661,13 +663,28 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                 var orderItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
 
+                JsonResult action = (JsonResult)CheckForAccessories(null, product);
+
+
                 if (warnings.Count > 0)
                 {
                     throw new Exception("Add to cart failed");
                 }
                 SubmitItemResponse response = new SubmitItemResponse();
                 response.status = "success";
-                return Json(response);
+
+                if (action != null)
+                {
+                    return action;
+                }
+                else
+                {
+                    return Json( new {
+                        redirect = "/cart"
+                    });
+
+                }//////////////////////////////////////////////////
+
             } catch(Exception ex){
                 _logger.Error("Error in SubmitItem = productId = " + productId, ex, customer);
                 SubmitItemResponse response = new SubmitItemResponse();
@@ -995,6 +1012,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
             }
         }
+
         
         [HttpPost]
         [ValidateInput(false)]
@@ -1208,5 +1226,5 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         
     }
-
+    
 }
