@@ -128,11 +128,11 @@
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
     <div class="gluon-template"  style="overflow:hidden; height:1900px">
-        <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1900px; width:100%;"></iframe>
+        <iframe id="hom-nb-iframe" src="@T("hom.url")@page" style="height:1900px; width:100%;"></iframe>
     </div>
 }
  <!--product attributes-->
-<script type="text/javascript"> 
+@*<script type="text/javascript"> 
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     var eventer = window[eventMethod];
     var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
@@ -145,18 +145,68 @@
         AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
         
     }, false);    
-</script>
+</script>*@
 
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        if($("#hdn-iframe-data").val() != "")
+
+        var iframe = document.getElementById('hom-nb-iframe');
+        
+        window.addEventListener("message", function (e) {
+            addToCart(e);
+        }, false);
+
+        function addToCart(e) {
+
+            //var obj = $.parseJSON(e);
+
+            var dataHomJson = $.parseJSON(e.data);
+            var formURL = dataHomJson['formURL'];
+
+            var dataTest = e.data;
+            var dataJson = dataHomJson['formData'];
+            
+
+            //convert json to form
+            var data = new FormData();
+            for (var key in dataJson) {
+                data.append(dataJson[key].name, dataJson[key].value);
+            }
+
+            $.ajax(
+            {
+                type: "POST",
+                dataType: "html",
+                url: formURL,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (msg) {
+                    var obj = $.parseJSON(msg);
+                    //console.log("msg: " + msg);
+                    //console.log("redirect value: " + obj['redirect']);
+                    //window.top.location.href = document.getElementById('nopcart').value + obj['redirect'];
+                    window.top.location.href = obj['redirect'];
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //if fails
+                    console.log("fail");
+                }
+            });
+
+
+        }
+
+
+
+        @*if($("#hdn-iframe-data").val() != "")
         {
             $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
         }
         $("#btn-add-to-cart").click(function () {
             console.log("addto cart clicked");
-        })
+        })*@
     });
 </script>
 
