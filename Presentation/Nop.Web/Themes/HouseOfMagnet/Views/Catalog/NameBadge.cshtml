@@ -79,7 +79,7 @@
 
 
                 Session.Add("categoryId", categoryId); //category id to get iframe url
-                int topicID = topicService.GetTopicBySystemName("hom_namebadge_iframe").Id;
+                int topicID = topicService.GetTopicBySystemName("hom_iframe_namebadge").Id;
                 @* iframe garbage *@
                 <div id="nbIframe" class="nb">
                     @Html.Action("TopicDetails", "Topic", new { topicId = topicID })
