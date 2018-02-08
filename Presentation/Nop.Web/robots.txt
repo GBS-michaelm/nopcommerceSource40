@@ -1,2 +1,10 @@
 User-agent: *
-Disallow: /
+Disallow: /customer/
+Disallow: /login
+Disallow: /wishlist
+Disallow: /cart
+Disallow: /search
+Disallow: /order/
+Disallow: /producttag/
+
+

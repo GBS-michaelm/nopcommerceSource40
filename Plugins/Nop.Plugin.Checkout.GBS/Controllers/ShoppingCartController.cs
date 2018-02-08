@@ -75,7 +75,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IDownloadService _downloadService;
         private readonly ILogger _logger;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IShippingRateComputationMethod gbsShipping = EngineContext.Current.Resolve<IShippingRateComputationMethod>();
 
         #endregion
 
@@ -197,11 +196,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             ViewBag.ShoppingCartModel = shoppingCartModel;
 
             var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
-            //var flatRate = gbsShipping.GetFixedRate(new GetShippingOptionRequest());
-            //if (String.IsNullOrEmpty(model.Shipping) && flatRate > 0)
-            //{
-            //    model.Shipping = _priceFormatter.FormatPrice((decimal)flatRate);
-            //}
             return PartialView("OrderTotals", model);
         }
 
@@ -310,42 +304,48 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             var groupId = 0000;
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             Product product = productService.GetProductById(productId);
-            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-            var specAttrs = specService.GetProductSpecificationAttributes(productId);
 
-            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
-                  
-            foreach (var item in specAttrs)
-            {
-                if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
-                {
-                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
-                }
-            }
+            //ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            //var specAttrs = specService.GetProductSpecificationAttributes(productId);
+
+            ////IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+            //foreach (var item in specAttrs)
+            //{
+            //    if(item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+            //    {
+            //        groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+            //    }
+            //}
 
             JsonResult action = (JsonResult)base.AddProductToCart_Details(productId, shoppingCartTypeId, form);
 
-            if (groupId != 0000)
-            {               
+            //if (groupId != 0000)
+            //{               
 
-                Type t = action.Data.GetType();
-                PropertyInfo redirect = t.GetProperty("redirect");
-                PropertyInfo success = t.GetProperty("success");
-                string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
-                bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+            Type t = action.Data.GetType();
+            PropertyInfo redirect = t.GetProperty("redirect");
+            PropertyInfo success = t.GetProperty("success");
+            string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+            bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
 
-                if ((redirectValue != null && redirectValue == "/cart") || successValue)
-                {
-                    return Json(new
-                    {
-                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
-                    });
-                }
+            if ((redirectValue != null && redirectValue == "/cart") || successValue)
+            {
+
+                action = (JsonResult)CheckForAccessories(action, product);
+
+                //        return Json(new
+                //        {
+                //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
+                //        });
             }
-                        
+            //}
+
             return action;
-            
+
         }
+
+      
 
         //Add to cart without leaving page while using amalgamation pricing on galleries
         [HttpPost]
@@ -435,6 +435,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 {
                     packType = spec.SpecificationAttributeOption.Name;
                 }                
+
             }
             
             foreach (ShoppingCartItem item in AmalgamationList)
@@ -621,6 +622,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     .ToList();
 
                 var orderItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
+                JsonResult action = (JsonResult)CheckForAccessories(null, product);
 
                 if (warnings.Count > 0)
                 {
@@ -628,7 +630,17 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
                 SubmitItemResponse response = new SubmitItemResponse();
                 response.status = "success";
-                return Json(response);
+                if (action != null)
+                {
+                    return action;
+                }
+                else
+                {
+                    return Json( new {
+                        redirect = "/cart"
+                    });
+
+                }//////////////////////////////////////////////////
             } catch(Exception ex){
                 _logger.Error("Error in SubmitItem = productId = " + productId, ex, customer);
                 SubmitItemResponse response = new SubmitItemResponse();
@@ -957,6 +969,49 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             }
         }
 
+        public ActionResult CheckForAccessories(ActionResult action, Product product)
+        {
+            var groupId = 0000;
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            var specAttrs = specService.GetProductSpecificationAttributes(product.Id);
+
+            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+            foreach (var item in specAttrs)
+            {
+                if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+                {
+                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                }
+            }
+
+
+            if (groupId != 0000)
+            {
+
+                //Type t = action.Data.GetType();
+                //PropertyInfo redirect = t.GetProperty("redirect");
+                //PropertyInfo success = t.GetProperty("success");
+                //string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                //bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                //if ((redirectValue != null && redirectValue == "/cart") || successValue)
+                //{
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = product.Id }),
+                });
+                //}
+            }
+            else
+            {
+                return action;
+            }
+
+
+        }
+
     }
+
 
 }
