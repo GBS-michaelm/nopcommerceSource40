@@ -33,10 +33,13 @@ namespace Nop.Plugin.Shipping.GBS.Services
 
         public override IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(Customer customer = null, int storeId = 0)
         {
+            IWebHelper webHelper = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IWebHelper>();
+            var inCheckout = webHelper.GetThisPageUrl(false).ToLower().Contains("shippingaddress");
+
             IList<IShippingRateComputationMethod> allMethods = base.LoadActiveShippingRateComputationMethods(customer, storeId);
             IList<IShippingRateComputationMethod> gbsShippingMethod = allMethods.Where(provider => provider.PluginDescriptor.SystemName == "Nop.Plugin.Shipping.GBS").ToList();
 
-            if (gbsShippingMethod.Any())
+            if (!inCheckout && gbsShippingMethod.Any())
             {
                 return gbsShippingMethod;
             }

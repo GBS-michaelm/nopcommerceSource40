@@ -1426,10 +1426,23 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     _baseNopCheckoutController.SelectShippingAddress(addresses[0].Id);
                 }
             }
+            var shippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+            ViewBag.ShippingMethod = shippingMethod;
+            var selectedShippingMethod = shippingMethod.ShippingMethods.Where(x => x.Selected == true).FirstOrDefault();
+            ShippingOption selectedShippingOption = shippingMethod.ShippingMethods.FirstOrDefault().ShippingOption;
+            if (selectedShippingMethod != null){
+                selectedShippingOption = selectedShippingMethod.ShippingOption;
+            }
+            if (TempData.Peek("ShippingType") != null)
+            {
+                var shippingMethodName = ((string)TempData.Peek("ShippingType")).Split('_').FirstOrDefault();
+                selectedShippingOption = shippingMethod.ShippingMethods.Where(x => x.Name == shippingMethodName).FirstOrDefault().ShippingOption;
+            }
+            if (selectedShippingOption != null)
+            {
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, selectedShippingOption, _storeContext.CurrentStore.Id);
+            }
 
-            ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
-
-            
             //new address
             model.NewAddress.CountryId = selectedCountryId;
             _addressModelFactory.PrepareAddressModel(model.NewAddress,
