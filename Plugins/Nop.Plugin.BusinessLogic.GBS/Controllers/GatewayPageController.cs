@@ -101,9 +101,9 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 mctab.html = tab.Value;
                 tabsContainer.MarketCenterTabsList.Add(mctab);
             }
-                        
-            return View("MarketCenterGateway", tabsContainer);
 
+            return View("MarketCenterGateway", tabsContainer);
+            //return View();
         }
 
 

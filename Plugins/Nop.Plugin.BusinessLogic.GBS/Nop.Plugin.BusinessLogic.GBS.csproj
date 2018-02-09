@@ -78,6 +78,7 @@
     <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />
     <Compile Include="Models\MarketCenterGatewayTabsModel.cs" />
     <Compile Include="Models\MarketCenterGatewayTabModel.cs" />
+    <Compile Include="Models\MarketCenterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

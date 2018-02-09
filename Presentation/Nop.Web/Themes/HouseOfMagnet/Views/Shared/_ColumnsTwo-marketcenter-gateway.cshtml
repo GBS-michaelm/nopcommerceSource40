@@ -59,14 +59,24 @@
 
 @{
 
-    MarketCenter marketCenter = new MarketCenter(id);
-    string h1 = marketCenter.h1;
-    string h2 = marketCenter.h2;
-    string topText = marketCenter.topText;
-    string bottomText = marketCenter.bottomText;
-    string backgroundColor = marketCenter.backgroundColor;
-    string foregroundImage = marketCenter.foregroundImage;
-    string backgroundImage = marketCenter.backgroundImage;
+    //MarketCenter marketCenter = new MarketCenter(id);
+    //string h1 = marketCenter.h1;
+    //string h2 = marketCenter.h2;
+    //string topText = marketCenter.topText;
+    //string bottomText = marketCenter.bottomText;
+    //string backgroundColor = marketCenter.backgroundColor;
+    //string foregroundImage = marketCenter.foregroundImage;
+    //string backgroundImage = marketCenter.backgroundImage;
+
+
+    ////testing
+string h1 = "";
+    string h2 = "";
+    string topText = "";
+    string bottomText = "";
+    string backgroundColor = "";
+    string foregroundImage = "";
+    string backgroundImage = "";
 
 }
 
@@ -130,7 +140,7 @@
             <div id="gatewayLayersContainer" >
                    
                 <div id="gatewayWYSIWYG" class="sports-wysiwyg">                                             
-                    @Html.Action("GatewayCatalogProducts", "GatewayPage", new { type = "sportsTeam", id = id})
+                    @Html.Action("MarketCenterTabs", "GatewayPage", new { marketCenterId = id})
                 </div>
                 @* foreground image from db *@
                 @*<div id="sportImage">
@@ -380,7 +390,7 @@
         </div>
     </div>*@
 
-    <div>
+    @*<div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
     </div>
 
@@ -396,7 +406,7 @@
     </div>
     <div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "hom_opc_video" })
-    </div>
+    </div>*@
 
 
 }

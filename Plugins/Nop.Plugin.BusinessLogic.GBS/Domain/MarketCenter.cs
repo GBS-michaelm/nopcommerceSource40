@@ -19,54 +19,59 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         DBManager manager = new DBManager();
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
         ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-        
+        ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+        IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+
         int _id = 0;
         int _parentCategoryId = 0;
-        string _h1 = "";
-        string _h2 = "";
-        string _topText = "";
-        string _bottomText = "";
+        string _h1 = "h1";
+        string _h2 = "h2";
+        string _topText = "top text";
+        string _bottomText = "bottom text";
         string _backgroundImage = "";
         string _foregroundImage = "";
         string _backgroundColor = "";
         string _mainPicturePath;
         string _gatewayHtml = "";
-        bool _isTopCompany = false; //featuredCompany ??
+        bool _isTopCompany = false;
         List<MarketCenter> _childCompanies = new List<MarketCenter>();
                         
-        public MarketCenter(int marketCenterCategoryId)
+        public MarketCenter(int marketCenterCategoryId, bool lightVer = true, bool getChildren = false)
         {
             
             this.id = marketCenterCategoryId;
-            Category category = categoryService.GetCategoryById(marketCenterCategoryId);
-            ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+            Category category = categoryService.GetCategoryById(marketCenterCategoryId);          
             CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
             catalogPagingFilteringModel.PageSize = 1;
-            this.PagingFilteringContext = catalogPagingFilteringModel;
             CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
             this.Name = categoryModel.Name;
-            this.Description = categoryModel.Description;
-            this.MetaKeywords = categoryModel.MetaKeywords;
-            this.MetaDescription = categoryModel.MetaDescription;
-            this.MetaTitle = categoryModel.MetaTitle;
             this.SeName = categoryModel.SeName;
-            this.PictureModel = categoryModel.PictureModel;
-            this.PagingFilteringContext = categoryModel.PagingFilteringContext;
-            this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-            this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-            this.SubCategories = categoryModel.SubCategories;
-            this.FeaturedProducts = categoryModel.FeaturedProducts;
-            this.Products = categoryModel.Products;
-            this.parentCategoryId = _parentCategoryId;
-            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            this.parentCategoryId = _parentCategoryId;           
             this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
+
+            if(lightVer == false)
+            {
+                this.PagingFilteringContext = catalogPagingFilteringModel;
+                this.Description = categoryModel.Description;
+                this.MetaKeywords = categoryModel.MetaKeywords;
+                this.MetaDescription = categoryModel.MetaDescription;
+                this.MetaTitle = categoryModel.MetaTitle;
+                this.PictureModel = categoryModel.PictureModel;
+                this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+                this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+                this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+                this.SubCategories = categoryModel.SubCategories;
+                this.FeaturedProducts = categoryModel.FeaturedProducts;
+                this.Products = categoryModel.Products;
+            }
+
 
 
             DataView marketCenterDataView = cacheManager.Get("marketCenter" + marketCenterCategoryId, 60, () => {
                 Dictionary<string, Object> marketCenterDic = new Dictionary<string, Object>();
                 marketCenterDic.Add("@CategoryId", marketCenterCategoryId);
 
-                string marketCenterDataQuery = "EXEC  @categoryId";
+                string marketCenterDataQuery = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
                 DataView innerMarketCenterDataView = manager.GetParameterizedDataView(marketCenterDataQuery, marketCenterDic);
 
                 return innerMarketCenterDataView;
@@ -74,7 +79,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             if (marketCenterDataView.Count > 0)
             {
-                //team specific data
+                //marketcenter custom data
                 this.parentCategoryId = category.ParentCategoryId;
                 this.h1 = !string.IsNullOrEmpty(marketCenterDataView[0]["H1"].ToString()) ? marketCenterDataView[0]["H1"].ToString() : this.Name;
                 this.h2 = !string.IsNullOrEmpty(marketCenterDataView[0]["H2"].ToString()) ? marketCenterDataView[0]["H2"].ToString() : _h2;
@@ -84,34 +89,35 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.foregroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["ForegroundPicturePath"].ToString()) ? marketCenterDataView[0]["ForegroundPicturePath"].ToString() : _foregroundImage;
                 this.backgroundColor = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundColor"].ToString()) ? marketCenterDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
                 this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
-                this.isTopCompany = marketCenterDataView[0]["IsFeatured"] != null ? (bool)marketCenterDataView[0]["IsFeatured"] : isTopCompany = _isTopCompany;
+                this.isTopCompany = !string.IsNullOrEmpty(marketCenterDataView[0]["IsFeatured"].ToString()) ? Convert.ToBoolean(marketCenterDataView[0]["IsFeatured"]) : isTopCompany = _isTopCompany;
             }
 
             #region child companies
-
-            //child companies handling
-            DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
-                Dictionary<string, Object> marketCenterChildCompanyDic = new Dictionary<string, Object>();
-                marketCenterChildCompanyDic.Add("@CategoryId", marketCenterCategoryId);
-
-                string marketCenterChildCompanyDataQuery = "EXEC usp_SelectMarketCenterChildren @categoryId";
-                DataView innerMarketCenterChildCompanyDataView = manager.GetParameterizedDataView(marketCenterChildCompanyDataQuery, marketCenterChildCompanyDic);
-
-                return innerMarketCenterChildCompanyDataView;
-            });
-
-            if(marketCenterChildCompanyDataView.Count > 0)
+            if (getChildren)
             {
-                for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
+                //child companies handling
+                DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
+                    Dictionary<string, Object> marketCenterChildCompanyDic = new Dictionary<string, Object>();
+                    marketCenterChildCompanyDic.Add("@CategoryId", marketCenterCategoryId);
+
+                    string marketCenterChildCompanyDataQuery = "EXEC usp_SelectGBSMarketCenterChildren @categoryId";
+                    DataView innerMarketCenterChildCompanyDataView = manager.GetParameterizedDataView(marketCenterChildCompanyDataQuery, marketCenterChildCompanyDic);
+
+                    return innerMarketCenterChildCompanyDataView;
+                });
+
+                if (marketCenterChildCompanyDataView.Count > 0)
                 {
-                    MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()));
-                    this.childCompanies.Add(marketCenter);
+                    for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
+                    {
+                        MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()));
+                        this.childCompanies.Add(marketCenter);
+                    }
                 }
             }
-
+            
             #endregion
-
-
+            
         }
 
         public int id { get { return _id; } set { _id = value; } } 
@@ -140,9 +146,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //if top level and has children build popup with children links
             IList<Category> topLevelMarketCenters = categoryService.GetAllCategoriesByParentCategoryId(this.id);
+
+            //option 2 db query then construct market centers from data, rest should be the same.
+
             foreach (var marketcenterCategory in topLevelMarketCenters)
             {
-                MarketCenter marketcenter = new MarketCenter(marketcenterCategory.Id);
+                MarketCenter marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
 
                 char firstLetter = marketcenter.Name.ToUpper()[0];
 
