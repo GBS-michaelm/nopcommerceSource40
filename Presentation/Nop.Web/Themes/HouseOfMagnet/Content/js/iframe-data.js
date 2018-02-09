@@ -132,6 +132,7 @@ var CreateJson = function (array, options) {
 }
 
 var AddItem = function (dataJson, cartItemId, qty, prodId, cartImageSrc, editActive) {
+
     var passJson = $.param(
         {
             "productId": prodId,

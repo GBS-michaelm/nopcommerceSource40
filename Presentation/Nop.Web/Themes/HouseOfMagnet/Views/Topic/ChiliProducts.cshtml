@@ -100,24 +100,35 @@
 
 
     window.addEventListener("message", function (e) {
-        if (e.data == "VALIDATE") {
+        if (e.data == "VALIDATEUPO") {
             if ($("#hdn-authenticated").val().toLowerCase() == "true")
             {
        
-                SendEmailAfterVerification($("#hdn-customer-email").val());
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
             } else {
                 $("#valid-error-summary").hide();
                 $(".field-validation-error").hide();
                 $("#loginModal").modal();
             }
-        } else {
+        }
+        else if (e.data == "VALIDATEBCT") {
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
+
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
+            } else {
+                $("#valid-error-summary").hide();
+                $(".field-validation-error").hide();
+                $("#loginModal").modal();
+            }
+        }else {
             addToCart(e);
         }
 
     }, false);
-    function SendEmailAfterVerification(email) {
+    function SendEmailAfterVerification(email, type) {
         var iframe = document.getElementById("chili-iframe").contentWindow;
-        iframe.postMessage(email, "*");
+        var json = JSON.stringify({ type: type, email: email});
+        iframe.postMessage(json, "*");
     }
     function addToCart(e)
     {
@@ -127,32 +138,40 @@
         var previewDisplay;
 
         if (e.data != "") {
+            console.log(e.data);
             var json = JSON.parse(e.data);
+            if (json.hasOwnProperty('misc3')) {
+                opcAlt = true;
+            }
+            if (cartImageSrc == '') {
+                previewDisplay = "undefined";
+            }
+          
             var cartImageSrc;
+            var bct = false;
             for (var i = 0; i < json["data"].length; i++) {
                 console.log(json["data"][i]);
                 switch (json["data"][i].option) {
                     case 320:
                         cartImageSrc = json["data"][i].value;
+                  
                         break;
                     case 399:
                         opc = true;
+                    case 515:
+                        bct = true;
                         break
                     default:
+                        previewDisplay = "undefined";
                         break;
                 }
 
             }
-            if (json.hasOwnProperty('misc3'))
-            {
-                opcAlt = true;
-            }
-            if (cartImageSrc == '')
-            {
-                previewDisplay = "undefined";
-            }
-            previewDisplay = (opc || opcAlt) ? "http://chili.houseofmagnets.com" + cartImageSrc : "undefined";
-            AddItem(JSON.parse(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
+
+                previewDisplay = (opc || opcAlt) ? "http://chili.houseofmagnets.com" + cartImageSrc : "undefined";
+            
+            
+            AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
