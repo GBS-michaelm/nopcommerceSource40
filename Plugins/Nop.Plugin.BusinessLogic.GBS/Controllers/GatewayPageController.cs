@@ -84,7 +84,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         }
 
 
-        public ActionResult MarketCenterTabs(int marketCenterId)
+        public ActionResult MarketCenterGatewayTabs(int marketCenterId)
         {
 
             MarketCenter marketCenter = new MarketCenter(marketCenterId);
@@ -102,7 +102,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 tabsContainer.MarketCenterTabsList.Add(mctab);
             }
 
-            return View("MarketCenterGateway", tabsContainer);
+            return View("MarketCenterGatewayTabs", tabsContainer);
             //return View();
         }
 

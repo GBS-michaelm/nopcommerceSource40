@@ -149,9 +149,22 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //option 2 db query then construct market centers from data, rest should be the same.
 
-            foreach (var marketcenterCategory in topLevelMarketCenters)
+            int x = 0;
+            int y = 0;
+            int z = 0;
+            
+            for(int i = 0; i < 20; i++)
+            //foreach (var marketcenterCategory in topLevelMarketCenters)
             {
-                MarketCenter marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
+                //TESTING !!!!!!!!!--------------------------------------------------------
+                Random r = new Random();
+                int v = r.Next(0, 2000); // to get random pool of market centers
+
+                MarketCenter marketcenter = new MarketCenter(topLevelMarketCenters[v].Id, getChildren: true);
+                //TESTING!!!!!! ------------------------------------------------------------
+
+
+                //MarketCenter marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
 
                 char firstLetter = marketcenter.Name.ToUpper()[0];
 
@@ -162,39 +175,45 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
 
                 //seperate market centers into alpha lists a-g h-p q-z
-                if (firstLetter >= '0' && firstLetter <= '9')
+                if (firstLetter >= '0' && firstLetter <= '9' && alphaList1.Count <= 5)
                 {
-                    alphaList1.Add(marketcenter);
+                    alphaList1.Add(marketcenter); x++;
                 }
-                else if (firstLetter >= 'A' && firstLetter <= 'G')
+                else if (firstLetter >= 'A' && firstLetter <= 'G' && alphaList1.Count <= 5)
                 {
-                    alphaList1.Add(marketcenter);
+                    alphaList1.Add(marketcenter); x++;
                 }
-                else if (firstLetter >= 'H' && firstLetter <= 'P')
+                else if (firstLetter >= 'H' && firstLetter <= 'P' && alphaList2.Count <= 5)
                 {
-                    alphaList2.Add(marketcenter);
+                    alphaList2.Add(marketcenter); y++;
                 }
-                else if (firstLetter >= 'Q' && firstLetter <= 'Z')
+                else if (firstLetter >= 'Q' && firstLetter <= 'Z' && alphaList3.Count <= 5)
                 {
-                    alphaList3.Add(marketcenter);
+                    alphaList3.Add(marketcenter); z++;
                 }
-                                
+                
+                
+                if(alphaList1.Count > 5 && alphaList2.Count > 5 && alphaList3.Count > 5)
+                {
+                    break;
+                }
+                             
             }
 
             //call build for featured list
             //top companies only (isFeatured)
-            string isfeatured = BuildFeaturedCompanyHtml(featuredMarketCenterList);
+            string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList) : "";
 
             //call build html for each alpha list      
-            string alpha1 = BuildTabHtml(alphaList1);
-            //string alpha2 = BuildTabHtml(alphaList2);
-            //string alpha3 = BuildTabHtml(alphaList3);
+            string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1) : "";
+            string alpha2 = alphaList2.Count > 0 ? BuildTabHtml(alphaList2) : "";
+            string alpha3 = alphaList3.Count > 0 ? BuildTabHtml(alphaList3) : "";
 
             //add featured and alphas to dictionary
             marketCenterTabsDict.Add("Featured Companies", isfeatured);
             marketCenterTabsDict.Add("Companies A - G", alpha1);
-            //marketCenterTabsDict.Add("Companies H - P", alpha2);
-            //marketCenterTabsDict.Add("Companies Q - Z", alpha3);
+            marketCenterTabsDict.Add("Companies H - P", alpha2);
+            marketCenterTabsDict.Add("Companies Q - Z", alpha3);
 
             return marketCenterTabsDict;
 
@@ -269,7 +288,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }
 
             innerLinkStringBuilder.Append(marketcenter.Name + "</a>");
-            innerLinkStringBuilder.Append("/li>");
+            innerLinkStringBuilder.Append("</li>");
 
             innerLink = innerLinkStringBuilder.ToString();
             return innerLink;

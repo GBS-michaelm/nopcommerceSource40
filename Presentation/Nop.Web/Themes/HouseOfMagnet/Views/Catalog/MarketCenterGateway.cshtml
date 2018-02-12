@@ -18,11 +18,17 @@
     }
 
     var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+
+
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-marketcenter-gateway.css", themeName));
+
 }
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@using Nop.Web.Framework.Themes
 
 @{ 
     //might need to pass view model data

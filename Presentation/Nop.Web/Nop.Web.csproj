@@ -1515,6 +1515,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-accessory.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-category-gallery.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\hom-gateway.css" />
+    <Content Include="Themes\HouseOfMagnet\Content\css\hom-marketcenter-gateway.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\blog.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\content.css" />
     <Content Include="Themes\HouseOfMagnet\Content\css\imports\events.css" />
@@ -3123,8 +3124,8 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\MarketCenterGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-marketcenter-gateway.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\NameBadgeGatewayTabs.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\NameBadgeGatewayTab.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGatewayTabs.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGatewayTab.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
