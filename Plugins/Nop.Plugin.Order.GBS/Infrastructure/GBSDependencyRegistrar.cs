@@ -16,6 +16,7 @@ using Nop.Services.Custom.Common;
 using Nop.Services.Common;
 using Nop.Plugin.Order.GBS.Factories;
 using Nop.Web.Factories;
+using Nop.Plugin.Order.GBS.Orders;
 
 namespace Nop.Services.Order.GBS
 {
@@ -52,6 +53,7 @@ namespace Nop.Services.Order.GBS
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderService>().As<IOrderService>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSOrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerLifetimeScope();
 
             }
 

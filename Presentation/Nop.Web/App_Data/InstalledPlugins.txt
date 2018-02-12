@@ -46,3 +46,4 @@ SevenSpikes.Nop.Plugins.QuickView
 Login.GBS
 FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
+DiscountRequirement.HasCategory
