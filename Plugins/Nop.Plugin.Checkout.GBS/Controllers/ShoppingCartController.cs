@@ -53,7 +53,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 using Nop.Services.Seo;
-
+using System.Collections.ObjectModel;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -1027,21 +1027,26 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             string[] idsArray = productIds.Split(',');
             string productCodes = form["productCode"];
             string[] codesArray = productCodes.Split(',');
-            string frameValue = "";
-            string frameId = "";
+            //string frameValue = "";
+            //string frameId = "";
+            int frameOptionValueId = 0;
             int frameQty = 0;
-            string attributesXml = "";
-            string customerName = "";
-            string customerTitle = "";
-            string companyName = "";
-            string backStyle = "";            
+            //string attributesXml = "";
+                                   
             string redirect = "";
             string productIdForAccessoryCheck = "";
             
             foreach (var productIdIFrame in idsArray)
             {               
                 string checkId = form["accQTY" + productIdIFrame];
-                if(!string.IsNullOrEmpty(checkId) && checkId != "0")
+                //string frameId = form["rp" + productIdIFrame + "option"];
+                //int frameOptionValueId = 0;
+                string customerName = "";
+                string customerTitle = "";
+                string companyName = "";
+                string attributesXml = "";
+                string backStyle = "";
+                if (!string.IsNullOrEmpty(checkId) && checkId != "0")
                 {
                     Product product = null;
                     
@@ -1052,59 +1057,90 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             string[] productIdCodeSplit = codeCombo.Split('|');
                             //create to get nop product id
                             product = productService.GetProductBySku(productIdCodeSplit[1]);
-                            
+
+                            //var combinationValues = productAttributeService.GetAllProductAttributeCombinations(product.Id);
+
                             //get attribute mapping
                             ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
                             ProductAttributeMapping frameStyleMappy = null;
-                                                        
+
+
+                            //ProductAttributeMapping pam = new ProductAttributeMapping();
+
+                            //Collection<ProductAttributeMapping> productAttributes2 = new Collection<ProductAttributeMapping>();
+                            //product.ProductAttributeMappings = productAttributes2;
+
+                            //foreach (ProductAttributeCombination combinationValue in combinationValues)
+                            //{
+
                             foreach (var attr in productAttributes)
-                            {
-                                if (attr.ProductAttribute.Name == "Frame Style")
-                                {                                    
+                                {
+                                    if (attr.ProductAttribute.Name == "Frame Style")
+                                    {
+                                    
+                                        //productAttributeService.GetProductAttributeValueById(attr.ProductAttributeId);
+                                        //foreach (ProductAttributeValue val in attr.ProductAttributeValues)
+                                        //{
+                                        //    if (val.Name == GetFrameStyleValue(frameId))
+                                        //    {
+                                        //        frameOptionValueId = val.Id;
+                                        //    }
+                                        //}
+                                        
                                     frameStyleMappy = attr;                                   
-                                }
-
-                                if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Name Badge Back")
-                                {
-                                    backStyle = form["text357"];
-                                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
-                                }
-
-                                if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Name Badge Company Name")
-                                {
-                                    companyName = form["text281"];
-                                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
-                                }
-
-                                if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Name Badge Customer Name")
-                                {
-                                    customerName = form["text279"];
-                                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
-                                }
-
-                                if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Name Badge Customer Title")
-                                {
-                                    if (!string.IsNullOrEmpty(form["chooseTitle"]))
-                                    {
-                                        customerTitle = form["chooseTitle"];
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
                                     }
-                                    else if (!string.IsNullOrEmpty(form["customTitle"]))
+
+                                    if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Name Badge Back")
                                     {
-                                        customerTitle = form["customTitle"];
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
+                                        backStyle = form["text357"];
+                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
+                                        //productService.GetProductAttributeValueById(attr.ProductAttributeId);
+                                        //foreach (ProductAttributeValue val in attr.ProductAttributeValues)
+                                        //{
+                                        //    if(val.Name == backStyle)
+                                        //    {
+
+                                        //    }
+                                        //}
                                     }
-                                    else
+
+                                    if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Name Badge Company Name")
                                     {
-                                        //dont add customer title
+                                        companyName = form["text281"];
+                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
                                     }
+
+                                    if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Name Badge Customer Name")
+                                    {
+                                        customerName = form["text279"];
+                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
+                                    }
+
+                                    if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Name Badge Customer Title")
+                                    {
+                                        if (!string.IsNullOrEmpty(form["chooseTitle"]))
+                                        {
+                                            customerTitle = form["chooseTitle"];
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
+                                        }
+                                        else if (!string.IsNullOrEmpty(form["customTitle"]))
+                                        {
+                                            customerTitle = form["customTitle"];
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
+                                        }
+                                        else
+                                        {
+                                            //dont add customer title
+                                        }
+                                    }
+
                                 }
 
-                            }
+                            //}
 
                             //TODO determine which attribute option has been selected for frame color
-                            frameId = form["rp" + productIdIFrame + "option"];
-                            
+                            string frameId = form["rp" + productIdIFrame + "option"];
+
                             //TODO
                             //check if rp[productCode]option  is for specific badge type or if option is 0
 
@@ -1117,14 +1153,27 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 string[] frameStyles = new string[] { "359", "360", "361", "362", "455" };
                                 foreach (var frameStyle in frameStyles)
                                 {
+
+                                    int frameOptionValueIdMix = 0;
+
                                     //check if style of frame has quantity to add to cart
-                                    if(Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]) > 0)
+                                    if (Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]) > 0)
                                     {
                                         //generate attr xml
-                                        frameValue = GetFrameStyleValue(frameStyle);
+                                        //frameValue = GetFrameStyleValue(frameStyle);
+
+                                        productAttributeService.GetProductAttributeValueById(frameStyleMappy.ProductAttributeId);
+                                        foreach (ProductAttributeValue val in frameStyleMappy.ProductAttributeValues)
+                                        {
+                                            if (val.Name == GetFrameStyleValue(frameId))
+                                            {
+                                                frameOptionValueIdMix = val.Id;
+                                            }
+                                        }
+                                        
                                         frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]);
 
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameValue, frameQty);
+                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueIdMix.ToString());
 
                                         //add to cart
                                         _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
@@ -1135,14 +1184,24 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             }else
                             {
                                 //adding only a single frame style
-                                frameValue = GetFrameStyleValue(frameId);
+                                string frameValue = GetFrameStyleValue(frameId);
                                 frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameId + "qty"]);
 
                                 //for testing bad values
                                 //frameValue = "Spider Monkey";
 
+                                productAttributeService.GetProductAttributeValueById(frameStyleMappy.ProductAttributeId);
+                                foreach (ProductAttributeValue val in frameStyleMappy.ProductAttributeValues)
+                                {
+                                    if (val.Name == frameValue)
+                                    {
+                                        frameOptionValueId = val.Id;
+                                        break;
+                                    }
+                                }
+                                
                                 //add new value to xml with mapping AddProductAttribute
-                                attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameValue, frameQty);
+                                attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueId.ToString());
 
                                 //add to cart
                                 _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
