@@ -29,7 +29,6 @@ Products.SpecificationAttributes
 Nop.Plugin.Api
 Nop.Plugin.Shipping.GBS
 Products.SpecificationAttributes
-BreadCrumb.GBS
 BusinessLogic.GBS
 Order.GBS
 Checkout.GBS
@@ -47,3 +46,4 @@ Login.GBS
 FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
 DiscountRequirement.HasCategory
+BreadCrumb.GBS
