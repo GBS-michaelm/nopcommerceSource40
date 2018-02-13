@@ -68,4 +68,10 @@ namespace Nop.Plugin.Widgets.Marketing.EmailPref.Models
     {
         public string ErrorMessage { get; set; }
     }
+
+    public class MarketingFormModel
+    {
+        public string EmailList { get; set; }
+        public string Accounts { get; set; }
+    }
 }
