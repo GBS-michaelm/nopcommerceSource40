@@ -38,8 +38,15 @@
 
                 }
             }
+
+            if (!attrDict.ContainsKey(item.Id))
+            {
+                attrDict[item.Id] = item.AttributesXml;
+            }
         }
     }
+
+
 }
 <div id="flyout-cart" class="flyout-main-wrapper">
     <div class="shopping-cart-link">
@@ -70,7 +77,7 @@
                             @if (Model.ShowProductImages)
                             {
                                 <div class="picture">
-                                    @if (imgUrlDict.ContainsKey(item.Id))
+                                    @if (imgUrlDict.ContainsKey(item.Id) && !attrDict[item.Id].Contains("515"))
                                     {
                                         string url = imgUrlDict[item.Id];
                                         if (!url.Contains("undefined"))

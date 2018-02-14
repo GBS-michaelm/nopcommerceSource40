@@ -1,0 +1,134 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.DiscountRules.HasCategory.Models.RequirementModel
+@using Nop.Web.Framework;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#saveHasCategoryrequirement@(Model.RequirementId)').click(function () {
+            var categoryIds = $("#@Html.FieldIdFor(model => model.Categories)").val();
+            var discountId = @Model.DiscountId;
+            var requirementId = @Model.RequirementId;
+
+            var postData = {
+                discountId: discountId,
+                discountRequirementId: requirementId,
+                categoryIds: categoryIds
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("Configure", "DiscountRulesHasCategory"))",
+                data: postData,
+                success: function (data) {
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (Model.RequirementId == 0)
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="form-group">
+    <div class="col-md-3 requirement-label-col">
+        @Html.NopLabelFor(model => model.Categories)
+    </div>
+    <div class="col-md-9 requirement-data-col">
+        <div class="requirement-data-input">
+            <div class="input-group">
+                @Html.NopEditorFor(model => model.Categories)
+                <div class="input-group-btn">
+                    <input type="submit"
+                           id="btnAddNewDiscountRequirementCategory@(Model.RequirementId)"
+                           value="@T("Plugins.DiscountRules.HasCategory.Fields.Categories.AddNew")"
+                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasCategory.CategoryAddPopup", new {btnId = "btnRefreshDiscountRequirementCategories" + Model.RequirementId, categoryIdsInput = Html.FieldIdFor(model => model.Categories)}))', 800, 850, true); return false;"
+                           class="btn btn-info" />
+                    <input type="submit" id="btnRefreshDiscountRequirementCategories@(Model.RequirementId)" style="display: none" />
+                </div>
+            </div>
+        </div>
+        <div class="requirement-data-buttons">
+            <input type="button" id="saveHasCategoryrequirement@(Model.RequirementId)" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-3 col-md-9 requirement-messages-col">
+        <div class="requirement-category-names text-blue" id="discountrequirement-category-names@(Model.RequirementId)"></div>
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none;" class="text-green margin-t-5">
+            @T("Admin.Promotions.Discounts.Requirements.Saved")
+        </div>
+        <div id="discountrequirement-categories-check-progress@(Model.RequirementId)" class="please-wait pull-right" style="display: none;">
+            @T("Common.Wait...")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#btnRefreshDiscountRequirementCategories@(Model.RequirementId)').click(function() {
+            //refresh category list
+            loadDiscountRequirementCategoryFriendlyNames@(Model.RequirementId)();
+
+            //return false to don't reload a page
+            return false;
+        });
+    });
+
+    $(document).ready(function() {
+        loadDiscountRequirementCategoryFriendlyNames@(Model.RequirementId)();
+    });
+    $(document).ready(function() {
+        $('#@Html.FieldIdFor(model => model.Categories)')
+            .data('timeout', null)
+            .keyup(function() {
+                clearTimeout($(this).data('timeout'));
+                //one second timeout
+                $(this).data('timeout', setTimeout(loadDiscountRequirementCategoryFriendlyNames@(Model.RequirementId), 1000));
+            });
+    });
+
+    function loadDiscountRequirementCategoryFriendlyNames@(Model.RequirementId)() {
+        var inputValue = $('#@Html.FieldIdFor(model => model.Categories)').val();
+        if (inputValue) {
+            //load friendly names
+            $('#discountrequirement-categories-check-progress@(Model.RequirementId)').show();
+
+            var postData = {
+                categoryIds: inputValue
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.RouteUrl("Plugin.DiscountRules.HasCategory.LoadCategoryFriendlyNames")',
+                data: postData,
+                dataType: 'json',
+                success: function(data) {
+                    $('#discountrequirement-categories-check-progress@(Model.RequirementId)').hide();
+                    $('#discountrequirement-category-names@(Model.RequirementId)').text(data.Text);
+                    $('#discountrequirement-category-names@(Model.RequirementId)').addClass('filled');
+                },
+                failure: function() {
+                    $('#discountrequirement-categories-check-progress@(Model.RequirementId)').hide();
+                    $('#discountrequirement-category-names@(Model.RequirementId)').text('');
+                    $('#discountrequirement-category-names@(Model.RequirementId)').removeClass('filled');
+                }
+            });
+        } else {
+            $('#discountrequirement-category-names@(Model.RequirementId)').text('');
+            $('#discountrequirement-category-names@(Model.RequirementId)').removeClass('filled');
+        }
+    }
+</script>

@@ -185,6 +185,7 @@
     <Compile Include="Catalog\CompareProductsService.cs" />
     <Compile Include="Catalog\CategoryTemplateService.cs" />
     <Compile Include="Catalog\IBackInStockSubscriptionService.cs" />
+    <Compile Include="Catalog\ICategoryService.cs" />
     <Compile Include="Catalog\IManufacturerTemplateService.cs" />
     <Compile Include="Catalog\RoundingHelper.cs" />
     <Compile Include="Catalog\ManufacturerTemplateService.cs" />
@@ -466,7 +467,6 @@
     <Compile Include="Catalog\IProductAttributeService.cs" />
     <Compile Include="Catalog\ISpecificationAttributeService.cs" />
     <Compile Include="Catalog\ProductAttributeExtensions.cs" />
-    <Compile Include="Catalog\ICategoryService.cs" />
     <Compile Include="Localization\ILanguageService.cs" />
     <Compile Include="Localization\ILocalizationService.cs" />
     <Compile Include="Catalog\IManufacturerService.cs" />

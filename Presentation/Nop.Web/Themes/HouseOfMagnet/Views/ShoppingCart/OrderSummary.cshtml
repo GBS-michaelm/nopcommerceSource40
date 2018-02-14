@@ -165,7 +165,7 @@
                             @if (Model.ShowProductImages)
                             {
                                 <td class="product-picture">
-                                    @if (imgUrlDict.ContainsKey(item.Id))
+                                    @if (imgUrlDict.ContainsKey(item.Id) && !attrDict[item.Id].Contains("515"))
                                     {
                                         string url = imgUrlDict[item.Id];
                                         if (!url.Contains("undefined"))
@@ -262,7 +262,7 @@
                                 @*@if (item.AttributeInfo.ToUpper().Contains("CHILI"))*@
                                 @if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("CHILI"))
                                 {
-                                    if (attrDict[item.Id].Contains("399"))
+                                    if (attrDict[item.Id].Contains("399") && !attrDict[item.Id].Contains("515"))
                                     {
                                         var editCartItemUrl = "/chili?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
@@ -273,18 +273,18 @@
                                     }
                                     else
                                     {
-                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        @*var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
 
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
-                                        </div>
+                                        </div>*@
                                     }
 
                                 }
                                 else if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("GLUON"))
                                 {
-                                    if (attrDict[item.Id].Contains("399"))
+                                    if (attrDict[item.Id].Contains("399") && !attrDict[item.Id].Contains("515"))
                                     {
                                         var editCartItemUrl = "/gluon?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
 
@@ -295,12 +295,12 @@
                                     }
                                     else
                                     {
-                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        @*var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
 
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
-                                        </div>
+                                        </div>*@
                                     }
                                 }
                                 else if (iFrameDataDict.ContainsKey(item.Id) && iFrameDataDict[item.Id].Contains("CANVAS"))
@@ -421,7 +421,7 @@
                                         <div class="product-image">
                                             @if (Model.ShowProductImages)
                                             {
-                                                if (item.AttributeInfo.Contains("CustomImgUrl"))
+                                                if (item.AttributeInfo.Contains("CustomImgUrl") && !attrDict[item.Id].Contains("515"))
                                                 {
                                                     string url = imgUrlDict[item.Id];
                                                     <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>

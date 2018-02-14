@@ -78,6 +78,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly GBSOrderService _gbsOrderService;
         private readonly IProductAttributeParser parser = EngineContext.Current.Resolve<IProductAttributeParser>();
         private readonly ICcService ccService = EngineContext.Current.Resolve<ICcService>();
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
 
 
 
@@ -112,7 +114,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             OrderSettings orderSettings,
             IOrderProcessingService orderProcessingService,
             IProductAttributeParser productAttributeParser,
-            ILogger logger)
+            ILogger logger,
+            ShoppingCartSettings shoppingCartSettings,
+            IShoppingCartModelFactory shoppingCartModelFactory)
         {
             _specificationAttributesSettings = specificationAttributesSettings;
             _customerService = customerService;
@@ -146,6 +150,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             _productAttributeParser = productAttributeParser;
             _logger = logger;
             this._gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
+            this._shoppingCartSettings = shoppingCartSettings;
+            this._shoppingCartModelFactory = shoppingCartModelFactory;
 
         }
 
@@ -520,8 +526,13 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                     var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
                                                     productDetailsModel.DefaultPictureModel.ImageUrl= attrValues[0];
                                                 }
+                                                else if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                                                {
+                                                    productDetailsModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
+                                                        _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
+                                                }
 
-                                            }
+                                        }
                                         }
                                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
 
@@ -535,6 +546,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     else
                     {
                         var productOverviewModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                        if (widgetZone == "shoppingcart_custom_image" && _shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                        {
+                            productOverviewModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
+                                _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
+                        }
                         return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModel);
                     }
 
@@ -559,6 +575,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 {
                                     var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
                                     productDetailsModel.DefaultPictureModel.ImageUrl = attrValues[0];
+                                }
+                                else if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                                {
+                                    productDetailsModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
+                                        _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
                                 }
 
                             }
@@ -710,6 +731,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                 ImageUrl = Products.DefaultPictureModel.ImageUrl
 
                             };
+                            var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                            orderItemModel.ImageUrl = _pictureService.GetPictureUrl(orderItemPicture, 0, true);
+
                             if (l.CustomProperties.ContainsKey("isLegacy") && Convert.ToBoolean(l.CustomProperties["isLegacy"]) == true)
                             {
                                 Nop.Plugin.Order.GBS.Orders.OrderExtensions.LegacyOrderItem legacyOrderItem = (Nop.Plugin.Order.GBS.Orders.OrderExtensions.LegacyOrderItem)new Nop.Plugin.Order.GBS.Orders.OrderExtensions().GetOrderItemById(orderItem.Id, true);
@@ -1073,6 +1097,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             var productPicModel = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
             ViewBag.ProductId = product.Id;
             //custom image
+            var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+            productPicModel.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(orderItemPicture, 0, true);
             var productAttributeMappings = parser.ParseProductAttributeMappings(orderItem.AttributesXml);
             if (productAttributeMappings != null)
             {
