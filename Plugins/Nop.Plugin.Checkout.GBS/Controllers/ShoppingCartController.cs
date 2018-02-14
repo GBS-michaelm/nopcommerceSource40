@@ -1046,6 +1046,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 string companyName = "";
                 string attributesXml = "";
                 string backStyle = "";
+                ProductAttributeMapping frameStyleMappy = null;
+
                 if (!string.IsNullOrEmpty(checkId) && checkId != "0")
                 {
                     Product product = null;
@@ -1062,7 +1064,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                             //get attribute mapping
                             ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
-                            ProductAttributeMapping frameStyleMappy = null;
+                            //ProductAttributeMapping frameStyleMappy = null;
 
 
                             //ProductAttributeMapping pam = new ProductAttributeMapping();
@@ -1087,43 +1089,45 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                         //    }
                                         //}
                                         
-                                    frameStyleMappy = attr;                                   
+                                        frameStyleMappy = attr;                                   
                                     }
 
-                                    if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Name Badge Back")
+                                    if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Back")
                                     {
                                         backStyle = form["text357"];
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
-                                        //productService.GetProductAttributeValueById(attr.ProductAttributeId);
-                                        //foreach (ProductAttributeValue val in attr.ProductAttributeValues)
-                                        //{
-                                        //    if(val.Name == backStyle)
-                                        //    {
-
-                                        //    }
-                                        //}
+                                        if (!string.IsNullOrEmpty(form["text357"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
+                                        }                                                                               
                                     }
 
-                                    if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Name Badge Company Name")
+                                    if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Company Name")
                                     {
                                         companyName = form["text281"];
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
+                                        if (!string.IsNullOrEmpty(form["text281"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
+                                        }
+                                        
                                     }
 
-                                    if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Name Badge Customer Name")
+                                    if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Customer Name")
                                     {
                                         customerName = form["text279"];
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
+                                        if (!string.IsNullOrEmpty(form["text279"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
+                                        }
                                     }
 
-                                    if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Name Badge Customer Title")
+                                    if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Customer Title")
                                     {
-                                        if (!string.IsNullOrEmpty(form["chooseTitle"]))
+                                        if (!string.IsNullOrEmpty(form["chooseTitle"].ToString()))
                                         {
                                             customerTitle = form["chooseTitle"];
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
                                         }
-                                        else if (!string.IsNullOrEmpty(form["customTitle"]))
+                                        else if (!string.IsNullOrEmpty(form["customTitle"].ToString()))
                                         {
                                             customerTitle = form["customTitle"];
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
@@ -1153,7 +1157,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 string[] frameStyles = new string[] { "359", "360", "361", "362", "455" };
                                 foreach (var frameStyle in frameStyles)
                                 {
-
+                                    string mixNameBadgeAttributesXml = "";
                                     int frameOptionValueIdMix = 0;
 
                                     //check if style of frame has quantity to add to cart
@@ -1165,19 +1169,19 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                         productAttributeService.GetProductAttributeValueById(frameStyleMappy.ProductAttributeId);
                                         foreach (ProductAttributeValue val in frameStyleMappy.ProductAttributeValues)
                                         {
-                                            if (val.Name == GetFrameStyleValue(frameId))
+                                            if (val.Name == GetFrameStyleValue(frameStyle))
                                             {
                                                 frameOptionValueIdMix = val.Id;
                                             }
                                         }
                                         
                                         frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]);
-
-                                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueIdMix.ToString());
+                                        //each mix frame name badge needs xml with empty frame style attr, else they append to same cart item
+                                        mixNameBadgeAttributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueIdMix.ToString());
 
                                         //add to cart
-                                        _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
-                                        
+                                        _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, mixNameBadgeAttributesXml, quantity: frameQty);
+                                                                                
                                     }
                                 }
                                 
