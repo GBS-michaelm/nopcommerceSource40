@@ -9,6 +9,8 @@
     //page class
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-order-completed-page");
+    TempData.Remove("ShippingType");
+
 }
 @*@if (!Model.OnePageCheckoutEnabled)
 {

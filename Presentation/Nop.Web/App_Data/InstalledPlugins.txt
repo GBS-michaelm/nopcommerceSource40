@@ -2,13 +2,12 @@ CurrencyExchange.ECB
 Misc.FacebookShop
 Payments.Manual
 Shipping.FixedRate
-Tax.FixedRate
+Tax.FixedOrByCountryStateZip
 Widgets.NivoSlider
 DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
-Tax.CountryStateZip
 Widgets.GoogleAnalytics
 Shipping.USPS
 Shipping.UPS
@@ -40,5 +39,10 @@ Payments.GBS.PurchaseOrder
 FoxNetSoft.Plugin.Misc.SpeedFilters
 Nop.Plugin.Catalog.GBS
 Catalog.GBS
+SevenSpikes.Nop.Plugins.CloudZoom
 SevenSpikes.Nop.Plugins.ProductRibbons
-BreadCrumb.GBS
+SevenSpikes.Nop.Plugins.QuickView
+Login.GBS
+FoxNetSoft.Plugin.Misc.MSSQLProvider
+FoxNetSoft.Plugin.Misc.PriceImportExport
+DiscountRequirement.HasCategory
