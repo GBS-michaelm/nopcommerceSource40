@@ -39,7 +39,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             IPermissionService permissionService,
             IWorkContext workContext, 
             ILocalizationService localizationService,
-            ICategoryService categoryService,
+             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
             IStoreService storeService, 
             IVendorService vendorService,
@@ -240,9 +240,6 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                         ids.Add(tmp1);
                 }
 
-                int id1;
-                id1 = ids[0];
-
                 //var products = _productService.GetProductsByIds(ids.ToArray());
                 //for (int i = 0; i <= products.Count - 1; i++)
                 //{
@@ -252,11 +249,10 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                 //}
 
                 var categories = _categoryService.GetAllCategories();
-                var categories1 = _categoryService.GetAllCategoriesByParentCategoryId(id1);
-                for (int i = 0; i <= categories1.Count - 1; i++)
+                for (int i = 0; i <= categories.Count - 1; i++)
                 {
-                    result += categories1[i].Name;
-                    if (i != categories1.Count - 1)
+                    result += categories[i].Name;
+                    if (i != categories.Count - 1)
                         result += ", ";
                 }
             }
