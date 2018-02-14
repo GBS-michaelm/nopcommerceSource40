@@ -76,7 +76,7 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            decimal _FixedRate = new decimal(0.0);
+            decimal? _FixedRate = null;
             if (_gbsShippingSetting.UseFlatRate)
             {
                 _FixedRate = _gbsShippingSetting.FlatRateAmount;

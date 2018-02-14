@@ -159,12 +159,17 @@
             // }
 
 
-
+             LoadingUpdate();
             //var jsonSend = JSON.stringify(jsonArray);
             //TempData["productOptions"] = jsonSend;
 
             SetProductOption("", htmlDecode("@url") + $(".qty-input").val());
-         });
+        });
+
+         function LoadingUpdate() {
+             $("#dv-loading-gif").show();
+             $(".product-details-page").hide();
+         }
     });
     </script>
 

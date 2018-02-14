@@ -1,0 +1,9 @@
+﻿Group: Discount requirements
+FriendlyName: Customer has all of these categories in the cart
+SystemName: DiscountRequirement.HasCategory
+Version: 1.19
+SupportedVersions: 3.90
+Author: Clint Treadway
+DisplayOrder: 1
+FileName: Nop.Plugin.DiscountRules.HasCategory.dll
+Description: This plugin allows you to configure discounts for customers who have certain categories in the cart
