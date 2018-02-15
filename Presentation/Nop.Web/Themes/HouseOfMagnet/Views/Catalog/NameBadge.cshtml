@@ -1,0 +1,106 @@
+﻿@model CategoryModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo-namebadge.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    Html.AppendPageCssClassParts("html-category-page");
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(categoryUrl);
+    }
+
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-name-badge.css", themeName));
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/namebadge.js");
+}
+
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Services.Topics;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Web.Framework.Themes;
+
+@{ 
+    var productId = 0000;
+    var canvas = false;
+    var categoryId = Model.Id;
+
+    var topicService = EngineContext.Current.Resolve<ITopicService>();
+    var categoryService = EngineContext.Current.Resolve<ICategoryService>();
+}
+
+
+
+@Html.Widget("categorydetails_after_breadcrumb", Model.Id)
+<div class="page category-page">
+    <div class="page-body nb-body">
+        @*<div class="pager clearfix">
+            @{
+
+                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+            }
+            @if (!pager.IsEmpty())
+            {
+                @pager
+            }
+            @Html.Widget("categorydetails_bottom", Model.Id)
+        </div>*@
+        
+        
+
+        @{
+            if (canvas)
+            {
+                @* check if product has canvas data and has or has not been added to nop yet *@
+                @* canvas *@
+                @*<div>
+                    @Html.Action("CategoryNameBadges", "NameBadge", new { isDefault = true, categoryid = Model.Id })
+                </div>*@
+            }
+            else
+            {
+
+                //get first product in category list and save id for session attr to use its spec attr to get the hom iframe url
+                //List<ProductCategory> productCategories = (List<ProductCategory>)categoryService.GetProductCategoriesByCategoryId(Model.Id);
+                //Session.Add("productId", productCategories[0].ProductId); //first id of prouct in category
+
+
+                Session.Add("categoryId", categoryId); //category id to get iframe url
+                int topicID = topicService.GetTopicBySystemName("hom_iframe_namebadge").Id;
+                @* iframe garbage *@
+                <div id="nbIframe" class="nb">
+                    @Html.Action("TopicDetails", "Topic", new { topicId = topicID })
+                </div>
+
+
+
+
+            }
+
+        }
+
+        @*<div class="pager clearfix">
+            @{
+                pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+            }
+            @if (!pager.IsEmpty())
+            {
+                @pager
+            }
+            @Html.Widget("categorydetails_bottom", Model.Id)
+        </div>*@
+    </div>
+</div>

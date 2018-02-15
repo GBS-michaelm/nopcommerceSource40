@@ -7,10 +7,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Catalog;
-using System.Collections.Generic;
-using System.Data;
-using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.DiscountRules.HasCategory
 {
@@ -61,10 +57,6 @@ namespace Nop.Plugin.DiscountRules.HasCategory
             var result = new DiscountRequirementValidationResult();
 
             var restrictedCategoryIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", request.DiscountRequirementId));
-
-            var settingId = _settingService.GetSettingById(2260);
-            var settingInfo = _settingService.GetSetting(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", request.DiscountRequirementId));
-
             if (String.IsNullOrWhiteSpace(restrictedCategoryIds))
             {
                 //valid
@@ -97,23 +89,6 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                             select new { ProductId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
             var cart = cartQuery.ToList();
 
-
-            IWorkContext _workContext = EngineContext.Current.Resolve<IWorkContext>();
-
-            DBManager dbmanager = new DBManager();
-            Dictionary<string, string> paramDic = new Dictionary<string, string>();
-            string select = "EXEC usp_getCategoryQty " + _workContext.CurrentCustomer.Id + "," + request.Store.Id + "";
-            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
-
-            //if (dView.Count > 0)
-            //{
-            //    foreach (DataRow dRow in dView.Table.Rows)
-            //    {
-
-            //    }
-            //}
-
-
             bool allFound = true;
             foreach (var restrictedCategory in restrictedCategories)
             {
@@ -121,8 +96,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                     continue;
 
                 bool found1 = false;
-                //foreach (var sci in cart)
-                foreach (DataRow dRow in dView.Table.Rows)
+                foreach (var sci in cart)
                 {
                     if (restrictedCategory.Contains(":"))
                     {
@@ -143,8 +117,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                                 //parsing error; exit;
                                 return result;
 
-                            //if (sci.ProductId == restrictedCategoryId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
+                            if (sci.ProductId == restrictedCategoryId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
                             {
                                 found1 = true;
                                 break;
@@ -163,9 +136,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                                 //parsing error; exit;
                                 return result;
 
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId && (int)dRow["TotalQuantity"] >= quantity)
+                            if (sci.ProductId == restrictedCategoryId && sci.TotalQuantity == quantity)
                             {
-                                //var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
+                                var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
 
                                 found1 = true;
                                 break;
@@ -178,9 +151,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                         int restrictedCategoryId;
                         if (int.TryParse(restrictedCategory, out restrictedCategoryId))
                         {
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId)
+                            if (sci.ProductId == restrictedCategoryId)
                             {
-                                //var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
+                                var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
 
                                 found1 = true;
                                 break;
