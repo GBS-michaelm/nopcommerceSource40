@@ -113,11 +113,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="Controllers\SpecificationAttributesController.cs" />
-    <Compile Include="Infrastructure\DependencyRegister.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
-    <Compile Include="ModelFactory\OrderModelFactory.cs" />
     <Compile Include="Setttings.cs" />
     <Compile Include="Models\CustomerOrderListModel.cs" />
     <Compile Include="ProductSpecificationAttributeProcessor.cs" />
