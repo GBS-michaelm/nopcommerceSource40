@@ -54,53 +54,75 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             MarketingFormModel model = new MarketingFormModel()
             {
                 EmailList = o.list,
-                Accounts = o.accounts
+                //Accounts = o.accounts
             };
             return View((string)o.form, model);
         }
 
         public ActionResult JoinList (FormCollection form)
         {
+            var modelError = new EmailPreferencesErrorModel();
+
             try
             {
                 GBSMarketingServiceClient marketingClient = new GBSMarketingServiceClient();
-                MarketingContactModel marketingModel = new MarketingContactModel();
-                MarketingListModel marketingListModel = new MarketingListModel();
                 dynamic json = null;
-                marketingModel.emailAddress = form["emailAddress"];
-                marketingModel.providerId = form["emailAddress"];
-                marketingModel.website = form["accounts"];
-
-                marketingModel.subscribeStatus = "subscribed";
-                marketingModel.invalid = "false";
-                marketingModel.forceSubscribe = "true";
-
-
-
-                marketingListModel = new MarketingListModel();
-                marketingListModel.name = form["emailLists"];
-                marketingListModel.subscribeStatus = "true";
-                marketingModel.marketingLists.Add(marketingListModel);
-
-
-
-
-                var responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
-
-                json = JsonConvert.DeserializeObject<Object>(responseMaster);
-                if (json.success != true)
+                var signUps = form["emailLists"].Split(',');
+                foreach (string signUp in signUps)
                 {
-                    var modelError = new EmailPreferencesErrorModel();
-                    modelError.ErrorMessage = "something went wrong with your submission";
+                    var account = signUp.Split(':')[0];
+                    MarketingContactModel marketingModel = new MarketingContactModel();
+                    marketingModel.emailAddress = form["emailAddress"];
+                    marketingModel.providerId = form["emailAddress"];
+                    marketingModel.website = account;
 
-                    return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
+                    marketingModel.subscribeStatus = "subscribed";
+                    marketingModel.invalid = "false";
+                    marketingModel.forceSubscribe = "true";
+
+
+                    var emailLists = signUp.Split(':')[1].Split('|');
+                    foreach (string emailList in emailLists)
+                    {
+                        MarketingListModel marketingListModel = new MarketingListModel();
+                        marketingListModel.name = emailList;
+                        marketingListModel.subscribeStatus = "true";
+                        marketingModel.marketingLists.Add(marketingListModel);
+                    }
+                    if (!string.IsNullOrEmpty(form["firstName"]))
+                    {
+                        marketingModel.firstName = form["firstName"];
+                    }
+                    if (!string.IsNullOrEmpty(form["lastName"]))
+                    {
+                        marketingModel.lastName = form["lastName"];
+                    }
+                    if (!string.IsNullOrEmpty(form["zipCode"]))
+                    {
+                        marketingModel.zipCode = form["zipCode"];
+                    }
+
+
+
+                    var responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
+
+                    json = JsonConvert.DeserializeObject<Object>(responseMaster);
+                    if (json.success != true)
+                    {
+                        modelError.ErrorMessage = "something went wrong with your submission for account " + marketingModel.website;
+                        _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"], new Exception(modelError.ErrorMessage), _workContext.CurrentCustomer);
+
+                        //return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
+                    }
                 }
 
                 return View("~/Plugins/Widgets.Marketing/Views/JoinListThankYou.cshtml");
-            }catch (Exception ex)
+                //return Content("<html></html>");
+            }
+            catch (Exception ex)
             {
                 _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"], ex, _workContext.CurrentCustomer);
-                var modelError = new EmailPreferencesErrorModel();
+                modelError = new EmailPreferencesErrorModel();
                 modelError.ErrorMessage = "something went wrong with your submission";
                 return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
             }

@@ -72,6 +72,6 @@ namespace Nop.Plugin.Widgets.Marketing.EmailPref.Models
     public class MarketingFormModel
     {
         public string EmailList { get; set; }
-        public string Accounts { get; set; }
+        //public string Accounts { get; set; }
     }
 }
