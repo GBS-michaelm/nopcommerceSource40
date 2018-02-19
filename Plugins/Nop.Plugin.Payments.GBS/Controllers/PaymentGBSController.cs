@@ -180,7 +180,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                     DBManager dbmanager = new DBManager();
                     Dictionary<string, string> paramDic = new Dictionary<string, string>();
                     paramDic.Add("@CustomerID", customerID.ToString());
-                    string select = "SELECT * FROM Profiles WHERE CustomerID = " + customerID + "";
+                    string select = "exec usp_getCCProfiles " + customerID + "";
                     DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
                     ViewBag.SavedCCCount = dView.Count;
 
