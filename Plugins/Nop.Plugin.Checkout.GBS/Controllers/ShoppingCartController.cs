@@ -53,7 +53,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 using Nop.Services.Seo;
-
+using System.Collections.ObjectModel;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -323,14 +323,16 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //if (groupId != 0000)
             //{               
 
-            Type t = action.Data.GetType();
-            PropertyInfo redirect = t.GetProperty("redirect");
-            PropertyInfo success = t.GetProperty("success");
-            string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
-            bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
 
-            if ((redirectValue != null && redirectValue == "/cart") || successValue)
-            {
+                Type t = action.Data.GetType();
+                PropertyInfo redirect = t.GetProperty("redirect");
+                PropertyInfo success = t.GetProperty("success");
+                string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                if ((redirectValue != null && redirectValue == "/cart") || successValue)
+                {
+
 
                 action = (JsonResult)CheckForAccessories(action, product);
 
@@ -338,14 +340,52 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 //        {
                 //            redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = productId }),
                 //        });
+
+                }
+                //}
+                        
+            return action;
+            
+        }
+
+        public ActionResult CheckForAccessories(ActionResult action, Product product)
+        {
+            var groupId = 0000;
+            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            var specAttrs = specService.GetProductSpecificationAttributes(product.Id);
+
+            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
+
+            foreach (var item in specAttrs)
+            {
+                if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+                {
+                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                }
             }
-            //}
+
+
+            if (groupId != 0000)
+            {
+
+                //Type t = action.Data.GetType();
+                //PropertyInfo redirect = t.GetProperty("redirect");
+                //PropertyInfo success = t.GetProperty("success");
+                //string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
+                //bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+
+                //if ((redirectValue != null && redirectValue == "/cart") || successValue)
+                //{
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = product.Id }),
+                    });
+                //}
+            }
 
             return action;
 
         }
-
-      
 
         //Add to cart without leaving page while using amalgamation pricing on galleries
         [HttpPost]
@@ -622,7 +662,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     .ToList();
 
                 var orderItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
+
                 JsonResult action = (JsonResult)CheckForAccessories(null, product);
+
 
                 if (warnings.Count > 0)
                 {
@@ -630,6 +672,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
                 SubmitItemResponse response = new SubmitItemResponse();
                 response.status = "success";
+
                 if (action != null)
                 {
                     return action;
@@ -641,6 +684,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     });
 
                 }//////////////////////////////////////////////////
+
             } catch(Exception ex){
                 _logger.Error("Error in SubmitItem = productId = " + productId, ex, customer);
                 SubmitItemResponse response = new SubmitItemResponse();
@@ -969,49 +1013,281 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             }
         }
 
-        public ActionResult CheckForAccessories(ActionResult action, Product product)
+        
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult NameBadgeIframeAddToCart(FormCollection form)
         {
-            var groupId = 0000;
-            ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-            var specAttrs = specService.GetProductSpecificationAttributes(product.Id);
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+            IProductAttributeParser productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+            Customer customer = _workContext.CurrentCustomer;
+            
+            string productIds = form["accChk"];
+            string[] idsArray = productIds.Split(',');
+            string productCodes = form["productCode"];
+            string[] codesArray = productCodes.Split(',');
+            //string frameValue = "";
+            //string frameId = "";
+            int frameOptionValueId = 0;
+            int frameQty = 0;
+            //string attributesXml = "";
+                                   
+            string redirect = "";
+            string productIdForAccessoryCheck = "";
+            
+            foreach (var productIdIFrame in idsArray)
+            {               
+                string checkId = form["accQTY" + productIdIFrame];
+                //string frameId = form["rp" + productIdIFrame + "option"];
+                //int frameOptionValueId = 0;
+                string customerName = "";
+                string customerTitle = "";
+                string companyName = "";
+                string attributesXml = "";
+                string backStyle = "";
+                ProductAttributeMapping frameStyleMappy = null;
 
-            //IList<ProductSpecificationAttribute> list = specService.GetProductSpecificationAttributes(productId);
-
-            foreach (var item in specAttrs)
-            {
-                if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "AccessoryGroup")
+                if (!string.IsNullOrEmpty(checkId) && checkId != "0")
                 {
-                    groupId = Int32.Parse(item.SpecificationAttributeOption.Name);
+                    Product product = null;
+                    
+                    foreach (var codeCombo in codesArray)
+                    {
+                        if(codeCombo.Contains(productIdIFrame + "|"))
+                        {
+                            string[] productIdCodeSplit = codeCombo.Split('|');
+                            //create to get nop product id
+                            product = productService.GetProductBySku(productIdCodeSplit[1]);
+
+                            //var combinationValues = productAttributeService.GetAllProductAttributeCombinations(product.Id);
+
+                            //get attribute mapping
+                            ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
+                            //ProductAttributeMapping frameStyleMappy = null;
+
+
+                            //ProductAttributeMapping pam = new ProductAttributeMapping();
+
+                            //Collection<ProductAttributeMapping> productAttributes2 = new Collection<ProductAttributeMapping>();
+                            //product.ProductAttributeMappings = productAttributes2;
+
+                            //foreach (ProductAttributeCombination combinationValue in combinationValues)
+                            //{
+
+                            foreach (var attr in productAttributes)
+                                {
+                                    if (attr.ProductAttribute.Name == "Frame Style")
+                                    {
+                                    
+                                        //productAttributeService.GetProductAttributeValueById(attr.ProductAttributeId);
+                                        //foreach (ProductAttributeValue val in attr.ProductAttributeValues)
+                                        //{
+                                        //    if (val.Name == GetFrameStyleValue(frameId))
+                                        //    {
+                                        //        frameOptionValueId = val.Id;
+                                        //    }
+                                        //}
+                                        
+                                        frameStyleMappy = attr;                                   
+                                    }
+
+                                    if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Back")
+                                    {
+                                        backStyle = form["text357"];
+                                        if (!string.IsNullOrEmpty(form["text357"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
+                                        }                                                                               
+                                    }
+
+                                    if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Company Name")
+                                    {
+                                        companyName = form["text281"];
+                                        if (!string.IsNullOrEmpty(form["text281"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
+                                        }
+                                        
+                                    }
+
+                                    if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Customer Name")
+                                    {
+                                        customerName = form["text279"];
+                                        if (!string.IsNullOrEmpty(form["text279"].ToString()))
+                                        {
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
+                                        }
+                                    }
+
+                                    if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Customer Title")
+                                    {
+                                        if (!string.IsNullOrEmpty(form["chooseTitle"].ToString()))
+                                        {
+                                            customerTitle = form["chooseTitle"];
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
+                                        }
+                                        else if (!string.IsNullOrEmpty(form["customTitle"].ToString()))
+                                        {
+                                            customerTitle = form["customTitle"];
+                                            attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
+                                        }
+                                        else
+                                        {
+                                            //dont add customer title
+                                        }
+                                    }
+
+                                }
+
+                            //}
+
+                            //TODO determine which attribute option has been selected for frame color
+                            string frameId = form["rp" + productIdIFrame + "option"];
+
+                            //TODO
+                            //check if rp[productCode]option  is for specific badge type or if option is 0
+
+                            //if only badge type, add to cart with qty
+                            //if 0, then mix type was selected. check all badge types for qty and add each with qty as seperate products, 
+                            if (frameId == "0")
+                            {
+                                //mix frames selected
+                                //will add each variant frame style so must loop thorugh all possible styles
+                                string[] frameStyles = new string[] { "359", "360", "361", "362", "455" };
+                                foreach (var frameStyle in frameStyles)
+                                {
+                                    string mixNameBadgeAttributesXml = "";
+                                    int frameOptionValueIdMix = 0;
+
+                                    //check if style of frame has quantity to add to cart
+                                    if (Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]) > 0)
+                                    {
+                                        //generate attr xml
+                                        //frameValue = GetFrameStyleValue(frameStyle);
+
+                                        productAttributeService.GetProductAttributeValueById(frameStyleMappy.ProductAttributeId);
+                                        foreach (ProductAttributeValue val in frameStyleMappy.ProductAttributeValues)
+                                        {
+                                            if (val.Name == GetFrameStyleValue(frameStyle))
+                                            {
+                                                frameOptionValueIdMix = val.Id;
+                                            }
+                                        }
+                                        
+                                        frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameStyle + "qty"]);
+                                        //each mix frame name badge needs xml with empty frame style attr, else they append to same cart item
+                                        mixNameBadgeAttributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueIdMix.ToString());
+
+                                        //add to cart
+                                        _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, mixNameBadgeAttributesXml, quantity: frameQty);
+                                                                                
+                                    }
+                                }
+                                
+                            }else
+                            {
+                                //adding only a single frame style
+                                string frameValue = GetFrameStyleValue(frameId);
+                                frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameId + "qty"]);
+
+                                //for testing bad values
+                                //frameValue = "Spider Monkey";
+
+                                productAttributeService.GetProductAttributeValueById(frameStyleMappy.ProductAttributeId);
+                                foreach (ProductAttributeValue val in frameStyleMappy.ProductAttributeValues)
+                                {
+                                    if (val.Name == frameValue)
+                                    {
+                                        frameOptionValueId = val.Id;
+                                        break;
+                                    }
+                                }
+                                
+                                //add new value to xml with mapping AddProductAttribute
+                                attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueId.ToString());
+
+                                //add to cart
+                                _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
+                                                                
+                            }
+
+                            break;
+
+                        }
+                    }  
+
                 }
+
             }
+            
+            string[] productAccessory = codesArray[0].Split('|');
+            productIdForAccessoryCheck = productAccessory[1];
 
+            Product accessoryProduct = productService.GetProductBySku(productIdForAccessoryCheck);
 
-            if (groupId != 0000)
+            ActionResult action = null;
+            JsonResult redirectJson = (JsonResult)CheckForAccessories(action, accessoryProduct);
+            
+            if(redirectJson == null)
+            {
+                redirect = Url.RouteUrl("ShoppingCart");
+            }else
+            {
+                Type t = redirectJson.Data.GetType();
+                PropertyInfo redirectData = t.GetProperty("redirect");
+                string redirectLink = (string)redirectData.GetValue(redirectJson.Data);
+                redirect = redirectLink;
+            }
+                        
+            return Json(new
+            {
+                redirect = redirect,
+            });
+        }
+        
+        private string GetFrameStyleValue(string frameId)
+        {
+            string frameValue = "";
+
+            switch (frameId)
             {
 
-                //Type t = action.Data.GetType();
-                //PropertyInfo redirect = t.GetProperty("redirect");
-                //PropertyInfo success = t.GetProperty("success");
-                //string redirectValue = redirect != null ? (string)redirect.GetValue(action.Data) : null;
-                //bool successValue = success != null ? (bool)success.GetValue(action.Data) : false;
+                case "359":
+                    frameValue = "Black";
+                    //frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                    return frameValue;
 
-                //if ((redirectValue != null && redirectValue == "/cart") || successValue)
-                //{
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("AccessoryPage", new { groupId = groupId, productId = product.Id }),
-                });
-                //}
-            }
-            else
-            {
-                return action;
+                case "362":
+                    frameValue = "Silver";
+                    //frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                    return frameValue;
+
+                case "361":
+                    frameValue = "Gold";
+                    //frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                    return frameValue;
+
+                case "360":
+                    frameValue = "Bling";
+                    //frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                    return frameValue;
+
+                case "455":
+                    frameValue = "Frameless";
+                    //frameQty = Int32.Parse(form["rp" + productId + "option" + frameId + "qty"]);
+                    return frameValue;
+                 
+                default:
+                    break;
+
             }
 
+            return frameValue;
 
         }
 
+        
     }
-
-
+    
 }

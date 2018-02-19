@@ -81,11 +81,8 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                     return View();
             }
             
-        }
-
-
+        }   
+        
     }
-
-    
-
+       
 }
