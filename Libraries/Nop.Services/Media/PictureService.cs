@@ -327,7 +327,7 @@ namespace Nop.Services.Media
         /// <param name="binary">Picture binary</param>
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
-            File.WriteAllBytes(thumbFilePath, binary);
+           // File.WriteAllBytes(thumbFilePath, binary);
         }
 
         #endregion

@@ -1,0 +1,214 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Models.Topics;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Logging;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using System.Web.Script.Serialization;
+@*@using Nop.Plugin.Payments.GBS;*@
+@using System.Data;
+@using System.Xml;
+@using Nop.Core;
+@using Nop.Core.Domain.Orders;
+@using Nop.Services.Orders; 
+@using Nop.Plugin.BusinessDataAccess.GBS;
+@{
+
+    DBManager manager = new DBManager();
+    DataView namebadgeIframeData = null;
+
+    Layout = "~/Views/Shared/_Empty.cshtml";
+
+    string page = string.Empty;
+    //try
+    //{
+    //int prodId = Convert.ToInt32(Request.QueryString["id"]);
+    //int prodId = Int32.Parse(Model.CustomProperties["productId"].ToString());
+
+    //int productId = Int32.Parse(Session["productId"].ToString());
+    int categoryId = Int32.Parse(Session["categoryId"].ToString());
+
+    int cartId = Convert.ToInt32(Request.QueryString["cartid"]);
+    int cartItemID = (!string.IsNullOrEmpty(Request.QueryString["updatecartitemid"])) ? Convert.ToInt32(Request.QueryString["updatecartitemid"]) : 0;
+    string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
+    //string sku = Request.QueryString["sku"];
+    string iframeData = string.Empty;
+    var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var attributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+    var attributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+    var attributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
+    //var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(productId);
+    //TODO
+    //db look up for iframe url using categoryid
+
+    string query = "EXEC usp_SelectGBSEntityURL @Entityid, @EntityName, @key";
+    //string query = "EXEC usp_SelectGBSEntityURL_Test @Entityid";
+    Dictionary<string, Object> namebadgeDic = new Dictionary<string, Object>();
+    namebadgeDic.Add("@Entityid", categoryId);
+    namebadgeDic.Add("@EntityName", "category");
+    namebadgeDic.Add("@key", "NameBadgeURL");
+
+    namebadgeIframeData = manager.GetParameterizedDataView(query, namebadgeDic);
+    if(namebadgeIframeData.Count > 0)
+    {
+        page = namebadgeIframeData[0]["value"].ToString();
+    }
+
+    string attributeXml = string.Empty;
+    bool editActive = false;
+    //string productXml = string.Empty;
+    //Set iframe url
+    //foreach (var item in CurrentSpecAttr)
+    //{
+    //    if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "IframeURL")
+    //    {
+    //        page = item.SpecificationAttributeOption.Name;
+    //    }
+    //}
+    //page = page + sku;
+
+    //Handles edit from cart
+    if (cartItemID != 0)
+    {
+        var customer = workContext.CurrentCustomer;
+        var cart = customer.ShoppingCartItems
+                      .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                      .LimitPerStore(_storeContext.CurrentStore.Id)
+                      .ToList();
+        foreach (var item in cart)
+        {
+            if (item.Id == cartItemID)
+            {
+                attributeXml = item.AttributesXml;
+            }
+        }
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(attributeXml);
+        XmlNodeList nodeList = xmldoc.GetElementsByTagName("ProductAttribute");
+        var node = xmldoc.FirstChild.FirstChild.InnerText;
+        //var attributeMappingId = attributeService.GetProductAttributeMappingsByProductId(prodId);
+
+
+        //XmlNode currentNode;
+
+        //var attributes = attributeService.GetProductAttributeMappingsByProductId(prodId);
+        //foreach (var item in attributes)
+        //{
+        //    switch (item.ProductAttribute.Name)
+        //    {
+        //        case "IframeUrl":
+        //            currentNode = xmldoc.SelectSingleNode("/Attributes/ProductAttribute[@ID='" + item.Id + "']");
+        //            currentNode.ParentNode.RemoveChild(currentNode);
+
+        //            break;
+        //        case "CustomImgUrl":
+        //            currentNode = xmldoc.SelectSingleNode("/Attributes/ProductAttribute[@ID='" + item.Id + "']");
+        //            currentNode.ParentNode.RemoveChild(currentNode);
+
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
+
+        //var productXml = xmldoc.OuterXml;
+        iframeData = node;
+        editActive = true;
+
+    }
+
+    @*<input type="hidden" id="hdn-product-xml" value="@productXml" />*@
+    <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
+    <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
+    <input type="hidden" id="hdn-qty" value="@qty" />
+    <input type="hidden" id="hdn-category-id" value="@categoryId" />
+    <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
+
+    <div class="gluon-template"  style="overflow:hidden; height: 100%">
+        <iframe id="hom-nb-iframe" src="@T("hom.url")@page" style="height:1500px; width:100%;"></iframe>
+    </div>
+}
+ <!--product attributes-->
+@*<script type="text/javascript"> 
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+    var imageUrl = '';
+    var check = true;
+ 
+    // Listen to message from child window
+    eventer(messageEvent, function (e) {
+        var cartImageSrc = (JSON.parse(e.data).hasOwnProperty('399') || JSON.parse(e.data).hasOwnProperty('misc3')) ? "http://gluon.houseofmagnets.com" + JSON.parse(e.data)[320] : "undefined";
+        AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
+        
+    }, false);    
+</script>*@
+
+<script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var iframe = document.getElementById('hom-nb-iframe');
+        
+        window.addEventListener("message", function (e) {
+            addToCart(e);
+        }, false);
+
+        function addToCart(e) {
+
+            //var obj = $.parseJSON(e);
+
+            var dataHomJson = $.parseJSON(e.data);
+            var formURL = dataHomJson['formURL'];
+
+            var dataTest = e.data;
+            var dataJson = dataHomJson['formData'];
+            
+
+            //convert json to form
+            var data = new FormData();
+            for (var key in dataJson) {
+                data.append(dataJson[key].name, dataJson[key].value);
+            }
+
+            $.ajax(
+            {
+                type: "POST",
+                dataType: "html",
+                url: formURL,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (msg) {
+                    var obj = $.parseJSON(msg);
+                    //console.log("msg: " + msg);
+                    //console.log("redirect value: " + obj['redirect']);
+                    //window.top.location.href = document.getElementById('nopcart').value + obj['redirect'];
+                    window.top.location.href = obj['redirect'];
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //if fails
+                    console.log("fail");
+                }
+            });
+
+
+        }
+
+
+
+        @*if($("#hdn-iframe-data").val() != "")
+        {
+            $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
+        }
+        $("#btn-add-to-cart").click(function () {
+            console.log("addto cart clicked");
+        })*@
+    });
+</script>
+
+
+
