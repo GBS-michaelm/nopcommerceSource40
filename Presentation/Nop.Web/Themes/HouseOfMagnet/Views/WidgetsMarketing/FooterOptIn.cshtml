@@ -263,94 +263,93 @@
 
 </div>
 <style>
-    .modal-dialog {
+    #formModal .modal-dialog {
         width: 330px;
         margin: 30px auto
     }
-    body {
+    #formModal body {
         margin: 0px;
     }
 
-    #HOMLogo {
+    #formModal #HOMLogo {
         padding: 12px 0px 5px 0px;
     }
 
-    p.email_heading {
+    #formModal p.email_heading {
         font: bold 22px/22px Arial, Helvetica, sans-serif;
         display: block;
         color: #002147;
         margin: 0px 0px 10px 0px;
     }
 
-    .email_bodytext {
+    #formModal .email_bodytext {
         font: bold 14px/16px Arial, Helvetica, sans-serif;
         color: #292929;
         margin: 5px 5px;
     }
 
-    .email_bodytext_thanks {
+    #formModal .email_bodytext_thanks {
         font: normal 12px/14px Arial, Helvetica, sans-serif;
         color: #292929;
         margin: 0px 0px 10px 0px;
     }
 
-    .email_bodytext_list {
+    #formModal .email_bodytext_list {
         font: normal 11px/11px Arial, Helvetica, sans-serif;
         line-height: 18px;
         color: #666;
         margin: 0px 0px 5px 20px;
     }
-    .email_bodytext_list li{
+        #formModal .email_bodytext_list li {
+            list-style: square;
+        }
 
-        list-style: square;
-    }
-
-    .email_bodytext_footer {
+    #formModal .email_bodytext_footer {
         font: normal 11px/11px Arial, Helvetica, sans-serif;
         color: #666;
         margin: 0px 0px 5px 0px;
     }
 
-        .email_bodytext_footer a {
+        #formModal .email_bodytext_footer a {
             font: normal 11px/11px Arial, Helvetica, sans-serif;
             color: #666;
             margin: 0px 0px 5px 0px;
             text-decoration: none;
         }
 
-            .email_bodytext_footer a:hover {
+            #formModal .email_bodytext_footer a:hover {
                 font: normal 11px/11px Arial, Helvetica, sans-serif;
                 color: #666;
                 margin: 0px 0px 5px 0px;
                 text-decoration: none;
             }
 
-    #formwrapper {
+    #formModal #formwrapper {
         width: 100%;
         /*height:230px;*/
         padding: 10px 0px 0px 0px;
         text-align: left;
         border-top: solid 15px #002147;
     }
-    #form, #message {
+    #formModal #form, #message {
         margin: 0px 30px 30px;
     }
 
-    #inner-wrapper {
+    #formModal #inner-wrapper {
         margin: 25px;
     }
 
-    #inner-wrapper2 {
+    #formModal #inner-wrapper2 {
         margin: 0px 20px 20px 20px;
     }
 
 
-    #email_form {
+    #formModal #email_form {
         margin-left: 0px;
         padding-top: 10px;
     }
 
-    input[type="text"] {
+    #formModal input[type="text"] {
         margin: 0px 0px 12px 0px;
         _margin-top: 15px !important;
         padding: 0px 0px 0px 5px;
@@ -361,7 +360,7 @@
         float: left;
     }
 
-    #emailInput {
+    #formModal #emailInput {
         margin: 0px 0px 0px 0px;
         _margin-top: 15px !important;
         padding: 0px 0px 0px 5px;
@@ -372,7 +371,7 @@
         float: left;
     }
 
-    #emailSubmit {
+    #formModal #emailSubmit {
         display: block;
         width: 110px;
         height: 30px;
@@ -387,7 +386,7 @@
         font-weight: bold;
     }
 
-    #thankyouClose {
+    #formModal #thankyouClose {
         width: 90px;
         height: 30px;
         background: #ff6f06;
@@ -400,29 +399,29 @@
         font-weight: bold;
     }
 
-    .emailHeading {
+    #formModal .emailHeading {
         font: bolder 14px/14px Arial, Helvetica, sans-serif;
         color: #002147;
     }
 
-    .successMsg {
+    #formModal .successMsg {
         margin: 20px 0px 0px 65px;
         font: bold 12px Arial, Helvetica, sans-serif;
         color: #333;
     }
 
-    .requiredMsg {
+    #formModal .requiredMsg {
         margin: 0px 0px 5px 5px;
         font: bold 10px/10px Arial, Helvetica, sans-serif;
         color: #FF0000;
     }
 
-    #errorMsg {
+    #formModal #errorMsg {
         padding: 0px 0px 10px 0px;
         font: normal 12px Arial, Helvetica, sans-serif;
         color: #FF0000;
     }
-    button.close {
+    #formModal button.close {
         display: block;
         box-sizing: border-box;
         width: 20px;
