@@ -3121,6 +3121,10 @@
     <Content Include="Themes\PurplePizza\Views\Web.config" />
     <Content Include="Themes\HouseOfMagnet\Views\GBSCatalog\SportsTeamsList.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.Envelopes.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\WidgetsMarketing\SampleSmall.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\WidgetsMarketing\FooterOptIn.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\FooterOptIn.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\SampleSmall.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\MarketCenterGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-marketcenter-gateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-namebadge.cshtml" />
