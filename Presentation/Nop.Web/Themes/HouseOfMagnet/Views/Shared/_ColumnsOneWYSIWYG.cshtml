@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+}
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+<div class="page-title panel-heading categorytitle">
+    <h1>@Model.Name</h1>
+</div>
+@if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p class="list-content">
+                @Html.Raw(Model.Description)
+            </p>
+        }
+    @Html.Widget("main_column_before")
+    @RenderBody()
+    @Html.Widget("main_column_after")
+
