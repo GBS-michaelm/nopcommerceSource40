@@ -180,7 +180,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                     DBManager dbmanager = new DBManager();
                     Dictionary<string, string> paramDic = new Dictionary<string, string>();
                     paramDic.Add("@CustomerID", customerID.ToString());
-                    string select = "exec usp_getCCProfiles " + customerID + "";
+                    string select = "exec usp_getCCProfiles @CustomerID";
                     DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
                     ViewBag.SavedCCCount = dView.Count;
 
@@ -293,14 +293,14 @@ namespace Nop.Plugin.Payments.GBS.Controllers
 
             if (form.AllKeys.Contains("ProfileID") && !String.IsNullOrEmpty(form["ProfileID"].ToString()))
             {
-                WebServices.Models.Payment.PaymentProfileModel paymentProfile = gateway.ReadProfile(int.Parse(form["ProfileID"]), _gbsPaymentSettings.GBSPaymentWebServiceAddress, _gbsPaymentSettings.LoginId, _gbsPaymentSettings.Password, _gbsPaymentSettings.UseSandbox);
+                //WebServices.Models.Payment.PaymentProfileModel paymentProfile = gateway.ReadProfile(int.Parse(form["ProfileID"]), _gbsPaymentSettings.GBSPaymentWebServiceAddress, _gbsPaymentSettings.LoginId, _gbsPaymentSettings.Password, _gbsPaymentSettings.UseSandbox);
 
                 paymentInfo = new ProcessPaymentRequest();
 
-                paymentInfo.CreditCardName = paymentProfile.customerName;
-                paymentInfo.CreditCardNumber = paymentProfile.cardNumber;
-                paymentInfo.CreditCardExpireMonth = int.Parse(paymentProfile.cardExpireMonth);
-                paymentInfo.CreditCardExpireYear = int.Parse(paymentProfile.cardExpireYear);
+                //paymentInfo.CreditCardName = paymentProfile.customerName;
+                //paymentInfo.CreditCardNumber = paymentProfile.cardNumber;
+                //paymentInfo.CreditCardExpireMonth = int.Parse(paymentProfile.cardExpireMonth);
+                //paymentInfo.CreditCardExpireYear = int.Parse(paymentProfile.cardExpireYear);
                 paymentInfo.CustomValues["ProfileID"] = form["ProfileID"].ToString();
                 paymentInfo.CustomValues["SavedProfile"] = true;
                 paymentInfo.CustomValues["StoreProfile"] = form["StoreProfile"];
