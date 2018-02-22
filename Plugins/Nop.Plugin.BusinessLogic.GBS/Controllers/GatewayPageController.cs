@@ -84,22 +84,31 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         }
 
 
-        public ActionResult MarketCenterGatewayTabs(int marketCenterId)
+        public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
 
             MarketCenter marketCenter = new MarketCenter(marketCenterId);
             Dictionary<string, string> tabs = new Dictionary<string, string>();
 
-            tabs = marketCenter.GetMarketCenterHtml();
+            tabs = marketCenter.GetMarketCenterHtml(type);
 
             //add tabs to list model with market center models inside
             MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
             foreach (var tab in tabs)
             {
                 MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
-                mctab.tabName = tab.Key;
-                mctab.html = tab.Value;
-                tabsContainer.MarketCenterTabsList.Add(mctab);
+                                
+                if (tab.Key == "HiddenHtml")
+                {
+                    tabsContainer.hiddenHtml = tab.Value;
+                }
+                else
+                {
+                    mctab.tabName = tab.Key;
+                    mctab.html = tab.Value;
+                    tabsContainer.MarketCenterTabsList.Add(mctab);
+                }
+                
             }
 
             return View("MarketCenterGatewayTabs", tabsContainer);

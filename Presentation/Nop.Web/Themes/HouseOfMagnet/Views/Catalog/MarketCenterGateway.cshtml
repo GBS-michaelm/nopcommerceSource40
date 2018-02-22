@@ -22,6 +22,10 @@
 
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-marketcenter-gateway.css", themeName));
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/jquery.fancybox-1.3.4.css", themeName));
+    
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/jquery.fancybox-1.3.4.pack.js");
+
 
 }
 @using Nop.Core.Domain.Common;
@@ -36,4 +40,11 @@
 }
 
 
+
+@*<script>
+    $(document).ready(function () {
+        //$(".fancybox").fancybox({ 'padding': 0 });  //{ 'padding': 0 }
+        $('.box-handle').fancybox({ 'padding': 0 });
+    });
+</script>*@
 

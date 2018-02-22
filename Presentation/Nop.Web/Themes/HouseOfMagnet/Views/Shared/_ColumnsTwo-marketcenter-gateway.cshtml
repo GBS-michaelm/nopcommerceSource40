@@ -8,6 +8,7 @@
 @using System.Text;
 @using Nop.Services.Catalog;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using System.Collections.Specialized;
 
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -41,6 +42,23 @@
 
 @{
     int id = @Model.Id;
+    string markcenterType = ""; ; //get query string from url
+}
+
+@{ 
+    NameValueCollection nvc = Request.QueryString;
+    if (nvc.HasKeys())
+    {
+        for (int i = 0; i < nvc.Count; i++)
+        {
+            string key = nvc.GetKey(i);
+
+            if (key == "mctype")
+            {
+                markcenterType = nvc.Get(i);
+            }
+        }
+    }
 }
 
 @{ 
@@ -140,7 +158,7 @@
             <div id="gatewayLayersContainer" >
                    
                 <div id="gatewayWYSIWYG" class="sports-wysiwyg">                                             
-                    @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id})
+                    @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id, type = markcenterType})
                 </div>
                 @* foreground image from db *@
                 @*<div id="sportImage">
