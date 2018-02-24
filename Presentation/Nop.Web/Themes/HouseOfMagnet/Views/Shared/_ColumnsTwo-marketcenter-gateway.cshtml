@@ -131,160 +131,43 @@
         </div>
 }
 
-    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">
-                
-        @* h1 from db *@
+    <div id="gatewayPageTitle" class="page-title panel-heading gateway-title">               
         <h1 id="gatewayH1" class="gateway-h1">@h1</h1>
-
         <div class="gateway-h2-wrap">
-            @* h2 from db *@
             <p class="gateway-h2"><span >@h2</span></p>
         </div>
-
     </div>
          
     <div>@*salewidgethere*@</div>
-    <div id="gateway-body" style="background-color : @backgroundColor;" class="bottommargin topmargin ">
-        <div id="gateway-body-inner" style="background-image: url(@backgroundImage)">
+    <div id="gateway-body" class="bgstretchouter" style="background-color : @backgroundColor; background-image: url(@backgroundImage);" >
+        <div id="gateway-body-inner" class="bgstretchinner">
            <input id="cssChange" type="hidden" value="" />
-           <input id="originalBodyHeight" type="hidden" value="" />
-           
-            @*<div id="gateway-inner">*@   
-            <div id="topInner">
-                <p id="gatewayTopText">
-                    @topText
-                </p>
-            </div> 
-            <div id="gatewayLayersContainer" >
-                   
-                <div id="gatewayWYSIWYG" class="sports-wysiwyg">                                             
-                    @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id, type = markcenterType})
-                </div>
-                @* foreground image from db *@
-                @*<div id="sportImage">
-                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
-                </div>*@
-                @**@
-                @* background images from db *@                       
-            </div>
-            <div id="bottomInner">
-                <p id="gatewayBottomText">
-                    @bottomText
-                </p>
-            </div>
-                
-            @*</div>*@
             
+            <p id="gatewayTopText">
+                @topText
+            </p>
+          
+            <div id="gateway-innner">
+                <div id="gatewayLayersContainer">
+                    <div id="gatewayWYSIWYG" class="sports-wysiwyg">
+                        @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id, type = markcenterType })
+                    </div>
+                    
+                    <img id="gatewayForegroundImage" class="" src="@foregroundImage" />
+                                   
+                </div>
+            </div>
+            <p id="gatewayBottomText">
+                @bottomText
+            </p>            
         </div>
     </div>
 
         <script>
             
             $(document).ready(function () {
-                            
-                //hide gateway show team box
-                //if ($("#hasTeam").val() == "true") {
-                //    $("#gatewayWYSIWYG").hide();
-                //    $("#teamSelect").show();
-                //    $("#label1").click();
-                //} else {
-                //    $("#teamSelect").remove();
-                //}
-
-                $(".team-from-list").click(function () {
-                    
-                    //console.log($(this).attr('id'));
-
-                    LoadTeamCategoryProducts($(this).attr('id'));
-                    
-                    $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
-
-                    
-                    //SetTeam($(this).text());
-
-                    //$("#gatewayWYSIWYG").show();
-                    $("#teamSelect").hide(3000, "linear");
-                    $("#selectTeamDiv").show();
-                    //$("#gatewayTopText").html(" ");
-
-
-                    //PageBodyResizeForMultipleProductRows("sports-wysiwyg");
-
-                })
-
-                $("#changeSelectedTeam").click(function () {
-                    $("#gatewayWYSIWYG").hide();
-                    $("#teamSelect").show();
-                    $("#selectTeamDiv").hide();
-                    //PageBodyResizeForMultipleProductRows("");
-                })
-
-                //$("#cssChange").click(function() {
-
-                //    //console.log("cur h1 test");
-
-                //    var type = $("#gatewayH1").html();
-
-                //    //console.log(type);
-
-                //    switch (type) {
-                //        case "Specialty Magnets":
-                //            $("#gatewayForegroundImage").addClass("gateway-foreground-specialty");
-                //            $("#gatewayWYSIWYG").addClass("regular-wysiwyg");
-                //            break;
-
-                            
-
-
-                //        default:
-                //            $("#gatewayForegroundImage").addClass("gateway-foreground-sports");
-                //            $("#gatewayWYSIWYG").addClass("sports-wysiwyg");
-                //            break;
-                //    }
-                //});
-
-                function LoadTeamCategoryProducts(id) {
-
-                    var link = "sportsgateway/GatewayCatalogProducts/sportsTeam/" + id;
-                    //console.log(id)
-
-                    $.ajax({
-                        type: "GET",
-                        url: link,             
-                        cache: false,
-                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                        dataType: "html",
-                        success: function (msg) {
-                            console.log("success");                          
-                            console.log(msg);
-                            console.log(msg.message);
-                            
-                            
-
-                            $("#gatewayWYSIWYG").html(msg);
-                            $("#gatewayWYSIWYG").show();
-                            //$("#gatewayTopText").html(msg.h1);
-
-
-                        },
-                        error: function (msg) {
-                            console.log("error");
-                            console.log(msg);
-                            console.log(msg.d);
-                        },
-                        complete: function (data) {
-
-                        },
-
-                    });
-                }
-
-
-               
-                var obj = jQuery.parseJSON('{ "outer": "#videoAndQuantityCalculatorWrap" , "inner": "#innerVidAndWQtyCalc" }');
-                CustomResize();
-                
-                obj = jQuery.parseJSON('{ "outer": "#gateway-body" , "inner": "#gateway-body-inner" }');
+ 
+                var obj = jQuery.parseJSON('{ "outer": ".bgstretchouter" , "inner": ".bgstretchinner" }');
                 CustomResize();
 
                 function CustomResize() {
@@ -309,84 +192,14 @@
                         })
 
                         $(obj.inner).width($(".container").width());
-                        //$(".gateway-foreground-sports-team").height($(obj.inner).height());
-
+                        
                     });
 
                     $(window).resize();
                 }
-
-                function PageBodyResizeForMultipleProductRows(currentWYSIWYG) {
-                    if (currentWYSIWYG != null && currentWYSIWYG != "") {
-                        //save original height incase team is changed
-                        $("#originalBodyHeight").val($("#gateway-body").height());
-                        //change body height for multiple row products
-                        var newHeight = parseInt($("." + currentWYSIWYG).height() + 180) + "px";
-                        $("#gateway-body").height(newHeight);
-                        $("#gateway-inner").height(newHeight);
-
-
-                        if ($("#gateway-body").height() > 900) {
-                            //football foreground image adjust, check if wysiwyg height is greater than a single rows height.
-                            //$("#gatewayForegroundImage").addClass("gateway-foreground-sports-multirow");
-                        }
-                        
-                    } else {
-                        $("#gateway-body").height($("#originalBodyHeight").val());
-                        $("#gateway-inner").height($("#originalBodyHeight").val());
-                        
-                        $("#gatewayForegroundImage").removeClass("gateway-foreground-sports-multirow");
-                    }
-                    
-                }
-
-                //function SetTeam(team) {                   
-                //    $(".team-handle").each(function () {
-                //        //replace space with dash
-                //        var current = $(this).attr("href");
-                //        var teamNoSpace = team.replace(/\s+/g, '-');
-
-                //        if(current.indexOf("?") >= 0){
-                //            var splitURL = current.split('?');
-                //            $(this).attr("href", splitURL[0] + "?team=" + teamNoSpace);
-                //            console.log("split ver: " + splitURL[0] + "?team=" + teamNoSpace);
-
-                //        }else{
-                //            $(this).attr("href", current + "?team=" + teamNoSpace);
-                //            console.log("new ver: " + current + "?team=" + teamNoSpace);
-                //        }
-                        
-                //    })                    
-                //}
-                
-                $("#gateway-inner").height($("#gateway-body").height());
-                
-                $("#cssChange").click();
-                
-                //remove topic header
-                $("#chartWrap div.panel-heading").remove();
-                
-                $("#videoAndQuantityCalculatorWrap div.panel-heading").remove();
-
-                function HeightHandle() {
-                    
-                    console.log("height handle called");
-
-                    var newHeight = parseInt($("#gatewayWYSIWYG").height() + 350) + "px";
-                    
-                    $("#gateway-body").height(newHeight);
-                    $("#gateway-inner").height(newHeight);
-                }
-
-                //$(window).resize(CustomResize(obj));
-                
-
-                //992px switches to mobileish screen
-
+               
             });
-
-
-
+                        
         </script>
 
 

@@ -1,0 +1,169 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.BusinessLogic.GBS.Models.MarketCenterGatewayTabsModel
+@using Nop.Plugin.BusinessLogic.GBS.Models;
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@using System.Text;
+@{
+
+    Layout = "";
+    int headerCount = 0;
+    int bodyCount = 0;
+    StringBuilder headerStringBuilder = new StringBuilder();
+
+}
+
+
+<div id="marketCenterOuter" class='pricing bottommargin clearfix'>
+
+    <div id="marketCenterInnerWrap">
+        <div id="marketCenterSelect">
+            <main>
+                @{
+                    foreach (MarketCenterGatewayTabModel headerTab in Model.MarketCenterTabsList)
+                    {
+
+                        if (headerCount == 0)
+                        {
+                            <input id='tab@(headerCount + 1)' type='radio' name='tabs' checked>
+                        }
+                        else
+                        {
+                            <input id='tab@(headerCount + 1)' type='radio' name='tabs'>
+                        }
+
+
+                        <label id='label@(headerCount + 1)' class='gateway-marketcenter-label' for='tab@(headerCount + 1)'> @headerTab.tabName </label>
+                        headerCount++;
+                    }
+                }
+                @* maybe a can't find your company tab *@
+                @{ 
+                    foreach (MarketCenterGatewayTabModel item in Model.MarketCenterTabsList)
+                    {
+                        @:<section id='content@(bodyCount + 1)'>                                   
+
+                                    @Html.Partial("MarketCenterGatewayTab", item)
+                
+                        @:</section>
+
+                        bodyCount++;
+                    }
+                }
+            </main>
+        </div>
+    </div>   
+    
+    <div id="mcHiddenWindows" style="display: none;">
+        @Html.Raw(Model.hiddenHtml)
+    </div>
+
+</div>
+
+
+<!-- .modal-profile -->
+<div class="modal fade modal-profile" tabindex="-1" role="dialog" aria-labelledby="modalProfile" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    @*<h3 class="modal-title"></h3>*@
+                </div>
+            <div class="modal-body">
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>*@
+        </div>
+
+    </div>
+</div>
+<!-- //.modal-profile -->
+
+<script>
+
+    $(document).ready(function () {
+    
+        $('.modal ').insertAfter($('body'));
+
+
+        $('.box-handle').click(function (event) {
+            event.preventDefault();
+            var content = $('.modal-body');
+            content.empty();
+            //var title = $(this).attr("title");
+            //$('.modal-title').html(title);
+
+            var contentHtml = $(this).attr('href');
+
+            console.log($(contentHtml));
+            console.log(contentHtml);
+
+            //console.log($(contentHtml).val());
+
+            content.html($(contentHtml).html());
+            $(".modal-profile").modal({ show: true });
+        });
+
+        $(".txt-office-filter").each(function (indx, elem) {
+
+            console.log("Searching");
+
+            var txtId = elem.id;
+            var lstId = txtId.replace("txt-office-filter-", "ul-office-list-");
+
+            $("#" + lstId).searchIt({
+                itemSelector: 'li',
+                $searchInput: $('#' + txtId),
+            });
+        });
+
+        
+        //var obj = jQuery.parseJSON('{ "outer": "#accessoryOuter" , "inner": "#accessoryInnerWrap" }');
+        //CustomResize();
+
+        //function CustomResize() {
+        //    $(window).resize(obj, function () {
+
+        //        var $c = $('.container'),
+        //            $w = $(obj.outer),
+        //            totalWidth = $('.footer').outerWidth(),
+        //            wellWidth = $c.outerWidth(),
+        //            diff = totalWidth - wellWidth,
+        //            marg = -Math.floor(diff / 2) + 'px';
+
+        //        console.log("footer width: " + $('.footer').outerWidth());
+        //        console.log("container width: " + $c.outerWidth());
+        //        console.log("");
+
+        //        $w.each(function () {
+        //            $(this).css({
+        //                'margin-left': marg,
+        //                'margin-right': marg
+        //            });
+        //        })
+
+        //        $(obj.inner).width($(".container").width());
+
+        //    });
+
+        //    $(window).resize();
+        //}
+
+
+    });
+
+
+    
+
+       
+
+  
+
+
+</script>
+
+

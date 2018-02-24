@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Nop.Plugin.BusinessDataAccess.GBS;
 using System.Data;
@@ -245,7 +246,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //check if using regular market center
             
             TopLevelMarketCenterIds = categoryService.GetAllCategoriesByParentCategoryId(this.id);
-            
+
+            IList<Category> TopLevelMarketCenterIdsInOrder = TopLevelMarketCenterIds.OrderBy(c => c.Name).ToList();
+
             //}else
             //{
             //    DataView marketCenterTypeCategoryIdsDataView = cacheManager.Get("marketCenterTypeCategoryIdsCompany" + type, 60, () => {
@@ -257,7 +260,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //        return innerMarketCenterTypeCategoryIdsDataView;
             //    });
-                
+
             //    if (marketCenterTypeCategoryIdsDataView.Count > 0)
             //    {
             //        for (int i = 0; i < marketCenterTypeCategoryIdsDataView.Count; i++)
@@ -269,38 +272,44 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //    {
             //        marketCenterCategoryIds = categoryService.GetAllCategoriesByParentCategoryId(this.id); //if query string not empty but no data is found, load default market center data
             //    }
-                
+
             //}
-            
+
             //option 2 db query then construct market centers from data, rest should be the same.
 
-            int x = 0;
-            int y = 0;
-            int z = 0;
+            //int x = 0;
+            //int y = 0;
+            //int z = 0;
             
-            for(int i = 0; i < 20; i++)
-            //foreach (var marketcenterCategory in marketCenterCategoryIds)
+            //for(int i = 0; i < 200; i++)
+            foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
             {
 
                 MarketCenter marketcenter = null;
 
                 //TESTING !!!!!!!!!--------------------------------------------------------
-                Random r = new Random();
-                int v = r.Next(0, 2500); // to get random pool of market centers
+                //Random r = new Random();
+                //int v = r.Next(0, 2500); // to get random pool of market centers
 
                 
 
                 if (!string.IsNullOrEmpty(type))
                 {
-                    marketcenter = new MarketCenter(TopLevelMarketCenterIds[v].Id, getChildren: true, customType: type);
-                }else
+                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true, customType: type);
+                    marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
+                }
+                else
                 {
-                    if (i == 0)
-                    {
-                        marketcenter = new MarketCenter(1618, getChildren: true);
-                    }else {
-                        marketcenter = new MarketCenter(TopLevelMarketCenterIds[v].Id, getChildren: true);
-                    }                   
+                    //TESTING FOR FEATURED
+                    //if (i == 0)
+                    //{
+                    //    marketcenter = new MarketCenter(1618, getChildren: true);
+                    //}else {
+                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
+                    marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
+                    //}                   
+                    //FORCE FEATURED
+
                 }
                 //TESTING!!!!!! ------------------------------------------------------------
 
@@ -310,34 +319,34 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 char firstLetter = marketcenter.Name.ToUpper()[0];
 
                 //create featured company list
-                if (marketcenter.isTopCompany && featuredMarketCenterList.Count <= 5)
+                if (marketcenter.isTopCompany) // && featuredMarketCenterList.Count <= 25
                 {
                     featuredMarketCenterList.Add(marketcenter);
                 }
 
                 //seperate market centers into alpha lists a-g h-p q-z
-                if (firstLetter >= '0' && firstLetter <= '9' && alphaList1.Count <= 1) //
+                if (firstLetter >= '0' && firstLetter <= '9') //&& alphaList1.Count <= 100
                 {
-                    alphaList1.Add(marketcenter); x++;
+                    alphaList1.Add(marketcenter); //x++;
                 }
-                else if (firstLetter >= 'A' && firstLetter <= 'G' && alphaList1.Count <= 1) //
+                else if (firstLetter >= 'A' && firstLetter <= 'G') //&& alphaList1.Count <= 100
                 {
-                    alphaList1.Add(marketcenter); x++;
+                    alphaList1.Add(marketcenter); //x++;
                 }
-                else if (firstLetter >= 'H' && firstLetter <= 'P' && alphaList2.Count <= 1) //
+                else if (firstLetter >= 'H' && firstLetter <= 'P') // && alphaList2.Count <= 25
                 {
-                    alphaList2.Add(marketcenter); y++;
+                    alphaList2.Add(marketcenter); //y++;
                 }
-                else if (firstLetter >= 'Q' && firstLetter <= 'Z' && alphaList3.Count <= 1) //
+                else if (firstLetter >= 'Q' && firstLetter <= 'Z') // && alphaList3.Count <= 25
                 {
-                    alphaList3.Add(marketcenter); z++;
+                    alphaList3.Add(marketcenter); //z++;
                 }
                 
                 //TESTING SECTION --------------------limit number of market centers to load page faster
-                if(featuredMarketCenterList.Count > 5 && alphaList1.Count > 1 && alphaList2.Count > 1 && alphaList3.Count > 1)
-                {
-                    break;
-                }
+                //if(featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
+                //{
+                //    break;
+                //}
                 //TESTING --------------------------------------------------------------------------
                           
             }
@@ -351,12 +360,14 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1) : "";
             string alpha2 = alphaList2.Count > 0 ? BuildTabHtml(alphaList2) : "";
             string alpha3 = alphaList3.Count > 0 ? BuildTabHtml(alphaList3) : "";
+            string cantFindHtml = BuildCantFindHtml();
 
             //add featured and alphas to dictionary
             marketCenterTabsDict.Add("Featured Companies", isfeatured);
             marketCenterTabsDict.Add("Companies A - G", alpha1);
             marketCenterTabsDict.Add("Companies H - P", alpha2);
             marketCenterTabsDict.Add("Companies Q - Z", alpha3);
+            marketCenterTabsDict.Add("Can't Find Your Company?", cantFindHtml);
             marketCenterTabsDict.Add("HiddenHtml", childLinksHtml);
 
             return marketCenterTabsDict;
@@ -386,6 +397,13 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             foreach (var marketCenter in marketcenterList)
             {
 
+                if (numLines == (marketcenterList.Count / 2 + 1))
+                {
+                    tabHtmlStringBuilder.Append("</ul>");
+                    tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
+                    numLines = 0;
+                }
+
                 char firstChar = marketCenter.Name.ToUpper()[0];
 
                 if (firstChar >= 'A' && firstChar != lastChar)
@@ -399,13 +417,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 tabHtmlStringBuilder.Append(BuildInnerTabLink(marketCenter));
                 numLines++;
 
-                if (numLines >= 30)
-                {
-                    tabHtmlStringBuilder.Append("</ul>");
-                    tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
-                    numLines = 0;
-                }
-                
+                            
+
             }
             
             tabHtmlStringBuilder.Append("</ul>");
@@ -497,7 +510,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     //childCompanyStringBuilder.Append("<div id='window-offices-" + marketcenter.id + "' class='dv-choose-office modal-content' >");
                     //childCompanyStringBuilder.Append("<div id='window-offices-" + marketcenter.id + "' class='dv-choose-office modal' >");
                     childCompanyStringBuilder.Append("        <h3>Choose an Office</h3>");
-                    childCompanyStringBuilder.Append("        <div><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' /></div>");
+                    childCompanyStringBuilder.Append("        <div class='search-filter-wrap'><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' /></div>");
                     childCompanyStringBuilder.Append("        <div class='dv-office-list' ><ul id='ul-office-list-" + marketcenter.id + "' class='ul-office-list' >");
                     childCompanyStringBuilder.Append("            <li><a href='" + marketcenter.SeName + "' >" + marketcenter.Name + "</a></li>");
                     foreach (var childCompany in marketcenter.childCompanies)
@@ -507,9 +520,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     childCompanyStringBuilder.Append("        </div></ul>");
                     childCompanyStringBuilder.Append("        <div class='dv-cant-find-office' >");
                     childCompanyStringBuilder.Append("            <h3>Can't find your office?</h3>");
-                    childCompanyStringBuilder.Append("            <p>Every office can use <a href='" + marketcenter.SeName + "'>these branded templates</a> or ");
-                    //childCompanyStringBuilder.Append("<a href='/marketcenter/market-center-request.aspx' >request templates</a> for your office.</p>"); //not sure about this now
-                    childCompanyStringBuilder.Append("            .</p>");
+                    childCompanyStringBuilder.Append("            <p>Every office can use <a href='' class='branded-link'>these branded templates</a> or ");
+                    childCompanyStringBuilder.Append("            <a href='/marketcenter/market-center-request.aspx' class='request-link' >request templates</a> for your office.</p>"); //not sure about this now
                     childCompanyStringBuilder.Append("        </div>");
                     childCompanyStringBuilder.Append("    </div>");
 
@@ -520,6 +532,20 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             childCompanyHtml = childCompanyStringBuilder.ToString();
             return childCompanyHtml;
         }
+
+
+        private string BuildCantFindHtml()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<div id='cantFindTab'>");
+            sb.Append("    <p>Ready to make the personalizing, proofing, and purchasing of essential marketing tools for your office a whole lot easier?</p>");
+            sb.Append("    <p>If your office has more than 50 agents / employees and a commitment from leadership to co-market the solution, you qualify for your own custom Market Center.</p>");
+            sb.Append("    <a id='btn-request-mc' href='' >Request a Market Center</a>");
+            sb.Append("</div>");
+
+            return sb.ToString();
+        }
+
 
     }
     
