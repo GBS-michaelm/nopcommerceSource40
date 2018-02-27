@@ -280,16 +280,16 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //int x = 0;
             //int y = 0;
             //int z = 0;
-            
-            //for(int i = 0; i < 200; i++)
+
+            //for (int i = 0; i < 20; i++)
             foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
             {
 
                 MarketCenter marketcenter = null;
 
                 //TESTING !!!!!!!!!--------------------------------------------------------
-                //Random r = new Random();
-                //int v = r.Next(0, 2500); // to get random pool of market centers
+                Random r = new Random();
+                int v = r.Next(0, 2500); // to get random pool of market centers
 
                 
 
@@ -304,8 +304,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     //if (i == 0)
                     //{
                     //    marketcenter = new MarketCenter(1618, getChildren: true);
-                    //}else {
-                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
+                    //}else if( i == 2)
+                    //{
+                    //    marketcenter = new MarketCenter(1461, getChildren: true);
+                    //}
+                    //else {
+                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true);
                     marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
                     //}                   
                     //FORCE FEATURED
@@ -341,14 +345,14 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
                     alphaList3.Add(marketcenter); //z++;
                 }
-                
+
                 //TESTING SECTION --------------------limit number of market centers to load page faster
-                //if(featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
-                //{
-                //    break;
-                //}
+                if (featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
+                {
+                    break;
+                }
                 //TESTING --------------------------------------------------------------------------
-                          
+
             }
 
             //call build for featured list
@@ -510,7 +514,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     //childCompanyStringBuilder.Append("<div id='window-offices-" + marketcenter.id + "' class='dv-choose-office modal-content' >");
                     //childCompanyStringBuilder.Append("<div id='window-offices-" + marketcenter.id + "' class='dv-choose-office modal' >");
                     childCompanyStringBuilder.Append("        <h3>Choose an Office</h3>");
-                    childCompanyStringBuilder.Append("        <div class='search-filter-wrap'><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' /></div>");
+                    childCompanyStringBuilder.Append("        <div class='search-filter-wrap'><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' onkeyup='SearchCall(this)' /></div>");
                     childCompanyStringBuilder.Append("        <div class='dv-office-list' ><ul id='ul-office-list-" + marketcenter.id + "' class='ul-office-list' >");
                     childCompanyStringBuilder.Append("            <li><a href='" + marketcenter.SeName + "' >" + marketcenter.Name + "</a></li>");
                     foreach (var childCompany in marketcenter.childCompanies)

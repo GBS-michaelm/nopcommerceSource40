@@ -89,8 +89,32 @@
     
         $('.modal ').insertAfter($('body'));
 
+        $('.modal-body .txt-office-filter').bind('input', function (indx, elem) {
+
+            console.log("Searching");
+
+            //SearchCall(indx, elem);
+
+            var txtId = elem.id;
+            var lstId = txtId.replace("txt-office-filter-", "ul-office-list-");
+
+
+            console.log("id: " + txtId);
+            console.log("lastid : " + lstId);
+
+            $("#" + lstId).searchIt({
+                itemSelector: 'li',
+                $searchInput: $('#' + txtId),
+            });
+        });
+
+
+        $("#txt-office-filter-1618").bind('input', function () {
+            console.log("Searching 2");
+        });
 
         $('.box-handle').click(function (event) {
+            console.log("box handle!");
             event.preventDefault();
             var content = $('.modal-body');
             content.empty();
@@ -108,19 +132,7 @@
             $(".modal-profile").modal({ show: true });
         });
 
-        $(".txt-office-filter").each(function (indx, elem) {
-
-            console.log("Searching");
-
-            var txtId = elem.id;
-            var lstId = txtId.replace("txt-office-filter-", "ul-office-list-");
-
-            $("#" + lstId).searchIt({
-                itemSelector: 'li',
-                $searchInput: $('#' + txtId),
-            });
-        });
-
+        
         
         //var obj = jQuery.parseJSON('{ "outer": "#accessoryOuter" , "inner": "#accessoryInnerWrap" }');
         //CustomResize();
@@ -155,13 +167,38 @@
 
 
     });
-
-
     
+    $("#txt-office-filter-1618").bind('input', function () {
+        alert("Change detected!");
+    });
+    
+    function SearchCall(elem) {
+        console.log("Searching");
 
-       
+        var txtId = $(elem).attr('id');
+        var lstId = txtId.replace("txt-office-filter-", "ul-office-list-");
 
-  
+
+        console.log("id: " + txtId);
+        console.log("lastid : " + lstId);       
+        console.log("input attr val : " + $(elem).attr('value'));       
+
+        var filterList = $(elem).closest('.search-filter-wrap').siblings('.dv-office-list').find('.ul-office-list').attr('id');
+
+        console.log("filter list id: " + filterList);
+
+        $($(elem).closest('.search-filter-wrap').siblings('.dv-office-list').find('.ul-office-list')).searchIt({
+            itemSelector: 'li',
+            //$searchInput: $('#' + txtId),
+            //$searchInput: $(elem).attr('value'), //breaks
+            $searchInput: $(elem), //works but fails on spaces
+            //inputLabelValue: $(elem), //does weird things
+            //inputLabelValue: $(elem).attr('value'), // even weirder
+        });
+        
+    }
+
+
 
 
 </script>

@@ -1730,7 +1730,6 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\bootstrap.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
-    <Content Include="Themes\HouseOfMagnet\Content\js\search-it.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\iframe-custom-submit.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1740,6 +1739,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\js\owl.carousel.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\plugins.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\respond.min.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\search-it.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\selectivizr-min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\simplex.js" />
     <Content Include="Themes\HouseOfMagnet\hom_product-page.jpg" />
