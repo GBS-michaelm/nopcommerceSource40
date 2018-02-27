@@ -29,7 +29,6 @@ Products.SpecificationAttributes
 Nop.Plugin.Api
 Nop.Plugin.Shipping.GBS
 Products.SpecificationAttributes
-BreadCrumb.GBS
 BusinessLogic.GBS
 Order.GBS
 Checkout.GBS

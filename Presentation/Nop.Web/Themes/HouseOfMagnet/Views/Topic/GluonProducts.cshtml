@@ -81,6 +81,7 @@
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
     <input type="hidden" id="hdn-customer-email" value="@customerEmail" />
     <input type="hidden" id="hdn-authenticated" value="@isAuthenticated.ToString()" />
+    <input type="hidden" id="hdn-authentice-type" value="" />
     <div class="gluon-template" style="overflow:hidden; height:1200px">
         <iframe id="gluon-iframe" src="@T("hom.url")@page&id=@cartItemID" style="height:1200px; width:100%;"></iframe>
     </div>
@@ -100,6 +101,7 @@
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
+            $("#hdn-authentice-type").val("UPO");
             if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
@@ -110,6 +112,7 @@
             }
         }
         else if (e.data == "VALIDATEBCT") {
+            $("#hdn-authentice-type").val("BCT");
             if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
@@ -165,8 +168,8 @@
 
             }
 
-                previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
-            
+            previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
+
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
@@ -179,11 +182,11 @@
 </script>
 
 @*<script type="text/javascript">
-    $(document).ready(function () {
-        if($("#hdn-iframe-data").val() != "")
-        {
-            $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
-        }
-    });
-</script>*@
+        $(document).ready(function () {
+            if($("#hdn-iframe-data").val() != "")
+            {
+                $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
+            }
+        });
+    </script>*@
 

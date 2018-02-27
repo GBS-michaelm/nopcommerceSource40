@@ -54,7 +54,7 @@
     @if (rootCategories.Count == 0 && Model.Topics.Count == 0)
     {
         //no categories or topis to display? in this case let's diplay some default menu items (should we?)
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+
         if (Model.NewProductsEnabled)
         {
             <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
