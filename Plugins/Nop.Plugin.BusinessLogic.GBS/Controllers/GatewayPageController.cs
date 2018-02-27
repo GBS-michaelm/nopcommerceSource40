@@ -86,7 +86,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
-
+                        
             MarketCenter marketCenter = new MarketCenter(marketCenterId);
             Dictionary<string, string> tabs = new Dictionary<string, string>();
 

@@ -277,12 +277,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //option 2 db query then construct market centers from data, rest should be the same.
 
-            //int x = 0;
-            //int y = 0;
-            //int z = 0;
+            int x = 0;
+            int y = 0;
+            int z = 0;
 
-            //for (int i = 0; i < 20; i++)
-            foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
+            for (int i = 0; i < 20; i++)
+            //foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
             {
 
                 MarketCenter marketcenter = null;
@@ -295,23 +295,25 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
                 if (!string.IsNullOrEmpty(type))
                 {
-                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true, customType: type);
-                    marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
+                    marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true, customType: type);
+                    //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
                 }
                 else
                 {
                     //TESTING FOR FEATURED
-                    //if (i == 0)
-                    //{
-                    //    marketcenter = new MarketCenter(1618, getChildren: true);
-                    //}else if( i == 2)
-                    //{
-                    //    marketcenter = new MarketCenter(1461, getChildren: true);
-                    //}
-                    //else {
-                    //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true);
-                    marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
-                    //}                   
+                    if (i == 0)
+                    {
+                        marketcenter = new MarketCenter(1618, getChildren: true);
+                    }
+                    else if (i == 2)
+                    {
+                        marketcenter = new MarketCenter(1461, getChildren: true);
+                    }
+                    else
+                    {
+                        marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true);
+                        //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
+                    }                   
                     //FORCE FEATURED
 
                 }
@@ -329,21 +331,21 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
 
                 //seperate market centers into alpha lists a-g h-p q-z
-                if (firstLetter >= '0' && firstLetter <= '9') //&& alphaList1.Count <= 100
+                if (firstLetter >= '0' && firstLetter <= '9' && alphaList1.Count <= 100) //
                 {
-                    alphaList1.Add(marketcenter); //x++;
+                    alphaList1.Add(marketcenter); x++;
                 }
-                else if (firstLetter >= 'A' && firstLetter <= 'G') //&& alphaList1.Count <= 100
+                else if (firstLetter >= 'A' && firstLetter <= 'G' && alphaList1.Count <= 100) //
                 {
-                    alphaList1.Add(marketcenter); //x++;
+                    alphaList1.Add(marketcenter); x++;
                 }
-                else if (firstLetter >= 'H' && firstLetter <= 'P') // && alphaList2.Count <= 25
+                else if (firstLetter >= 'H' && firstLetter <= 'P' && alphaList2.Count <= 25) // 
                 {
-                    alphaList2.Add(marketcenter); //y++;
+                    alphaList2.Add(marketcenter); y++;
                 }
-                else if (firstLetter >= 'Q' && firstLetter <= 'Z') // && alphaList3.Count <= 25
+                else if (firstLetter >= 'Q' && firstLetter <= 'Z' && alphaList3.Count <= 25) // 
                 {
-                    alphaList3.Add(marketcenter); //z++;
+                    alphaList3.Add(marketcenter); z++;
                 }
 
                 //TESTING SECTION --------------------limit number of market centers to load page faster
