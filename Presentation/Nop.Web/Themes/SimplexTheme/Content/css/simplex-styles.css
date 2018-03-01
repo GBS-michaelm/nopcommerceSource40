@@ -4589,7 +4589,7 @@ a.eu-cookie-privacyinfo-tag {
 }
 
 #cart-page .modal-backdrop {
-    z-index: 9999;
+    z-index: 1000;
 }
 
 .wishlist-page .update-email-button {

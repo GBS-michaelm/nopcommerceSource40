@@ -152,7 +152,7 @@
                     switch (data.message.toLowerCase())
                     {
                         case "success":
-                            SendEmailAfterVerification($("#Email").val());
+                            SendEmailAfterVerification($("#Email").val(), $("#hdn-authentice-type").val());
                             $("#loginModal").modal("toggle");
                             $("#hdn-authenticated").val("True");
                             $("#hdn-customer-email").val($("#Email").val());

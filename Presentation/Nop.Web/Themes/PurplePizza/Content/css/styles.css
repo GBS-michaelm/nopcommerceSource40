@@ -63,7 +63,7 @@ body {
     max-width: 100%;
 	overflow-x: hidden;
 	background-color: #fff;
-	font: normal 14px Arial, Helvetica, sans-serif;
+	font: normal 14px "Lato", Arial, Helvetica, sans-serif;
     color: #777;
 }
 h1,h2,h3,h4,h5,h6 {
@@ -211,7 +211,7 @@ label, label + * {
 .post-body p,
 .news-body p {
 	margin: 10px 0;
-	text-align: justify;
+	text-align: left;
 }
 .flyout-cart {
 	display: none;
@@ -807,7 +807,7 @@ label, label + * {
 	line-height: 0; /*firefox line-height bug fix*/
 }
 .header-logo a img {
-	max-width: 100%;
+	max-width: 90%;
 	opacity: 1;
 }
 
@@ -2662,6 +2662,7 @@ label, label + * {
 .topic-block-title h2 {
 	font-size: 30px;
 	font-weight: normal;
+    font-family: "Lato", arial;
 }
 .topic-block-body {
 	text-align: justify;
@@ -6989,6 +6990,10 @@ pre {
     .theme-custom .nivo-controlNav a {
         background-color: #999 !important;
     }
+	.home-hero img {
+    width: 100%;
+    margin-bottom: 30px;
+}
 
 @media (min-width: 1001px) {
     .theme-custom {
