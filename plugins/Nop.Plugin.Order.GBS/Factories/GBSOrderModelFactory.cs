@@ -65,7 +65,7 @@ namespace Nop.Plugin.Order.GBS.Factories
         private readonly IPluginFinder _pluginFinder;
         private readonly GBSOrderSettings _gbsOrderSettings;
         private readonly ILogger _logger;
-        
+
         public GBSOrderModelFactory(IAddressModelFactory addressModelFactory,
             IOrderService orderService,
             IWorkContext workContext,
@@ -172,8 +172,9 @@ namespace Nop.Plugin.Order.GBS.Factories
 
             var model = new CustomerOrderListModel();
             var orders = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageIndex: --page ?? 0, pageSize: 5, osIds: statusList);
+                customerId: _workContext.CurrentCustomer.Id, osIds: statusList); //pageIndex: --page ?? 0, pageSize: 5,
 
+            List<CustomerOrderListModel.OrderDetailsModel> allOrders = new List<CustomerOrderListModel.OrderDetailsModel>();
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
@@ -190,8 +191,30 @@ namespace Nop.Plugin.Order.GBS.Factories
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                 orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
-                model.Orders.Add(orderModel);
+                allOrders.Add(orderModel);
             }
+
+            List<CustomerOrderListModel.OrderDetailsModel> legacyOrders = null;
+            var miscPlugins = _pluginFinder.GetPlugins<MyOrderServicePlugin>(storeId: EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id).ToList();
+            if (miscPlugins.Count > 0 && _gbsOrderSettings.LegacyOrdersInOrderHistory)
+            {
+                legacyOrders = new Orders.OrderExtensions().getLegacyOrders();
+                if (!string.IsNullOrEmpty(status))
+                {
+                    legacyOrders = legacyOrders.Where(x => statusList.Contains((int)x.OrderStatusEnum)).ToList();
+                }
+
+                if (legacyOrders != null && legacyOrders.Count() > 0)
+                {
+                    allOrders.AddRange(legacyOrders);
+                }
+                allOrders.Sort((x, y) => y.CreatedOn.CompareTo(x.CreatedOn));
+            }
+
+            var ordersPaging = new PagedList<CustomerOrderListModel.OrderDetailsModel>(allOrders, pageIndex: --page ?? 0, pageSize: 5);
+            model.Orders = ordersPaging.ToList();
+
+            // do paging on orders
 
             var recurringPayments = _orderService.SearchRecurringPayments(_storeContext.CurrentStore.Id,
                 _workContext.CurrentCustomer.Id);
@@ -216,9 +239,9 @@ namespace Nop.Plugin.Order.GBS.Factories
 
             model.CustomProperties["PagerModel"] = new PagerModel
             {
-                PageSize = orders.PageSize,
-                TotalRecords = orders.TotalCount,
-                PageIndex = orders.PageIndex,
+                PageSize = ordersPaging.PageSize,
+                TotalRecords = ordersPaging.TotalCount,
+                PageIndex = ordersPaging.PageIndex,
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerOrders",
                 UseRouteLinks = true,
