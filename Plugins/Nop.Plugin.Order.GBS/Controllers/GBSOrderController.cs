@@ -44,12 +44,12 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly HttpContextBase _httpContext;
         private readonly IOrderService _orderService;
-        private readonly IOrderModelFactory _orderModelFactory;
+        private readonly Factories.IOrderModelFactory _orderModelFactory;
         private readonly GBSOrderService _gbsOrderService;
 
 
         public GBSOrderController(
-            IOrderModelFactory orderModelFactory,
+            Factories.IOrderModelFactory orderModelFactory,
             IOrderService orderService,
             ICcService ccService,
             CcSettings ccSettings,

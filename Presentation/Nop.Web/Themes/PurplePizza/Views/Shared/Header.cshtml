@@ -24,6 +24,15 @@
             
             @Html.Widget("header_selectors")
         </div>
+		
+		<style type="text/css">
+
+	.header-menu::before {
+    background-color: #9d0b21 !important;
+	}
+	</style>
+	
+	
         <div class="header-links-wrapper">
             @Html.Action("HeaderLinks", "Common")
             @Html.Action("FlyoutShoppingCart", "ShoppingCart")

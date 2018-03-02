@@ -1085,6 +1085,15 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         [ValidateInput(false)]
         public ActionResult NameBadgeIframeAddToCart(FormCollection form)
         {
+            //[EnableCors(origins: "*", headers: "*", methods: "*")]
+            IList<string> warnings = new List<string>();
+            string attributesXml = "";
+
+            try
+            {
+
+            
+
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
             IProductAttributeParser productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
@@ -1099,8 +1108,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             int frameOptionValueId = 0;
             int frameQty = 0;
             //string attributesXml = "";
-                                   
-            string redirect = "";
+            
+
+                string redirect = "";
             string productIdForAccessoryCheck = "";
             
             foreach (var productIdIFrame in idsArray)
@@ -1111,7 +1121,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 string customerName = "";
                 string customerTitle = "";
                 string companyName = "";
-                string attributesXml = "";
+                attributesXml = "";
                 string backStyle = "";
                 ProductAttributeMapping frameStyleMappy = null;
 
@@ -1246,8 +1256,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                         //each mix frame name badge needs xml with empty frame style attr, else they append to same cart item
                                         mixNameBadgeAttributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueIdMix.ToString());
 
-                                        //add to cart
-                                        _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, mixNameBadgeAttributesXml, quantity: frameQty);
+                                            //add to cart
+                                            warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, mixNameBadgeAttributesXml, quantity: frameQty);
                                                                                 
                                     }
                                 }
@@ -1275,7 +1285,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 attributesXml = productAttributeParser.AddProductAttribute(attributesXml, frameStyleMappy, frameOptionValueId.ToString());
 
                                 //add to cart
-                                _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
+                                warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: frameQty);
                                                                 
                             }
 
@@ -1311,6 +1321,28 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             {
                 redirect = redirect,
             });
+
+            }
+            catch(Exception ex)
+            {
+                
+                _logger.Error("Add Name Badge To Cart Iframe = attr xml = " + attributesXml + ", warnings = " + JsonConvert.SerializeObject(warnings), ex);
+                //string productURL = Url.RouteUrl("Product", new { SeName = orderItem.Product.GetSeName() });
+                //if (string.IsNullOrEmpty(productURL))
+                //{
+                //    return RedirectToRoute("ShoppingCart");
+                //}
+                //else
+                //{
+                //    return Redirect(productURL);
+
+                //}
+
+                throw ex;
+
+            }
+
+
         }
         
         private string GetFrameStyleValue(string frameId)

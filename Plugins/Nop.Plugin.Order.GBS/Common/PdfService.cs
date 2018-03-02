@@ -23,7 +23,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Services.Common;
