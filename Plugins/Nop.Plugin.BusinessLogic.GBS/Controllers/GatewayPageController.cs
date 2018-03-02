@@ -83,7 +83,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
-
+        //[OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
                         

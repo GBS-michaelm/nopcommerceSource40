@@ -86,10 +86,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
                     DataView marketCenterSeView = cacheManager.Get("marketCenterSeLink" + marketCenterCategoryId, 60, () => {
                         Dictionary<string, Object> marketCenterSeDic = new Dictionary<string, Object>();
-                        marketCenterSeDic.Add("@CategoryId", categoriesList[x]);
-                        marketCenterSeDic.Add("@SpecificationAttributeOptionId", specAttributeValueOption);
+                        //int catListId = categoriesList[x].Id;
 
-                        string marketCenterSeDataQuery = "EXEC usp_SelectGBSMarketCenterCustomTypeCategoryId @categoryId";
+                        marketCenterSeDic.Add("@CategoryId", categoriesList[x].Id);
+                        marketCenterSeDic.Add("@SpecificationAttributeOptionId", specAttributeValueOption);
+                        
+                        string marketCenterSeDataQuery = "EXEC usp_SelectGBSMarketCenterCustomTypeCategoryId @CategoryId, @SpecificationAttributeOptionId";
                         DataView innerMarketCenterSeDataView = manager.GetParameterizedDataView(marketCenterSeDataQuery, marketCenterSeDic);
 
                         return innerMarketCenterSeDataView;
@@ -107,7 +109,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
 
                     //check child count to see if is top office
-                    int childMarketCenterCount = GetChildCategories(marketCenterCategoryId, true);
+                    int childMarketCenterCount = GetChildCategories(marketCenterCategoryId, customType, true);
 
                     if(childMarketCenterCount > 0)
                     {
@@ -175,15 +177,22 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.backgroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundPicturePath"].ToString()) ? marketCenterDataView[0]["BackgroundPicturePath"].ToString() : _backgroundImage;
                 this.foregroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["ForegroundPicturePath"].ToString()) ? marketCenterDataView[0]["ForegroundPicturePath"].ToString() : _foregroundImage;
                 this.backgroundColor = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundColor"].ToString()) ? marketCenterDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
-                this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
+                if (!string.IsNullOrEmpty(marketCenterDataView[0]["LogoPicturePath"].ToString()))
+                {
+                    this.mainPicturePath = marketCenterDataView[0]["LogoPicturePath"].ToString();
+                }
+                else
+                {
+                    this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
+                }               
                 this.isTopCompany = !string.IsNullOrEmpty(marketCenterDataView[0]["IsFeatured"].ToString()) ? Convert.ToBoolean(marketCenterDataView[0]["IsFeatured"]) : isTopCompany = _isTopCompany;
             }
                         
             #region child companies
-            if (getChildren)
-            {
-                GetChildCategories(marketCenterCategoryId);
-            }            
+            //if (getChildren)
+            //{
+            //    GetChildCategories(marketCenterCategoryId, customType);
+            //}            
             #endregion
             
         }
@@ -203,7 +212,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public bool isTopCompany { get { return _isTopCompany; } set { _isTopCompany = value; } }
 
 
-        private int GetChildCategories(int marketCenterCategoryId, bool countOnly = false)
+        private int GetChildCategories(int marketCenterCategoryId, string type, bool countOnly = false)
         {
             //child companies handling
             DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
@@ -222,7 +231,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
                     for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
                     {
-                        MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()));
+                        MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()), customType: type);
                         this.childCompanies.Add(marketCenter);
                     }
                 }
@@ -277,43 +286,56 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //option 2 db query then construct market centers from data, rest should be the same.
 
-            int x = 0;
-            int y = 0;
-            int z = 0;
+            //int x = 0;
+            //int y = 0;
+            //int z = 0;
 
-            for (int i = 0; i < 20; i++)
-            //foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
+            //for (int i = 0; i < 20; i++)
+            foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
             {
 
                 MarketCenter marketcenter = null;
 
                 //TESTING !!!!!!!!!--------------------------------------------------------
-                Random r = new Random();
-                int v = r.Next(0, 2500); // to get random pool of market centers
+                //Random r = new Random();
+                //int v = r.Next(0, 2500); // to get random pool of market centers
 
                 
 
                 if (!string.IsNullOrEmpty(type))
                 {
-                    marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true, customType: type);
-                    //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
+                    //TESTING FOR FEATURED
+                    //if (i == 0)
+                    //{
+                    //    marketcenter = new MarketCenter(1618, getChildren: true, customType: type);
+                    //}
+                    //else if (i == 2)
+                    //{
+                    //    marketcenter = new MarketCenter(1461, getChildren: true, customType: type);
+                    //}
+                    //else
+                    //{
+                        //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true, customType: type);
+                        marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
+                    //}
+                    //FORCE FEATURED
                 }
                 else
                 {
                     //TESTING FOR FEATURED
-                    if (i == 0)
-                    {
-                        marketcenter = new MarketCenter(1618, getChildren: true);
-                    }
-                    else if (i == 2)
-                    {
-                        marketcenter = new MarketCenter(1461, getChildren: true);
-                    }
-                    else
-                    {
-                        marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true);
-                        //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
-                    }                   
+                    //if (i == 0)
+                    //{
+                    //    marketcenter = new MarketCenter(1618, getChildren: true);
+                    //}
+                    //else if (i == 2)
+                    //{
+                    //    marketcenter = new MarketCenter(1461, getChildren: true);
+                    //}
+                    //else
+                    //{
+                        //marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[v].Id, getChildren: true);
+                        marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true);
+                    //}                   
                     //FORCE FEATURED
 
                 }
@@ -331,28 +353,28 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
 
                 //seperate market centers into alpha lists a-g h-p q-z
-                if (firstLetter >= '0' && firstLetter <= '9' && alphaList1.Count <= 100) //
+                if (firstLetter >= '0' && firstLetter <= '9') //&& alphaList1.Count <= 100
                 {
-                    alphaList1.Add(marketcenter); x++;
+                    alphaList1.Add(marketcenter); //x++;
                 }
-                else if (firstLetter >= 'A' && firstLetter <= 'G' && alphaList1.Count <= 100) //
+                else if (firstLetter >= 'A' && firstLetter <= 'G') //&& alphaList1.Count <= 100
                 {
-                    alphaList1.Add(marketcenter); x++;
+                    alphaList1.Add(marketcenter);// x++;
                 }
-                else if (firstLetter >= 'H' && firstLetter <= 'P' && alphaList2.Count <= 25) // 
+                else if (firstLetter >= 'H' && firstLetter <= 'P') // && alphaList2.Count <= 25
                 {
-                    alphaList2.Add(marketcenter); y++;
+                    alphaList2.Add(marketcenter); //y++;
                 }
-                else if (firstLetter >= 'Q' && firstLetter <= 'Z' && alphaList3.Count <= 25) // 
+                else if (firstLetter >= 'Q' && firstLetter <= 'Z') // && alphaList3.Count <= 25
                 {
-                    alphaList3.Add(marketcenter); z++;
+                    alphaList3.Add(marketcenter); //z++;
                 }
 
                 //TESTING SECTION --------------------limit number of market centers to load page faster
-                if (featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
-                {
-                    break;
-                }
+                //if (featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
+                //{
+                //    break;
+                //}
                 //TESTING --------------------------------------------------------------------------
 
             }
@@ -421,9 +443,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
 
                 tabHtmlStringBuilder.Append(BuildInnerTabLink(marketCenter));
-                numLines++;
-
-                            
+                numLines++;                           
 
             }
             
