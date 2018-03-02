@@ -689,6 +689,7 @@
     <Content Include="Content\samples\product_IfYouWait_1.zip" />
     <Content Include="Content\samples\product_NightVision_1.zip" />
     <Content Include="Content\samples\product_ScienceAndFaith_1.zip" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fineuploader\iframe.xss.response-4.2.2.js" />
     <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.js" />
@@ -2665,7 +2666,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\ReturnRequest\CustomerReturnRequests.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Error.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\Head-orig.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Head.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\Header.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\OldInternetExplorerWarning.cshtml" />
@@ -2925,10 +2925,7 @@
     <Content Include="Themes\FridgeTips\Views\ReturnRequest\CustomerReturnRequests.cshtml" />
     <Content Include="Themes\FridgeTips\Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Themes\FridgeTips\Views\Shared\Error.cshtml" />
-    <Content Include="Themes\FridgeTips\Views\Shared\Head-orig.cshtml" />
-    <Content Include="Themes\FridgeTips\Views\Shared\Head-orig.cshtml.bak" />
     <Content Include="Themes\FridgeTips\Views\Shared\Head.cshtml" />
-    <Content Include="Themes\FridgeTips\Views\Shared\Head.cshtml.bak" />
     <Content Include="Themes\FridgeTips\Views\Shared\Header.cshtml" />
     <Content Include="Themes\FridgeTips\Views\Shared\OldInternetExplorerWarning.cshtml" />
     <Content Include="Themes\FridgeTips\Views\Shared\_AddressAttributes.cshtml" />
@@ -3091,8 +3088,6 @@
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\AccessoryCategoryAccessory.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\AccessoryPage\CrossSellProducts.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Catalog\AmalgamationProductsInGridOrLines.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-amalgamation.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxAmalgamation.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_AmalgamationBar.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_AmalgamationAddToCart.cshtml" />
@@ -3128,6 +3123,15 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-marketcenter-gateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGatewayTabs.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGatewayTab.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\WidgetsMarketing\SampleSmall.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\WidgetsMarketing\FooterOptIn.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\FooterOptIn.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\SampleSmall.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-namebadge.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_Empty.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\NameBadgeIFrame.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Product\_LoadingGif.cshtml" />
+    <Content Include="Themes\GoGBS\Views\Topic\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

@@ -117,5 +117,14 @@
             }
         }
         @Html.Widget("order_listing_widget", Model.Orders)
+        @{
+            var pager = Html.Pager(Model.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel);
+            if (!MvcHtmlString.IsNullOrEmpty(pager))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
     </div>
 </div>

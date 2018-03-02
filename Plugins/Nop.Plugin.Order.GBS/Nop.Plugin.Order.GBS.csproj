@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Controllers\ConfigurationGBSController.cs" />
+    <Compile Include="Controllers\CustomerOrderController.cs" />
     <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="CustomTokenProvider.cs" />
     <Compile Include="DataManager.cs" />

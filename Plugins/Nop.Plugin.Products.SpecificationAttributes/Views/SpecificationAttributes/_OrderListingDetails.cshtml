@@ -4,6 +4,8 @@
 @using Nop.Services.Catalog;
 @using Nop.Core;
 @using Nop.Services.Stores;
+@using Nop.Web.Framework;
+@using Nop.Web;
 @{ 
     var _productService = EngineContext.Current.Resolve<IProductService>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();

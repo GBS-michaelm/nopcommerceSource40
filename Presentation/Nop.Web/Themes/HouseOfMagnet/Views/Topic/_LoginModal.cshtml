@@ -125,7 +125,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
             </div>
         </div>
 
@@ -152,7 +152,7 @@
                     switch (data.message.toLowerCase())
                     {
                         case "success":
-                            SendEmailAfterVerification($("#Email").val());
+                            SendEmailAfterVerification($("#Email").val(), $("#hdn-authentice-type").val());
                             $("#loginModal").modal("toggle");
                             $("#hdn-authenticated").val("True");
                             $("#hdn-customer-email").val($("#Email").val());

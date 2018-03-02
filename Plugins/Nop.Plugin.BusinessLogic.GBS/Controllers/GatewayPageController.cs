@@ -113,12 +113,8 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
             return View("MarketCenterGatewayTabs", tabsContainer);
             //return View();
-        }
-
-
+        }    
         
     }
-
-    
-
+       
 }

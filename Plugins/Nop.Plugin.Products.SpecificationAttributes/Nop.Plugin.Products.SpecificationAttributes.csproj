@@ -36,6 +36,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>False</Private>
@@ -110,13 +114,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SpecificationAttributesController.cs" />
+    <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Setttings.cs" />
     <Compile Include="Models\CustomerOrderListModel.cs" />
     <Compile Include="ProductSpecificationAttributeProcessor.cs" />
     <Compile Include="EventConsumers\AdminProductTab.cs" />
     <Compile Include="Models\ConfigureModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="ProductSpecificationAttributeNames.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +147,11 @@
     <ProjectReference Include="..\Nop.Plugin.Order.GBS\Nop.Plugin.Order.GBS.csproj">
       <Project>{ae79e188-83b5-490c-a7cb-733383122457}</Project>
       <Name>Nop.Plugin.Order.GBS</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Widgets.CustomersCanvas\Nop.Plugin.Widgets.CustomersCanvas.csproj">
+      <Project>{54e3cfcc-b85d-43c0-a8e9-899341c8dbe0}</Project>
+      <Name>Nop.Plugin.Widgets.CustomersCanvas</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

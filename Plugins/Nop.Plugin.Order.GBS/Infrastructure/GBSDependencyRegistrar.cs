@@ -16,7 +16,8 @@ using Nop.Services.Custom.Common;
 using Nop.Services.Common;
 using Nop.Plugin.Order.GBS.Factories;
 using Nop.Web.Factories;
-
+using Nop.Plugin.Order.GBS.Controllers;
+using NW = Nop.Web.Controllers;
 namespace Nop.Services.Order.GBS
 {
     public class DependencyRegistrar : IDependencyRegistrar
@@ -47,10 +48,11 @@ namespace Nop.Services.Order.GBS
 
             if (pluginDescriptor != null)  // pluginDescriptor.Installed == true
             {
+                builder.RegisterType<OrderController>().As<NW.OrderController>();
                 builder.RegisterType<GBSOrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
                 builder.RegisterType<CustomTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();
-                builder.RegisterType<GBSOrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSOrderModelFactory>().As<Plugin.Order.GBS.Factories.IOrderModelFactory>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderService>().As<IOrderService>().InstancePerLifetimeScope();
 
             }

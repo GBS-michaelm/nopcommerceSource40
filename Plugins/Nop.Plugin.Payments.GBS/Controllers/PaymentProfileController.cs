@@ -53,7 +53,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
             paramDic.Add("@CustomerID", model.customerID.ToString());
-            string select = "SELECT * FROM Profiles WHERE CustomerID = " + model.customerID + "";
+            string select = "exec usp_getCCProfiles @CustomerID";
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
 
             if (dView.Count > 0)
@@ -89,7 +89,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
             paramDic.Add("@CustomerID", customer.Id.ToString());
-            string select = "SELECT * FROM Profiles WHERE CustomerID = " + customer.Id + "";
+            string select = "exec usp_getCCProfiles @CustomerID";
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
 
             if (dView != null &&  dView.Count > 0)
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                 Dictionary<string, string> paramDic = new Dictionary<string, string>();
                 paramDic.Add("@CustomerID", customer.Id.ToString());
                 paramDic.Add("@ProfileID", profileId.ToString());
-                string select = "DELETE FROM Profiles WHERE CustomerID = " + customer.Id + " AND ProfileID = " + profileId + "";
+                string select = "usp_deleteCCProfile @CustomerID,@ProfileID";
                 DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
             }
             else
@@ -216,6 +216,7 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                 last4Digits = last4Digits.Substring(last4Digits.Length - 4);
                 string expireMonth = profile.cardExpireMonth;
                 string expireYear = profile.cardExpireYear;
+                //string billingAddressID = customer.BillingAddress.Id.ToString();
 
                 DBManager manager = new DBManager();
                 Dictionary<string, string> paramDic = new Dictionary<string, string>();
@@ -227,8 +228,9 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                 paramDic.Add("@ExpMonth", expireMonth.ToString());
                 paramDic.Add("@ExpYear", expireYear.ToString());
 
-                string insert = "INSERT INTO Profiles (CustomerID, ProfileID, NickName, Last4Digits, CardType, ExpMonth, ExpYear) ";
-                insert += "VALUES ('" + customer.Id + "', '" + profileID.ToString() + "', '" + nickName.ToString() + "', '" + last4Digits.ToString() + "', '" + cardType.ToString() + "', '" + expireMonth.ToString() + "', '" + expireYear.ToString() + "')";
+                //string insert = "INSERT INTO Profiles (CustomerID, ProfileID, NickName, Last4Digits, CardType, ExpMonth, ExpYear) ";
+                //insert += "VALUES ('" + customer.Id + "', '" + profileID.ToString() + "', '" + nickName.ToString() + "', '" + last4Digits.ToString() + "', '" + cardType.ToString() + "', '" + expireMonth.ToString() + "', '" + expireYear.ToString() + "')";
+                string insert = "usp_InsertCCProfile @CustomerID,@ProfileID,@NickName,@Last4Digits,@CardType,@ExpMonth,@ExpYear";
                 manager.SetParameterizedQueryNoData(insert, paramDic);
             }
             else
@@ -258,32 +260,32 @@ namespace Nop.Plugin.Payments.GBS.Controllers
             var model = new CustomerPaymentProfilesModel();
 
             GBSPaymentServiceClient gateway = new GBSPaymentServiceClient();
-            var response = gateway.ReadProfile(int.Parse(profileId.ToString()), _gbsPaymentSettings.GBSPaymentWebServiceAddress, _gbsPaymentSettings.LoginId, _gbsPaymentSettings.Password, _gbsPaymentSettings.UseSandbox);
+            //var response = gateway.ReadProfile(int.Parse(profileId.ToString()), _gbsPaymentSettings.GBSPaymentWebServiceAddress, _gbsPaymentSettings.LoginId, _gbsPaymentSettings.Password, _gbsPaymentSettings.UseSandbox);
 
-            if (response.procStatus == "0")
-            {
+            //if (response.procStatus == "0")
+            //{
                 DBManager dbmanager = new DBManager();
                 Dictionary<string, string> paramDic = new Dictionary<string, string>();
                 paramDic.Add("@CustomerID", customer.Id.ToString());
                 paramDic.Add("@ProfileID", profileId.ToString());
-                string select = "SELECT * FROM Profiles WHERE CustomerID = " + customer.Id + " AND ProfileID = " + profileId + "";
+                string select = "exec usp_getCCProfiles @CustomerID,@ProfileID ";
                 DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
                 DataRow firstRow = dView.Table.Rows[0];
 
                 PaymentMethodModel getProfile = new PaymentMethodModel();
-                getProfile.profileID = Convert.ToInt32(response.profileID);
+                getProfile.profileID = Convert.ToInt32(profileId);
                 getProfile.NickName = firstRow["NickName"].ToString();
-                getProfile.Last4Digits = response.cardNumber.ToString();
+                getProfile.Last4Digits = "************" + firstRow["Last4Digits"].ToString();
                 getProfile.CardType = firstRow["CardType"].ToString();
                 getProfile.ExpMonth = (int)firstRow["ExpMonth"];
                 getProfile.ExpYear = (int)firstRow["ExpYear"];
                 model.SavedProfiles.Add(getProfile);
-            }
-            else
-            {
-                //ADD ERROR CODE HERE
-                ViewBag.warnings = response.profileMessage;
-            }
+            //}
+            //else
+            //{
+            //    //ADD ERROR CODE HERE
+            //    ViewBag.warnings = response.profileMessage;
+            //}
 
             return View(model);
         }
@@ -360,8 +362,9 @@ namespace Nop.Plugin.Payments.GBS.Controllers
                 paramDic.Add("@ExpMonth", expireMonth.ToString());
                 paramDic.Add("@ExpYear", expireYear.ToString());
 
-                string update = "UPDATE Profiles SET NickName='" + nickName.ToString() + "', Last4Digits='" + last4Digits.ToString() + "', CardType='" + cardType.ToString() + "', ExpMonth='" + expireMonth.ToString() + "', ExpYear='" + expireYear.ToString() + "'";
-                update += "WHERE CustomerID = " + customer.Id + " AND ProfileID = " + profileID + "";
+                //string update = "UPDATE Profiles SET NickName='" + nickName.ToString() + "', Last4Digits='" + last4Digits.ToString() + "', CardType='" + cardType.ToString() + "', ExpMonth='" + expireMonth.ToString() + "', ExpYear='" + expireYear.ToString() + "'";
+                //update += "WHERE CustomerID = " + customer.Id + " AND ProfileID = " + profileID + "";
+                string update = "usp_UpdateCCProfile @CustomerID,@ProfileID,@NickName,@Last4Digits,@CardType,@ExpMonth,@ExpYear";
                 manager.SetParameterizedQueryNoData(update, paramDic);
             }
             else
