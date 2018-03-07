@@ -24,7 +24,6 @@
 /*********list page**********/
 .product-grid .pictures {
     width: 250px;
-    height: 250px;
     margin: auto;
     position: relative;
     z-index: 1;
