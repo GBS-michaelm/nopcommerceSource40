@@ -1769,7 +1769,9 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         line-height: 18px;
         font-size: 14px;
         text-align: center;
-        color: #444444
+        color: #444444;
+	    clear: left;
+	    padding-top: 10px;
     }
 
         .item-box .product-item .product-title a {
@@ -9605,6 +9607,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 
 .custom-tab li {
     margin-bottom: 5px;
+	list-style-type: disc;
 }
 
 .product-details-page .prices .product-price span {
@@ -10858,7 +10861,7 @@ body hr {
     border-radius: 3px;
     border-style: none none solid;
     border-width: 0 0 3px;
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: bold;
     padding: 10px 20px;
     right: 0;
@@ -10872,6 +10875,7 @@ body hr {
 
 .award-section .shopnow {
     background: #6c8baa none repeat scroll 0 0;
+	color:#fff;
 }
 
     .award-section .shopnow:hover {
