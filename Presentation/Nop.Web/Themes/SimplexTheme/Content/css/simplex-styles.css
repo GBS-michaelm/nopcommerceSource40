@@ -1784,7 +1784,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         line-height: 18px;
         font-size: 14px;
         text-align: center;
-        color: #444444
+        color: #444444;        
     }
 
         .item-box .product-item .product-title a {
@@ -1950,6 +1950,10 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
 
 
 /* PRODUCT LIST PAGE STYLE */
+.product-grid .pictures {
+    height: 250px;
+}
+
 .product-grid .item-box.product-list {
     height: auto;
 }

@@ -337,11 +337,11 @@
     </div>  
    
    @{
-    //Loading specific banner ads
+    //Loading specific banners
 
     if (!string.IsNullOrEmpty(@bannerad))
     {
-        <div id="banner-ad">@Html.Action("TopicBlock", "Topic", new { systemName = @bannerad.ToString() }) </div>
+        <div id="banners">@Html.Action("TopicBlock", "Topic", new { systemName = @bannerad.ToString() }) </div>
     }
 	}
 	
