@@ -96,10 +96,12 @@
     <ProjectReference Include="..\Nop.Plugin.Order.GBS\Nop.Plugin.Order.GBS.csproj">
       <Project>{ae79e188-83b5-490c-a7cb-733383122457}</Project>
       <Name>Nop.Plugin.Order.GBS</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Plugin.Widgets.CustomersCanvas\Nop.Plugin.Widgets.CustomersCanvas.csproj">
       <Project>{54E3CFCC-B85D-43C0-A8E9-899341C8DBE0}</Project>
       <Name>Nop.Plugin.Widgets.CustomersCanvas</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
