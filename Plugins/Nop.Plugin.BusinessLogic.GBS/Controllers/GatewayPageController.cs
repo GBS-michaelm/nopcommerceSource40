@@ -12,6 +12,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Core;
+using Nop.Plugin.BusinessLogic.GBS;
+using Nop.Services.Configuration;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
@@ -21,7 +23,14 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
     public class GatewayPageController : BaseController
     {
 
-        
+        private readonly GBSBusinessLogicSettings _gbsBusinessLogicSettings;
+        public GatewayPageController (
+            GBSBusinessLogicSettings gbsBusinessLogicSettings
+            )
+        {
+            this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
+        }
+
         [HttpGet]
         public ActionResult SportsTeamHtml(int id)
         {           
@@ -83,14 +92,14 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
-        //[OutputCache(Duration = 3600, VaryByParam = "*")]
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
                         
             MarketCenter marketCenter = new MarketCenter(marketCenterId);
             Dictionary<string, string> tabs = new Dictionary<string, string>();
 
-            tabs = marketCenter.GetMarketCenterHtml(type);
+            tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
 
             //add tabs to list model with market center models inside
             MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();

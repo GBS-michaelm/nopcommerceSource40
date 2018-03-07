@@ -15,7 +15,7 @@ namespace Nop.Plugin.BusinessLogic.GBS
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "Configure";
-            controllerName = "BusinessLogic";
+            controllerName = "ConfigurationBusinessGBS";
             //routeValues = new RouteValueDictionary()
             //{
             //    { "Namespaces", "Nop.Plugin.BusinessLogic.GBS.Controllers" },
