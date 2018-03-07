@@ -36,6 +36,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         string _foregroundImage = "";
         string _backgroundColor = "";
         string _mainPicturePath;
+        string _fontColor = "";
         //string _gatewayHtml = "";
         bool _isTopCompany = false;
         List<MarketCenter> _childCompanies = new List<MarketCenter>();
@@ -222,11 +223,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string foregroundImage { get { return _foregroundImage; } set { _foregroundImage = value; } }
         public string backgroundColor { get { return _backgroundColor; } set { _backgroundColor = value; } }
         public string mainPicturePath { get { return _mainPicturePath; } set { _mainPicturePath = value; } }
-        //public string gatewayHtml { get { return _gatewayHtml; } set { _gatewayHtml = value; } }
+        public string fontColor { get { return _fontColor; } set { _fontColor = value; } }
         public List<MarketCenter> childCompanies { get { return _childCompanies; } set { _childCompanies = value; } }
         public bool isTopCompany { get { return _isTopCompany; } set { _isTopCompany = value; } }
-
-
+        
         private int GetChildCategories(int marketCenterCategoryId, string type, bool countOnly = false)
         {
             //child companies handling
@@ -488,13 +488,29 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 if(marketcenter.childCompanies.Count > 0)
                 {
                     featuredHtmlStringBuilder.Append("class='mc-img-link box-handle' href='#window-offices-" + marketcenter.id + "' >");
-                    featuredHtmlStringBuilder.Append("<img src='" + marketcenter.mainPicturePath + "' data-toggle='modal' alt='logo' />");                   
+                    if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
+                    {
+                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + "' </p>");
+                    }
+                    else
+                    {
+                        featuredHtmlStringBuilder.Append("<img src='" + marketcenter.mainPicturePath + "' data-toggle='modal' alt='logo' />");
+                    }
+                                     
                     featuredHtmlStringBuilder.Append("</a>");                 
                 }
                 else
                 {
                     featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + marketcenter.SeName + "' >");
-                    featuredHtmlStringBuilder.Append("<img src='" + marketcenter.mainPicturePath + "' alt='logo' />");
+                    if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
+                    {
+                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + "' </p>");
+                    }
+                    else
+                    {
+                        featuredHtmlStringBuilder.Append("<img src='" + marketcenter.mainPicturePath + "' alt='logo' />");
+                    }
+                    
                     featuredHtmlStringBuilder.Append("</a>");
                 }           
 
