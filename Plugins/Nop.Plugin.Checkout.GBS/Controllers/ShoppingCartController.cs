@@ -54,6 +54,11 @@ using System.IO;
 using static Nop.Plugin.Order.GBS.Orders.OrderExtensions;
 using Nop.Services.Seo;
 using System.Collections.ObjectModel;
+using Nop.Plugin.Widgets.CustomersCanvas.Services;
+using Nop.Services.Custom.Orders;
+using Nop.Plugin.Widgets.CustomersCanvas.Domain;
+using System.Net;
+using Nop.Plugin.Widgets.CustomersCanvas;
 
 namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 {
@@ -75,12 +80,17 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         private readonly IDownloadService _downloadService;
         private readonly ILogger _logger;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly ICcService _ccService;
+        private readonly CcSettings _customersCanvasSettings;
 
         #endregion
 
         #region Constructors
 
         public GBSShoppingCartController(
+            CcSettings customersCanvasSettings,
+            ICcService ccService,
             IShoppingCartModelFactory shoppingCartModelFactory,           
             IProductService productService,
             IStoreContext storeContext,
@@ -175,6 +185,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             this._productAttributeService = productAttributeService;
             this._settingService = settingService;
             this._logger = logger;
+            this._orderProcessingService = orderProcessingService;
+            this._ccService = ccService;
+            this._customersCanvasSettings = customersCanvasSettings;
 
         }
 
@@ -956,6 +969,59 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             return attributesXml;
         }
         #endregion
+
+        private OrderItem CopyCCDesign(OrderItem orderItem)
+        {
+
+            var randomGenerator = new Random();
+            var createNewDesignLink = _ccService.ServerHostUrl() + "/api/HiRes/GenerateHiRes";
+
+            var mappings = _productAttributeParser.ParseProductAttributeMappings(orderItem.AttributesXml);
+            var mapping = mappings.FirstOrDefault(x => x.ProductAttributeId == _customersCanvasSettings.CcIdAttributeId);
+            if (mapping == null) { return orderItem; }
+
+            var values = _productAttributeParser.ParseValues(orderItem.AttributesXml, mapping.Id);
+            if (values == null || !values.Any()) { return orderItem; }
+
+            int designID = Convert.ToInt32(values.First());
+
+            CcDesign ccDesign = _ccService.GetDesign(designID);
+            dynamic designData = JsonConvert.DeserializeObject<Object>(ccDesign.Data);
+            dynamic newDesignData = designData;
+            List<JToken> proofUrls = new List<JToken>();
+            List<JToken> hiResUrls = new List<JToken>();
+
+            foreach (dynamic data in designData)
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("Content-Type", "application/json");
+                var CustomersCanvasSecurityKey = System.Configuration.ConfigurationManager.AppSettings["CustomersCanvasApiSecurityKey"];
+                client.Headers.Add("X-CustomersCanvasAPIKey", CustomersCanvasSecurityKey);
+
+                string stateID = (string)data;
+                var postData = new { productDefinitions = new string[] { stateID }, userId = "nopcommerce_"+ _workContext.CurrentCustomer.Id, itemsData = new { neverlanditem = new { text = randomGenerator.Next(1000000, 9999999) } }, hiResOptions = new { RenderProofImages = true, renderingConfig = new { hiResOutputToSeparateFiles = true } } };
+                string responseString = client.UploadString(createNewDesignLink, JsonConvert.SerializeObject(postData));
+                List<dynamic> responseList = JsonConvert.DeserializeObject<List<Object>>(responseString);
+                newDesignData[data.Name] = responseList.FirstOrDefault().StateId;
+                //proofUrls.AddRange(((JArray) responseList.FirstOrDefault().ProofImageUrls));
+                foreach(var urlArray in ((JArray)responseList.FirstOrDefault().ProofImageUrls))
+                {
+                    foreach (var url in urlArray)
+                    {
+                        proofUrls.Add(url);
+                    }
+                }
+                hiResUrls.AddRange(((JArray)responseList.FirstOrDefault().HiResUrls));
+
+            }
+            var newCCId = _ccService.AddDesign(JsonConvert.SerializeObject(newDesignData), JsonConvert.SerializeObject(proofUrls), JsonConvert.SerializeObject(hiResUrls));
+            orderItem.AttributesXml = _productAttributeParser.RemoveProductAttribute(orderItem.AttributesXml, mapping);
+            orderItem.AttributesXml = _productAttributeParser.AddProductAttribute(orderItem.AttributesXml, mapping,  Convert.ToString(newCCId));
+            return orderItem;
+
+        }
+
+
         [HttpGet]
         [ValidateInput(false)]
         public ActionResult BuyItAgain(int orderItemId, bool isLegacy)
@@ -982,6 +1048,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
                 else
                 {
+                    CopyCCDesign(orderItem);
                     warnings = _shoppingCartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
                 }
 

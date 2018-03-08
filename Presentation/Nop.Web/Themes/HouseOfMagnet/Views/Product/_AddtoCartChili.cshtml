@@ -2,6 +2,12 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
+
+<style>
+    .min-qty-notification {
+        top: -55px !important;
+    }
+</style>
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
@@ -27,8 +33,10 @@
         }
         @if (!String.IsNullOrEmpty(Model.AddToCart.MinimumQuantityNotification))
         {
+            <div class="clear"></div>
             <div class="min-qty-notification">@Model.AddToCart.MinimumQuantityNotification</div>
         }
+            
         @if (!Model.AddToCart.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
@@ -39,12 +47,12 @@
                     </div>
                     @if (Model.AddToCart.AllowedQuantities.Count > 0)
                     {
-                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control" })
+                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control qty-value" })
                     }
                     else
                     {
                         <div class="addtocart-quantity-box">
-                            @Html.TextBoxFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.AddToCart.ProductId })
+                            @Html.TextBoxFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-input form-control qty-value", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.AddToCart.ProductId })
                             <span class="increase-quantity" onclick="IncreaseQuantity(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
                             <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
                         </div>
@@ -170,7 +178,7 @@
             //var jsonSend = JSON.stringify(jsonArray);
             //TempData["productOptions"] = jsonSend;
             
-            SetProductOption("", htmlDecode("@url") + $(".qty-input").val());
+            SetProductOption("", htmlDecode("@url") + $(".qty-value").val());
         });
 
          function LoadingUpdate()
