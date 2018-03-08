@@ -374,9 +374,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     }
                     
                     featuredMarketCenterList = GetTabData(true, type: type);
-                    alphaList1 = GetTabData(null, '!', 'G', specAttrId, specAttrOptionId, type);
-                    alphaList2 = GetTabData(null, 'H', 'P', specAttrId, specAttrOptionId, type);
-                    alphaList3 = GetTabData(null, 'Q', 'Z', specAttrId, specAttrOptionId, type);
+                    alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                    alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                    alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
                 }
                 else
                 {                  
@@ -411,7 +411,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
         }
         
-        private List<MarketCenter> GetTabData(bool? isFeatured = null, char start = '!', char end = 'z', int specAttrId = 0, int specAttrOpId = 0, string type = "")
+        private List<MarketCenter> GetTabData(bool? isFeatured = null, char start = '!', char end = 'z', int specAttrOpId = 0, string type = "")
         {
 
             List<MarketCenter> marketCenters = null;
@@ -435,13 +435,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             {
                 //using type to change urls
                 marketCenterTabDic.Add("@type", type);
-                marketCenterTabDic.Add("@specAttributeId", specAttrId);
                 marketCenterTabDic.Add("@specAttributeOptionId", specAttrOpId);
 
-                string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeId, @specAttributeOptionId ";
+                string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
                 if (isFeatured != null)
                 {
-                    select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeId, @specAttributeOptionId, @isFeatured ";
+                    select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId, @isFeatured ";
                     marketCenterTabDic.Add("@isFeatured", isFeatured);
                 }
 
