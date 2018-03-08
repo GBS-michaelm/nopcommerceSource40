@@ -57,7 +57,7 @@
                 }
             }
         </div>
-        @*@using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
+        @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
             {
             @Html.AntiForgeryToken()
             <div class="ordersearch">
@@ -67,7 +67,7 @@
                     Search orders
                 </button>
             </div>
-        }*@
+        }
     </div>
     <div class="tabbody @(status == "" ? "active" : "hide")" id="tab1">
         <div class="order-list padtop25">
@@ -184,7 +184,7 @@
         //    $(target_tab_selector).removeClass('hide');
         //    $(target_tab_selector).addClass('active');
         //});
-        
+
 
         //Drop down 3/6 months
         $("#pastorderddl").change(function () {
@@ -198,18 +198,26 @@
             });
         });
 
-        $("li a").click(function () {
-            if (this.id == "a1"){
-                $("#stab").text("");
-            }
-            if (this.id == "a2") {
-                $("#stab").text("open");
+        BindTextByStatus();
+    });
 
-            }
-            if (this.id == "a3") {
-                $("#stab").text("cancelled");
+    function BindTextByStatus() {
+        $(".tabheading li").each(function () {
+            if ($(this).hasClass("active")) {
+                var id = $(this).find("a").attr("id");
 
+                if (id == "a1") {
+                    $("#stab").text("");
+                }
+                else if (id == "a2") {
+                    $("#stab").text("open");
+
+                }
+                else if (id == "a3") {
+                    $("#stab").text("cancelled");
+
+                }
             }
         });
-    });
+    }
 </script>

@@ -11302,7 +11302,7 @@ div .mega-menu {
 }
 /* Pager and pager dropdown Order history page*/
 .paging-size-dropdown {
-    margin-left: 50px;
+    /*margin-left: 50px;*/
     width: 80px;
     margin-top: 4px;
 }
@@ -11312,8 +11312,11 @@ div .mega-menu {
 .pager{
     float:right;
     margin-bottom:10px;
-    margin-top: 0px;
+    margin-top: 5px;
 }
 .head-left{
     width:100%;
+}
+.orderplace{
+    width: 165px;
 }
