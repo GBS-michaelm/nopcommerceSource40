@@ -246,7 +246,7 @@ namespace Nop.Plugin.Order.GBS.Factories
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerOrders",
                 UseRouteLinks = true,
-                RouteValues = new OrderRouteValues { page = page ?? 0, status = status }
+                RouteValues = new OrderRouteValues { page = page ?? 0, status = status, pageSize = pageSize}
             };
 
             if (model.Orders.Any())
@@ -259,7 +259,7 @@ namespace Nop.Plugin.Order.GBS.Factories
                     ShowTotalSummary = true,
                     RouteActionName = "CustomerOrders",
                     UseRouteLinks = true,
-                    RouteValues = new OrderRouteValues { page = page ?? 0, status = status }
+                    RouteValues = new OrderRouteValues { page = page ?? 0, status = status, pageSize = pageSize }
                 };
             }
 
@@ -318,5 +318,6 @@ namespace Nop.Plugin.Order.GBS.Factories
     {
         public string status { get; set; }
         public int page { get; set; }
+        public int? pageSize { get; set; }
     }
 }

@@ -20,19 +20,20 @@
 <div class="tabcontainer order-details-page">
 
     <ul class="tabheading">
-        <li class="@(status == "" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="" })"> Orders</a> </li>
-        <li class="@(status == "10" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="10" })">Open Orders</a> </li>
-        <li class="@(status == "40" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="40" })">Cancelled Orders</a> </li>
+        <li class="@(status == "" ? "active" : "")"><a id="a1" href="@Url.Action("CustomerOrders", "Order", new { status="" })"> Orders</a> </li>
+        <li class="@(status == "10" ? "active" : "")"><a id="a2" href="@Url.Action("CustomerOrders", "Order", new { status="10" })">Open Orders</a> </li>
+        <li class="@(status == "40" ? "active" : "")"><a id="a3" href="@Url.Action("CustomerOrders", "Order", new { status="40" })">Cancelled Orders</a> </li>
     </ul>
     <div class="tab-headsection">
         <div class="head-left">
-            <span class="orderplace"><strong id="numberoforders">@totalOrders</strong> orders placed in</span>
-            <div class="pastorder-select">
+            <span class="orderplace"><strong id="numberoforders">@totalOrders</strong>
+                 total <strong id="stab"> </strong> orders</span>
+            @*<div class="pastorder-select">
                 <select id="pastorderddl">
                     <option value="6">Past 6 months</option>
                     <option value="3">Past 3 months</option>
                 </select>
-            </div>
+            </div>*@
             @{
                 if (firstOrder != null)
                 {
@@ -56,7 +57,7 @@
                 }
             }
         </div>
-        @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
+        @*@using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
             {
             @Html.AntiForgeryToken()
             <div class="ordersearch">
@@ -66,7 +67,7 @@
                     Search orders
                 </button>
             </div>
-        }
+        }*@
     </div>
     <div class="tabbody @(status == "" ? "active" : "hide")" id="tab1">
         <div class="order-list padtop25">
@@ -183,7 +184,7 @@
         //    $(target_tab_selector).removeClass('hide');
         //    $(target_tab_selector).addClass('active');
         //});
-
+        
 
         //Drop down 3/6 months
         $("#pastorderddl").change(function () {
@@ -195,6 +196,20 @@
                     $(this).parent().addClass("hidden");
                 }
             });
+        });
+
+        $("li a").click(function () {
+            if (this.id == "a1"){
+                $("#stab").text("");
+            }
+            if (this.id == "a2") {
+                $("#stab").text("open");
+
+            }
+            if (this.id == "a3") {
+                $("#stab").text("cancelled");
+
+            }
         });
     });
 </script>
