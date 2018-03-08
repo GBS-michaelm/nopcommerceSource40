@@ -1,0 +1,57 @@
+﻿@using Nop.Plugin.Widgets.Marketing.EmailPref.Models;
+@model  MarketingFormModel
+@{
+    Layout = null;
+}
+<div id="outer">
+@using (Html.BeginRouteForm("JoinList", null, FormMethod.Post, new { id = "sampleJoinForm" }))
+{
+
+    <div class="form-group">
+        <div id="signup" class="col-md-12">
+            Sign up and don’t miss out!
+
+            <input type="text" id ="emailAddress" name="emailAddress" placeholder="Enter Email Address" />
+            <input type="hidden" id="emailLists" name="emailLists" value="@Model.EmailList" />
+            @*<input type="hidden" id="accounts" name="accounts" value="@Model.Accounts" />*@
+            <input type="button" id="submitForm" class="button button-3d button-rounded button-darkgreen" value="Sign Up">
+
+        </div>
+    </div>
+
+
+    if (true)
+    {
+        <div class="form-group">
+            <div class="captcha-box col-md-6">
+                @*@Html.Raw(Html.GenerateCaptcha())*@
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-3">
+            @*<input type="button" id="submitForm" class="button button-3d button-rounded button-darkgreen" value="Join">*@
+        </div>
+    </div>
+}
+</div>
+<script type="text/javascript">
+
+            $(document).ready(function() {
+                $("#submitForm").click(function() {
+                    $.ajax({
+                        cache: false,
+                        url: $("#sampleJoinForm")[0].action,
+                        type: 'post',
+                        data: $("#sampleJoinForm").serialize(),
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#outer').html(data);
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            $('#outer').html(data);
+                        }
+                    });
+                });
+            });
+</script>
