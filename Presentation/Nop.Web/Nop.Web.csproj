@@ -3132,6 +3132,9 @@
     <Content Include="Themes\HouseOfMagnet\Views\Topic\NameBadgeIFrame.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\_LoadingGif.cshtml" />
     <Content Include="Themes\GoGBS\Views\Topic\Comment.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.MadMonday.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-Mad-Monday.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\QuickEmailSignUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

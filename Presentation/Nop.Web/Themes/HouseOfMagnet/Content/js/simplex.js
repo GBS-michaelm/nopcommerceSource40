@@ -178,7 +178,7 @@ function ChangeQuantity1(e) {
     //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
     //document.getElementById("newprice").textContent = "$"+final;
-    $(".price-value-" + e.dataset.productid).text("$" + final);
+    $(".newprice-value-" + e.dataset.productid).text("$" + final);
     return true;
 }
 
@@ -204,7 +204,7 @@ function IncreaseQuantity(e) {
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
     //document.getElementById("newprice").textContent = "$"+final;
-    $(".price-value-" + e.dataset.productid).text("$" + final);
+    $(".newprice-value-" + e.dataset.productid).text("$" + final);
     return true;
 }
 
@@ -215,27 +215,30 @@ function DecreaseQuantity(e) {
     if (id <= 0 || id == 1) {
         id = 1;
     }
+
     var quantity = parseInt(id) - 1;
-    var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
-    pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
+    if (quantity > 0) {
+
+        var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
+        pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
 
 
-    var qtyValue = parseInt(id);
-    if (id <= 0 || id == 1) {
-        qtyValue = 1;
+        var qtyValue = parseInt(id);
+        if (id <= 0 || id == 1) {
+            qtyValue = 1;
+        }
+        else {
+            qtyValue = qtyValue - 1;
+        }
+
+        var final = parseFloat(qtyValue * pricechange).toFixed(2);
+        document.getElementById(e.id).value = qtyValue;
+        //document.getElementById("newprice").textContent = "$" + final;
+        //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
+        $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
+
+        $(".newprice-value-" + e.dataset.productid).text("$" + final);
     }
-    else {
-        qtyValue = qtyValue - 1;
-    }
-
-    var final = parseFloat(qtyValue * pricechange).toFixed(2);
-    document.getElementById(e.id).value = qtyValue;
-    //document.getElementById("newprice").textContent = "$" + final;
-    //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
-    $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
-
-    $(".price-value-" + e.dataset.productid).text("$" + final);
-
     return true;
 }
 

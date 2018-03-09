@@ -27,12 +27,13 @@ using Nop.Core.Plugins;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Nop.Services.Logging;
+using System.Web;
 
 namespace Nop.Plugin.Order.GBS.Factories
 {
     public interface IOrderModelFactory : NW.IOrderModelFactory
     {
-        CustomerOrderListModel PrepareCustomerOrderListModel(string status, int? page);
+        CustomerOrderListModel PrepareCustomerOrderListModel(string status, int? page, int? pageSize);
     }
 
     public class GBSOrderModelFactory : OrderModelFactory, IOrderModelFactory
@@ -152,7 +153,7 @@ namespace Nop.Plugin.Order.GBS.Factories
         /// Prepare the customer order list model
         /// </summary>
         /// <returns>Customer order list model</returns>
-        public virtual CustomerOrderListModel PrepareCustomerOrderListModel(string status, int? page)
+        public virtual CustomerOrderListModel PrepareCustomerOrderListModel(string status, int? page, int? pageSize)
         {
             if (page == 0)
                 page = null;
@@ -211,7 +212,7 @@ namespace Nop.Plugin.Order.GBS.Factories
                 allOrders.Sort((x, y) => y.CreatedOn.CompareTo(x.CreatedOn));
             }
 
-            var ordersPaging = new PagedList<CustomerOrderListModel.OrderDetailsModel>(allOrders, pageIndex: --page ?? 0, pageSize: 5);
+            var ordersPaging = new PagedList<CustomerOrderListModel.OrderDetailsModel>(allOrders, pageIndex: --page ?? 0, pageSize: pageSize ?? 5);
             model.Orders = ordersPaging.ToList();
 
             // do paging on orders
@@ -245,8 +246,22 @@ namespace Nop.Plugin.Order.GBS.Factories
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerOrders",
                 UseRouteLinks = true,
-                RouteValues = new OrderRouteValues { page = page ?? 0, status = status }
+                RouteValues = new OrderRouteValues { page = page ?? 0, status = status, pageSize = pageSize}
             };
+
+            if (model.Orders.Any())
+            {
+                model.Orders.FirstOrDefault().CustomProperties["PagerModel"] = new PagerModel
+                {
+                    PageSize = ordersPaging.PageSize,
+                    TotalRecords = ordersPaging.TotalCount,
+                    PageIndex = ordersPaging.PageIndex,
+                    ShowTotalSummary = true,
+                    RouteActionName = "CustomerOrders",
+                    UseRouteLinks = true,
+                    RouteValues = new OrderRouteValues { page = page ?? 0, status = status, pageSize = pageSize }
+                };
+            }
 
             return model;
         }
@@ -303,5 +318,6 @@ namespace Nop.Plugin.Order.GBS.Factories
     {
         public string status { get; set; }
         public int page { get; set; }
+        public int? pageSize { get; set; }
     }
 }
