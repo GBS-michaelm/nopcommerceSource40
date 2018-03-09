@@ -12,6 +12,8 @@ using Nop.Services.Media;
 using Nop.Core.Caching;
 using System.Text;
 using Newtonsoft.Json;
+using Nop.Services.Logging;
+using System.Data.SqlClient;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -24,8 +26,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
         IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
         ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        ILogger logger = EngineContext.Current.Resolve<ILogger>();
 
-        
+
         int _id = 0;
         int _parentCategoryId = 0;
         string _h1 = "h1";
@@ -267,147 +270,145 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             //if top level and has children build popup with children links
             IList<Category> TopLevelMarketCenterIds = null;
-            //check if using regular market center
 
-
-
-            //option 2 db query then construct market centers from data, rest should be the same.
-
-            //int x = 0;
-            //int y = 0;
-            //int z = 0;
-
-
-            if (!hack)
+            try
             {
-                for (int i = 0; i < 20; i++)
-                //foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
+                if (!hack)
                 {
-
-                    TopLevelMarketCenterIds = categoryService.GetAllCategoriesByParentCategoryId(this.id);
-
-                    IList<Category> TopLevelMarketCenterIdsInOrder = TopLevelMarketCenterIds.OrderBy(c => c.Name).ToList();
-
-                    MarketCenter marketcenter = null;
-
-
-                    //TESTING !!!!!!!!!--------------------------------------------------------
-                    //Random r = new Random();
-                    //int v = r.Next(0, 2500); // to get random pool of market centers
-
-                    //TESTING FOR FEATURED
-                    //if (i == 0)
-                    //{
-                    //    marketcenter = new MarketCenter(1618, getChildren: true);
-                    //}
-                    //else if (i == 2)
-                    //{
-                    //    marketcenter = new MarketCenter(1461, getChildren: true);
-                    //}
-                    //else
-                    //{
-                    marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
-                    //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
-                    //}                   
-                    //FORCE FEATURED                     
-
-                    char firstLetter = marketcenter.Name.ToUpper()[0];
-
-                    //create featured company list
-                    if (marketcenter.isTopCompany) // && featuredMarketCenterList.Count <= 25
+                    for (int i = 0; i < 20; i++)
+                    //foreach (var marketcenterCategory in TopLevelMarketCenterIdsInOrder)
                     {
-                        featuredMarketCenterList.Add(marketcenter);
-                    }
 
-                    //seperate market centers into alpha lists a-g h-p q-z
-                    if (firstLetter >= '0' && firstLetter <= '9') //&& alphaList1.Count <= 100
-                    {
-                        alphaList1.Add(marketcenter); //x++;
-                    }
-                    else if (firstLetter >= 'A' && firstLetter <= 'G') //&& alphaList1.Count <= 100
-                    {
-                        alphaList1.Add(marketcenter);// x++;
-                    }
-                    else if (firstLetter >= 'H' && firstLetter <= 'P') // && alphaList2.Count <= 25
-                    {
-                        alphaList2.Add(marketcenter); //y++;
-                    }
-                    else if (firstLetter >= 'Q' && firstLetter <= 'Z') // && alphaList3.Count <= 25
-                    {
-                        alphaList3.Add(marketcenter); //z++;
-                    }
+                        TopLevelMarketCenterIds = categoryService.GetAllCategoriesByParentCategoryId(this.id);
 
-                    //TESTING SECTION --------------------limit number of market centers to load page faster
-                    //if (featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
-                    //{
-                    //    break;
-                    //}
-                    //TESTING --------------------------------------------------------------------------
-                    
-                }
-            }          
-            else
-            {
-                //hacking
+                        IList<Category> TopLevelMarketCenterIdsInOrder = TopLevelMarketCenterIds.OrderBy(c => c.Name).ToList();
+
+                        MarketCenter marketcenter = null;
 
 
-                if (!string.IsNullOrEmpty(type))
-                {
+                        //TESTING !!!!!!!!!--------------------------------------------------------
+                        //Random r = new Random();
+                        //int v = r.Next(0, 2500); // to get random pool of market centers
 
-                    int specAttrId = 0;
-                    int specAttrOptionId = 0;
+                        //TESTING FOR FEATURED
+                        //if (i == 0)
+                        //{
+                        //    marketcenter = new MarketCenter(1618, getChildren: true);
+                        //}
+                        //else if (i == 2)
+                        //{
+                        //    marketcenter = new MarketCenter(1461, getChildren: true);
+                        //}
+                        //else
+                        //{
+                        marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
+                        //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
+                        //}                   
+                        //FORCE FEATURED                     
 
-                    specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
-                    foreach (var attr in specAttrList)
-                    {
-                        string typeOptionValue = "";
-                        if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+                        char firstLetter = marketcenter.Name.ToUpper()[0];
+
+                        //create featured company list
+                        if (marketcenter.isTopCompany) // && featuredMarketCenterList.Count <= 25
                         {
-                            specAttrId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
-                            typeOptionValue = attr.SpecificationAttributeOption.Name;
-                            if (typeOptionValue == type)
-                            {
-                                specAttrOptionId = attr.SpecificationAttributeOption.Id;
-                                break;
-                            }
+                            featuredMarketCenterList.Add(marketcenter);
                         }
+
+                        //seperate market centers into alpha lists a-g h-p q-z
+                        if (firstLetter >= '0' && firstLetter <= '9') //&& alphaList1.Count <= 100
+                        {
+                            alphaList1.Add(marketcenter); //x++;
+                        }
+                        else if (firstLetter >= 'A' && firstLetter <= 'G') //&& alphaList1.Count <= 100
+                        {
+                            alphaList1.Add(marketcenter);// x++;
+                        }
+                        else if (firstLetter >= 'H' && firstLetter <= 'P') // && alphaList2.Count <= 25
+                        {
+                            alphaList2.Add(marketcenter); //y++;
+                        }
+                        else if (firstLetter >= 'Q' && firstLetter <= 'Z') // && alphaList3.Count <= 25
+                        {
+                            alphaList3.Add(marketcenter); //z++;
+                        }
+
+                        //TESTING SECTION --------------------limit number of market centers to load page faster
+                        //if (featuredMarketCenterList.Count > 25 && alphaList1.Count > 25 && alphaList2.Count > 25 && alphaList3.Count > 25)
+                        //{
+                        //    break;
+                        //}
+                        //TESTING --------------------------------------------------------------------------
+
                     }
-                    
-                    featuredMarketCenterList = GetTabData(true, type: type);
-                    alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
-                    alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
-                    alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
                 }
                 else
-                {                  
-                    featuredMarketCenterList = GetTabData(true);
-                    alphaList1 = GetTabData(null, '!', 'G');
-                    alphaList2 = GetTabData(null, 'H', 'P');
-                    alphaList3 = GetTabData(null, 'Q', 'Z');
-                }              
+                {
+                    //hacking
 
+                    if (!string.IsNullOrEmpty(type))
+                    {
+
+                        int specAttrId = 0;
+                        int specAttrOptionId = 0;
+
+                        specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
+                        foreach (var attr in specAttrList)
+                        {
+                            string typeOptionValue = "";
+                            if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+                            {
+                                specAttrId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+                                typeOptionValue = attr.SpecificationAttributeOption.Name;
+                                if (typeOptionValue == type)
+                                {
+                                    specAttrOptionId = attr.SpecificationAttributeOption.Id;
+                                    break;
+                                }
+                            }
+                        }
+
+                        featuredMarketCenterList = GetTabData(true, type: type);
+                        alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                        alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                        alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                    }
+                    else
+                    {
+                        featuredMarketCenterList = GetTabData(true);
+                        alphaList1 = GetTabData(null, '!', 'G');
+                        alphaList2 = GetTabData(null, 'H', 'P');
+                        alphaList3 = GetTabData(null, 'Q', 'Z');
+                    }
+
+                }
+
+                //call build for featured list
+                //top companies only (isFeatured)
+                string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
+                string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
+
+                //call build html for each alpha list      
+                string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1, type) : "";
+                string alpha2 = alphaList2.Count > 0 ? BuildTabHtml(alphaList2, type) : "";
+                string alpha3 = alphaList3.Count > 0 ? BuildTabHtml(alphaList3, type) : "";
+                string cantFindHtml = BuildCantFindHtml();
+
+                //add featured and alphas to dictionary
+                marketCenterTabsDict.Add("Featured Companies", isfeatured);
+                marketCenterTabsDict.Add("Companies A - G", alpha1);
+                marketCenterTabsDict.Add("Companies H - P", alpha2);
+                marketCenterTabsDict.Add("Companies Q - Z", alpha3);
+                marketCenterTabsDict.Add("Can't Find Your Company?", cantFindHtml);
+                marketCenterTabsDict.Add("HiddenHtml", childLinksHtml);
+
+                return marketCenterTabsDict;
             }
+            catch (Exception ex)
+            {                               
+                logger.Error("MarketCenter.cs GetMarketCenterHtml : ", ex);
 
-            //call build for featured list
-            //top companies only (isFeatured)
-            string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
-            string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
-
-            //call build html for each alpha list      
-            string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1, type) : "";
-            string alpha2 = alphaList2.Count > 0 ? BuildTabHtml(alphaList2, type) : "";
-            string alpha3 = alphaList3.Count > 0 ? BuildTabHtml(alphaList3, type) : "";
-            string cantFindHtml = BuildCantFindHtml();
-
-            //add featured and alphas to dictionary
-            marketCenterTabsDict.Add("Featured Companies", isfeatured);
-            marketCenterTabsDict.Add("Companies A - G", alpha1);
-            marketCenterTabsDict.Add("Companies H - P", alpha2);
-            marketCenterTabsDict.Add("Companies Q - Z", alpha3);
-            marketCenterTabsDict.Add("Can't Find Your Company?", cantFindHtml);
-            marketCenterTabsDict.Add("HiddenHtml", childLinksHtml);
-
-            return marketCenterTabsDict;
+                return marketCenterTabsDict;
+            }       
 
         }
         
@@ -419,38 +420,53 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             marketCenterTabDic.Add("@start", start);
             marketCenterTabDic.Add("@end", end);
 
-            if (string.IsNullOrEmpty(type))
+            try
             {
-                string select = "EXEC usp_SELECTGBSGetMarketCenters @start, @end";
-                if (isFeatured != null)
+                if (string.IsNullOrEmpty(type))
                 {
-                    select = "EXEC usp_SELECTGBSGetMarketCenters  @start, @end, @isFeatured";
-                    marketCenterTabDic.Add("@isFeatured", isFeatured);
+                    string select = "EXEC usp_SELECTGBSGetMarketCenters @start, @end";
+                    if (isFeatured != null)
+                    {
+                        select = "EXEC usp_SELECTGBSGetMarketCenters  @start, @end, @isFeatured";
+                        marketCenterTabDic.Add("@isFeatured", isFeatured);
+                    }
+
+                    string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
+
+                    marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+                }
+                else
+                {
+                    //using type to change urls
+                    marketCenterTabDic.Add("@type", type);
+                    marketCenterTabDic.Add("@specAttributeOptionId", specAttrOpId);
+
+                    string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
+                    if (isFeatured != null)
+                    {
+                        select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId, @isFeatured ";
+                        marketCenterTabDic.Add("@isFeatured", isFeatured);
+                    }
+
+                    string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
+
+                    marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+
                 }
 
-                string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
-
-                marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
-            }else
+                return marketCenters;
+            }catch(SqlException sqlex)
             {
-                //using type to change urls
-                marketCenterTabDic.Add("@type", type);
-                marketCenterTabDic.Add("@specAttributeOptionId", specAttrOpId);
-
-                string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
-                if (isFeatured != null)
-                {
-                    select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId, @isFeatured ";
-                    marketCenterTabDic.Add("@isFeatured", isFeatured);
-                }
-
-                string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
-
-                marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
-                
+                logger.Error("MarketCenter.cs GetTabData : You're probably missing the following stored proc from the database buddy.", sqlex);
+                throw sqlex;
             }
+            catch (Exception ex)
+            {
+                logger.Error("MarketCenter.cs GetTabData : ", ex);
+                throw ex;
+            }
+
             
-            return marketCenters;
 
         }
 

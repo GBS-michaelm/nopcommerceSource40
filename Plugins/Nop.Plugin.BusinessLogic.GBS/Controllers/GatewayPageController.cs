@@ -95,33 +95,45 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
-                        
-            MarketCenter marketCenter = new MarketCenter(marketCenterId);
-            Dictionary<string, string> tabs = new Dictionary<string, string>();
-
-            tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
-
-            //add tabs to list model with market center models inside
-            MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
-            foreach (var tab in tabs)
+            try
             {
-                MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
-                                
-                if (tab.Key == "HiddenHtml")
+                MarketCenter marketCenter = new MarketCenter(marketCenterId);
+                Dictionary<string, string> tabs = new Dictionary<string, string>();
+
+                tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
+
+                //add tabs to list model with market center models inside
+                MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
+                foreach (var tab in tabs)
                 {
-                    tabsContainer.hiddenHtml = tab.Value;
+                    MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
+
+                    if (tab.Key == "HiddenHtml")
+                    {
+                        tabsContainer.hiddenHtml = tab.Value;
+                    }
+                    else
+                    {
+                        mctab.tabName = tab.Key;
+                        mctab.html = tab.Value;
+                        tabsContainer.MarketCenterTabsList.Add(mctab);
+                    }
+
                 }
-                else
-                {
-                    mctab.tabName = tab.Key;
-                    mctab.html = tab.Value;
-                    tabsContainer.MarketCenterTabsList.Add(mctab);
-                }
-                
+
+                return View("MarketCenterGatewayTabs", tabsContainer);
+            }          
+            catch(Exception ex)
+            {
+
+                ex = new Exception("Gateway Page Controller Fail. Market Center Id: " + marketCenterId + ".");
+                base.LogException(ex);
+
+                return View();
             }
 
-            return View("MarketCenterGatewayTabs", tabsContainer);
             //return View();
+
         }    
         
     }
