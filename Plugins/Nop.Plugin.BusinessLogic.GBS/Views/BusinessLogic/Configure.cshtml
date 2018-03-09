@@ -1,1 +1,30 @@
-﻿<p>fancy plugin stuff</p>
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.BusinessLogic.GBS.Models;
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@using (Html.BeginForm())
+
+{
+@Html.AntiForgeryToken()
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.Hack_OverrideForStore, model => model.Hack, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.Hack):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Hack)
+            @Html.ValidationMessageFor(model => model.Hack)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </td>
+    </tr>
+</table>
+
+}

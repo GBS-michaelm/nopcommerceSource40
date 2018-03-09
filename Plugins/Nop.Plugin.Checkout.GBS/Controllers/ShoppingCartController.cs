@@ -377,7 +377,6 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
             }
 
-
             if (groupId != 0000)
             {
 
@@ -683,8 +682,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 {
                     throw new Exception("Add to cart failed");
                 }
-                SubmitItemResponse response = new SubmitItemResponse();
-                response.status = "success";
+                //SubmitItemResponse response = new SubmitItemResponse();
+                //response.status = "success";
 
                 if (action != null)
                 {
@@ -1080,6 +1079,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             }
         }
 
+
         
         [HttpPost]
         [ValidateInput(false)]
@@ -1088,11 +1088,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             //[EnableCors(origins: "*", headers: "*", methods: "*")]
             IList<string> warnings = new List<string>();
             string attributesXml = "";
+            string whereAmI = "";
 
             try
             {
 
-            
+            whereAmI = "init";
 
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
@@ -1114,7 +1115,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             string productIdForAccessoryCheck = "";
             
             foreach (var productIdIFrame in idsArray)
-            {               
+            {
+
+                whereAmI = "in loop, product frame : " + productIdIFrame;
+
+
                 string checkId = form["accQTY" + productIdIFrame];
                 //string frameId = form["rp" + productIdIFrame + "option"];
                 //int frameOptionValueId = 0;
@@ -1154,6 +1159,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                             foreach (var attr in productAttributes)
                                 {
+
+                                    whereAmI = "productAttr loop #1  attr name: " + attr.ProductAttribute.Name;
+
+
+
                                     if (attr.ProductAttribute.Name == "Frame Style")
                                     {
                                     
@@ -1169,7 +1179,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                         frameStyleMappy = attr;                                   
                                     }
 
-                                    if(string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Back")
+                                    whereAmI = "productAttr loop #2  attr name: " + attr.ProductAttribute.Name;
+
+                                    if (string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Back")
                                     {
                                         backStyle = form["text357"];
                                         if (!string.IsNullOrEmpty(form["text357"].ToString()))
@@ -1178,16 +1190,23 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                         }                                                                               
                                     }
 
-                                    if(string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Company Name")
+                                    whereAmI = "productAttr loop #3  attr name: " + attr.ProductAttribute.Name;
+                                    if (string.IsNullOrEmpty(companyName) && attr.ProductAttribute.Name == "Company Name")
                                     {
+
+                                        whereAmI = "productAttr loop #3  attr form:  " + form["text281"];
+
                                         companyName = form["text281"];
                                         if (!string.IsNullOrEmpty(form["text281"].ToString()))
                                         {
+
+                                            whereAmI = "productAttr loop #3 inside if";
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, companyName);
+                                            whereAmI = "productAttr loop #3 after attr xml add";
                                         }
                                         
                                     }
-
+                                    whereAmI = "productAttr loop #4  attr name: " + attr.ProductAttribute.Name;
                                     if (string.IsNullOrEmpty(customerName) && attr.ProductAttribute.Name == "Customer Name")
                                     {
                                         customerName = form["text279"];
@@ -1196,8 +1215,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerName);
                                         }
                                     }
-
-                                    if(string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Customer Title")
+                                    whereAmI = "productAttr loop #5  attr name: " + attr.ProductAttribute.Name;
+                                    if (string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Customer Title")
                                     {
                                         if (!string.IsNullOrEmpty(form["chooseTitle"].ToString()))
                                         {
@@ -1217,7 +1236,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                                 }
 
-                            //}
+                                //}
+
+                            whereAmI = "out of attr loop";
+
 
                             //TODO determine which attribute option has been selected for frame color
                             string frameId = form["rp" + productIdIFrame + "option"];
@@ -1229,9 +1251,12 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                             //if 0, then mix type was selected. check all badge types for qty and add each with qty as seperate products, 
                             if (frameId == "0")
                             {
+
+                                    whereAmI = "multi frame section";
+
                                 //mix frames selected
                                 //will add each variant frame style so must loop thorugh all possible styles
-                                string[] frameStyles = new string[] { "359", "360", "361", "362", "455" };
+                                    string[] frameStyles = new string[] { "359", "360", "361", "362", "455" };
                                 foreach (var frameStyle in frameStyles)
                                 {
                                     string mixNameBadgeAttributesXml = "";
@@ -1264,8 +1289,11 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                 
                             }else
                             {
+
+                                    whereAmI = "single frame";
+
                                 //adding only a single frame style
-                                string frameValue = GetFrameStyleValue(frameId);
+                                    string frameValue = GetFrameStyleValue(frameId);
                                 frameQty = Int32.Parse(form["rp" + productIdIFrame + "option" + frameId + "qty"]);
 
                                 //for testing bad values
@@ -1326,7 +1354,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             catch(Exception ex)
             {
                 
-                _logger.Error("Add Name Badge To Cart Iframe = attr xml = " + attributesXml + ", warnings = " + JsonConvert.SerializeObject(warnings), ex);
+                _logger.Error("Add Name Badge To Cart Iframe = attr xml = " + attributesXml + ", warnings = " + JsonConvert.SerializeObject(warnings) + "where am i : " + whereAmI, ex);
                 //string productURL = Url.RouteUrl("Product", new { SeName = orderItem.Product.GetSeName() });
                 //if (string.IsNullOrEmpty(productURL))
                 //{
@@ -1389,4 +1417,5 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
         
     }
     
+
 }
