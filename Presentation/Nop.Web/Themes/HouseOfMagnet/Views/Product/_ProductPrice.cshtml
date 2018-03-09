@@ -44,7 +44,7 @@
                 @*render price*@
 <span id="pricescript" style="display:none;" class="pricescript-value-@(Model.ProductId)" >@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)</span>
 
-                <span id="newprice"  @*@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) 
+                <span id="newprice" class="newprice-value-@(Model.ProductId)"  @*@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) 
                       { 
                           <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>  
                       }*@>

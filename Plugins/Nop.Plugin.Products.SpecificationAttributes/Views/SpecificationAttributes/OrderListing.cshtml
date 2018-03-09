@@ -1,100 +1,132 @@
 ﻿@model System.Collections.Generic.List<Nop.Plugin.Products.SpecificationAttributes.Models.CustomerOrderListModel.OrderDetailsModel>
+@using Nop.Web.Extensions;
+@using System.Web.Mvc;
 @{
     string status = "";
     if (TempData["SelectedTab"] != null)
     {
         status = Convert.ToString(TempData["SelectedTab"]);
     }
+
+    var firstOrder = Model.FirstOrDefault();
+    int totalOrders = Model.Count;
+    if (firstOrder != null)
+    {
+        totalOrders = (firstOrder.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel).TotalRecords;
+    }
 }
 @*@if (Model.Count > 0)
-{*@
-    <div class="tabcontainer order-details-page">
+    {*@
+<div class="tabcontainer order-details-page">
 
-        <ul class="tabheading">
-            <li class="@(status == "" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="" })"> Orders</a> </li>
-            <li class="@(status == "10" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="10" })">Open Orders</a> </li>
-            <li class="@(status == "40" ? "active" : "")"><a href="@Url.Action("CustomerOrders", "Order", new { status="40" })">Cancelled Orders</a> </li>
-        </ul>
-        <div class="tab-headsection">
-            <div class="head-left">
-                <span class="orderplace"><strong id="numberoforders">@Model.Count</strong> orders placed in</span>
-                <div class="pastorder-select">
-                    <select id="pastorderddl">
-                        <option value="6">Past 6 months</option>
-                        <option value="3">Past 3 months</option>
+    <ul class="tabheading">
+        <li class="@(status == "" ? "active" : "")"><a id="a1" href="@Url.Action("CustomerOrders", "Order", new { status="" })"> Orders</a> </li>
+        <li class="@(status == "10" ? "active" : "")"><a id="a2" href="@Url.Action("CustomerOrders", "Order", new { status="10" })">Open Orders</a> </li>
+        <li class="@(status == "40" ? "active" : "")"><a id="a3" href="@Url.Action("CustomerOrders", "Order", new { status="40" })">Cancelled Orders</a> </li>
+    </ul>
+    <div class="tab-headsection">
+        <div class="head-left">
+            <span class="orderplace"><strong id="numberoforders">@totalOrders</strong>
+                 total <strong id="stab"> </strong> orders</span>
+            @*<div class="pastorder-select">
+                <select id="pastorderddl">
+                    <option value="6">Past 6 months</option>
+                    <option value="3">Past 3 months</option>
+                </select>
+            </div>*@
+            @{
+                if (firstOrder != null)
+                {
+                    var pagerModel = firstOrder.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel;
+
+                    <select class="paging-size-dropdown">
+                        <option selected="@(pagerModel.PageSize == 5)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=5 })">5</option>
+                        <option selected="@(pagerModel.PageSize == 10)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=10 })">10</option>
+                        <option selected="@(pagerModel.PageSize == 15)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=15 })">15</option>
+                        <option selected="@(pagerModel.PageSize == 20)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=20 })">20</option>
+                        <option selected="@(pagerModel.PageSize == 25)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=25 })">25</option>
                     </select>
-                </div>
-            </div>
-            @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
+
+                    var pager = Html.Pager(pagerModel);
+                    if (!MvcHtmlString.IsNullOrEmpty(pager))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                }
+            }
+        </div>
+        @using (Html.BeginForm("GoToOrderId", "SpecificationAttributes", FormMethod.Post, new { id = "ordersearchsubmit" }))
             {
-                @Html.AntiForgeryToken()
-                <div class="ordersearch">
-                    <input type="text" placeholder="Search" class="ordersearch" id="GoDirectlyToNumber" />
-                    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-                    <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="order-submit">
-                        Search orders
-                    </button>
+            @Html.AntiForgeryToken()
+            <div class="ordersearch">
+                <input type="text" placeholder="Search" class="ordersearch" id="GoDirectlyToNumber" />
+                <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+                <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="order-submit">
+                    Search orders
+                </button>
+            </div>
+        }
+    </div>
+    <div class="tabbody @(status == "" ? "active" : "hide")" id="tab1">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
+                {
+                    @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
                 </div>
             }
         </div>
-        <div class="tabbody @(status == "" ? "active" : "hide")" id="tab1">
-            <div class="order-list padtop25">
-                @if (Model.Count > 0)
+    </div>
+    <div class="tabbody @(status == "10" ? "active" : "hide")" id="tab2">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
                 {
-                    foreach (var order in Model)
+                    if (order.OrderStatus == "Processing" || order.OrderStatus == "Pending")
                     {
                         @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
                     }
                 }
-                else
-                {
-                    <div class="no-data">
-                        @T("Account.CustomerOrders.NoOrders")
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="tabbody @(status == "10" ? "active" : "hide")" id="tab2">
-            <div class="order-list padtop25">
-                @if (Model.Count > 0)
-                {
-                    foreach (var order in Model)
-                    {
-                        if (order.OrderStatus == "Processing" || order.OrderStatus == "Pending")
-                        {
-                            @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
-                        }
-                    }
-                }
-                else
-                {
-                    <div class="no-data">
-                        @T("Account.CustomerOrders.NoOrders")
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="tabbody @(status == "40" ? "active" : "hide")" id="tab3">
-            <div class="order-list padtop25">
-                @if (Model.Count > 0)
-                {
-                    foreach (var order in Model)
-                    {
-                        if (order.OrderStatus == "Cancelled")
-                        {
-                            @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
-                        }
-                    }
-                }
-                else
-                {
-                    <div class="no-data">
-                        @T("Account.CustomerOrders.NoOrders")
-                    </div>
-                }
-            </div>
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
+                </div>
+            }
         </div>
     </div>
+    <div class="tabbody @(status == "40" ? "active" : "hide")" id="tab3">
+        <div class="order-list padtop25">
+            @if (Model.Count > 0)
+            {
+                foreach (var order in Model)
+                {
+                    if (order.OrderStatus == "Cancelled")
+                    {
+                        @Html.Partial("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/_OrderListingDetails.cshtml", order)
+                    }
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("Account.CustomerOrders.NoOrders")
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @*}*@
 <style>
@@ -165,5 +197,27 @@
                 }
             });
         });
+
+        BindTextByStatus();
     });
+
+    function BindTextByStatus() {
+        $(".tabheading li").each(function () {
+            if ($(this).hasClass("active")) {
+                var id = $(this).find("a").attr("id");
+
+                if (id == "a1") {
+                    $("#stab").text("");
+                }
+                else if (id == "a2") {
+                    $("#stab").text("open");
+
+                }
+                else if (id == "a3") {
+                    $("#stab").text("cancelled");
+
+                }
+            }
+        });
+    }
 </script>

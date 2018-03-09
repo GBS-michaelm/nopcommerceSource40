@@ -7,6 +7,12 @@
     //page class
     Html.AppendPageCssClassParts("html-account-page");
     Html.AppendPageCssClassParts("html-order-list-page");
+
+    string status = "";
+    if (TempData["SelectedTab"] != null)
+    {
+        status = TempData.Peek("SelectedTab").ToString();
+    }
 }
 
 @using Nop.Web.Models.Customer
@@ -116,9 +122,19 @@
                 </div>
             }
         }
-        @Html.Widget("order_listing_widget", Model.Orders) 
+        @Html.Widget("order_listing_widget", Model.Orders)
         @{
-            var pager = Html.Pager(Model.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel);
+            var pagerModel = Model.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel;
+
+            @*<select class="paging-size-dropdown">
+                <option selected="@(pagerModel.PageSize == 5)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=5 })">5</option>
+                <option selected="@(pagerModel.PageSize == 10)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=10 })">10</option>
+                <option selected="@(pagerModel.PageSize == 15)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=15 })">15</option>
+                <option selected="@(pagerModel.PageSize == 20)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=20 })">20</option>
+                <option selected="@(pagerModel.PageSize == 25)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=25 })">25</option>
+            </select>*@
+
+            var pager = Html.Pager(pagerModel);
             if (!MvcHtmlString.IsNullOrEmpty(pager))
             {
                 <div class="pager">
@@ -131,36 +147,36 @@
             {
                 foreach (var order in Model.Orders)
                 {
-                    
-                        <div class="col_half panel panel-default">
-                            <div class="panel-heading">
-                                @*<h2 class="panel-title">@T("Account.CustomerOrders.OrderNumber"): @order.Id</h2>*@
-                                <h2>@T("Account.CustomerOrders.OrderNumber"): @*@DBManager.getGBSOrderID(order.Id)*@ @order.Id</h2>
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav">
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>
-                                    </li>
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()
-                                    </li>
-                                    <li>
-                                        @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
-                                    </li>
-                                </ul>
-                                <div>&nbsp;</div>
-                                <div class="buttons">
-                                    @if (order.IsReturnRequestAllowed)
-                                    {
-                                        @*<input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-default return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />*@
-    <a onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="icon-search"></i>@T("Account.CustomerOrders.ReturnItems")</a>
-                                    }
-                                    @*<input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-primary order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />*@
-                                    <a onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="fa fa-info" aria-hidden="true"></i>@T("Account.CustomerOrders.OrderDetails")</a>
-                                </div>
+
+                    <div class="col_half panel panel-default">
+                        <div class="panel-heading">
+                            @*<h2 class="panel-title">@T("Account.CustomerOrders.OrderNumber"): @order.Id</h2>*@
+                            <h2>@T("Account.CustomerOrders.OrderNumber"): @*@DBManager.getGBSOrderID(order.Id)*@ @order.Id</h2>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="nav">
+                                <li>
+                                    @T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>
+                                </li>
+                                <li>
+                                    @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()
+                                </li>
+                                <li>
+                                    @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
+                                </li>
+                            </ul>
+                            <div>&nbsp;</div>
+                            <div class="buttons">
+                                @if (order.IsReturnRequestAllowed)
+                                {
+                                    @*<input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-default return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />*@
+                                    <a onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="icon-search"></i>@T("Account.CustomerOrders.ReturnItems")</a>
+                                }
+                                @*<input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-primary order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />*@
+                                <a onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" class="button button-3d button-rounded button-white button-light button-gray"><i class="fa fa-info" aria-hidden="true"></i>@T("Account.CustomerOrders.OrderDetails")</a>
                             </div>
                         </div>
+                    </div>
 
                 }
             }
@@ -173,3 +189,17 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+    $(function () {
+        // bind change event to select
+        $('.paging-size-dropdown').on('change', function () {
+            var url = $(this).val(); // get selected value
+            if (url) { // require a URL
+                window.location = url; // redirect
+            }
+            return false;
+        });
+    });
+
+</script>

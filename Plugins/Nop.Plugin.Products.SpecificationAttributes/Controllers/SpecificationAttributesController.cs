@@ -1261,8 +1261,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         [HttpGet]
         public JsonResult GetTierPrice(int quantity, int productID)
         {
-            decimal finalprice = 0;
             var product = _productService.GetProductById(productID);
+            decimal finalprice = product.Price;
+
             foreach (var price in product.TierPrices)
             {
                 if (quantity >= price.Quantity)
