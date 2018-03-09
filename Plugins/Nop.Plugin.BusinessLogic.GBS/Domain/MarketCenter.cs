@@ -575,7 +575,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     featuredHtmlStringBuilder.Append("class='mc-img-link box-handle' href='#window-offices-" + marketcenter.id + "' >");
                     if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
                     {
-                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + "' </p>");
+                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + " </p>");
                     }
                     else
                     {
@@ -590,7 +590,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + marketcenter.SeName + "' >");
                     if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
                     {
-                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + "' </p>");
+                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + " </p>");
                     }
                     else
                     {
