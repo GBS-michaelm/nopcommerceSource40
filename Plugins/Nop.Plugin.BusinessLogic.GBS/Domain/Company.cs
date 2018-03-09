@@ -29,7 +29,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     {
 
         DBManager manager = new DBManager();
-       
+        ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+
         private int _id = 0;
         private int _parentCategoryId = 0;    
         private string _h1 = "";
@@ -41,10 +43,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string _forgroundColor = "#000000";
         private List<int> _childCompanyIds = new List<int>();
         
-        public Company(int companyId)
+        public Company(int companyId, bool lightVer = true)
         {
             //nop category data
-            ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+            
             this.id = companyId;
             Category category = categoryService.GetCategoryById(companyId);
             ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();           
@@ -54,27 +56,24 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);          
             this.Name = categoryModel.Name;
             this.Description = categoryModel.Description;
-            this.MetaKeywords = categoryModel.MetaKeywords;
-            this.MetaDescription = categoryModel.MetaDescription;
-            this.MetaTitle = categoryModel.MetaTitle;
+
+            if (!lightVer)
+            {
+                this.MetaKeywords = categoryModel.MetaKeywords;
+                this.MetaDescription = categoryModel.MetaDescription;
+                this.MetaTitle = categoryModel.MetaTitle;
+                this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+            }
+                        
             this.SeName = categoryModel.SeName;
-            this.PictureModel = categoryModel.PictureModel;
-            this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+            this.PictureModel = categoryModel.PictureModel;           
             this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
             this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
             this.SubCategories = categoryModel.SubCategories;
             this.FeaturedProducts = categoryModel.FeaturedProducts;
             this.Products = categoryModel.Products;
+                        
             
-            //datalook up via category(company) id from gbscategory table
-            //Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-            //companyDic.Add("@CategoryId", companyId);
-
-            //string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
-            //DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
-
-
-            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
             DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
@@ -96,8 +95,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 return innerChildCompanyDataView;
                  
             });
-
-
+            
             if (companyDataView.Count > 0)
             {
                 
@@ -119,9 +117,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     childCompanyIds.Add(Int32.Parse(childCompanyDataView[i]["categoryId"].ToString()));
                 }
             }
-
-
-
+            
         }
         
         public int id { get { return _id; } set { _id = value; } }
@@ -137,5 +133,60 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public List<int> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
 
 
+        public List<CategoryModel> GetNonMarketCenterCompanyCategories(int parentCompanyId)
+        {
+
+            List<CategoryModel> categories = new List<CategoryModel>();
+
+
+            DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
+                Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
+                nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
+
+                string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
+                DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
+                
+                return innerCompanyDataView;
+            });
+                        
+            if(nonMarketCenterCompanyDataView.Count > 0)
+            {
+
+                for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
+                {
+
+                    Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
+                    ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+                    CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+                    catalogPagingFilteringModel.PageSize = 1;
+                    //this.PagingFilteringContext = catalogPagingFilteringModel;
+                    CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+                    this.Name = categoryModel.Name;
+                    this.Description = categoryModel.Description;
+                    this.SeName = categoryModel.SeName;
+                    this.PictureModel = categoryModel.PictureModel;
+                    //this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+                    //this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+                    //this.SubCategories = categoryModel.SubCategories;
+                    //this.FeaturedProducts = categoryModel.FeaturedProducts;
+                    //this.Products = categoryModel.Products;
+                    //if (!lightVer)
+                    //{
+                    //    this.MetaKeywords = categoryModel.MetaKeywords;
+                    //    this.MetaDescription = categoryModel.MetaDescription;
+                    //    this.MetaTitle = categoryModel.MetaTitle;
+                    //    this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+                    //}
+
+                    categories.Add(categoryModel);
+                    
+                }
+
+            }
+            
+            return categories;
+            
+        }
+        
     }
 }

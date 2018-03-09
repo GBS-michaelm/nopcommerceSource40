@@ -572,10 +572,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 featuredHtmlStringBuilder.Append("<a id='a-mc-link-" + marketcenter.id + "' title='" + marketcenter.Name + "' ");
                 if(marketcenter.childCompanies.Count > 0)
                 {
-                    featuredHtmlStringBuilder.Append("class='mc-img-link box-handle' href='#window-offices-" + marketcenter.id + "' >");
+                    featuredHtmlStringBuilder.Append("class='mc-img-link box-handle' href='#window-offices-" + marketcenter.id + " >");
                     if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
                     {
-                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + "' </p>");
+                        featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + " </p>");
                     }
                     else
                     {
@@ -631,7 +631,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     childCompanyStringBuilder.Append("        <div class='search-filter-wrap'><label class='lbl-filter' >Search Filter:</label><input type='text' id='txt-office-filter-" + marketcenter.id + "' class='txt-office-filter' onkeyup='SearchCall(this)' /></div>");
                     childCompanyStringBuilder.Append("        <div class='dv-office-list' ><ul id='ul-office-list-" + marketcenter.id + "' class='ul-office-list' >");
 
-                    //childCompanyStringBuilder.Append("            <li><a href='" + HandledSeName + "' >" + marketcenter.Name + "</a></li>"); //parent company
+                    childCompanyStringBuilder.Append("            <li><a href='" + HandledSeName + "' >" + marketcenter.Name + "</a></li>"); //parent company
                     foreach (var childCompany in marketcenter.childCompanies)
                     {
                         if (!string.IsNullOrEmpty(type))

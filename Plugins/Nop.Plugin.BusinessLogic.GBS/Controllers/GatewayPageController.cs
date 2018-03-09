@@ -14,6 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core;
 using Nop.Plugin.BusinessLogic.GBS;
 using Nop.Services.Configuration;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
@@ -134,7 +135,23 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
             //return View();
 
-        }    
+        }
+
+        //[OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult GetNonMarketCenterCategories(Company parentCategory)
+        {
+
+            List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+
+
+
+
+
+
+
+            return View();
+                        
+        }         
         
     }
        
