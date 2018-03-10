@@ -16,12 +16,10 @@
        @{
            foreach (var item in Model.CategoriesList)
            {
-
-
-            @Html.Partial("", item)
-
-
+               
+            @Html.Partial("MarketCenterGalleryCategory", item)
+               
            }
-    }
+        }
 
    </div>

@@ -138,18 +138,17 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         }
 
         //[OutputCache(Duration = 3600, VaryByParam = "*")]
-        public ActionResult GetNonMarketCenterCategories(Company parentCategory)
+        public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
+
+            Company parentCategory = new Company(parentCategoryId);
 
             List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
 
+            MarketCenterGalleryCategoriesModel mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+            mcGallerCategories.CategoriesList = categories;
 
-
-
-
-
-
-            return View();
+            return View("MarketCenterGalleryCategories", mcGallerCategories);
                         
         }         
         
