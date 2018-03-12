@@ -344,33 +344,53 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 else
                 {
                     //hacking
-
+                    
                     if (!string.IsNullOrEmpty(type))
                     {
 
-                        int specAttrId = 0;
-                        int specAttrOptionId = 0;
+                        int parseResult;
 
-                        specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
-                        foreach (var attr in specAttrList)
+                        Int32.TryParse(type, out parseResult);
+                        if (parseResult != 0)
                         {
-                            string typeOptionValue = "";
-                            if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+                            //ver where id is in url
+                            int specAttrOptionId = parseResult;
+
+                            featuredMarketCenterList = GetTabData(true, type: type);
+                            alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                            alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                            alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                            
+                        }
+                        else
+                        {
+                            //ver where string is in url
+                            int specAttrId = 0;
+                            int specAttrOptionId = 0;
+
+                            specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
+                            foreach (var attr in specAttrList)
                             {
-                                specAttrId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
-                                typeOptionValue = attr.SpecificationAttributeOption.Name;
-                                if (typeOptionValue == type)
+                                string typeOptionValue = "";
+                                //if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+                                if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "WhatAmI")
                                 {
-                                    specAttrOptionId = attr.SpecificationAttributeOption.Id;
-                                    break;
+                                    specAttrId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+                                    typeOptionValue = attr.SpecificationAttributeOption.Name;
+                                    if (typeOptionValue == type)
+                                    {
+                                        specAttrOptionId = attr.SpecificationAttributeOption.Id;
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                        featuredMarketCenterList = GetTabData(true, type: type);
-                        alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
-                        alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
-                        alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                            featuredMarketCenterList = GetTabData(true, type: type);
+                            alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                            alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                            alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                        }
+                                                
                     }
                     else
                     {
@@ -438,13 +458,14 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 else
                 {
                     //using type to change urls
-                    marketCenterTabDic.Add("@type", type);
+                    //marketCenterTabDic.Add("@type", type);
                     marketCenterTabDic.Add("@specAttributeOptionId", specAttrOpId);
 
-                    string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
+                    //string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
+                    string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @specAttributeOptionId ";
                     if (isFeatured != null)
                     {
-                        select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId, @isFeatured ";
+                        select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @specAttributeOptionId, @isFeatured ";
                         marketCenterTabDic.Add("@isFeatured", isFeatured);
                     }
 
