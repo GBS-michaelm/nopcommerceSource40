@@ -15,6 +15,13 @@
 
 }
 
+@{
+
+    string logopath = Model.CustomProperties["LogoPicturePath"].ToString();
+
+
+}
+
    <div class='pricing bottommargin clearfix'>
                
             @*<div class="sub-category-grid row">
@@ -26,7 +33,7 @@
                                 <div class="category-item product-category-item">
                                     <div class="picture">
                                         <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title" class="product-img">
-                                            <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" />
+                                            <img alt="@Model.PictureModel.AlternateText" src="@logopath" title="@Model.PictureModel.Title" />
                                         </a>
                                         <div class="title">
                                             <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title"> @Model.Name</a>

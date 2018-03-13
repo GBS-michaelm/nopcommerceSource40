@@ -72,7 +72,6 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             this.SubCategories = categoryModel.SubCategories;
             this.FeaturedProducts = categoryModel.FeaturedProducts;
             this.Products = categoryModel.Products;
-                        
             
 
             DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
@@ -177,6 +176,22 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     //    this.MetaTitle = categoryModel.MetaTitle;
                     //    this.PagingFilteringContext = categoryModel.PagingFilteringContext;
                     //}
+
+                    DataView companyDataView = cacheManager.Get("company" + category.Id, 60, () => {
+                        Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+                        companyDic.Add("@CategoryId", category.Id);
+
+                        string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+                        DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+
+                        return innerCompanyDataView;
+                    });
+
+                    if(companyDataView.Count > 0)
+                    {
+                        categoryModel.CustomProperties.Add("LogoPicturePath", companyDataView[0]["LogoPicturePath"].ToString());
+                        //description text stuff
+                    }                 
 
                     categories.Add(categoryModel);
                     
