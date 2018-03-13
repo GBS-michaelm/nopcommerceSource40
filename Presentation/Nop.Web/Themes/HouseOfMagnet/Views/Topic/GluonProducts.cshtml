@@ -38,6 +38,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
+    string pageId = string.Empty;
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -46,6 +47,11 @@
         if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "IframeURL")
         {
             page = item.SpecificationAttributeOption.Name;
+        }
+
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
+        {
+            pageId = item.SpecificationAttributeOption.Name;
         }
     }
 
@@ -74,7 +80,7 @@
         editActive = true;
     }
 
-    page = page + sku + "&qty=" + qty + "&id=" + cartItemID;
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
     if(sku.Contains("BP"))
     {
         if(!string.IsNullOrEmpty(pageid))
