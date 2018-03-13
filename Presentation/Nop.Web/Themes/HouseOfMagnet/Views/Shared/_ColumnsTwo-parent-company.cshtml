@@ -12,8 +12,7 @@
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-
-
+    
     Layout = "~/Views/Shared/_Root.cshtml";
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
@@ -58,19 +57,7 @@
 @{
 
     DBManager manager = new DBManager();
-
-    //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
-    //categoryDic.Add("@CategoryId", id);
-
-    //string categoryDataQuery = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
-    //DataView categoryDataView = manager.GetParameterizedDataView(categoryDataQuery, categoryDic);
-
-    //if(categoryDataView.Count > 0)
-    //{
-    //    categoryName = categoryDataView[0]["H1"].ToString();
-
-    //}
-
+        
     Company company = new Company(id);
     string categoryName = company.h1;
     string categoryh2 = company.h2;
@@ -108,9 +95,6 @@
 }
 
 
-
-
-
 <div id="parentTitleWrapDiv">
     
     <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
@@ -129,10 +113,6 @@
     }
   
 </div>
-
-
-
-
 
 @*<div class="category-section">
     <div class="row">
@@ -159,36 +139,7 @@
 
             //category stuff
             var catService = EngineContext.Current.Resolve<ICategoryService>();
-            //IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
-            //for testing
-            //int catCount = marketCenterByNameList.Count();
-            //int storeId = marketCenterByNameList[0].Id;
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
-
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
-
-            //var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
-
-            //foreach (var item in companiesInOrder)
-            //{
-            //    sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            //}
-
-            //stored proc way
-            //Dictionary<string, Object> childCategoryDic = new Dictionary<string, Object>();
-            //childCategoryDic.Add("@CategoryId", id);
-            //string childCategoryDataQuery = "EXEC usp_SelectGBSChildCategoryData @CategoryId";
-            //DataView childCategoryDataView = manager.GetParameterizedDataView(childCategoryDataQuery, childCategoryDic);
-
-            //if (childCategoryDataView.Count > 0)
-            //{
-            //    for (int i = 0; i < childCategoryDataView.Count; i++)
-            //    {
-            //        sb.Append("<option value='" + childCategoryDataView[i]["slug"].ToString() + "'> " + childCategoryDataView[i]["name"].ToString() + "</option>");
-            //    }
-
-            //}
-
+            
             //class attribute way
             List<Category> childCategoriesList = new List<Category>();
             for (int i = 0; i < company.childCompanyIds.Count; i++)
@@ -287,14 +238,7 @@
     <div>
 
     </div>
-
-
-
     
-
-
-
-
     <script type="text/javascript">
         $(document).ready(function () {
             //$(".topic-html-content").addClass("topic-html-content-parent-gateway");

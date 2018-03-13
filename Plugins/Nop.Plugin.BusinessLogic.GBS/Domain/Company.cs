@@ -67,16 +67,15 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.MetaDescription = categoryModel.MetaDescription;
                 this.MetaTitle = categoryModel.MetaTitle;
                 this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+                this.PictureModel = categoryModel.PictureModel;
+                this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+                this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+                this.SubCategories = categoryModel.SubCategories;
+                this.FeaturedProducts = categoryModel.FeaturedProducts;
+                this.Products = categoryModel.Products;
             }
                         
             this.SeName = categoryModel.SeName;
-            this.PictureModel = categoryModel.PictureModel;           
-            this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-            this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-            this.SubCategories = categoryModel.SubCategories;
-            this.FeaturedProducts = categoryModel.FeaturedProducts;
-            this.Products = categoryModel.Products;
-            
 
             DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
@@ -134,7 +133,6 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
         public string agentPacks { get { return _agentPacks; } set { _agentPacks = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
-
         public List<int> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
 
 
@@ -171,19 +169,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         this.Description = categoryModel.Description;
                         this.SeName = categoryModel.SeName;
                         this.PictureModel = categoryModel.PictureModel;
-                        //this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-                        //this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-                        //this.SubCategories = categoryModel.SubCategories;
-                        //this.FeaturedProducts = categoryModel.FeaturedProducts;
-                        //this.Products = categoryModel.Products;
-                        //if (!lightVer)
-                        //{
-                        //    this.MetaKeywords = categoryModel.MetaKeywords;
-                        //    this.MetaDescription = categoryModel.MetaDescription;
-                        //    this.MetaTitle = categoryModel.MetaTitle;
-                        //    this.PagingFilteringContext = categoryModel.PagingFilteringContext;
-                        //}
-
+                        
                         DataView companyDataView = cacheManager.Get("company" + category.Id, 60, () => {
                             Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
                             companyDic.Add("@CategoryId", category.Id);
@@ -197,7 +183,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         if (companyDataView.Count > 0)
                         {
                             categoryModel.CustomProperties.Add("LogoPicturePath", companyDataView[0]["LogoPicturePath"].ToString());
-                            //description text stuff
+                            //description text stuff like pricing and stuff 
                         }
 
                         categories.Add(categoryModel);
@@ -208,8 +194,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }catch(Exception ex)
             {
                 logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
-
-
+                
                 throw ex;
 
             }        
