@@ -75,7 +75,8 @@
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
-    string aboutYourMarketCenter = company.aboutYourMarketCenter;   
+    string aboutYourMarketCenter = company.aboutYourMarketCenter;
+    string agentPacks = company.agentPacks;
     
 }
 
@@ -230,7 +231,8 @@
             @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
         </div>
         <div id="agentPacks">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })
+            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
+            @agentPacks
         </div>
         <div id="marketCenterAbout">
             @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@

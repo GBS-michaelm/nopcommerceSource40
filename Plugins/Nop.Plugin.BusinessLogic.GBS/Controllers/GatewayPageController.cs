@@ -141,15 +141,27 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
 
-            Company parentCategory = new Company(parentCategoryId);
+            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
 
-            List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+            try
+            {
+                Company parentCategory = new Company(parentCategoryId);
 
-            MarketCenterGalleryCategoriesModel mcGallerCategories = new MarketCenterGalleryCategoriesModel();
-            mcGallerCategories.CategoriesList = categories;
+                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+
+                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+                mcGallerCategories.CategoriesList = categories;
+
+                //return View("MarketCenterGalleryCategories", mcGallerCategories);
+            }
+            catch (Exception ex)
+            {
+                ex = new Exception("Gateway Page Controller Fail. GetNonMarketCenterCategories.");
+                base.LogException(ex);
+            }
 
             return View("MarketCenterGalleryCategories", mcGallerCategories);
-                        
+
         }         
         
     }
