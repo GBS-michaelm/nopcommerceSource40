@@ -3158,6 +3158,8 @@ a.eu-cookie-privacyinfo-tag {
     text-decoration: line-through;
     color: #999;
     margin-bottom: 5px;
+    font-size: small;
+    line-height: .5;
 }
 
     .product-details-page .old-product-price label {
