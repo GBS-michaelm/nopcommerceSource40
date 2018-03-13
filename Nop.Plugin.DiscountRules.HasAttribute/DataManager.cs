@@ -9,7 +9,7 @@ using Nop.Services.Logging;
 using Nop.Core.Data;
 using Newtonsoft.Json;
 
-namespace Nop.Plugin.DiscountRules.HasCategory
+namespace Nop.Plugin.DiscountRules.HasAttribute
 {
     public class DBManager
     {

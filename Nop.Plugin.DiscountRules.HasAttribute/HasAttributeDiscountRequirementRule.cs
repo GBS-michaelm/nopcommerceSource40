@@ -12,39 +12,16 @@ using System.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Plugin.DiscountRules.HasCategory
+namespace Nop.Plugin.DiscountRules.HasAttribute
 {
-    public partial class HasCategoryDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
+    public partial class HasAttributeDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         private readonly ISettingService _settingService;
-        private readonly ICategoryService _categoryService;
 
-        public HasCategoryDiscountRequirementRule(ISettingService settingService,
+        public HasAttributeDiscountRequirementRule(ISettingService settingService,
             ICategoryService categoryService)
         {
             this._settingService = settingService;
-            this._categoryService = categoryService;
-        }
-
-        public int getCatId(int proId, int resCatId)
-        {
-            var productCategories = _categoryService.GetProductCategoriesByProductId(proId, true);
-            if (productCategories.Count > 0)
-            {
-                var category = productCategories[0].Category;
-                if (category != null)
-                {
-                    return category.Id;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                return 0;
-            }
         }
 
         /// <summary>
@@ -60,12 +37,12 @@ namespace Nop.Plugin.DiscountRules.HasCategory
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var restrictedCategoryIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", request.DiscountRequirementId));
+            var RestrictedAttributeIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedAttributeIds-{0}", request.DiscountRequirementId));
 
             var settingId = _settingService.GetSettingById(2260);
-            var settingInfo = _settingService.GetSetting(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", request.DiscountRequirementId));
+            var settingInfo = _settingService.GetSetting(string.Format("DiscountRequirement.RestrictedAttributeIds-{0}", request.DiscountRequirementId));
 
-            if (String.IsNullOrWhiteSpace(restrictedCategoryIds))
+            if (String.IsNullOrWhiteSpace(RestrictedAttributeIds))
             {
                 //valid
                 result.IsValid = true;
@@ -81,11 +58,11 @@ namespace Nop.Plugin.DiscountRules.HasCategory
             //      {Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
             //3. The comma-separated list of product identifiers with quantity range.
             //      {Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-            var restrictedCategories = restrictedCategoryIds
+            var restrictedAttributes = RestrictedAttributeIds
                 .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .ToList();
-            if (!restrictedCategories.Any())
+            if (!restrictedAttributes.Any())
                 return result;
 
             //group products in the cart by product ID
@@ -115,36 +92,36 @@ namespace Nop.Plugin.DiscountRules.HasCategory
 
 
             bool allFound = true;
-            foreach (var restrictedCategory in restrictedCategories)
+            foreach (var restrictedAttribute in restrictedAttributes)
             {
-                if (String.IsNullOrWhiteSpace(restrictedCategory))
+                if (String.IsNullOrWhiteSpace(restrictedAttribute))
                     continue;
 
                 bool found1 = false;
                 //foreach (var sci in cart)
                 foreach (DataRow dRow in dView.Table.Rows)
                 {
-                    if (restrictedCategory.Contains(":"))
+                    if (restrictedAttribute.Contains(":"))
                     {
-                        if (restrictedCategory.Contains("-"))
+                        if (restrictedAttribute.Contains("-"))
                         {
                             //the third way (the quantity rage specified)
                             //{Category ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                            int restrictedCategoryId;
-                            if (!int.TryParse(restrictedCategory.Split(new[] { ':' })[0], out restrictedCategoryId))
+                            int restrictedAttributeId;
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[0], out restrictedAttributeId))
                                 //parsing error; exit;
                                 return result;
                             int quantityMin;
-                            if (!int.TryParse(restrictedCategory.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
                                 //parsing error; exit;
                                 return result;
                             int quantityMax;
-                            if (!int.TryParse(restrictedCategory.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
                                 //parsing error; exit;
                                 return result;
 
-                            //if (sci.ProductId == restrictedCategoryId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
+                            //if (sci.ProductId == restrictedAttributeId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
+                            if ((int)dRow["CategoryId"] == restrictedAttributeId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
                             {
                                 found1 = true;
                                 break;
@@ -154,19 +131,17 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                         {
                             //the second way (the quantity specified)
                             //{Category ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                            int restrictedCategoryId;
-                            if (!int.TryParse(restrictedCategory.Split(new[] { ':' })[0], out restrictedCategoryId))
+                            int restrictedAttributeId;
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[0], out restrictedAttributeId))
                                 //parsing error; exit;
                                 return result;
                             int quantity;
-                            if (!int.TryParse(restrictedCategory.Split(new[] { ':' })[1], out quantity))
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[1], out quantity))
                                 //parsing error; exit;
                                 return result;
 
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId && (int)dRow["TotalQuantity"] >= quantity)
+                            if ((int)dRow["CategoryId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
                             {
-                                //var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
-
                                 found1 = true;
                                 break;
                             }
@@ -175,13 +150,11 @@ namespace Nop.Plugin.DiscountRules.HasCategory
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedCategoryId;
-                        if (int.TryParse(restrictedCategory, out restrictedCategoryId))
+                        int restrictedAttributeId;
+                        if (int.TryParse(restrictedAttribute, out restrictedAttributeId))
                         {
-                            if ((int)dRow["CategoryId"] == restrictedCategoryId)
+                            if ((int)dRow["CategoryId"] == restrictedAttributeId)
                             {
-                                //var testCatId = getCatId(sci.ProductId, restrictedCategoryId);
-
                                 found1 = true;
                                 break;
                             }
@@ -215,7 +188,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
         {
             //configured in RouteProvider.cs
-            string result = "Plugins/DiscountRulesHasCategory/Configure/?discountId=" + discountId;
+            string result = "Plugins/DiscountRulesHasAttribute/Configure/?discountId=" + discountId;
             if (discountRequirementId.HasValue)
                 result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
             return result;
@@ -224,20 +197,20 @@ namespace Nop.Plugin.DiscountRules.HasCategory
         public override void Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories", "Restricted Categories [and quantity range]");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.Hint", "The comma-separated list of Category identifiers (e.g. 77, 123, 156). You can find a Category ID on its details page. You can also specify the comma-separated list of Category identifiers with quantities ({Category ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of Category identifiers with quantity range ({Category ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.AddNew", "Add Category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.Choose", "Choose");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes", "Restricted Attributes [and quantity range]");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Hint", "The comma-separated list of Attribute identifiers (e.g. 77, 123, 156). You can find a Category ID on its details page. You can also specify the comma-separated list of Category identifiers with quantities ({Category ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of Category identifiers with quantity range ({Category ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.AddNew", "Add Attribute");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Choose", "Choose");
             base.Install();
         }
 
         public override void Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.Hint");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.AddNew");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasCategory.Fields.Categories.Choose");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Hint");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.AddNew");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Choose");
             base.Uninstall();
         }
     }
