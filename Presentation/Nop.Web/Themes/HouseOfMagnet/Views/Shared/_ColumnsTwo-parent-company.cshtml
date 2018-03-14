@@ -1,5 +1,4 @@
 ﻿@using Nop.Plugin.DataAccess.GBS;
-@using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.Themes;
@@ -7,7 +6,6 @@
 @using System.Text;
 @using Nop.Services.Catalog;
 @using Nop.Services.Seo;
-@using Nop.Core.Domain.Seo;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
 
 @{
@@ -183,7 +181,8 @@
         </div>
         <div id="agentPacks">
             @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
-            @agentPacks
+            <h3>Discounted Agent Packs</h3>
+            @Html.Raw(@agentPacks)
         </div>
         <div id="marketCenterAbout">
             @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@

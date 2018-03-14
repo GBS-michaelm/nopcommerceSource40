@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nop.Plugin.BusinessDataAccess.GBS;
 using System.Data;
 using Nop.Web.Models.Catalog;
@@ -10,18 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Factories;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Vendors;
-using Nop.Core;
-using Nop.Services.Directory;
-using Nop.Services.Media;
-using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Stores;
-using Nop.Services.Topics;
-using Nop.Services.Events;
-using Nop.Services.Common;
 using Nop.Core.Caching;
-using System.Web;
 using Nop.Services.Logging;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
