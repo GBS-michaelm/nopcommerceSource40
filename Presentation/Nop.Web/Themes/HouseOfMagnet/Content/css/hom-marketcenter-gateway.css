@@ -23,10 +23,11 @@
 	margin-right: 50px;
 }*/
 #marketCenterSelect p {
-	margin: 0 0 20px;
-	line-height: 2.3;
-	float: left;
+    margin: 0 0 20px;
+    line-height: 1.25;
+    font-weight: bold;
 }
+
 #marketCenterSelect main {
 	min-width: 320px;
 	max-width: 1085px;
@@ -415,27 +416,31 @@ label:hover {
 /* END - Tabs */    
 
 /* BEGIN - Featured/Popular Companies */
-a.mc-img-link
-{
+a.mc-img-link {
     display: block;
     float: left;
     border: dashed 1px #fff;
     padding: 4px;
     margin: 12px;
+    width: 105px;
+    height: 85px;
+    text-align: center;
 }
+
     
 a.mc-img-link:hover
 {
     border: dashed 1px #FF6F06;
 }
-    
-a.mc-img-link img
-{
+
+a.mc-img-link img {
     display: block;
     border: none;
     max-width: 100px;
     max-height: 68px;
+    margin: 0 auto;
 }
+
 /* END - Featured/Popular Companies */
 
 /* BEGIN - Alpha Lists */
