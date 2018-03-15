@@ -24,7 +24,7 @@
     int cartItemID = (!string.IsNullOrEmpty(Request.QueryString["updatecartitemid"])) ? Convert.ToInt32(Request.QueryString["updatecartitemid"]) : 0;
     string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
     string sku = Request.QueryString["sku"];
-    string pageid = (!string.IsNullOrEmpty(Request.QueryString["pageid"])) ? Request.QueryString["pageid"] : string.Empty;
+
     string iframeData = string.Empty;
     var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
@@ -81,13 +81,7 @@
     }
 
     page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
-    if(sku.Contains("BP"))
-    {
-        if(!string.IsNullOrEmpty(pageid))
-        {
-            page = page + "&pageid=" + pageid;
-        }
-    }
+
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
     <input type="hidden" id="hdn-qty" value="@qty" />
@@ -182,7 +176,7 @@
 
             }
 
-            previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
+            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
 
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
