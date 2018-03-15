@@ -554,7 +554,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             innerLinkStringBuilder.Append("<li>");
             innerLinkStringBuilder.Append("<a id='a-mc-link-" + marketcenter.id + "' title='" + marketcenter.Name + "' ");
-
+                        
             if (marketcenter.childCompanies.Count > 0)
             {
                 innerLinkStringBuilder.Append("class='mc-text-link box-handle' href='#window-offices-" + marketcenter.id + "' >");
