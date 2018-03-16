@@ -1,1 +1,3 @@
 Disallow: /login
+Disallow: /register
+Disallow: /search
