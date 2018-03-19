@@ -74,15 +74,17 @@
 <div class="page-title panel-heading categorytitle">
     <h1>@Model.Name</h1>
 </div>
-@if (!String.IsNullOrWhiteSpace(Model.Description))
-        {
+
             <div class="list-content">
-                @Html.Raw(Model.Description)
+@if (!String.IsNullOrWhiteSpace(Model.Description))
+{  
+    @Html.Raw(Model.Description)
+}                
                 <div class="category-tabs-wrapper ">
                     @Html.Widget("category_tabs", currentCategoryId)
                 </div>
             </div>
-        }
+
 @*<div class="category-section">
     <div class="row">
         @*<div class="col-sm-6">
