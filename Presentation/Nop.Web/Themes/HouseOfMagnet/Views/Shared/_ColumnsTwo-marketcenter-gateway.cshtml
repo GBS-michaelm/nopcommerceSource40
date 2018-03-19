@@ -9,6 +9,8 @@
 @using Nop.Services.Catalog;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
 @using System.Collections.Specialized;
+@using Nop.Plugin.BusinessLogic.GBS;
+@using Nop.Services.Configuration;
 
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -41,8 +43,15 @@
 }
 
 @{
+
+    var _settingService = EngineContext.Current.Resolve<ISettingService>();
+    var _specificationAttributeService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    string marketCenterDefaultID = _settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterDefaultId", storeId: _storeContext.CurrentStore.Id);
+
     int id = @Model.Id;
     string markcenterType = ""; ; //get query string from url
+                                  //string marketcenterOverride = ""; // over ride h1 h2 etc for page
 }
 
 @{ 
@@ -77,7 +86,52 @@
 
 @{
 
-    MarketCenter marketCenter = new MarketCenter(id, lightVer: false);
+    MarketCenter marketCenter = null;
+
+    if (id != Int32.Parse(marketCenterDefaultID))
+    {
+        string specOptionId = "";
+
+
+        //using a different mc type
+        Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+        paramDicEx.Add("@categoryId", id);
+
+        DBManager manager = new DBManager();
+        string select = "EXEC usp_SelectGBSCategorySpecAttributesOptionMapping @categoryId";
+        DataView result = manager.GetParameterizedDataView(select, paramDicEx);
+
+        if (result.Count > 0)
+        {
+            DataTable specAttrOptTable = result.ToTable(true, "SpecificationAttributeOptionId");
+
+            var specOptIds = specAttrOptTable.AsEnumerable().Select(r => r.Field<int>("SpecificationAttributeOptionId")).ToArray();
+            IList<SpecificationAttributeOption> specOptions = _specificationAttributeService.GetSpecificationAttributeOptionsByIds(specOptIds);
+
+            string whatAmIRef = _settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName", storeId: _storeContext.CurrentStore.Id);
+
+            specOptionId = specOptions.Where(x => x.SpecificationAttribute.Name == whatAmIRef).FirstOrDefault().Id.ToString();
+
+        }
+
+        if (!string.IsNullOrEmpty(specOptionId))
+        {
+            //if attr is found assign mc to this cat id
+            marketCenter = new MarketCenter(id, lightVer: false);
+            markcenterType = specOptionId;
+        }
+        else
+        {
+            //fall back on default
+            marketCenter = new MarketCenter(Int32.Parse(marketCenterDefaultID), lightVer: false);
+        }
+        
+    }
+    else
+    {
+        marketCenter = new MarketCenter(id, lightVer: false);
+    }
+
     string h1 = marketCenter.h1;
     string h2 = marketCenter.h2;
     string topText = marketCenter.topText;
@@ -86,15 +140,6 @@
     string foregroundImage = marketCenter.foregroundImage;
     string backgroundImage = marketCenter.backgroundImage;
 
-
-    ////testing
-    //string h1 = "";
-    //string h2 = "";
-    //string topText = "";
-    //string bottomText = "";
-    //string backgroundColor = "";
-    //string foregroundImage = "";
-    //string backgroundImage = "";
 
 }
 
@@ -114,7 +159,7 @@
                 @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
                 @foreach (var cat in Model.CategoryBreadcrumb)
                 {
-                    var isLastCategory = cat.Id == Model.Id;
+                    var isLastCategory = cat.Id == @id;
                 <li>
                     @if (isLastCategory)
                     {
@@ -150,7 +195,7 @@
             <div id="gateway-innner">
                 <div id="gatewayLayersContainer">
                     <div id="gatewayWYSIWYG" class="sports-wysiwyg">
-                        @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id, type = markcenterType })
+                        @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = marketCenterDefaultID, type = markcenterType })
                     </div>
                     
                     <img id="gatewayForegroundImage" class="" src="@foregroundImage" />

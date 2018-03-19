@@ -3137,6 +3137,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\QuickEmailSignUp.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGalleryCategories.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\MarketCenterGalleryCategory.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\MarketCenterNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
