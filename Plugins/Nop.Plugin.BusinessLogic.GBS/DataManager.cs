@@ -35,25 +35,26 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 return "Row Not Found";
             }
-            
+
         }
 
 
         private DbConnection dbConnection = null;
-        
+
         public DBManager()
         {
             this.dbConnection = new SqlConnection();
             dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
         }
-        public DBManager( string connectionString)
+        public DBManager(string connectionString)
         {
             this.dbConnection = new SqlConnection();
 
             if (!string.IsNullOrEmpty(connectionString))
             {
                 dbConnection.ConnectionString = connectionString;
-            } else
+            }
+            else
             {
                 dbConnection.ConnectionString = new DataSettingsManager().LoadSettings().DataConnectionString;
             }
@@ -80,7 +81,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
         }
 
-                           
+
 
         public DataView GetDataView(String sqlQuery)
         {
@@ -112,10 +113,10 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                 {
                     Close();
                 }
-               
+
             }
 
-           
+
 
         }
 
@@ -170,7 +171,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 
                     return dv;
                 }
-                
+
 
             }
             catch (SqlException ex)
@@ -220,6 +221,103 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 _logger.Error("SQL Exception in Business Logic Datamanager GetParameterizedDataView - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
                 return null;
+            }
+            finally
+            {
+                Close();
+            }
+
+        }
+        public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    return cmd.ExecuteScalar();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedScalar - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
+                throw ex;
+            }
+            finally
+            {
+                Close();
+            }
+
+        }
+        public SqlDataReader GetParameterizedDataReader(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                        }
+                    }
+                    Open();
+                    return cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedDataReader - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
+                Close();
+                throw ex;
+            }
+            finally
+            {
+                //Close();
+            }
+
+        }
+        public string GetParameterizedJsonString(string query, Dictionary<string, Object> myDict)
+        {
+            try
+            {
+
+                using (SqlDataReader reader = GetParameterizedDataReader(query, myDict))
+                {
+                    string jsonString = "";
+                    while (reader.Read())
+                    {
+                        jsonString += reader.GetValue(0).ToString();
+                    }
+                    return jsonString;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("SQL Exception in Order Datamanager GetParameterizedJsonString - query : " + query + " " + JsonConvert.SerializeObject(myDict, Formatting.Indented), ex);
+                Close();
+                throw ex;
             }
             finally
             {

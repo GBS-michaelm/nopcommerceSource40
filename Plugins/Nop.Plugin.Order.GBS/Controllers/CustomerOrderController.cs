@@ -53,12 +53,17 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
             int? page = 1;
             string status = "";
+            int pageSize = 5;
             if (Request.QueryString.Count > 0)
             {
                 page = Convert.ToInt32(Request.QueryString["page"]);
                 status = Convert.ToString(Request.QueryString["status"]);
+                if (Request.QueryString["pageSize"] != null)
+                {
+                    pageSize = Convert.ToInt32(Request.QueryString["pageSize"]);
+                }
             }
-            var model = _orderModelFactory.PrepareCustomerOrderListModel(status, page);
+            var model = _orderModelFactory.PrepareCustomerOrderListModel(status, page, pageSize);
             ViewBag.SelectedTab = status;
             TempData["SelectedTab"] = status;
 
