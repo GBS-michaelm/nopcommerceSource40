@@ -76,9 +76,12 @@
 </div>
 @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
-            <p class="list-content">
+            <div class="list-content">
                 @Html.Raw(Model.Description)
-            </p>
+                <div class="category-tabs-wrapper ">
+                    @Html.Widget("category_tabs", currentCategoryId)
+                </div>
+            </div>
         }
 @*<div class="category-section">
     <div class="row">

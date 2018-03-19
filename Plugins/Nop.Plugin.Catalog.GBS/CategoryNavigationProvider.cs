@@ -22,7 +22,7 @@ namespace Nop.Plugin.Catalog.GBS
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "category_navigation_block" };
+            return new List<string> { "category_navigation_block","category_tabs" };
         }
         /// <summary>
         /// Gets a route for provider configuration
@@ -46,14 +46,28 @@ namespace Nop.Plugin.Catalog.GBS
         /// <param name="routeValues">Route values</param>
         public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            actionName = "CategoryNavigation";
-            controllerName = "WidgetsCategoryNavigation";            
-            routeValues = new RouteValueDictionary
+            if (widgetZone == "category_tabs")
             {
-                {"Namespaces", "Nop.Plugin.Catalog.GBS.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}                
-            };
+                actionName = "CategoryTabs";
+                controllerName = "WidgetsCategoryNavigation";
+                routeValues = new RouteValueDictionary
+                {
+                    {"Namespaces", "Nop.Plugin.Catalog.GBS.Controllers"},
+                    {"area", null},
+                    {"widgetZone", widgetZone}
+                };
+            }
+            else
+            {
+                actionName = "CategoryNavigation";
+                controllerName = "WidgetsCategoryNavigation";
+                routeValues = new RouteValueDictionary
+                {
+                    {"Namespaces", "Nop.Plugin.Catalog.GBS.Controllers"},
+                    {"area", null},
+                    {"widgetZone", widgetZone}
+                };
+            }
         }
 
         /// <summary>
