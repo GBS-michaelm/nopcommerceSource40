@@ -11387,8 +11387,6 @@ body hr {
 #MadMondayPage .product-grid .buttons {
     display: inherit
 }
-}
-
 /* Pager and pager dropdown Order history page*/
 .paging-size-dropdown {
     margin-left: 50px;
@@ -11407,4 +11405,9 @@ body hr {
 }
 .orderplace {
     width: 165px;
+}
+
+/*To Make Quick View button in center*/
+.pictures > .quick-view-button {
+    margin-top: 40%;
 }

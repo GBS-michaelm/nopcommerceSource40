@@ -23,13 +23,16 @@
 	margin-right: 50px;
 }*/
 #marketCenterSelect p {
-	margin: 0 0 20px;
-	line-height: 2.3;
-	float: left;
+    margin: 0 0 20px;
+    line-height: 1.25;
+    font-weight: bold;
 }
+
 #marketCenterSelect main {
 	min-width: 320px;
-	max-width: 1085px;
+	/*max-width: 1085px;*/
+    max-width: 1450px;
+    width: 1149px;
 	min-height: 315px;
 	padding: 38px;
 	padding-top: 0px;
@@ -415,27 +418,31 @@ label:hover {
 /* END - Tabs */    
 
 /* BEGIN - Featured/Popular Companies */
-a.mc-img-link
-{
+a.mc-img-link {
     display: block;
     float: left;
     border: dashed 1px #fff;
     padding: 4px;
     margin: 12px;
+    width: 105px;
+    height: 85px;
+    text-align: center;
 }
+
     
 a.mc-img-link:hover
 {
     border: dashed 1px #FF6F06;
 }
-    
-a.mc-img-link img
-{
+
+a.mc-img-link img {
     display: block;
     border: none;
     max-width: 100px;
     max-height: 68px;
+    margin: 0 auto;
 }
+
 /* END - Featured/Popular Companies */
 
 /* BEGIN - Alpha Lists */
@@ -547,6 +554,13 @@ a.mc-img-link img
     padding: 2px;
 }
 
+
+#featuredSearch {
+    display: block !important;
+    width: 50%;
+    height : 35px;
+}
+
 .dv-cant-find-office
 {
     margin-top: 18px;
@@ -619,6 +633,11 @@ a.mc-img-link img
 #profile-grid .panel-thumbnail { overflow: hidden; }
 #profile-grid .img-rounded { border-radius: 4px 4px 0 0;}
 
+.modal {
+    overflow: auto;
+}
+
+
 .modal-backdrop {
     /*z-index: -1 !important;*/
 }
@@ -674,4 +693,9 @@ a.mc-img-link img
 
 .modal-content.request-link {
     text-decoration: underline;
+}
+
+
+.hide-me {
+    display: none;
 }

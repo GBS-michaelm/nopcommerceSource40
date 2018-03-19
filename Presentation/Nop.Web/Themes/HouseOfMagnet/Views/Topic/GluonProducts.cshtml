@@ -1,4 +1,4 @@
-﻿@model TopicModel
+@model TopicModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Models.Topics;
 @using Nop.Core.Infrastructure;
@@ -24,7 +24,7 @@
     int cartItemID = (!string.IsNullOrEmpty(Request.QueryString["updatecartitemid"])) ? Convert.ToInt32(Request.QueryString["updatecartitemid"]) : 0;
     string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
     string sku = Request.QueryString["sku"];
-    string pageid = (!string.IsNullOrEmpty(Request.QueryString["pageid"])) ? Request.QueryString["pageid"] : string.Empty;
+
     string iframeData = string.Empty;
     var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
@@ -38,6 +38,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
+    string pageId = string.Empty;
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -46,6 +47,11 @@
         if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "IframeURL")
         {
             page = item.SpecificationAttributeOption.Name;
+        }
+
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
+        {
+            pageId = item.SpecificationAttributeOption.Name;
         }
     }
 
@@ -74,14 +80,8 @@
         editActive = true;
     }
 
-    page = page + sku + "&qty=" + qty + "&id=" + cartItemID;
-    if(sku.Contains("BP"))
-    {
-        if(!string.IsNullOrEmpty(pageid))
-        {
-            page = page + "&pageid=" + pageid;
-        }
-    }
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
+
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
     <input type="hidden" id="hdn-qty" value="@qty" />
@@ -176,7 +176,7 @@
 
             }
 
-            previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
+            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
 
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());

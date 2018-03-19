@@ -3135,6 +3135,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.MadMonday.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ColumnsTwo-listing-Mad-Monday.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\WidgetsMarketing\QuickEmailSignUp.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Topic\MarketCenterNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

@@ -5,10 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.BusinessLogic.GBS.Models;
-//using Nop.Plugin.Payments.GBS.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-//using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -44,14 +42,18 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
 
             var model = new ConfigurationModel
             {
-                                
+
                 Hack = GBSBusinessLogicSettings.Hack,
+                MarketCenterDefaultId = GBSBusinessLogicSettings.MarketCenterDefaultId,
+                MarketCenterWhatAmIReferenceName = GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
             if (storeScope > 0)
             {
                 model.Hack_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.Hack, storeScope);
+                model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);               
+                model.MarketCenterWhatAmIReferenceName_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
             }
 
             return View("~/Plugins/BusinessLogic.GBS/Views/BusinessLogic/Configure.cshtml", model);
@@ -72,15 +74,27 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             //save settings
 
             GBSBusinessLogicSettings.Hack = model.Hack;
-            
+            GBSBusinessLogicSettings.MarketCenterDefaultId = model.MarketCenterDefaultId;
+            GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName = model.MarketCenterWhatAmIReferenceName;
+
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-                         
+
             if (model.Hack_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.Hack, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.Hack, storeScope);
+
+            if (model.MarketCenterDefaultId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);
+
+            if (model.MarketCenterWhatAmIReferenceName_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
