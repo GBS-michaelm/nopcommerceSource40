@@ -30,7 +30,9 @@
 
 #marketCenterSelect main {
 	min-width: 320px;
-	max-width: 1085px;
+	/*max-width: 1085px;*/
+    max-width: 1450px;
+    width: 1149px;
 	min-height: 315px;
 	padding: 38px;
 	padding-top: 0px;
@@ -552,6 +554,13 @@ a.mc-img-link img {
     padding: 2px;
 }
 
+
+#featuredSearch {
+    display: block !important;
+    width: 50%;
+    height : 35px;
+}
+
 .dv-cant-find-office
 {
     margin-top: 18px;
@@ -684,4 +693,9 @@ a.mc-img-link img {
 
 .modal-content.request-link {
     text-decoration: underline;
+}
+
+
+.hide-me {
+    display: none;
 }

@@ -59,6 +59,7 @@
     
     <div id="mcHiddenWindows" style="display: none;">
         @Html.Raw(Model.hiddenHtml)
+        @*@Html.Raw(Model.hiddenTopLevelAll)*@
     </div>
 
 </div>
@@ -198,6 +199,17 @@
         
     }
 
+    //display this result when search button is clicked. still filter on key up stroke.
+    function FeaturedSearchCall(elem) {
+
+        console.log("featured Searching");
+        
+        $("#featuredSearchList").searchIt({
+            itemSelector: 'a',
+            $searchInput: $(elem),
+        });
+
+    }
 
 
 

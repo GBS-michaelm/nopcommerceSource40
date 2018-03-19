@@ -108,9 +108,13 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 {
                     MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
 
-                    if (tab.Key == "HiddenHtml")
+                    if (tab.Key == "HiddenChildrenHtml")
                     {
                         tabsContainer.hiddenHtml = tab.Value;
+                    }
+                    else if (tab.Key == "HiddenTopLevel")
+                    {
+                        tabsContainer.hiddenTopLevelAll = tab.Value;
                     }
                     else
                     {
