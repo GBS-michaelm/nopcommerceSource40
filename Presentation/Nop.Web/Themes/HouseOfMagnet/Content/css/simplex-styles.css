@@ -11408,3 +11408,17 @@ body hr {
 .orderplace {
     width: 165px;
 }
+
+/*Category Tabs*/
+.category-tabs {
+    display: flex;
+    justify-content: flex-end;
+    width: 500px;
+}
+.list-content {
+    justify-content: flex-end;
+    display: inline-flex;
+}
+    .category-tabs .topic-html-content-body {
+
+    }
