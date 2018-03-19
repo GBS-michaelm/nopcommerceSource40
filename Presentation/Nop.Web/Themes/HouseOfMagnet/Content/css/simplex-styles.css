@@ -11367,3 +11367,7 @@ body hr {
 #emailInput, #countryDropdown, .address-list .email {
     display: none;
 }
+/*To Make Quick View button in center*/
+.pictures > .quick-view-button {
+    margin-top: 40%;
+}
