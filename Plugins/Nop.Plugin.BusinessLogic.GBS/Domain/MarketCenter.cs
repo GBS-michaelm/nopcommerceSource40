@@ -516,7 +516,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
         private string MarketCenterTypeURLHandle(string marketCenterUrl, string type, int id)
         {
-            string handledUrl = string.IsNullOrEmpty(marketCenterUrl) ? "/request-marketcenter-product?type=" + type + "&company=" + id + "" : marketCenterUrl;
+            string handledUrl = string.IsNullOrEmpty(marketCenterUrl) ? "/hom_marketcenter_not_found?type=" + type + "&company=" + id + "" : marketCenterUrl;
             return handledUrl;
         }
 
