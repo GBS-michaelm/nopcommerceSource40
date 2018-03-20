@@ -19,6 +19,7 @@ using Nop.Web.Framework.Themes;
 using Nop.Services.Topics;
 using Nop.Core.Domain.Topics;
 using Nop.Web.Models.Catalog;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
@@ -34,6 +35,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         private readonly ILocalizationService _localizationService;
         public readonly IStoreContext _storeContext;
         public readonly ITopicTemplateService _topicTemplateService;
+        private readonly ILogger _logger;
+
 
         public WidgetsCategoryNavigationController(ICatalogModelFactoryCustom catalogModelFactoryCustom,
             ICategoryService categoryService,
@@ -43,7 +46,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             ISettingService settingService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
-            ITopicTemplateService topicTemplateService
+            ITopicTemplateService topicTemplateService,
+            ILogger logger
             )
         {
             this._categoryService = categoryService;
@@ -56,6 +60,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._topicTemplateService = topicTemplateService;
+            this._logger = logger;
 
         }
 
@@ -182,21 +187,38 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         public ActionResult CategoryTabs(string widgetZone, object additionalData = null)
         {
             var currentCategoryId = 0;
-            if (additionalData != null)
+            try
             {
-                int.TryParse(additionalData.ToString(), out currentCategoryId);
+
+                if (additionalData != null)
+                {
+                    int.TryParse(additionalData.ToString(), out currentCategoryId);
+                }
+                //get topic id from mapping table
+                var model = _catalogModelFactoryCustom.PrepareCategoryTabTopicModel(currentCategoryId);
+                if (model == null) {
+                    _logger.Error("Model is null in CategoryTabs: category id = " +currentCategoryId);
+                    return null;
+                }
+                //substitute viewpath with topic template.
+                //do this dynamically so that different templates can be used for this widget.
+                var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+                TopicTemplate topicTemplate = _topicTemplateService.GetTopicTemplateById(model.TopicTemplateId);
+                if (topicTemplate == null) {
+                    _logger.Error("topicTemplate is null in CategoryTabs: category id = " + currentCategoryId);
+                    return null;
+                }
+
+                //get pricing
+                ViewBag.ProductDetailModel = _catalogModelFactoryCustom.PrepareCategoryFeaturedProductDetailsModel(currentCategoryId);
+
+                return View("~/Themes/" + themeName + "/Views/Topic/" + topicTemplate.ViewPath + ".cshtml", model);
+            } catch (Exception ex)
+            {
+                _logger.Error("Exception in CategoryTabs: category id = "+currentCategoryId, ex);
+
+                return null;
             }
-            //get topic id from mapping table
-            var model = _catalogModelFactoryCustom.PrepareCategoryTabTopicModel(currentCategoryId);
-            //substitute viewpath with topic template.
-            //do this dynamically so that different templates can be used for this widget.
-            var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-            TopicTemplate topicTemplate = _topicTemplateService.GetTopicTemplateById(model.TopicTemplateId);
-
-            //get pricing
-            ViewBag.ProductDetailModel = _catalogModelFactoryCustom.PrepareCategoryFeaturedProductDetailsModel(currentCategoryId);
-
-            return View("~/Themes/" + themeName + "/Views/Topic/"+ topicTemplate.ViewPath + ".cshtml", model);
 
         }
 

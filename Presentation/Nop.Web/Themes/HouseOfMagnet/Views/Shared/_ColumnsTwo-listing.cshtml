@@ -114,14 +114,14 @@
         else
         {
             @Html.Widget("left_side_column_before")
-            if (categoryNavigationSettings.IsActive)
+            @*if (categoryNavigationSettings.IsActive)
             {
                 @Html.Widget("category_navigation_block", currentCategoryId + "," + currentProductId)
             }
             else
             {
                 @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-            }
+            }*@
             @*@Html.Widget("left_side_column_after_category_navigation")
             @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
             @Html.Action("VendorNavigation", "Catalog")*@
