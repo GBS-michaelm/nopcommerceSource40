@@ -18,7 +18,7 @@
     text-decoration: underline;
     color: #234782;
     font-weight: bold;
-    
+    cursor: pointer;
 }
 
 #agentPacks div.topic-html-content {
