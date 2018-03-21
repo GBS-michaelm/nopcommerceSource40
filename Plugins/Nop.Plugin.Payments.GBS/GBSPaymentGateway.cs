@@ -396,9 +396,12 @@ namespace Nop.Plugin.Payments.GBS
                     paramDic.Add("@CardType", response.cardBrand.ToString());
                     paramDic.Add("@ExpMonth", payment.cardExpireMonth);
                     paramDic.Add("@ExpYear", payment.cardExpireYear);
-                    
-                    string insert = "INSERT INTO Profiles (CustomerID, ProfileID, NickName, Last4Digits, CardType, ExpMonth, ExpYear) ";
-                    insert += "VALUES ('" + customer.Id + "', '" + response.customerRefNum + "', '" + nickName + "', '" + last4Digits + "', '" + response.cardBrand + "', '" + payment.cardExpireMonth + "', '" + payment.cardExpireYear + "')";
+                    paramDic.Add("@BillingAddressId", customer.BillingAddress.Id.ToString());
+
+                    string insert = "usp_InsertCCProfile @CustomerID,@ProfileID,@NickName,@Last4Digits,@CardType,@ExpMonth,@ExpYear,@BillingAddressId";
+
+                    //string insert = "INSERT INTO Profiles (CustomerID, ProfileID, NickName, Last4Digits, CardType, ExpMonth, ExpYear) ";
+                    //insert += "VALUES ('" + customer.Id + "', '" + response.customerRefNum + "', '" + nickName + "', '" + last4Digits + "', '" + response.cardBrand + "', '" + payment.cardExpireMonth + "', '" + payment.cardExpireYear + "')";
                     try
                     {
                         manager.SetParameterizedQueryNoData(insert, paramDic);

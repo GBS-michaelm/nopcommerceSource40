@@ -3158,6 +3158,8 @@ a.eu-cookie-privacyinfo-tag {
     text-decoration: line-through;
     color: #999;
     margin-bottom: 5px;
+    font-size: small;
+    line-height: .5;
 }
 
     .product-details-page .old-product-price label {
@@ -4580,7 +4582,7 @@ a.eu-cookie-privacyinfo-tag {
 }
 
 #cart-page .modal-backdrop {
-    z-index: 9999;
+    z-index: 1000;
 }
 
 .wishlist-page .update-email-button {
@@ -11362,4 +11364,65 @@ body hr {
 /*** Address pages **/
 #emailInput, #countryDropdown, .address-list .email {
     display: none;
+}
+
+/*** Mad Monday Page **/
+#MadMondayPage .product-grid .Specialty-QuickStix-3-pack {
+    width: 570px;
+    height: 570px;
+}
+
+#MadMondayPage .product-grid .pictures .Specialty-QuickStix-3-pack img {
+    height: 492px;
+    left: 43px;
+    position: absolute;
+    top: 32px;
+    width: 192px;
+}
+
+#MadMondayPage #productInfo {
+    float: right !important
+}
+
+#MadMondayPage .product-grid .buttons {
+    display: inherit
+}
+/* Pager and pager dropdown Order history page*/
+.paging-size-dropdown {
+    margin-left: 50px;
+    width: 80px;
+    margin-top: 4px;
+}
+.pager > ul > li:first-child {
+    display: none;
+}
+.pager{
+    float:right;
+    margin-top:0px !important;
+}
+.head-left{
+    width:100%;
+}
+.orderplace {
+    width: 165px;
+}
+
+/*Category Tabs*/
+.category-tabs {
+    display: flex;
+    justify-content: flex-end;
+    width: 500px;
+}
+.list-content {
+    justify-content: flex-end;
+    display: inline-flex;
+}
+    .category-tabs .topic-html-content-body {
+
+    }
+
+
+/*To Make Quick View button in center*/
+.pictures > .quick-view-button {
+    margin-top: 40%;
 }

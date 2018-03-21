@@ -1,4 +1,4 @@
-﻿@model TopicModel
+@model TopicModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Models.Topics;
 @using Nop.Core.Infrastructure;
@@ -24,6 +24,7 @@
     int cartItemID = (!string.IsNullOrEmpty(Request.QueryString["updatecartitemid"])) ? Convert.ToInt32(Request.QueryString["updatecartitemid"]) : 0;
     string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
     string sku = Request.QueryString["sku"];
+
     string iframeData = string.Empty;
     var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
@@ -37,6 +38,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
+    string pageId = string.Empty;
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -46,8 +48,13 @@
         {
             page = item.SpecificationAttributeOption.Name;
         }
+
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
+        {
+            pageId = item.SpecificationAttributeOption.Name;
+        }
     }
-    page = page + sku;
+
 
     //Handles edit from cart
     if (cartItemID != 0)
@@ -73,6 +80,7 @@
         editActive = true;
     }
 
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
 
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
@@ -81,8 +89,9 @@
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
     <input type="hidden" id="hdn-customer-email" value="@customerEmail" />
     <input type="hidden" id="hdn-authenticated" value="@isAuthenticated.ToString()" />
+    <input type="hidden" id="hdn-authentice-type" value="" />
     <div class="gluon-template" style="overflow:hidden; height:1200px">
-        <iframe id="gluon-iframe" src="@T("hom.url")@page&id=@cartItemID" style="height:1200px; width:100%;"></iframe>
+        <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 
 
@@ -100,6 +109,7 @@
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
+            $("#hdn-authentice-type").val("UPO");
             if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
@@ -110,6 +120,7 @@
             }
         }
         else if (e.data == "VALIDATEBCT") {
+            $("#hdn-authentice-type").val("BCT");
             if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
@@ -165,8 +176,8 @@
 
             }
 
-                previewDisplay = (opc || opcAlt) ? "http://gluon.houseofmagnets.com" + cartImageSrc : "undefined";
-            
+            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
+
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
@@ -179,11 +190,11 @@
 </script>
 
 @*<script type="text/javascript">
-    $(document).ready(function () {
-        if($("#hdn-iframe-data").val() != "")
-        {
-            $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
-        }
-    });
-</script>*@
+        $(document).ready(function () {
+            if($("#hdn-iframe-data").val() != "")
+            {
+                $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
+            }
+        });
+    </script>*@
 

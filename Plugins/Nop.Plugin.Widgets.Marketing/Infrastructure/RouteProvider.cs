@@ -20,6 +20,11 @@ namespace Nop.Plugin.Widgets.Marketing.Infrastructure
                             new { controller = "EmailPref", action = "EmailPreferencesView" },
                             new[] { "Nop.Plugin.Widgets.Marketing.Controllers" });
 
+            routes.MapLocalizedRoute("JoinList",
+                            "marketing/joinlist",
+                            new { controller = "WidgetsMarketing", action = "JoinList" },
+                            new[] { "Nop.Plugin.Widgets.Marketing.Controllers" });
+
             ViewEngines.Engines.Insert(0, new MarketingViewEngine());
 
         }

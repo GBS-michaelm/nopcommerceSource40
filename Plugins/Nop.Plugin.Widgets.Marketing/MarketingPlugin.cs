@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.Marketing
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "marketing_unsubscribe" };
+            return new List<string> { "marketing_unsubscribe", "join_email_list" };
         }
 
 
@@ -55,14 +55,28 @@ namespace Nop.Plugin.Widgets.Marketing
         /// <param name="routeValues">Route values</param>
         public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            actionName = "EmailPreferencesView";
-            controllerName = "EmailPref";
-            routeValues = new RouteValueDictionary
+
+            if (widgetZone == "join_email_list")
             {
-                {"Namespaces", "Nop.Plugin.Widgets.Marketing.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
+                actionName = "JoinListForm";
+                controllerName = "WidgetsMarketing";
+                routeValues = new RouteValueDictionary
+                {
+                    {"Namespaces", "Nop.Plugin.Widgets.Marketing.Controllers"},
+                    {"area", null}
+                };
+            } else
+            {
+                actionName = "EmailPreferencesView";
+                controllerName = "EmailPref";
+                routeValues = new RouteValueDictionary
+                {
+                    {"Namespaces", "Nop.Plugin.Widgets.Marketing.Controllers"},
+                    {"area", null},
+                    {"widgetZone", widgetZone}
+                };
+            }
+
         }
 
 

@@ -23,10 +23,10 @@
                         <div class="row">
                             <div class="col-sm-7">
                                  @Html.Action("TopicBlock", "Topic", new { systemName = "hom_footer_emaillist" })
+                                @Html.Widget("join_email_list", new { list = "HOM:Website_Signups", form = "FooterOptIn" })
+
 								
-								
-								
-                                @Html.Action("NewsletterBox", "Newsletter")
+                                @*@Html.Action("NewsletterBox", "Newsletter")*@
                                 <div class="follow-us">
                                     @Html.Action("Social", "Common")
                                 </div>

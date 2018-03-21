@@ -17,6 +17,11 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Plugin.Catalog.GBS.Models;
 using Nop.Services.Logging;
+using Nop.Web.Factories;
+using Nop.Plugin.Catalog.GBS.DataAccess;
+using Nop.Web.Models.Topics;
+using System.Data;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -33,7 +38,9 @@ namespace Nop.Plugin.Catalog.GBS.Factories
 
         private readonly CategoryNavigationSettings _categoryNavigationSettings;
         private readonly ILogger _logger;
-
+        private readonly ITopicModelFactory _topicModelFactory;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        public readonly IProductModelFactory _productModelFactory;
 
         #endregion
 
@@ -47,7 +54,10 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             IStoreContext storeContext,         
             CatalogSettings catalogSettings,        
             ICacheManager cacheManager,                  
-            CategoryNavigationSettings categoryNavigationSettings)
+            CategoryNavigationSettings categoryNavigationSettings,
+            ITopicModelFactory topicModelFactory,
+            ISpecificationAttributeService specificationAttributeService,
+            IProductModelFactory productModelFactory)
         {
             this._logger = logger;
             this._categoryService = categoryService;            
@@ -58,6 +68,9 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             this._cacheManager = cacheManager;           
 
             this._categoryNavigationSettings = categoryNavigationSettings;
+            this._topicModelFactory = topicModelFactory;
+            this._specificationAttributeService = specificationAttributeService;
+            this._productModelFactory = productModelFactory;
         }
 
         #endregion
@@ -235,6 +248,97 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             return result;
         }
 
+        /// <summary>
+        /// Prepare category Topic model.  Grabs Topic data associated with a category for use with Tab display on Category Pages
+        /// </summary>
+        /// <param name="catId">Category Id</param>
+        /// <returns>TopicModel</returns>
+        public virtual TopicModel PrepareCategoryTabTopicModel(int catId)
+        {
+            //select from tblNOPCategory_SpecificationAttribute_Mapping
+            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+            paramDicEx.Add("@categoryId", catId);
+
+            DBManager manager = new DBManager();
+            string select = "EXEC usp_SelectGBSCategorySpecAttributesOptionMapping @categoryId";
+            DataView result = manager.GetParameterizedDataView(select, paramDicEx);
+            string topicSysName = null;
+            if (result.Count > 0)
+            {
+                DataTable specAttrOptTable = result.ToTable(true, "SpecificationAttributeOptionId");
+
+                var specOptIds = specAttrOptTable.AsEnumerable().Select(r => r.Field<int>("SpecificationAttributeOptionId")).ToArray();
+                IList<SpecificationAttributeOption> specOptions = _specificationAttributeService.GetSpecificationAttributeOptionsByIds(specOptIds);
+
+                //get name from settings
+                var specAttrName = _categoryNavigationSettings.CategoryTabsSpecAttrName;
+                if (specOptions.Where(x => x.SpecificationAttribute.Name == specAttrName).Any())
+                {
+                    topicSysName = specOptions.Where(x => x.SpecificationAttribute.Name == specAttrName).FirstOrDefault().Name;
+                    return _topicModelFactory.PrepareTopicModelBySystemName(topicSysName);
+                }
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        /// <summary>
+        /// Prepare category featured product detail model.  Grabs product data associated with featured products
+        /// </summary>
+        /// <param name="catId">Category Id</param>
+        /// <returns>TopicModel</returns>
+        public virtual ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId)
+        {
+            //select from tblNOPCategory
+            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+            paramDicEx.Add("@categoryId", catId);
+
+            DBManager manager = new DBManager();
+            string select = "EXEC usp_SelectTblNopCategory @categoryId";
+            DataView result = manager.GetParameterizedDataView(select, paramDicEx);
+            int featuredProductId = 0;
+            if (result.Count > 0)
+            {
+                featuredProductId = (int)result[0]["FeaturedProductId"];
+                if (featuredProductId == 0)
+                {
+                    return null;
+                }
+                //get product detail model
+
+                GBSProduct featuredProduct = ConvertToGBSProduct(_productService.GetProductById(featuredProductId));
+                featuredProduct.ReplaceTierPrices(featuredProduct.TierPrices.Distinct().ToList());
+                return _productModelFactory.PrepareProductDetailsModel(featuredProduct);
+
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        public GBSProduct ConvertToGBSProduct(Product product)
+        {
+            var type = typeof(GBSProduct);
+            var instance = Activator.CreateInstance(type);
+
+            if (type.BaseType != null)
+            {
+                var properties = type.BaseType.GetProperties();
+                foreach (var property in properties)
+                    if (property.CanWrite)
+                        property.SetValue(instance, property.GetValue(product, null), null);
+            }
+
+            return (GBSProduct)instance;
+        }
         #endregion
     }
 }
