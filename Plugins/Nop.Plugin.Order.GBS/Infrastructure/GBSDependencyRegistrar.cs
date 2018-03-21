@@ -18,6 +18,8 @@ using Nop.Plugin.Order.GBS.Factories;
 using Nop.Web.Factories;
 using Nop.Plugin.Order.GBS.Controllers;
 using NW = Nop.Web.Controllers;
+using Nop.Plugin.Order.GBS.Orders;
+
 namespace Nop.Services.Order.GBS
 {
     public class DependencyRegistrar : IDependencyRegistrar
@@ -54,6 +56,7 @@ namespace Nop.Services.Order.GBS
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderModelFactory>().As<Plugin.Order.GBS.Factories.IOrderModelFactory>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSOrderService>().As<IOrderService>().InstancePerLifetimeScope();
+                builder.RegisterType<GBSOrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerLifetimeScope();
 
             }
 

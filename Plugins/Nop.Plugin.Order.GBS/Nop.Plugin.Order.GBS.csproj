@@ -92,6 +92,7 @@
     <Compile Include="Orders\OrderExtensions.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\OrderTotalCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
