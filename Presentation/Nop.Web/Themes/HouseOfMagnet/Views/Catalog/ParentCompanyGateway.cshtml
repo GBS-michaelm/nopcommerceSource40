@@ -97,7 +97,7 @@
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
-            <div class="featured-product-grid">
+            @*<div class="featured-product-grid">
                 <div class="page-title panel-heading">
                     <h1>@T("Products.FeaturedProducts")</h1>
                 </div>
@@ -113,7 +113,7 @@
                         }
                     </div>
                 </div>
-            </div>
+            </div>*@
         }
         @Html.Widget("categorydetails_after_featured_products", Model.Id)
         @if (Model.Products.Count > 0)
@@ -141,7 +141,7 @@
         @if (Model.Products.Count > 0)
         {
             @*<div class="product-grid clearfix">*@
-            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list col-xs-12 col-sm-12 col-md-12 product-align" : "product-grid col-xs-12 col-sm-4 col-md-4 product-align")">
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list col-xs-12 col-sm-12 col-md-12 product-align" : "product-grid col-xs-12 col-sm-4 col-md-4 product-align")">
                 <div class="row">
                     @foreach (var product in Model.Products)
                     {
@@ -152,7 +152,7 @@
                         </div>
                     }
                 </div>
-            </div>
+            </div>*@
         }
         <div class="pager clearfix">
             @{
