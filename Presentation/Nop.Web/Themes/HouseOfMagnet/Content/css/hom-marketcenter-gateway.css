@@ -30,7 +30,9 @@
 
 #marketCenterSelect main {
 	min-width: 320px;
-	max-width: 1085px;
+	/*max-width: 1085px;*/
+    max-width: 1450px;
+    width: 1149px;
 	min-height: 315px;
 	padding: 38px;
 	padding-top: 0px;
@@ -425,6 +427,7 @@ a.mc-img-link {
     width: 105px;
     height: 85px;
     text-align: center;
+    z-index: 0;
 }
 
     
@@ -550,6 +553,50 @@ a.mc-img-link img {
 {
     font: normal 14px/14px Droid Sans, sans-serif;
     padding: 2px;
+}
+
+.all-search-wrap {
+    display: block; 
+    position: relative;
+}
+
+.all-search {
+    display: block !important;
+    width: 55%;
+    height : 35px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.all-select {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.allSearchList {
+    display: block;
+    position: absolute;
+    z-index: 99; 
+    left: 22.5%;
+    width: 55%;
+    max-height: 300px;
+    min-height: 150px;
+    overflow-y: scroll;
+    border: 1px solid #e0e0e0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.allSearchList li {
+    background-color: #fff;
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.allSearchList li:hover {
+    background-color: #ddd;
 }
 
 .dv-cant-find-office
@@ -684,4 +731,9 @@ a.mc-img-link img {
 
 .modal-content.request-link {
     text-decoration: underline;
+}
+
+
+.hide-me {
+    display: none;
 }

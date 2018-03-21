@@ -62,6 +62,7 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
         public ActionResult JoinList (FormCollection form)
         {
             var modelError = new EmailPreferencesErrorModel();
+            var responseMaster = "";
 
             try
             {
@@ -104,13 +105,13 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
 
 
 
-                    var responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
+                    responseMaster = marketingClient.updateMarketingContact(marketingModel, _gbsMarketingSettings.GBSMarketingWebServiceAddress, _gbsMarketingSettings.LoginId, _gbsMarketingSettings.Password);
 
                     json = JsonConvert.DeserializeObject<Object>(responseMaster);
                     if (json.success != true)
                     {
                         modelError.ErrorMessage = "something went wrong with your submission for account " + marketingModel.website;
-                        _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"], new Exception(modelError.ErrorMessage), _workContext.CurrentCustomer);
+                        _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"] + "response = "+responseMaster, new Exception(modelError.ErrorMessage), _workContext.CurrentCustomer);
 
                         //return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
                     }
@@ -121,10 +122,11 @@ namespace Nop.Plugin.Widgets.Marketing.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"], ex, _workContext.CurrentCustomer);
+                _logger.Error("Error in JoinList: Join Email = " + form["emailAddress"] + " Lists = " + form["emailLists"] + "response = " + responseMaster, ex, _workContext.CurrentCustomer);
                 modelError = new EmailPreferencesErrorModel();
                 modelError.ErrorMessage = "something went wrong with your submission";
-                return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
+                //return View("~/Plugins/Widgets.Marketing/Views/JoinListError.cshtml", modelError);
+                return View("~/Plugins/Widgets.Marketing/Views/JoinListThankYou.cshtml");
             }
         }
 

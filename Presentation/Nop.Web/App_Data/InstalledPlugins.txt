@@ -39,9 +39,9 @@ Payments.GBS.PurchaseOrder
 FoxNetSoft.Plugin.Misc.SpeedFilters
 Nop.Plugin.Catalog.GBS
 Catalog.GBS
-SevenSpikes.Nop.Plugins.CloudZoom
 SevenSpikes.Nop.Plugins.ProductRibbons
-SevenSpikes.Nop.Plugins.QuickView
 Login.GBS
-FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
+FoxNetSoft.Plugin.Misc.MSSQLProvider
+SevenSpikes.Nop.Plugins.QuickView
+SevenSpikes.Nop.Plugins.CloudZoom

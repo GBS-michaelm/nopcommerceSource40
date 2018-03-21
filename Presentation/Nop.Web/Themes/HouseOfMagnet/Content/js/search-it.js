@@ -57,7 +57,8 @@
             this.bindKeyboardInput(this);
         },
         getQuery: function() {
-            return this.config.$searchInput.val().toLowerCase().split(/\s+/)[0]; //think this is where it grabs only the first word splitting on the spaces
+            //return this.config.$searchInput.val().toLowerCase().split(/\s+/)[0]; //think this is where it grabs only the first word splitting on the spaces
+            return this.config.$searchInput.val().toLowerCase(); //Modified ver to use more than the first word for searches
         },
         getText: function($item) {
             return $item.text().toLowerCase();

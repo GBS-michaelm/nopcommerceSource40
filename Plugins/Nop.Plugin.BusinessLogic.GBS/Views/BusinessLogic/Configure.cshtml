@@ -21,6 +21,26 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.MarketCenterDefaultId_OverrideForStore, model => model.MarketCenterDefaultId, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.MarketCenterDefaultId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarketCenterDefaultId)
+            @Html.ValidationMessageFor(model => model.MarketCenterDefaultId)
+        </td>
+    </tr> 
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.MarketCenterWhatAmIReferenceName_OverrideForStore, model => model.MarketCenterWhatAmIReferenceName, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.MarketCenterWhatAmIReferenceName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarketCenterWhatAmIReferenceName)
+            @Html.ValidationMessageFor(model => model.MarketCenterWhatAmIReferenceName)
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </td>
