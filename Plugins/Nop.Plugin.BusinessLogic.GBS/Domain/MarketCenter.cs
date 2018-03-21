@@ -520,23 +520,19 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             searchAllStringBuilder.Append("<div class='all-search-wrap'>");
             searchAllStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter'>Search for your company office:</label></div>");
-            searchAllStringBuilder.Append("<input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)'/>");
-            
+            searchAllStringBuilder.Append("<div class='mc-input-button-wrap'><input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)'/>");
+            searchAllStringBuilder.Append("<a class='button button-3d button-rounded button-green mc-search'><i class='icon-search'></i>Search</a></div>");
 
             searchAllStringBuilder.Append("<div id='' class='allSearchList'>");
-            //searchAllStringBuilder.Append("<select class='all-select'>");
             searchAllStringBuilder.Append("<ul>");
             foreach (MarketCenter marketcenter in allMarketCenters)
-            {
-                //searchAllStringBuilder.Append("<option value='" + marketcenter.SeName + "'>" + marketcenter.Name + "</option>");
-                searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");
-                //maybe add children?
+            {               
+                searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");            
             }
-            //searchAllStringBuilder.Append("</select>");
             searchAllStringBuilder.Append("</ul>");
             searchAllStringBuilder.Append("</div>");
 
-            //searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of out most popular companies:</label>");
+            searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of our most popular companies:</label>");
             searchAllStringBuilder.Append("</div>");
 
             return searchAllStringBuilder.ToString();

@@ -210,8 +210,12 @@
         var selected = $(elem).closest('.all-search-wrap').find('.allSearchList');
         console.log("selected: " + selected);
 
-        if ($(elem).val() > 1) {
-
+        if ($(elem).val()) {
+            console.log("show");
+            $(elem).closest('.all-search-wrap').find('.allSearchList').show();
+        } else {
+            console.log("hide");
+            $(elem).closest('.all-search-wrap').find('.allSearchList').hide();
         }
 
         //$($(elem).find('.all-select')).searchIt({ //name of container
