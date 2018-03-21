@@ -94,7 +94,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.Ha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasCategory", "Plugins\Nop.Plugin.DiscountRules.HasCategory\Nop.Plugin.DiscountRules.HasCategory.csproj", "{2632BC9B-9359-4707-9D8F-D112D4463417}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAttribute", "Nop.Plugin.DiscountRules.HasAttribute\Nop.Plugin.DiscountRules.HasAttribute.csproj", "{C2802D42-066A-4264-B141-5DD0FD32F5AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAttribute", "Plugins\Nop.Plugin.DiscountRules.HasAttribute\Nop.Plugin.DiscountRules.HasAttribute.csproj", "{C2802D42-066A-4264-B141-5DD0FD32F5AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
