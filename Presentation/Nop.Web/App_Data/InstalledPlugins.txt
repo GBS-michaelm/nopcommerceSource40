@@ -39,11 +39,20 @@ Payments.GBS.PurchaseOrder
 FoxNetSoft.Plugin.Misc.SpeedFilters
 Nop.Plugin.Catalog.GBS
 Catalog.GBS
+<<<<<<< HEAD
 SevenSpikes.Nop.Plugins.CloudZoom
 SevenSpikes.Nop.Plugins.ProductRibbons
 SevenSpikes.Nop.Plugins.QuickView
+=======
+SevenSpikes.Nop.Plugins.ProductRibbons
+>>>>>>> aac5489d3f08e74d10ebe42046d444eb0a995522
 Login.GBS
-FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
+<<<<<<< HEAD
 BreadCrumb.GBS
 DiscountRequirement.HasCategory
+=======
+FoxNetSoft.Plugin.Misc.MSSQLProvider
+SevenSpikes.Nop.Plugins.QuickView
+SevenSpikes.Nop.Plugins.CloudZoom
+>>>>>>> aac5489d3f08e74d10ebe42046d444eb0a995522

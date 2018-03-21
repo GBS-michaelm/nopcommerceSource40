@@ -1,0 +1,51 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model CategoryModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Web.Models.Catalog;
+
+@{
+
+    Layout = "";
+
+}
+
+@{
+
+    string logopath = Model.CustomProperties["LogoPicturePath"].ToString();
+
+
+}
+
+   <div class='pricing bottommargin clearfix'>
+               
+            @*<div class="sub-category-grid row">
+
+                <div id="sub-category-slider" class="home-category-slider">*@
+                       
+                        
+                            <div class="item-box col-xs-6 col-sm-3 col-md-3">
+                                <div class="category-item product-category-item">
+                                    <div class="picture">
+                                        <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title" class="product-img">
+                                            <img alt="@Model.PictureModel.AlternateText" src="@logopath" title="@Model.PictureModel.Title" />
+                                        </a>
+                                        <div class="title">
+                                            <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title"> @Model.Name</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                       
+                    @*</div>
+                
+            </div>*@
+
+            @*CATEGORIES YO!*@
+              
+   </div>

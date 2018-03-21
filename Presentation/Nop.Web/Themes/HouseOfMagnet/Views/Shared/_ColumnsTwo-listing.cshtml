@@ -74,12 +74,17 @@
 <div class="page-title panel-heading categorytitle">
     <h1>@Model.Name</h1>
 </div>
+
+            <div class="list-content">
 @if (!String.IsNullOrWhiteSpace(Model.Description))
-        {
-            <p class="list-content">
-                @Html.Raw(Model.Description)
-            </p>
-        }
+{  
+    @Html.Raw(Model.Description)
+}                
+                <div class="category-tabs-wrapper ">
+                    @Html.Widget("category_tabs", currentCategoryId)
+                </div>
+            </div>
+
 @*<div class="category-section">
     <div class="row">
         @*<div class="col-sm-6">
@@ -95,7 +100,7 @@
     </div>*@
     @*</div>*@
 @*</div>*@
-    
+        <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
 <div class="listing-page">
     <div class="sidebar col-md-3">
         <div class=" sidebar-title">
@@ -109,14 +114,14 @@
         else
         {
             @Html.Widget("left_side_column_before")
-            if (categoryNavigationSettings.IsActive)
+            @*if (categoryNavigationSettings.IsActive)
             {
                 @Html.Widget("category_navigation_block", currentCategoryId + "," + currentProductId)
             }
             else
             {
                 @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-            }
+            }*@
             @*@Html.Widget("left_side_column_after_category_navigation")
             @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
             @Html.Action("VendorNavigation", "Catalog")*@

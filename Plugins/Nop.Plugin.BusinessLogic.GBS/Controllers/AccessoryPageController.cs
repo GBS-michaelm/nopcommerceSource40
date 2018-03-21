@@ -22,12 +22,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
     
     public class AccessoryPageController : BaseController
     {
-
-
-        
-
-
-
+                
         public ActionResult AccessoryPage(int groupId, int productId)
         {
             AccessoryPageModel model = new AccessoryPageModel();

@@ -12,7 +12,7 @@
 @using Nop.Core;
 @using Nop.Core.Domain.Orders;
 @using Nop.Services.Orders;
- @using Nop.Web.Models.Customer;
+@using Nop.Web.Models.Customer;
 @using Nop.Core.Domain.Customers;
 @{
     DBManager db = new DBManager();
@@ -81,8 +81,9 @@
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
     <input type="hidden" id="hdn-customer-email" value="@customerEmail" />
     <input type="hidden" id="hdn-authenticated" value="@isAuthenticated.ToString()" />
+    <input type="hidden" id="hdn-authentice-type" value="" />
     <div class="chili-template" style="overflow:hidden; height:1200px">
-        <iframe id="chili-iframe" src="@T("hom.url")@page&id=@cartItemID" style="height:1200px; width:100%;"></iframe>
+        <iframe id="chili-iframe" src="@T("hom.url")@page&qty=@qty&id=@cartItemID" style="height:1200px; width:100%;"></iframe>
     </div>
 
 
@@ -101,9 +102,9 @@
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
-            if ($("#hdn-authenticated").val().toLowerCase() == "true")
-            {
-       
+            $("#hdn-authentice-type").val("UPO");
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
+
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
             } else {
                 $("#valid-error-summary").hide();
@@ -112,6 +113,7 @@
             }
         }
         else if (e.data == "VALIDATEBCT") {
+            $("#hdn-authentice-type").val("BCT");
             if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
                 SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
@@ -120,18 +122,17 @@
                 $(".field-validation-error").hide();
                 $("#loginModal").modal();
             }
-        }else {
+        } else {
             addToCart(e);
         }
 
     }, false);
     function SendEmailAfterVerification(email, type) {
         var iframe = document.getElementById("chili-iframe").contentWindow;
-        var json = JSON.stringify({ type: type, email: email});
+        var json = JSON.stringify({ type: type, email: email });
         iframe.postMessage(json, "*");
     }
-    function addToCart(e)
-    {
+    function addToCart(e) {
         console.log(e);
         var opc = false;
         var opcAlt = false;
@@ -146,7 +147,7 @@
             if (cartImageSrc == '') {
                 previewDisplay = "undefined";
             }
-          
+
             var cartImageSrc;
             var bct = false;
             for (var i = 0; i < json["data"].length; i++) {
@@ -154,7 +155,7 @@
                 switch (json["data"][i].option) {
                     case 320:
                         cartImageSrc = json["data"][i].value;
-                  
+
                         break;
                     case 399:
                         opc = true;
@@ -168,29 +169,29 @@
 
             }
 
-                previewDisplay = (opc || opcAlt) ? "http://chili.houseofmagnets.com" + cartImageSrc : "undefined";
-            
-            
+            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
+
+
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
 
-   
+
 
 
 </script>
 
 @*<script type="text/javascript">
-   window.onload = function () {
-        if ($("#hdn-iframe-data").val() != "") {
-            $("#chili-iframe").attr("src", "@T("hom.url")@page");
-            var iframeEl = document.getElementById("chili-iframe").contentWindow;
-            iframeEl.postMessage(JSON.stringify($("#hdn-iframe-data").val()), '*');
-            
-        }
+       window.onload = function () {
+            if ($("#hdn-iframe-data").val() != "") {
+                $("#chili-iframe").attr("src", "@T("hom.url")@page");
+                var iframeEl = document.getElementById("chili-iframe").contentWindow;
+                iframeEl.postMessage(JSON.stringify($("#hdn-iframe-data").val()), '*');
 
-    }
-</script>*@
+            }
+
+        }
+    </script>*@
 
 

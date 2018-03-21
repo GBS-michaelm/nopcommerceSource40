@@ -12,6 +12,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Core;
+using Nop.Plugin.BusinessLogic.GBS;
+using Nop.Services.Configuration;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
@@ -21,7 +24,14 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
     public class GatewayPageController : BaseController
     {
 
-        
+        private readonly GBSBusinessLogicSettings _gbsBusinessLogicSettings;
+        public GatewayPageController (
+            GBSBusinessLogicSettings gbsBusinessLogicSettings
+            )
+        {
+            this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
+        }
+
         [HttpGet]
         public ActionResult SportsTeamHtml(int id)
         {           
@@ -83,9 +93,81 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
+        {
+            try
+            {
+                MarketCenter marketCenter = new MarketCenter(marketCenterId);
+                Dictionary<string, string> tabs = new Dictionary<string, string>();
 
+                tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
+
+                //add tabs to list model with market center models inside
+                MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
+                foreach (var tab in tabs)
+                {
+                    MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
+
+                    if (tab.Key == "HiddenChildrenHtml")
+                    {
+                        tabsContainer.hiddenHtml = tab.Value;
+                    }
+                    else if (tab.Key == "HiddenTopLevel")
+                    {
+                        tabsContainer.hiddenTopLevelAll = tab.Value;
+                    }
+                    else
+                    {
+                        mctab.tabName = tab.Key;
+                        mctab.html = tab.Value;
+                        tabsContainer.MarketCenterTabsList.Add(mctab);
+                    }
+
+                }
+
+                return View("MarketCenterGatewayTabs", tabsContainer);
+            }          
+            catch(Exception ex)
+            {
+
+                ex = new Exception("Gateway Page Controller Fail. Market Center Id: " + marketCenterId + ".");
+                base.LogException(ex);
+
+                return View();
+            }
+
+            //return View();
+
+        }
+
+        //[OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
+        {
+
+            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+
+            try
+            {
+                Company parentCategory = new Company(parentCategoryId);
+
+                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+
+                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+                mcGallerCategories.CategoriesList = categories;
+
+                //return View("MarketCenterGalleryCategories", mcGallerCategories);
+            }
+            catch (Exception ex)
+            {
+                ex = new Exception("Gateway Page Controller Fail. GetNonMarketCenterCategories.");
+                base.LogException(ex);
+            }
+
+            return View("MarketCenterGalleryCategories", mcGallerCategories);
+
+        }         
+        
     }
-
-    
-
+       
 }
