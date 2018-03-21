@@ -113,9 +113,9 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                     {
                         tabsContainer.hiddenHtml = tab.Value;
                     }
-                    else if (tab.Key == "HiddenTopLevel")
+                    else if (tab.Key == "HiddenAll")
                     {
-                        tabsContainer.hiddenTopLevelAll = tab.Value;
+                        tabsContainer.hiddenAll = tab.Value;
                     }
                     else
                     {

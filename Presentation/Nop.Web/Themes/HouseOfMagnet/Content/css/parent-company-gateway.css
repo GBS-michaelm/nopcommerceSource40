@@ -15,10 +15,10 @@
 }
 
 .agentpacks-promo-header {
-    text-decoration: underline;
+    /*text-decoration: underline;*/
     color: #234782;
     font-weight: bold;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 #agentPacks div.topic-html-content {
