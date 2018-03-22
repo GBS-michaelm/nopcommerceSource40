@@ -95,7 +95,9 @@ else
             @Html.Raw(Model.Body)
             <div class="tab-pane fade" id="pricing">
                 @if (ViewBag.ProductDetailModel.TierPrices.Count > 0)
-                {
+                {                              
+                    ViewBag.productId = productDetailsModel.Id;
+                
                    @Html.Partial("~/Themes/" + themeName + "/Views/Product/_ProductTierPrices.cshtml", tieredPrices)
                 }
                 else
