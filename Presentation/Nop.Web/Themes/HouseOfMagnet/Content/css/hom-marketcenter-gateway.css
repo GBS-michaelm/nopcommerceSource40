@@ -594,8 +594,9 @@ a.mc-img-link img {
 .allSearchList {
     display: none;
     position: absolute;
-    z-index: 99; 
-    left: 22.5%;
+    z-index: 99;
+    top : 66%; 
+    left: 22.15%;
     width: 55%;
     max-height: 300px;
     min-height: 150px;
