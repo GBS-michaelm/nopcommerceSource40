@@ -10,7 +10,7 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                if (!attribute.Name.ToLower().Contains("customimgurl") && !attribute.Name.ToLower().Contains("iframedata"))
+                if ((!attribute.Name.ToLower().Contains("customimgurl") && !attribute.Name.ToLower().Contains("iframedata")) && (!attribute.Description.ToUpper().Contains("DONOTDISPLAY")))
                 {
                     string controlId = string.Format("product_attribute_{0}", attribute.Id);
                     string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
