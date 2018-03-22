@@ -1769,7 +1769,9 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         line-height: 18px;
         font-size: 14px;
         text-align: center;
-        color: #444444
+        color: #444444;
+        clear: both;
+        padding-top: 5px;
     }
 
         .item-box .product-item .product-title a {

@@ -267,7 +267,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             List<MarketCenter> alphaList1 = new List<MarketCenter>();
             List<MarketCenter> alphaList2 = new List<MarketCenter>();
             List<MarketCenter> alphaList3 = new List<MarketCenter>();
-            List<MarketCenter> allTopLevelSearch = new List<MarketCenter>();
+            List<MarketCenter> allList = new List<MarketCenter>();
 
             //if top level and has children build popup with children links
             IList<Category> TopLevelMarketCenterIds = null;
@@ -402,7 +402,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         alphaList1 = GetTabData(null, '!', 'G');
                         alphaList2 = GetTabData(null, 'H', 'P');
                         alphaList3 = GetTabData(null, 'Q', 'Z');
-                        //allTopLevelSearch = GetTabData(null, '!', 'Z', all: true);
+                        allList = GetTabData(null, '!', 'Z');
                     }
 
                 }
@@ -411,7 +411,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 //top companies only (isFeatured)
                 string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
                 string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
-                //string topLevelSearch = allTopLevelSearch.Count > 0 ? BuildChildCompanyHtml(allTopLevelSearch, type) : "";
+                string AllSearch = allList.Count > 0 ? SearchAllHtml(allList) : "";
 
                 //call build html for each alpha list      
                 string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1, type) : "";
@@ -426,7 +426,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 marketCenterTabsDict.Add("Companies Q - Z", alpha3);
                 marketCenterTabsDict.Add("Can't Find Your Company?", cantFindHtml);
                 marketCenterTabsDict.Add("HiddenChildrenHtml", childLinksHtml);
-                //marketCenterTabsDict.Add("HiddenTopLevel", topLevelSearch);
+                marketCenterTabsDict.Add("HiddenAll", AllSearch);
 
 
                 return marketCenterTabsDict;
@@ -450,20 +450,20 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             try
             {
-                if (all)
-                {
-                    //get all top level only
-                    string select = "EXEC usp_SELECTGBSGetMarketCentersTopLevelOnly @start, @end";
-                    string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
+                //if (all)
+                //{
+                //    //get all top level only
+                //    string select = "EXEC usp_SELECTGBSGetMarketCenters @start, @end";
+                //    string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
 
-                    marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+                //    marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
 
-                    //will need mc type version as well
+                //    //will need mc type version as well
 
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     if (string.IsNullOrEmpty(type))
                     {
                         string select = "EXEC usp_SELECTGBSGetMarketCenters @start, @end";
@@ -496,7 +496,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
 
                     }
-                }
+                //}
                 
                 return marketCenters;
             }catch(SqlException sqlex)
@@ -512,6 +512,30 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             
 
+        }
+
+        private string SearchAllHtml(List<MarketCenter> allMarketCenters)
+        {
+            StringBuilder searchAllStringBuilder = new StringBuilder();
+
+            searchAllStringBuilder.Append("<div class='all-search-wrap'>");
+            searchAllStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter'>Search for your company office:</label></div>");
+            searchAllStringBuilder.Append("<div class='mc-input-button-wrap'><input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)'/>");
+            searchAllStringBuilder.Append("<a class='button button-3d button-rounded button-green mc-search'><i class='icon-search'></i>Search</a></div>");
+
+            searchAllStringBuilder.Append("<div id='' class='allSearchList'>");
+            searchAllStringBuilder.Append("<ul>");
+            foreach (MarketCenter marketcenter in allMarketCenters)
+            {               
+                searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");            
+            }
+            searchAllStringBuilder.Append("</ul>");
+            searchAllStringBuilder.Append("</div>");
+
+            searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of our most popular companies:</label>");
+            searchAllStringBuilder.Append("</div>");
+
+            return searchAllStringBuilder.ToString();
         }
 
         private string MarketCenterTypeURLHandle(string marketCenterUrl, string type, int id)
@@ -613,10 +637,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             StringBuilder featuredHtmlStringBuilder = new StringBuilder();
             //if top lvl and no children. Top level will take user to it's own page
 
-            featuredHtmlStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter' >Search for your company office:</label></div>");
-            featuredHtmlStringBuilder.Append("<input type='text' id='featuredSearch' class='txt-office-filter' onkeyup='FeaturedSearchCall(this)' />");
-            featuredHtmlStringBuilder.Append("<label class='lbl-filter' >...or select from some of out most popular companies:</label>");
-            featuredHtmlStringBuilder.Append("<div id='featuredSearchList'>");
+            //featuredHtmlStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter' >Search for your company office:</label></div>");
+            //featuredHtmlStringBuilder.Append("<input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)' />"); //id='featuredSearch'
+            //featuredHtmlStringBuilder.Append("<label class='lbl-filter' >...or select from some of out most popular companies:</label>");
+            //featuredHtmlStringBuilder.Append("<div id='featuredSearchList'>");
 
             foreach (var marketcenter in marketcenterList)
             {
@@ -659,7 +683,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }
 
 
-            featuredHtmlStringBuilder.Append("</div>");
+            //featuredHtmlStringBuilder.Append("</div>");
 
             return featuredHtmlStringBuilder.ToString(); ;
         }

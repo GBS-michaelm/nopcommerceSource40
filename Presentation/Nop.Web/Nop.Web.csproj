@@ -3140,6 +3140,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Topic\CategoryTabs.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\MarketCenterNotFound.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.NameBadge.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\NameBadge.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

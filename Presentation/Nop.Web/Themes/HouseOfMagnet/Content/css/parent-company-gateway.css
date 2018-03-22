@@ -10,8 +10,13 @@
     background-color: #012D5C;
 }
 
-#agentPacks {
-    margin-top: 60px;
+#agentPacks li {
+    list-style: disc !important;
+}
+
+.agentpacks-promo-header {
+    color: #234782;
+    font-weight: bold;
 }
 
 #agentPacks div.topic-html-content {
