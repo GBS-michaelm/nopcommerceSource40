@@ -9,6 +9,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Core.Caching;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -62,6 +63,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }
                         
             this.SeName = categoryModel.SeName;
+            
+            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            string picturePath = pictureService.GetPictureUrl(category.PictureId);
+
 
             DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
@@ -92,7 +97,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.h2 = !string.IsNullOrEmpty(companyDataView[0]["H2"].ToString()) ? companyDataView[0]["H2"].ToString() : _h2;
                 this.isVisible = (bool)companyDataView[0]["IsVisible"];
                 this.isDisplayLogo = (bool)companyDataView[0]["IsDisplayLogo"];
-                this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
+                //this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
+                this.logoPicturePath = !string.IsNullOrEmpty(picturePath) ? picturePath : "";
                 this.aboutYourMarketCenter = !string.IsNullOrEmpty(companyDataView[0]["aboutYourMarketCenter"].ToString()) ? companyDataView[0]["aboutYourMarketCenter"].ToString() : _aboutYourMarketCenter;
                 this.agentPacks = !string.IsNullOrEmpty(companyDataView[0]["AgentPacks"].ToString()) ? companyDataView[0]["AgentPacks"].ToString() : _agentPacks;
                 this.foregroundColor = !string.IsNullOrEmpty(companyDataView[0]["ForegroundColor"].ToString()) ? companyDataView[0]["ForegroundColor"].ToString() : _forgroundColor;
