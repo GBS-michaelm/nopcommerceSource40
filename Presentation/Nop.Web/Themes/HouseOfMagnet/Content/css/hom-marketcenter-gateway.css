@@ -37,6 +37,8 @@
 	padding: 38px;
 	padding-top: 0px;
 	margin: 0 auto;
+    margin-left: -100px;
+    float: left;
 }
 #innerMain {
 	background-color: white;
@@ -558,7 +560,11 @@ a.mc-img-link img {
 .all-search-wrap {
     display: block; 
     position: relative;
-    margin-top: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 140px;
+    padding-top: 20px;
+    background-color: white;
 }
 
 .all-search-wrap .lbl-filter {
@@ -580,6 +586,14 @@ a.mc-img-link img {
     margin-bottom: 10px; 
 }
 
+.all-search-fixed {
+    display: block;
+    position: fixed;
+    width: 55%;
+    top: 566px;
+    background-color: #e0e0e0;
+}
+
 .mc-search {
    float: right;
    margin-right: 90px !important;
@@ -595,8 +609,8 @@ a.mc-img-link img {
     display: none;
     position: absolute;
     z-index: 99;
-    top : 66%; 
-    left: 22.15%;
+    top: 62%;
+    left: 20.55%;
     width: 55%;
     max-height: 300px;
     min-height: 150px;
