@@ -797,7 +797,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     {
                         var attributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
                         foreach (var selectedAttributeId in attributeValues
-                            .Where(v => v.Name == value)
+                            .Where(v => v.Name == value || (v.Name.ToLower() == "yes" && value == "1") || (v.Name.ToLower() == "no" && value == "0"))
                             .Select(v => v.Id)
                             .ToList())
                         {
