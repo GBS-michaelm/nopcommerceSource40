@@ -606,8 +606,8 @@ a.mc-img-link img {
     top: 59%;
     left: 20%;
     width: 46.8%;
-    max-height: 300px;
-    min-height: 150px;
+    max-height: 300px !important;
+    height: fit-content;
     overflow-y: scroll;
     border: 1px solid #e0e0e0;
     margin-left: auto;
