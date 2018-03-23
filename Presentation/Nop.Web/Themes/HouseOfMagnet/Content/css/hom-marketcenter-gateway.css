@@ -574,30 +574,24 @@ a.mc-img-link img {
     text-transform: none !important;
 }
 
-.all-search {
-    display: block !important;
-    width: 55%;
-    height: 38px;
-    float: left;
-    margin-left: 220px;
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    margin-top: 5px;
-    margin-bottom: 10px; 
+.mc-input-button-wrap {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width : 60%;
 }
 
-.all-search-fixed {
-    display: block;
-    position: fixed;
-    width: 55%;
-    top: 566px;
-    background-color: #e0e0e0;
+.all-search {
+    display: block !important;
+    width: 78%;
+    height: 38px;
+    float: left;
+    margin-top: 2px;    
+    margin-bottom: 10px; 
 }
 
 .mc-search {
    float: right;
-   margin-right: 90px !important;
-   margin-top: 4px !important;
 }
 
 .all-select {
