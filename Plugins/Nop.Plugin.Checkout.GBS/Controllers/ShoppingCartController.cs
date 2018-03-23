@@ -674,7 +674,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     .ToList();
 
                 var orderItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, ShoppingCartType.ShoppingCart, product, attributesXml);
-
+                
                 JsonResult action = (JsonResult)CheckForAccessories(null, product);
 
 
@@ -749,14 +749,127 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
             optionsAttributesXml += formOptionsAttributeXml;
 
-            return string.Format("<Attributes>"  +
+            var attbributesXML =  string.Format("<Attributes>"  +
                                  "<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>" +
                                  optionsAttributesXml +
                                  customImgXml +
                                  "</Attributes>", iframeDataId.ToString(), iframeData);
 
+            //add items from iFrameData to attributesXML
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            dynamic productOptionsObject = JsonConvert.DeserializeObject<Object>(iframeData);
+            if (productOptionsObject != null &&  productOptionsObject.data != null)
+            {
+                foreach (var productOption in productOptionsObject.data)
+                {
+                    //List<ProductAttributeMapping> attributeMappings = productAttributes.Where(x => x.ProductAttribute.Name == productOption.name.ToString()).ToList();
+                    List<ProductAttributeMapping> attributeMappings = productAttributes.Where(x => productOption.name.ToString().Contains(x.ProductAttribute.Name)).ToList();
+
+                    if (attributeMappings.Any())
+                    {
+                        foreach (ProductAttributeMapping attributeMapping in attributeMappings)
+                        {
+                            //attbributesXML = _productAttributeParser.AddProductAttribute(attbributesXML, attributeMapping, productOption.value.ToString());
+                            attbributesXML = this.AddProductAttribute(attbributesXML, attributeMapping, productOption.value.ToString());
+
+                        }
+                    }
+                }
+            }
+
+
+            return attbributesXML;
+
         }
 
+        private string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value)
+        {
+            #region Product attributes
+
+                switch (productAttributeMapping.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ReadonlyCheckboxes:
+                    {
+                        var attributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                            .Where(v => v.Name == value)
+                            .Select(v => v.Id)
+                            .ToList())
+                        {
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                productAttributeMapping, selectedAttributeId.ToString());
+                        }
+                        break;
+                    }
+                    //case AttributeControlType.ReadonlyCheckboxes:
+                    //    {
+                    //        //load read-only (already server-side selected) values
+                    //        var attributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                    //        foreach (var selectedAttributeId in attributeValues
+                    //            .Where(v => v.IsPreSelected)
+                    //            .Select(v => v.Id)
+                    //            .ToList())
+                    //        {
+                    //            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                    //                productAttributeMapping, selectedAttributeId.ToString());
+                    //        }
+                    //    }
+                        //break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+
+                            string enteredText = value;
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                productAttributeMapping, enteredText);
+
+                        }
+                        break;
+                    //case AttributeControlType.Datepicker:
+                    //    {
+                    //        var day = form[controlId + "_day"];
+                    //        var month = form[controlId + "_month"];
+                    //        var year = form[controlId + "_year"];
+                    //        DateTime? selectedDate = null;
+                    //        try
+                    //        {
+                    //            selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                    //        }
+                    //        catch { }
+                    //        if (selectedDate.HasValue)
+                    //        {
+                    //            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                    //                productAttributeMapping, selectedDate.Value.ToString("D"));
+                    //        }
+                    //    }
+                    //    break;
+                    //case AttributeControlType.FileUpload:
+                    //    {
+                    //        Guid downloadGuid;
+                    //        Guid.TryParse(form[controlId], out downloadGuid);
+                    //        var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                    //        if (download != null)
+                    //        {
+                    //            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                    //                productAttributeMapping, download.DownloadGuid.ToString());
+                    //        }
+                    //    }
+                    //    break;
+                    default:
+                        break;
+                }
+
+
+            #endregion
+
+
+            return attributesXml;
+        }
 
         private string GetOptionsAttributes(Core.Domain.Catalog.Product product, Dictionary<string, SelectedOption> options)
         {

@@ -1,8 +1,34 @@
 ﻿@model IList<ProductDetailsModel.TierPriceModel>
 @using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Orders;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Shipping;
+@using Nop.Services.Catalog;
+@using Nop.Core;
 @{
     //When there is just one tier (with  qty 1), there are no actual savings in the list.
     var displayTierPrices = Model.Count > 0 && !(Model.Count == 1 && Model[0].Quantity <= 1);
+    var shippingService = EngineContext.Current.Resolve<IShippingService>();
+    var productService = EngineContext.Current.Resolve<IProductService>();
+    var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+    ShoppingCartItem si = new ShoppingCartItem();
+    si.ProductId = ViewBag.productId;
+    si.Product = productService.GetProductById(ViewBag.productId);
+    si.StoreId = storeContext.CurrentStore.Id;
+    IList<ShoppingCartItem> items = new List<ShoppingCartItem>();
+    items.Add(si);
+    bool sfml = false;
+    Nop.Core.Domain.Common.Address address = new Nop.Core.Domain.Common.Address();
+    address.ZipPostalCode = "92020";
+    var shippingOptionRequests = shippingService.CreateShippingOptionRequests(items, address, si.StoreId, out sfml);
+    var shippingOptionRequest = shippingOptionRequests.FirstOrDefault();
+    var shippingMethods = shippingService.LoadActiveShippingRateComputationMethods(null, si.StoreId);
+    IList<IShippingRateComputationMethod> gbsShippingMethods = shippingMethods.Where(provider => provider.PluginDescriptor.SystemName == "Nop.Plugin.Shipping.GBS").ToList();
+    var gbsShippingMethod = gbsShippingMethods.FirstOrDefault();
+    var shippingRate = priceFormatter.FormatPrice((decimal)gbsShippingMethod.GetFixedRate(shippingOptionRequest));
+
+
 }
 @if (displayTierPrices)
 {
@@ -36,7 +62,12 @@
                         }
                     </tr>
                 </table>
-            </div>
+                @if(!string.IsNullOrEmpty(shippingRate)){ 
+                    <div id="disclaimer1">Plus sales tax if shipped to California</div>
+                    <div id="disclaimer2">Plus shipping cost of @shippingRate</div>
+                }
+
+            </div>  
         </div>
     </div>
 }
