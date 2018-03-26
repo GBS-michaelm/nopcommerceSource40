@@ -42,6 +42,6 @@ Catalog.GBS
 SevenSpikes.Nop.Plugins.ProductRibbons
 Login.GBS
 FoxNetSoft.Plugin.Misc.PriceImportExport
-FoxNetSoft.Plugin.Misc.MSSQLProvider
 SevenSpikes.Nop.Plugins.QuickView
 SevenSpikes.Nop.Plugins.CloudZoom
+FoxNetSoft.Plugin.Misc.MSSQLProvider
