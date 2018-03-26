@@ -33,6 +33,8 @@
     var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(prodId);
     string attributeXml = string.Empty;
     bool editActive = false;
+    string pageId = string.Empty;
+
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -42,8 +44,13 @@
         {
             page = item.SpecificationAttributeOption.Name;
         }
+
+        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
+        {
+            pageId = item.CustomValue;
+        }
     }
-    page = page + sku;
+
 
     //Handles edit from cart
     if (cartItemID != 0)
@@ -64,19 +71,19 @@
         xmldoc.LoadXml(attributeXml);
         XmlNodeList nodeList = xmldoc.GetElementsByTagName("ProductAttribute");
         var node = xmldoc.FirstChild.FirstChild.InnerText;
-      
+
         iframeData = node;
         editActive = true;
     }
-
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
     <input type="hidden" id="hdn-qty" value="@qty" />
     <input type="hidden" id="hdn-product-id" value="@prodId" />
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
-    <div class="chili-template" style="overflow:hidden; height:1200px">
-        <iframe id="chili-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
+    <div class="canvas-template" style="overflow:hidden; height:1200px">
+        <iframe id="canvas-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 }
 <!--product attributes-->
@@ -87,13 +94,41 @@
 
     var imageUrl = '';
 
-    var iframe = document.getElementById('chili-iframe');
+    var iframe = document.getElementById('canvas-iframe');
 
 
     window.addEventListener("message", function (e) {
-        addToCart(e);
-    }, false);
+        if (e.data == "VALIDATEUPO") {
+            $("#hdn-authentice-type").val("UPO");
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
+            } else {
+                $("#valid-error-summary").hide();
+                $(".field-validation-error").hide();
+                $("#loginModal").modal();
+            }
+        }
+        else if (e.data == "VALIDATEBCT") {
+            $("#hdn-authentice-type").val("BCT");
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
+
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
+            } else {
+                $("#valid-error-summary").hide();
+                $(".field-validation-error").hide();
+                $("#loginModal").modal();
+            }
+        } else {
+            addToCart(e);
+        }
+
+    }, false);
+    function SendEmailAfterVerification(email, type) {
+        var iframe = document.getElementById("chili-iframe").contentWindow;
+        var json = JSON.stringify({ type: type, email: email });
+        iframe.postMessage(json, "*");
+    }
     function addToCart(e) {
         console.log(e);
         var opc = false;
@@ -101,45 +136,49 @@
         var previewDisplay;
 
         if (e.data != "") {
+            console.log(e.data);
             var json = JSON.parse(e.data);
-            var cartImageSrc;
-            for (var i = 0; i < json["data"].length; i++) {
-                console.log(json["data"][i]);
-                switch (json["data"][i].option) {
-                    case 536:
-                        cartImageSrc = json["data"][i].value;
-                        break;
-                    case 399:
-                        opc = true;
-                        break
-                    default:
-                        break;
-                }
-
-            }
             if (json.hasOwnProperty('misc3')) {
                 opcAlt = true;
             }
             if (cartImageSrc == '') {
                 previewDisplay = "undefined";
             }
+
+            var cartImageSrc;
+            var bct = false;
+            for (var i = 0; i < json["data"].length; i++) {
+                console.log(json["data"][i]);
+                switch (json["data"][i].option) {
+                    case 320:
+                        cartImageSrc = json["data"][i].value;
+
+                        break;
+                    case 399:
+                        opc = true;
+                    case 515:
+                        bct = true;
+                        break
+                    default:
+                        previewDisplay = "undefined";
+                        break;
+                }
+
+            }
+
             previewDisplay = (opc || opcAlt) ? cartImageSrc : "undefined";
+
+
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
 
-</script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        if ($("#hdn-iframe-data").val() != "") {
-            $("#chili-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
-        }
-    });
-</script>
 
-    @*eventer(messageEvent, function (e) {
+
+</script>
+@*eventer(messageEvent, function (e) {
         var cartImageSrc = JSON.parse(e.data)[536];
         AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
 

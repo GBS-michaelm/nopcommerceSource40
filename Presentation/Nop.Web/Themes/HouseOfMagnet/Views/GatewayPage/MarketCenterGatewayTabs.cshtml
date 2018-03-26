@@ -41,11 +41,15 @@
                     }
                 }
                 @* maybe a can't find your company tab *@
-                @{ 
+                @{
+
+                    @Html.Raw(Model.hiddenAll)
+
                     foreach (MarketCenterGatewayTabModel item in Model.MarketCenterTabsList)
                     {
-                        @:<section id='content@(bodyCount + 1)'>                                   
 
+                        @:<section id='content@(bodyCount + 1)' class='scroll-find' >                              
+                                    
                                     @Html.Partial("MarketCenterGatewayTab", item)
                 
                         @:</section>
@@ -91,7 +95,7 @@
 
         $('.modal-body .txt-office-filter').bind('input', function (indx, elem) {
 
-            console.log("Searching");
+            //console.log("Searching");
 
             //SearchCall(indx, elem);
 
@@ -109,9 +113,9 @@
         });
 
 
-        $("#txt-office-filter-1618").bind('input', function () {
-            console.log("Searching 2");
-        });
+        //$("#txt-office-filter-1618").bind('input', function () {
+        //    //console.log("Searching 2");
+        //});
 
         $('.box-handle').click(function (event) {
             console.log("box handle!");
@@ -130,47 +134,13 @@
 
             content.html($(contentHtml).html());
             $(".modal-profile").modal({ show: true });
-        });
-
-        
-        
-        //var obj = jQuery.parseJSON('{ "outer": "#accessoryOuter" , "inner": "#accessoryInnerWrap" }');
-        //CustomResize();
-
-        //function CustomResize() {
-        //    $(window).resize(obj, function () {
-
-        //        var $c = $('.container'),
-        //            $w = $(obj.outer),
-        //            totalWidth = $('.footer').outerWidth(),
-        //            wellWidth = $c.outerWidth(),
-        //            diff = totalWidth - wellWidth,
-        //            marg = -Math.floor(diff / 2) + 'px';
-
-        //        console.log("footer width: " + $('.footer').outerWidth());
-        //        console.log("container width: " + $c.outerWidth());
-        //        console.log("");
-
-        //        $w.each(function () {
-        //            $(this).css({
-        //                'margin-left': marg,
-        //                'margin-right': marg
-        //            });
-        //        })
-
-        //        $(obj.inner).width($(".container").width());
-
-        //    });
-
-        //    $(window).resize();
-        //}
-
+        });            
 
     });
     
-    $("#txt-office-filter-1618").bind('input', function () {
-        alert("Change detected!");
-    });
+    //$("#txt-office-filter-1618").bind('input', function () {
+    //    alert("Change detected!");
+    //});
     
     function SearchCall(elem) {
         console.log("Searching");
@@ -188,17 +158,108 @@
         console.log("filter list id: " + filterList);
 
         $($(elem).closest('.search-filter-wrap').siblings('.dv-office-list').find('.ul-office-list')).searchIt({
-            itemSelector: 'li',
-            //$searchInput: $('#' + txtId),
-            //$searchInput: $(elem).attr('value'), //breaks
-            $searchInput: $(elem), //works but fails on spaces
-            //inputLabelValue: $(elem), //does weird things
-            //inputLabelValue: $(elem).attr('value'), // even weirder
+            itemSelector: 'li',          
+            $searchInput: $(elem),           
         });
         
     }
 
+    function FeaturedSearchCall(elem) {
 
+        console.log("featured Searching");
+                
+        var selected = $(elem).closest('.all-search-wrap').find('.allSearchList');
+        console.log("selected: " + selected);
+
+        if ($(elem).val()) {
+            console.log("show");
+            $(elem).closest('.all-search-wrap').find('.allSearchList').show();
+        } else {
+            console.log("hide");
+            $(elem).closest('.all-search-wrap').find('.allSearchList').hide();
+        }
+     
+        $($(elem).closest('.all-search-wrap').find('.allSearchList')).searchIt({
+            itemSelector: 'li',
+            $searchInput: $(elem),
+        });
+    }
+    
+    //sticky filter js
+    function isScrolledTo(elem, win) {
+
+        var docViewTop = $(win).scrollTop(); //num of pixels hidden above current screen
+        var docViewBottom = docViewTop + $(window).height();
+
+        //console.log("isScrolledToElem: " + elem);
+        //console.log("top position: " + $(elem).offset().top); //value that top holds
+
+
+        //var elemTop = $(elem).offset().bottom;
+        var elemTop = $(elem).offset().top; //num of pixels above the elem
+        var elemBottom = elemTop + $(elem).height();
+
+        return ((elemTop <= docViewTop));
+    }
+
+    
+    //var container = $('#container');  
+    //var bottomStop = $("#bottom_container");
+
+    $(window).scroll(function () {
+
+
+    });
+
+    //$('.scroll-find').scroll(function () {
+        //console.log("scrolling");
+
+        //var search = $(this).find('.all-search-wrap');
+
+        //var scrollpos = $(this).scrollTop();
+
+
+        //if (scrollpos != 0) {
+        //    console.log('go to fixed');
+        //    search.addClass('all-search-fixed');
+        //} else {
+        //    console.log('stop fixed');
+        //    search.removeClass('all-search-fixed');
+        //}
+
+        //if (scrollpos == $(this).height - 100) {
+        //    search.css('position', 'absolute');
+        //    search.css('top', $(this).height - 100);          
+        //}
+
+        //var id = $(this).attr('id');
+        //console.log("scroll id: " + id);
+
+        //var catcher = $(this).find('.stickCatcher');
+        //var sticky = $(this).find('.stickWithMe');
+        ////var bottomStop = $(this).find('.scrollStopper');
+
+        //var scrollpos = $(this).scrollTop();
+        //console.log("scroll position: " + scrollpos.toString());
+
+        //if (isScrolledTo(sticky, $(this)) | !isScrolledTo(bottomStop), $(this)) {
+        //    console.log("sticky hit");
+        //    //sticky.css('position', 'fixed');
+        //    //sticky.css('top', '0px');
+        //}
+        //var stopHeight = catcher.offset().top + catcher.height();
+        //if (stopHeight > sticky.offset().top) {
+        //    sticky.css('position', 'absolute');
+        //    sticky.css('top', stopHeight);
+        //}
+
+        //var bottomStopHeight = bottomStop.offset().top;
+        //if (bottomStopHeight < sticky.offset().top + sticky.height()) { // stop above footer
+        //    sticky.css('position', 'absolute');
+        //    sticky.css('top', bottomStopHeight - sticky.outerHeight() - 10); // a bit of padding
+        //}
+
+    //});
 
 
 </script>

@@ -72,22 +72,17 @@
             }
             else
             {
-
-                //get first product in category list and save id for session attr to use its spec attr to get the hom iframe url
-                //List<ProductCategory> productCategories = (List<ProductCategory>)categoryService.GetProductCategoriesByCategoryId(Model.Id);
-                //Session.Add("productId", productCategories[0].ProductId); //first id of prouct in category
-
-
+                //IFRAME VERSION
+                //both gluon and canvas versions
+                //url differences are handled in the database tblNopHOMReference
+                                
                 Session.Add("categoryId", categoryId); //category id to get iframe url
                 int topicID = topicService.GetTopicBySystemName("hom_iframe_namebadge").Id;
                 @* iframe garbage *@
                 <div id="nbIframe" class="nb">
                     @Html.Action("TopicDetails", "Topic", new { topicId = topicID })
                 </div>
-
-
-
-
+                
             }
 
         }

@@ -11,5 +11,6 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
     {
         public List<MarketCenterGatewayTabModel> MarketCenterTabsList = new List<MarketCenterGatewayTabModel>();
         public string hiddenHtml;
+        public string hiddenAll;
     }
 }

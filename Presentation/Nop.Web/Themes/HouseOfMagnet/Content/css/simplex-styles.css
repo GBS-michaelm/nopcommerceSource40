@@ -1769,7 +1769,9 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         line-height: 18px;
         font-size: 14px;
         text-align: center;
-        color: #444444
+        color: #444444;
+        clear: both;
+        padding-top: 5px;
     }
 
         .item-box .product-item .product-title a {
@@ -3158,6 +3160,8 @@ a.eu-cookie-privacyinfo-tag {
     text-decoration: line-through;
     color: #999;
     margin-bottom: 5px;
+    font-size: small;
+    line-height: .5;
 }
 
     .product-details-page .old-product-price label {
@@ -11404,6 +11408,21 @@ body hr {
 .orderplace {
     width: 165px;
 }
+
+/*Category Tabs*/
+.category-tabs {
+    display: flex;
+    justify-content: flex-end;
+    width: 500px;
+}
+.list-content {
+    justify-content: flex-end;
+    display: inline-flex;
+}
+    .category-tabs .topic-html-content-body {
+
+    }
+
 
 /*To Make Quick View button in center*/
 .pictures > .quick-view-button {

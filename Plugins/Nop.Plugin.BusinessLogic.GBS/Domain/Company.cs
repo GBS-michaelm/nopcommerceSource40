@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nop.Plugin.BusinessDataAccess.GBS;
 using System.Data;
 using Nop.Web.Models.Catalog;
@@ -10,26 +7,21 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Factories;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Vendors;
-using Nop.Core;
-using Nop.Services.Directory;
-using Nop.Services.Media;
-using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Stores;
-using Nop.Services.Topics;
-using Nop.Services.Events;
-using Nop.Services.Common;
 using Nop.Core.Caching;
-using System.Web;
+using Nop.Services.Logging;
+using Nop.Services.Media;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
+        
     public class Company : CategoryModel
     {
 
         DBManager manager = new DBManager();
-       
+        ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+        ILogger logger = EngineContext.Current.Resolve<ILogger>();
+
         private int _id = 0;
         private int _parentCategoryId = 0;    
         private string _h1 = "";
@@ -37,14 +29,15 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private bool _isVisible = false;
         private bool _isDisplayLogo = false;      
         private string _logoPicturePath = "";
-        private string _aboutYourMarketCenter = "";       
+        private string _aboutYourMarketCenter = "";
+        private string _agentPacks = "";
         private string _forgroundColor = "#000000";
         private List<int> _childCompanyIds = new List<int>();
         
-        public Company(int companyId)
+        public Company(int companyId, bool lightVer = true)
         {
             //nop category data
-            ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
+            
             this.id = companyId;
             Category category = categoryService.GetCategoryById(companyId);
             ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();           
@@ -54,27 +47,26 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);          
             this.Name = categoryModel.Name;
             this.Description = categoryModel.Description;
-            this.MetaKeywords = categoryModel.MetaKeywords;
-            this.MetaDescription = categoryModel.MetaDescription;
-            this.MetaTitle = categoryModel.MetaTitle;
+
+            if (!lightVer)
+            {
+                this.MetaKeywords = categoryModel.MetaKeywords;
+                this.MetaDescription = categoryModel.MetaDescription;
+                this.MetaTitle = categoryModel.MetaTitle;
+                this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+                this.PictureModel = categoryModel.PictureModel;
+                this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+                this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+                this.SubCategories = categoryModel.SubCategories;
+                this.FeaturedProducts = categoryModel.FeaturedProducts;
+                this.Products = categoryModel.Products;
+            }
+                        
             this.SeName = categoryModel.SeName;
-            this.PictureModel = categoryModel.PictureModel;
-            this.PagingFilteringContext = categoryModel.PagingFilteringContext;
-            this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-            this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-            this.SubCategories = categoryModel.SubCategories;
-            this.FeaturedProducts = categoryModel.FeaturedProducts;
-            this.Products = categoryModel.Products;
             
-            //datalook up via category(company) id from gbscategory table
-            //Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-            //companyDic.Add("@CategoryId", companyId);
+            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            string picturePath = pictureService.GetPictureUrl(category.PictureId);
 
-            //string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
-            //DataView companyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
-
-
-            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
             DataView companyDataView = cacheManager.Get("company" + companyId, 60, () => {
                 Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
@@ -96,8 +88,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 return innerChildCompanyDataView;
                  
             });
-
-
+            
             if (companyDataView.Count > 0)
             {
                 
@@ -106,8 +97,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.h2 = !string.IsNullOrEmpty(companyDataView[0]["H2"].ToString()) ? companyDataView[0]["H2"].ToString() : _h2;
                 this.isVisible = (bool)companyDataView[0]["IsVisible"];
                 this.isDisplayLogo = (bool)companyDataView[0]["IsDisplayLogo"];
-                this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
-                this.aboutYourMarketCenter = !string.IsNullOrEmpty(companyDataView[0]["aboutYourMarketCenter"].ToString()) ? companyDataView[0]["aboutYourMarketCenter"].ToString() : _aboutYourMarketCenter;               
+                //this.logoPicturePath = !string.IsNullOrEmpty(companyDataView[0]["LogoPicturePath"].ToString()) ? companyDataView[0]["LogoPicturePath"].ToString() : _logoPicturePath;
+                this.logoPicturePath = !string.IsNullOrEmpty(picturePath) ? picturePath : "";
+                this.aboutYourMarketCenter = !string.IsNullOrEmpty(companyDataView[0]["aboutYourMarketCenter"].ToString()) ? companyDataView[0]["aboutYourMarketCenter"].ToString() : _aboutYourMarketCenter;
+                this.agentPacks = !string.IsNullOrEmpty(companyDataView[0]["AgentPacks"].ToString()) ? companyDataView[0]["AgentPacks"].ToString() : _agentPacks;
                 this.foregroundColor = !string.IsNullOrEmpty(companyDataView[0]["ForegroundColor"].ToString()) ? companyDataView[0]["ForegroundColor"].ToString() : _forgroundColor;
 
             }
@@ -119,9 +112,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     childCompanyIds.Add(Int32.Parse(childCompanyDataView[i]["categoryId"].ToString()));
                 }
             }
-
-
-
+            
         }
         
         public int id { get { return _id; } set { _id = value; } }
@@ -132,10 +123,81 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public bool isDisplayLogo { get { return _isDisplayLogo; } set { _isDisplayLogo = value; } }
         public string logoPicturePath { get { return _logoPicturePath; } set { _logoPicturePath = value; } }
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
+        public string agentPacks { get { return _agentPacks; } set { _agentPacks = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
-
         public List<int> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
 
 
+        public List<CategoryModel> GetNonMarketCenterCompanyCategories(int parentCompanyId)
+        {
+
+            List<CategoryModel> categories = new List<CategoryModel>();
+            
+            try
+            {
+                DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
+                    Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
+                    nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
+
+                    string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
+                    DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
+
+                    return innerCompanyDataView;
+                });
+
+                if (nonMarketCenterCompanyDataView.Count > 0)
+                {
+
+                    for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
+                    {
+
+                        Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
+                        ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+                        CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+                        catalogPagingFilteringModel.PageSize = 1;
+                        //this.PagingFilteringContext = catalogPagingFilteringModel;
+                        CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+                        this.Name = categoryModel.Name;
+                        this.Description = categoryModel.Description;
+                        this.SeName = categoryModel.SeName;
+
+                        IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+                        string picturePath = pictureService.GetPictureUrl(category.PictureId);
+
+                        //this.PictureModel = categoryModel.PictureModel;
+                        
+                        DataView companyDataView = cacheManager.Get("company" + category.Id, 60, () => {
+                            Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+                            companyDic.Add("@CategoryId", category.Id);
+
+                            string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+                            DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+
+                            return innerCompanyDataView;
+                        });
+
+                        if (companyDataView.Count > 0)
+                        {
+                            categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
+                            //description text stuff like pricing and stuff 
+                        }
+
+                        categories.Add(categoryModel);
+
+                    }
+
+                }
+            }catch(Exception ex)
+            {
+                logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
+                
+                throw ex;
+
+            }        
+            
+            return categories;
+            
+        }
+        
     }
 }

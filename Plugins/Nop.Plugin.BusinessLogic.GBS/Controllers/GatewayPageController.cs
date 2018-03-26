@@ -14,6 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core;
 using Nop.Plugin.BusinessLogic.GBS;
 using Nop.Services.Configuration;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
@@ -108,9 +109,13 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 {
                     MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
 
-                    if (tab.Key == "HiddenHtml")
+                    if (tab.Key == "HiddenChildrenHtml")
                     {
                         tabsContainer.hiddenHtml = tab.Value;
+                    }
+                    else if (tab.Key == "HiddenAll")
+                    {
+                        tabsContainer.hiddenAll = tab.Value;
                     }
                     else
                     {
@@ -134,7 +139,34 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
             //return View();
 
-        }    
+        }
+
+        //[OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
+        {
+
+            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+
+            try
+            {
+                Company parentCategory = new Company(parentCategoryId);
+
+                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+
+                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+                mcGallerCategories.CategoriesList = categories;
+
+                //return View("MarketCenterGalleryCategories", mcGallerCategories);
+            }
+            catch (Exception ex)
+            {
+                ex = new Exception("Gateway Page Controller Fail. GetNonMarketCenterCategories.");
+                base.LogException(ex);
+            }
+
+            return View("MarketCenterGalleryCategories", mcGallerCategories);
+
+        }         
         
     }
        

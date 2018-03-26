@@ -169,7 +169,9 @@
                                         </li>
                                     </ul>
                                 </div>
-
+                                @{
+                                    ViewBag.productId = Model.Id;
+                                }
                                 @Html.Partial("_ProductTierPrices", Model.TierPrices)
                             </div>
                             <div class="detailpage-tab">
