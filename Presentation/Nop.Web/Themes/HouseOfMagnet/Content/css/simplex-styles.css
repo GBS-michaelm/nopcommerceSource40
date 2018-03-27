@@ -11428,3 +11428,8 @@ body hr {
 .pictures > .quick-view-button {
     margin-top: 40%;
 }
+/** Product Quick View **/
+.gallery .picture {
+    position: relative;
+}
+
