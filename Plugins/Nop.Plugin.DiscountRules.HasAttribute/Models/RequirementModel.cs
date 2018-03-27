@@ -3,12 +3,12 @@ using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Plugin.DiscountRules.HasCategory.Models
+namespace Nop.Plugin.DiscountRules.HasAttribute.Models
 {
     public class RequirementModel
     {
-        [NopResourceDisplayName("Plugins.DiscountRules.HasCategory.Fields.Categories")]
-        public string Categories { get; set; }
+        [NopResourceDisplayName("Plugins.DiscountRules.HasAttribute.Fields.Categories")]
+        public string Attributes { get; set; }
 
         public int DiscountId { get; set; }
 
@@ -16,11 +16,11 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Models
 
         #region Nested classes
 
-        public partial class AddCategoryModel : BaseNopModel
+        public partial class AddAttributeModel : BaseNopModel
         {
-            public AddCategoryModel()
+            public AddAttributeModel()
             {
-                AvailableCategories = new List<SelectListItem>();
+                AvailableAttributes = new List<SelectListItem>();
                 AvailableManufacturers = new List<SelectListItem>();
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
@@ -31,7 +31,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Models
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public int SearchAttributeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public int SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
@@ -41,7 +41,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Models
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
-            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableAttributes { get; set; }
             public IList<SelectListItem> AvailableManufacturers { get; set; }
             public IList<SelectListItem> AvailableStores { get; set; }
             public IList<SelectListItem> AvailableVendors { get; set; }
@@ -51,7 +51,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Models
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        public partial class CategoryModel : BaseNopEntityModel
+        public partial class AttributeModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿Group: GBS
-FriendlyName: GBS Customer has all of these attributes in the cart
+FriendlyName: Customer has all of these attributes in the cart
 SystemName: DiscountRequirement.HasAttribute
-Version: 3.9
+Version: 1.1
 SupportedVersions: 3.90
 Author: Clint Treadway
 DisplayOrder: 1
