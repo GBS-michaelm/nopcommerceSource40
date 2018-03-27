@@ -10,6 +10,7 @@ using Nop.Services.Catalog;
 using Nop.Core.Caching;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Core.Domain.Media;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -161,8 +162,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         this.Description = categoryModel.Description;
                         this.SeName = categoryModel.SeName;
 
+                        MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
+                        
                         IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
-                        string picturePath = pictureService.GetPictureUrl(category.PictureId);
+                        string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
 
                         //this.PictureModel = categoryModel.PictureModel;
                         
