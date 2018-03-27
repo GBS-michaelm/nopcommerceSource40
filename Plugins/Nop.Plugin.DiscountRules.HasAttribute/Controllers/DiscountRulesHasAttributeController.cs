@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
-using Nop.Plugin.DiscountRules.HasCategory.Models;
+using Nop.Plugin.DiscountRules.HasAttribute.Models;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
@@ -18,10 +18,10 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
 
-namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
+namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
 {
     [AdminAuthorize]
-    public class DiscountRulesHasCategoryController : BasePluginController
+    public class DiscountRulesHasAttributeController : BasePluginController
     {
         private readonly IDiscountService _discountService;
         private readonly ISettingService _settingService;
@@ -34,7 +34,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
         private readonly IVendorService _vendorService;
         private readonly IProductService _productService;
 
-        public DiscountRulesHasCategoryController(IDiscountService discountService,
+        public DiscountRulesHasAttributeController(IDiscountService discountService,
             ISettingService settingService, 
             IPermissionService permissionService,
             IWorkContext workContext, 
@@ -73,22 +73,22 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedCategoryIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedAttributeIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedAttributeIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
 
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
-            model.Categories = restrictedCategoryIds;
+            model.Attributes = restrictedAttributeIds;
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasCategory{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasAttribute{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
 
-            return View("~/Plugins/DiscountRules.HasCategory/Views/DiscountRulesHasCategory/Configure.cshtml", model);
+            return View("~/Plugins/DiscountRules.HasAttribute/Views/DiscountRulesHasAttribute/Configure.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Configure(int discountId, int? discountRequirementId, string categoryIds)
+        public ActionResult Configure(int discountId, int? discountRequirementId, string attributeIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -104,37 +104,37 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", discountRequirement.Id), categoryIds);
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedAttributeIds-{0}", discountRequirement.Id), attributeIds);
             }
             else
             {
                 //save new rule
                 discountRequirement = new DiscountRequirement
                 {
-                    DiscountRequirementRuleSystemName = "DiscountRequirement.HasCategory"
+                    DiscountRequirementRuleSystemName = "DiscountRequirement.HasAttribute"
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
 
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedCategoryIds-{0}", discountRequirement.Id), categoryIds);
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedAttributeIds-{0}", discountRequirement.Id), attributeIds);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CategoryAddPopup(string btnId, string categoryIdsInput)
+        public ActionResult AttributeAddPopup(string btnId, string attributeIdsInput)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return Content("Access denied");
 
-            var model = new RequirementModel.AddCategoryModel();
+            var model = new RequirementModel.AddAttributeModel();
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+            //attributes
+            model.AvailableAttributes.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var attributes = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in attributes)
+                model.AvailableAttributes.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(attributes), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -156,17 +156,17 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
 
-            ViewBag.categoryIdsInput = categoryIdsInput;
+            ViewBag.attributeIdsInput = attributeIdsInput;
             ViewBag.btnId = btnId;
 
-            return View("~/Plugins/DiscountRules.HasCategory/Views/DiscountRulesHasCategory/CategoryAddPopup.cshtml", model);
+            return View("~/Plugins/DiscountRules.HasAttribute/Views/DiscountRulesHasAttribute/AttributeAddPopup.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult CategoryAddPopupList(DataSourceRequest command, RequirementModel.AddCategoryModel model)
+        public ActionResult AttributeAddPopupList(DataSourceRequest command, RequirementModel.AddAttributeModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return Content("Access denied");
 
             //a vendor should have access only to his products
@@ -176,7 +176,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchAttributeId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -187,18 +187,18 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                 showHidden: true
                 );
 
-            var categories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
+            var attributes = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);
 
             var gridModel = new DataSourceResult();
-            gridModel.Data = categories.Select(x => new RequirementModel.CategoryModel
+            gridModel.Data = attributes.Select(x => new RequirementModel.AttributeModel
             {
                    Id = x.Id,
                    Name = x.Name,
                    Published = x.Published
             });
-            gridModel.Total = categories.TotalCount;
+            gridModel.Total = attributes.TotalCount;
 
             return Json(gridModel);
         }
@@ -206,27 +206,27 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [AdminAntiForgery]
-        public ActionResult LoadCategoryFriendlyNames(string categoryIds)
+        public ActionResult LoadAttributeFriendlyNames(string attributeIds)
         {
             var result = "";
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return Json(new { Text = result });
 
-            if (!String.IsNullOrWhiteSpace(categoryIds))
+            if (!String.IsNullOrWhiteSpace(attributeIds))
             {
                 var ids = new List<int>();
-                var rangeArray = categoryIds
+                var rangeArray = attributeIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .ToList();
 
-                //we support three ways of specifying Categories:
-                //1. The comma-separated list of Category identifiers (e.g. 77, 123, 156).
-                //2. The comma-separated list of Category identifiers with quantities.
-                //      {Category ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                //3. The comma-separated list of Category identifiers with quantity range.
-                //      {Category ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
+                //we support three ways of specifying Attributes:
+                //1. The comma-separated list of Attribute identifiers (e.g. 77, 123, 156).
+                //2. The comma-separated list of Attribute identifiers with quantities.
+                //      {Attribute ID}:{Quantity}. For example, 77:1, 123:2, 156:3
+                //3. The comma-separated list of Attribute identifiers with quantity range.
+                //      {Attribute ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
                 foreach (string str1 in rangeArray)
                 {
                     var str2 = str1;
@@ -251,12 +251,12 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                 //        result += ", ";
                 //}
 
-                var categories = _categoryService.GetAllCategories();
-                var categories1 = _categoryService.GetAllCategoriesByParentCategoryId(id1);
-                for (int i = 0; i <= categories1.Count - 1; i++)
+                var attributes = _categoryService.GetAllCategories();
+                var attributes1 = _categoryService.GetAllCategoriesByParentCategoryId(id1);
+                for (int i = 0; i <= attributes1.Count - 1; i++)
                 {
-                    result += categories1[i].Name;
-                    if (i != categories1.Count - 1)
+                    result += attributes1[i].Name;
+                    if (i != attributes1.Count - 1)
                         result += ", ";
                 }
             }

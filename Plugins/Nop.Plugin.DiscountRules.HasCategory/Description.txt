@@ -1,7 +1,7 @@
 ﻿Group: GBS
-FriendlyName: GBS Customer has all of these categories in the cart
+FriendlyName: Customer has all of these categories in the cart
 SystemName: DiscountRequirement.HasCategory
-Version: 3.9
+Version: 1.2
 SupportedVersions: 3.90
 Author: Clint Treadway
 DisplayOrder: 1
