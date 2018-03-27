@@ -59,23 +59,12 @@
 
     DBManager manager = new DBManager();
 
-    //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
-    //categoryDic.Add("@CategoryId", id);
-
-    //string categoryDataQuery = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
-    //DataView categoryDataView = manager.GetParameterizedDataView(categoryDataQuery, categoryDic);
-
-    //if(categoryDataView.Count > 0)
-    //{
-    //    categoryName = categoryDataView[0]["H1"].ToString();
-
-    //}
-
     Company company = new Company(id);
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
     string aboutYourMarketCenter = company.aboutYourMarketCenter;
+    string agentPacks = company.agentPacks;
 
 }
 
@@ -155,36 +144,7 @@
 
             //category stuff
             var catService = EngineContext.Current.Resolve<ICategoryService>();
-            //IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
-            ////for testing
-            ////int catCount = marketCenterByNameList.Count();
-            ////int storeId = marketCenterByNameList[0].Id;
-            ////IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
-
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
-
-            //var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
-
-            //foreach (var item in companiesInOrder)
-            //{
-            //    sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            //}
-
-            //stored proc way
-            //Dictionary<string, Object> childCategoryDic = new Dictionary<string, Object>();
-            //childCategoryDic.Add("@CategoryId", id);
-            //string childCategoryDataQuery = "EXEC usp_SelectGBSChildCategoryData @CategoryId";
-            //DataView childCategoryDataView = manager.GetParameterizedDataView(childCategoryDataQuery, childCategoryDic);
-
-            //if (childCategoryDataView.Count > 0)
-            //{
-            //    for (int i = 0; i < childCategoryDataView.Count; i++)
-            //    {
-            //        sb.Append("<option value='" + childCategoryDataView[i]["slug"].ToString() + "'> " + childCategoryDataView[i]["name"].ToString() + "</option>");
-            //    }
-
-            //}
-
+            
             //class attribute way
             List<Category> childCategoriesList = new List<Category>();
             for (int i = 0; i < company.childCompanyIds.Count; i++)
@@ -227,7 +187,9 @@
             @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
         </div>
         <div id="agentPacks">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })
+            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
+            <h3>Discounted Agent Packs</h3>
+            @Html.Raw(@agentPacks)
         </div>
         <div id="marketCenterAbout">
             @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@
@@ -259,13 +221,15 @@
         @*<div class="right-column-title">
 
         </div>*@
-
-
-
+        
         @Html.Widget("main_column_before")
         @RenderBody()
         @Html.Widget("main_column_after")
 
+        @* dynamic partial *@
+        @Html.Action("GetNonMarketCenterCategories", "GatewayPage", new { parentCategoryId = id })
+
+        @* static topic *@
 
         @*Stuff on the Right*@
  

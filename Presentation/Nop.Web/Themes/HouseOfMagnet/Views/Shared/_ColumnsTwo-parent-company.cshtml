@@ -98,9 +98,7 @@
     <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
         <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
     </div>
-    
-
-   
+       
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="parent-gateway-description">
@@ -215,29 +213,19 @@
 
         </div>*@
         
-
-
         @Html.Widget("main_column_before")      
         @RenderBody()
         @Html.Widget("main_column_after")
-
-
-
+        
         @* dynamic partial *@
         @Html.Action("GetNonMarketCenterCategories", "GatewayPage", new { parentCategoryId = id })
 
         @* static topic *@
-
-
-
+        
         @*Stuff on the Right*@
  
     </div>
-
-    <div>
-
-    </div>
-    
+            
     <script type="text/javascript">
         $(document).ready(function () {
             //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
