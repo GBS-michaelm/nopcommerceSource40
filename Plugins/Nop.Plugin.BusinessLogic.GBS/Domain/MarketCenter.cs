@@ -358,7 +358,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                             //ver where ID is in url
                             int specAttrOptionId = parseResult;
 
-                            featuredMarketCenterList = GetTabData(true, type: type);
+                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
                             alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
                             alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
                             alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
@@ -389,7 +389,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                                 }
                             }
 
-                            featuredMarketCenterList = GetTabData(true, type: type);
+                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
                             alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
                             alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
                             alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
@@ -646,6 +646,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string BuildFeaturedCompanyHtml(List<MarketCenter> marketcenterList, string type)
         {
             StringBuilder featuredHtmlStringBuilder = new StringBuilder();
+            string HandledSeName = "";
             //if top lvl and no children. Top level will take user to it's own page
 
             //featuredHtmlStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter' >Search for your company office:</label></div>");
@@ -676,8 +677,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
                 else
                 {
-                    
-                    featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + marketcenter.SeName + "' >");
+
+                    if (!string.IsNullOrEmpty(type))
+                    {
+                        HandledSeName = MarketCenterTypeURLHandle(marketcenter.SeName, type, marketcenter.id);
+                    }
+                    else
+                    {
+                        HandledSeName = marketcenter.SeName;
+                    }
+
+                    featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + HandledSeName + "' >");
                     if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
                     {
                         featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + " </p>");
