@@ -73,8 +73,8 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
-            if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+            //if (getShippingOptionRequest == null)
+            //    throw new ArgumentNullException("getShippingOptionRequest");
 
             decimal? _FixedRate = null;
             if (_gbsShippingSetting.UseFlatRate)

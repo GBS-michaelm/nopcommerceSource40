@@ -10,6 +10,10 @@
     background-color: #012D5C;
 }
 
+#agentPacks {
+    margin-left: 25px;
+}
+
 #agentPacks li {
     list-style: disc !important;
 }
@@ -117,4 +121,13 @@
     padding-bottom: 15px;
 }
 
+
+/**/
+#leftColumn {
+   width: 277px;
+}
+
+#rightColumn {
+    width: 820px;
+}
 

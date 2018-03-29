@@ -355,19 +355,20 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         Int32.TryParse(type, out parseResult);
                         if (parseResult != 0)
                         {
-                            //ver where id is in url
+                            //ver where ID is in url
                             int specAttrOptionId = parseResult;
 
-                            featuredMarketCenterList = GetTabData(true, type: type);
+                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
                             alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
                             alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
                             alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
-                            //allTopLevelSearch = GetTabData(null, '!', 'Z', all: true, type: type);
-                            
+                            allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
+
                         }
                         else
                         {
-                            //ver where string is in url
+                            //ver where STRING is in url (PRETTY MUCH ONLY USED FOR DEBUG)
+                            //urls will contain spec attr ids for production use.
                             int specAttrId = 0;
                             int specAttrOptionId = 0;
 
@@ -375,7 +376,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                             foreach (var attr in specAttrList)
                             {
                                 string typeOptionValue = "";
-                                //if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+                                
                                 if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "WhatAmI")
                                 {
                                     specAttrId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
@@ -388,11 +389,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                                 }
                             }
 
-                            featuredMarketCenterList = GetTabData(true, type: type);
+                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
                             alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
                             alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
                             alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
-                            //allTopLevelSearch = GetTabData(null, '!', 'Z', all: true, type: type);
+                            allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
                         }
                                                 
                     }
@@ -411,7 +412,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 //top companies only (isFeatured)
                 string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
                 string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
-                string AllSearch = allList.Count > 0 ? SearchAllHtml(allList) : "";
+                string AllSearch = allList.Count > 0 ? SearchAllHtml(allList, type) : "";
 
                 //call build html for each alpha list      
                 string alpha1 = alphaList1.Count > 0 ? BuildTabHtml(alphaList1, type) : "";
@@ -514,29 +515,34 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
         }
 
-        private string SearchAllHtml(List<MarketCenter> allMarketCenters)
+        private string SearchAllHtml(List<MarketCenter> allMarketCenters, string type = "")
         {
             StringBuilder searchAllStringBuilder = new StringBuilder();
-
-            searchAllStringBuilder.Append("<div class='all-search-wrap'>");
+          
+            searchAllStringBuilder.Append("<div  class='all-search-wrap'>");
             searchAllStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter'>Search for your company office:</label></div>");
-            searchAllStringBuilder.Append("<input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)'/>");
-            
-
+            searchAllStringBuilder.Append("<div class='mc-input-button-wrap'><input type='text' class='txt-office-filter all-search' onkeyup='FeaturedSearchCall(this)'/>");
+            searchAllStringBuilder.Append("<a class='button button-3d button-rounded button-green mc-search'><i class='icon-search'></i>Search</a></div>");
             searchAllStringBuilder.Append("<div id='' class='allSearchList'>");
-            //searchAllStringBuilder.Append("<select class='all-select'>");
             searchAllStringBuilder.Append("<ul>");
-            foreach (MarketCenter marketcenter in allMarketCenters)
+            if (!string.IsNullOrEmpty(type))
             {
-                //searchAllStringBuilder.Append("<option value='" + marketcenter.SeName + "'>" + marketcenter.Name + "</option>");
-                searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");
-                //maybe add children?
+                foreach (MarketCenter marketcenter in allMarketCenters)
+                {
+                    string handledURL = MarketCenterTypeURLHandle(marketcenter.SeName, type, marketcenter.id);
+                    searchAllStringBuilder.Append("<li><a href='" + handledURL + "'> " + marketcenter.Name + " </a></li>");
+                }
             }
-            //searchAllStringBuilder.Append("</select>");
+            else
+            {
+                foreach (MarketCenter marketcenter in allMarketCenters)
+                {
+                    searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");
+                }
+            }           
             searchAllStringBuilder.Append("</ul>");
             searchAllStringBuilder.Append("</div>");
-
-            //searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of out most popular companies:</label>");
+            searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of our most popular companies:</label>");
             searchAllStringBuilder.Append("</div>");
 
             return searchAllStringBuilder.ToString();
@@ -547,8 +553,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             string handledUrl = string.IsNullOrEmpty(marketCenterUrl) ? "/hom_marketcenter_not_found?type=" + type + "&company=" + id + "" : marketCenterUrl;
             return handledUrl;
         }
-
-
+        
         private string BuildTabHtml(List<MarketCenter> marketcenterList, string type)
         {
             StringBuilder tabHtmlStringBuilder = new StringBuilder();
@@ -599,7 +604,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }
             
             tabHtmlStringBuilder.Append("</ul>");
-                        
+
+            //tabHtmlStringBuilder.Append("<div class='scrollStopper'></div>");
+                     
             return tabHtmlStringBuilder.ToString(); ;
         }
 
@@ -639,6 +646,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string BuildFeaturedCompanyHtml(List<MarketCenter> marketcenterList, string type)
         {
             StringBuilder featuredHtmlStringBuilder = new StringBuilder();
+            string HandledSeName = "";
             //if top lvl and no children. Top level will take user to it's own page
 
             //featuredHtmlStringBuilder.Append("<div class='search-filter-wrap'><label class='lbl-filter' >Search for your company office:</label></div>");
@@ -669,8 +677,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 }
                 else
                 {
-                    
-                    featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + marketcenter.SeName + "' >");
+
+                    if (!string.IsNullOrEmpty(type))
+                    {
+                        HandledSeName = MarketCenterTypeURLHandle(marketcenter.SeName, type, marketcenter.id);
+                    }
+                    else
+                    {
+                        HandledSeName = marketcenter.SeName;
+                    }
+
+                    featuredHtmlStringBuilder.Append("class='mc-img-link' href='" + HandledSeName + "' >");
                     if (string.IsNullOrEmpty(marketcenter.mainPicturePath))
                     {
                         featuredHtmlStringBuilder.Append("<p style='color: " + marketcenter.fontColor + "'>" + marketcenter.Name + " </p>");

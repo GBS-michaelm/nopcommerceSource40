@@ -9,14 +9,38 @@
 $(document).ready(function () {
     //Used js for Header Sticky Menu  
     //http://www.jqueryscript.net/menu/Sticky-Navigation-Bar-with-jQuery-Bootstrap.html
-    $(window).bind('scroll', function() {
-        var navHeight = $("div.header").height();
-        var navWidth = $("div.header").width();
-if(window.location.pathname.includes("Plugins/CcWidget/EditorPage"))
-{
-}
-else{
-        ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');}
+    var scrollTimer, lastScrollFireTime = 0;
+    var oldPosition = $(window).scrollTop();
+    $(window).bind('scroll', function () {
+        var minScrollTime = 100;
+        var now = new Date().getTime();
+
+        function processScroll() {
+            var navHeight = $("div.header").height();
+            var navWidth = $("div.header").width();
+            if (window.location.pathname.includes("Plugins/CcWidget/EditorPage")) {
+            }
+            else {
+                ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');
+            }
+        }
+
+        if (!scrollTimer) {
+            if (now - lastScrollFireTime > (3 * minScrollTime)) {
+                processScroll();   // fire immediately on first scroll
+                lastScrollFireTime = now;
+            }
+            scrollTimer = setTimeout(function () {
+                scrollTimer = null;
+                lastScrollFireTime = new Date().getTime();
+                if (Math.abs($(window).scrollTop() - oldPosition) > 25) {
+                    processScroll();
+                }
+                oldPosition = $(window).scrollTop();
+            }, minScrollTime);
+        }
+
+
     });
 
     //Used js for Responsive Website Checker
