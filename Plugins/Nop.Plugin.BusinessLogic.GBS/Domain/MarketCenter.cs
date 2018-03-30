@@ -434,7 +434,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }
             catch (Exception ex)
             {                               
-                logger.Error("MarketCenter.cs GetMarketCenterHtml : ", ex);
+                logger.Error("MarketCenter.cs GetMarketCenterHtml. TypeId : " + type + " HackStatus : " + hack , ex);
 
                 return marketCenterTabsDict;
             }       
