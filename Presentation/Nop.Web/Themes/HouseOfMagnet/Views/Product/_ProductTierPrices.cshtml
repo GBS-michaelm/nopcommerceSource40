@@ -5,6 +5,7 @@
 @using Nop.Services.Shipping;
 @using Nop.Services.Catalog;
 @using Nop.Core;
+@using Nop.Plugin.Shipping.GBS;
 @{
     //When there is just one tier (with  qty 1), there are no actual savings in the list.
     var displayTierPrices = Model.Count > 0 && !(Model.Count == 1 && Model[0].Quantity <= 1);
@@ -12,6 +13,7 @@
     var productService = EngineContext.Current.Resolve<IProductService>();
     var storeContext = EngineContext.Current.Resolve<IStoreContext>();
     var priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+    var shippingSettings = EngineContext.Current.Resolve<GBSShippingSetting>();
     ShoppingCartItem si = new ShoppingCartItem();
     si.ProductId = ViewBag.productId;
     si.Product = productService.GetProductById(ViewBag.productId);
@@ -26,7 +28,14 @@
     var shippingMethods = shippingService.LoadActiveShippingRateComputationMethods(null, si.StoreId);
     IList<IShippingRateComputationMethod> gbsShippingMethods = shippingMethods.Where(provider => provider.PluginDescriptor.SystemName == "Nop.Plugin.Shipping.GBS").ToList();
     var gbsShippingMethod = gbsShippingMethods.FirstOrDefault();
-    var shippingRate = priceFormatter.FormatPrice((decimal)gbsShippingMethod.GetFixedRate(shippingOptionRequest));
+    var shippingRate = "";
+    if (shippingSettings.UseFlatRate) {
+        shippingRate = priceFormatter.FormatPrice((decimal)gbsShippingMethod.GetFixedRate(shippingOptionRequest));
+    }else
+    {
+        var shippingOption = gbsShippingMethod.GetShippingOptions(shippingOptionRequest);
+        shippingRate = priceFormatter.FormatPrice(shippingOption.ShippingOptions.FirstOrDefault().Rate);
+    }
 
 
 }
