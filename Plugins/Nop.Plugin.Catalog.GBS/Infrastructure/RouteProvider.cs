@@ -14,6 +14,15 @@ namespace Nop.Plugin.Catalog.GBS
                             new { controller = "GBSCatalog", action = "SportsTeamsList" },
                             new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
 
+            var adminListroute = routes.MapRoute("List",
+            "Admin/Product/List",
+            new { controller = "GBSProductAdmin", action = "List" },
+            new[] { "Nop.Plugin.Catalog.GBS.Controllers" }
+            );
+
+            adminListroute.DataTokens.Add("area", "admin");
+            routes.Remove(adminListroute);
+            routes.Insert(0, adminListroute);
         }
 
         public int Priority

@@ -3,6 +3,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Models.Catalog;
 using Nop.Plugin.Catalog.GBS.Models;
 using Nop.Web.Models.Topics;
+using Nop.Services.Catalog;
+using System.Web.Mvc;
+using Nop.Core.Caching;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -49,6 +52,12 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// <returns>TopicModel</returns>
         ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId);
 
+        /// <summary>
+        /// Get category list
+        /// </summary>
+        /// <param name="categoryService">Category service</param>
+        /// <returns>Category list</returns>
+        List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager);
 
         #endregion
     }
