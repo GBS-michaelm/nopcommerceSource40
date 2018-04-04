@@ -76,12 +76,18 @@
   <ItemGroup>
     <Compile Include="CategoryNavigationSettings.cs" />
     <Compile Include="Controllers\GBSCatalogController.cs" />
+    <Compile Include="Controllers\GBSOrderAdminController.cs" />
+    <Compile Include="Controllers\GBSManufacturerAdminController.cs" />
+    <Compile Include="Controllers\GBSDiscountAdminController.cs" />
+    <Compile Include="Controllers\GBSCustomerRoleAdminController.cs" />
+    <Compile Include="Controllers\GBSCategoryAdminController.cs" />
     <Compile Include="Controllers\GBSProductAdminController.cs" />
     <Compile Include="Controllers\WidgetsCategoryNavigationController.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Factories\CatalogModelFactoryCustom.cs" />
     <Compile Include="Factories\ICatalogModelFactoryCustom.cs" />
+    <Compile Include="Infrastructure\PluginViewEngine.cs" />
     <Compile Include="Models\CategoryNavigationModelCustom.cs" />
     <Compile Include="Models\CategorySimpleModelCustom.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
