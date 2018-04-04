@@ -87,6 +87,7 @@
                 if (splitString[i] < " " | splitString[i] > " ") { charFound = true; }
                 if (splitString[i] == "@@") { atFound = i; }
                 if (splitString[i] == ".") { dotFound = i; }
+                if (splitString[i] == ",") { return false; }
             }
             if (charFound == true) {
                 if (atFound > -1) {

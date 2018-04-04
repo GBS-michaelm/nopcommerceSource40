@@ -2,6 +2,12 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
+<style>
+
+    .min-qty-notification {
+        top: -55px !important;
+    }
+</style>
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)

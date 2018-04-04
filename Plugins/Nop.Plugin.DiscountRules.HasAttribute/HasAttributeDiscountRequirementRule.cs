@@ -79,16 +79,8 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
 
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
-            string select = "EXEC usp_getCategoryQty " + _workContext.CurrentCustomer.Id + "," + request.Store.Id + "";
+            string select = "EXEC usp_getAttributeQty " + _workContext.CurrentCustomer.Id + "," + request.Store.Id + "";
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
-
-            //if (dView.Count > 0)
-            //{
-            //    foreach (DataRow dRow in dView.Table.Rows)
-            //    {
-
-            //    }
-            //}
 
 
             bool allFound = true;
@@ -106,7 +98,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                         if (restrictedAttribute.Contains("-"))
                         {
                             //the third way (the quantity rage specified)
-                            //{Category ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
+                            //{Attribute ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
                             int restrictedAttributeId;
                             if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[0], out restrictedAttributeId))
                                 //parsing error; exit;
@@ -121,7 +113,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                                 return result;
 
                             //if (sci.ProductId == restrictedAttributeId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
-                            if ((int)dRow["CategoryId"] == restrictedAttributeId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
+                            if ((int)dRow["AttributeId"] == restrictedAttributeId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
                             {
                                 found1 = true;
                                 break;
@@ -130,7 +122,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                         else
                         {
                             //the second way (the quantity specified)
-                            //{Category ID}:{Quantity}. For example, 77:1, 123:2, 156:3
+                            //{Attribute ID}:{Quantity}. For example, 77:1, 123:2, 156:3
                             int restrictedAttributeId;
                             if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[0], out restrictedAttributeId))
                                 //parsing error; exit;
@@ -140,7 +132,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                                 //parsing error; exit;
                                 return result;
 
-                            if ((int)dRow["CategoryId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
+                            if ((int)dRow["AttributeId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
                             {
                                 found1 = true;
                                 break;
@@ -153,7 +145,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                         int restrictedAttributeId;
                         if (int.TryParse(restrictedAttribute, out restrictedAttributeId))
                         {
-                            if ((int)dRow["CategoryId"] == restrictedAttributeId)
+                            if ((int)dRow["AttributeId"] == restrictedAttributeId)
                             {
                                 found1 = true;
                                 break;
@@ -198,7 +190,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
         {
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes", "Restricted Attributes [and quantity range]");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Hint", "The comma-separated list of Attribute identifiers (e.g. 77, 123, 156). You can find a Category ID on its details page. You can also specify the comma-separated list of Category identifiers with quantities ({Category ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of Category identifiers with quantity range ({Category ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Hint", "The comma-separated list of Attribute identifiers (e.g. 77, 123, 156). You can find a Attribute ID on its details page. You can also specify the comma-separated list of Attribute identifiers with quantities ({Attribute ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of Attribute identifiers with quantity range ({Attribute ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.AddNew", "Add Attribute");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAttribute.Fields.Attributes.Choose", "Choose");
             base.Install();

@@ -147,7 +147,9 @@
                             }
                             @Html.Raw(Model.FullDescription)
 
-
+                            @{
+                                ViewBag.productId = Model.Id;
+                            }
                             @Html.Partial("_ProductTierPrices", Model.TierPrices)  
                            <div class="overview">
 
@@ -325,7 +327,9 @@
 
                                             </div>
                                             <!--delivery-->
-                                            @{
+                                            @{                               
+                                                ViewBag.productId = Model.Id;
+                                      
                                                 if (@featuredProductId != 9999 && amalgamation == true)
                                                 {
                                                     @Html.Partial("_FeaturedProductTierPrices", @featuredProduct)
