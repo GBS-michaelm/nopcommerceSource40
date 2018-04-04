@@ -509,9 +509,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             {
                 logger.Error("MarketCenter.cs GetTabData : ", ex);
                 throw ex;
-            }
-
-            
+            }          
 
         }
 

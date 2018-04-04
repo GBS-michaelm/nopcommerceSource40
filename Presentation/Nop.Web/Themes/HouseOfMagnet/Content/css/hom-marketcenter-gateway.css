@@ -769,3 +769,12 @@ a.mc-img-link img {
 .hide-me {
     display: none;
 }
+
+#gatewayForegroundImage {
+    position: absolute;
+    top: -240px;
+    left: 57%;
+    width: 44%;
+    max-height: 860px;
+    z-index: 0;
+}
