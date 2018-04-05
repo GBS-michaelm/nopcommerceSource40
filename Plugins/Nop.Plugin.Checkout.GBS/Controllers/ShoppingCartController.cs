@@ -1309,7 +1309,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                                         whereAmI = "productAttr loop #3  attr form:  " + form["text281"];
 
-                                        companyName = form["text281"];
+                                        companyName = !string.IsNullOrEmpty(form["text281"]) ? form["text281"] : "";
                                         if (!string.IsNullOrEmpty(form["text281"].ToString()))
                                         {
 
