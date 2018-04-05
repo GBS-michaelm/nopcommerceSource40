@@ -7,7 +7,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Models
 {
     public class RequirementModel
     {
-        [NopResourceDisplayName("Plugins.DiscountRules.HasAttribute.Fields.Categories")]
+        [NopResourceDisplayName("Plugins.DiscountRules.HasAttribute.Fields.Attributes")]
         public string Attributes { get; set; }
 
         public int DiscountId { get; set; }

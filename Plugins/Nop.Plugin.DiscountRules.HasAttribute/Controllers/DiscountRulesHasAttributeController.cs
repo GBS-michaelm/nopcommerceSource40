@@ -33,6 +33,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IProductService _productService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
 
         public DiscountRulesHasAttributeController(IDiscountService discountService,
             ISettingService settingService, 
@@ -43,7 +44,8 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
             IManufacturerService manufacturerService,
             IStoreService storeService, 
             IVendorService vendorService,
-            IProductService productService)
+            IProductService productService,
+            ISpecificationAttributeService specificationAttributeService)
         {
             this._discountService = discountService;
             this._settingService = settingService;
@@ -55,6 +57,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._productService = productService;
+            this._specificationAttributeService = specificationAttributeService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
@@ -187,18 +190,16 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
                 showHidden: true
                 );
 
-            var attributes = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true);
+            var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(37);
 
             var gridModel = new DataSourceResult();
             gridModel.Data = attributes.Select(x => new RequirementModel.AttributeModel
             {
                    Id = x.Id,
                    Name = x.Name,
-                   Published = x.Published
+                   Published = true
             });
-            gridModel.Total = attributes.TotalCount;
+            gridModel.Total = attributes.Count;
 
             return Json(gridModel);
         }
@@ -243,20 +244,11 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
                 int id1;
                 id1 = ids[0];
 
-                //var products = _productService.GetProductsByIds(ids.ToArray());
-                //for (int i = 0; i <= products.Count - 1; i++)
-                //{
-                //    result += products[i].Name;
-                //    if (i != products.Count - 1)
-                //        result += ", ";
-                //}
-
-                var attributes = _categoryService.GetAllCategories();
-                var attributes1 = _categoryService.GetAllCategoriesByParentCategoryId(id1);
-                for (int i = 0; i <= attributes1.Count - 1; i++)
+                var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(37);
+                for (int i = 0; i <= attributes.Count - 1; i++)
                 {
-                    result += attributes1[i].Name;
-                    if (i != attributes1.Count - 1)
+                    result += attributes[i].Name;
+                    if (i != attributes.Count - 1)
                         result += ", ";
                 }
             }
