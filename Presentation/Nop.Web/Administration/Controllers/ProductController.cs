@@ -191,7 +191,11 @@ namespace Nop.Admin.Controllers
             this._vendorSettings = vendorSettings;
         }
 
-        #endregion 
+        public ProductController()
+        {
+        }
+
+        #endregion
 
         #region Utilities
 
