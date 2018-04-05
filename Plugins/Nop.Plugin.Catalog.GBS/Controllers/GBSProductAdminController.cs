@@ -51,7 +51,7 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
-    public class GBSProductAdminController : BaseAdminController
+    public class ProductController : Nop.Admin.Controllers.ProductController
     {
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactory _catalogModelFactory;
@@ -69,19 +69,98 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         private readonly ICatalogModelFactoryCustom _catalogModelFactoryCustom;
 
 
-        public GBSProductAdminController(
+        public ProductController(
+            IProductService productService,
+            IProductTemplateService productTemplateService,
             ICategoryService categoryService,
-            ICatalogModelFactory catalogModelFactory,
-            IWorkContext workContext,
-            IStoreService storeService,
-            ISettingService settingService,
-            ILocalizationService localizationService,
-            IPermissionService permissionService,
-            VendorSettings vendorSettings,
             IManufacturerService manufacturerService,
-            IShippingService shippingService,
+            ICustomerService customerService,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            ISpecificationAttributeService specificationAttributeService,
+            IPictureService pictureService,
+            ITaxCategoryService taxCategoryService,
+            IProductTagService productTagService,
+            ICopyProductService copyProductService,
+            IPdfService pdfService,
+            IExportManager exportManager,
+            IImportManager importManager,
+            ICustomerActivityService customerActivityService,
+            IPermissionService permissionService,
+            IAclService aclService,
+            IStoreService storeService,
+            IOrderService orderService,
+            IStoreMappingService storeMappingService,
             IVendorService vendorService,
-            ICatalogModelFactoryCustom catalogModelFactoryCustom)
+            IDateRangeService dateRangeService,
+            IShippingService shippingService,
+            IShipmentService shipmentService,
+            ICurrencyService currencyService,
+            CurrencySettings currencySettings,
+            IMeasureService measureService,
+            MeasureSettings measureSettings,
+            ICacheManager cacheManager,
+            IDateTimeHelper dateTimeHelper,
+            IDiscountService discountService,
+            IProductAttributeService productAttributeService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
+            IShoppingCartService shoppingCartService,
+            IProductAttributeFormatter productAttributeFormatter,
+            IProductAttributeParser productAttributeParser,
+            IDownloadService downloadService,
+            ISettingService settingService,
+            TaxSettings taxSettings,
+            VendorSettings vendorSettings,
+            ICatalogModelFactory catalogModelFactory,
+            ICatalogModelFactoryCustom catalogModelFactoryCustom) : base(
+                     productService,
+                     productTemplateService,
+                     categoryService,
+                     manufacturerService,
+                     customerService,
+                     urlRecordService,
+                     workContext,
+                     languageService,
+                     localizationService,
+                     localizedEntityService,
+                     specificationAttributeService,
+                     pictureService,
+                     taxCategoryService,
+                     productTagService,
+                     copyProductService,
+                     pdfService,
+                     exportManager,
+                     importManager,
+                     customerActivityService,
+                     permissionService,
+                     aclService,
+                     storeService,
+                     orderService,
+                     storeMappingService,
+                     vendorService,
+                     dateRangeService,
+                     shippingService,
+                     shipmentService,
+                     currencyService,
+                     currencySettings,
+                     measureService,
+                     measureSettings,
+                     cacheManager,
+                     dateTimeHelper,
+                     discountService,
+                     productAttributeService,
+                     backInStockSubscriptionService,
+                     shoppingCartService,
+                     productAttributeFormatter,
+                     productAttributeParser,
+                     downloadService,
+                     settingService,
+                     taxSettings,
+                     vendorSettings
+                )
         {
             this._categoryService = categoryService;
             this._catalogModelFactory = catalogModelFactory;
@@ -100,7 +179,68 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
         }
 
-        public virtual ActionResult List()
+
+        //create product
+        public override ActionResult Create()
+        {
+            ActionResult result = base.Create();
+            if (result.GetType() != typeof(ViewResult))
+            {
+                return result;
+            }
+            else
+            {
+                return View("~/Administration/Views/Product/Create.cshtml", ((ViewResult)result).Model);
+            }
+            //return base.Create();
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public override ActionResult Create(ProductModel model, bool continueEditing)
+        {
+            ActionResult result = base.Create(model, continueEditing);
+            if (result.GetType() != typeof(ViewResult))
+            {
+                return result;
+            }
+            else
+            {
+                return View("~/Administration/Views/Product/Create.cshtml", ((ViewResult)result).Model);
+            }
+            //return base.Create(model, continueEditing);
+        }
+
+        //edit product
+        public override ActionResult Edit(int id)
+        {
+            ActionResult result = base.Edit(id);
+            if (result.GetType() != typeof(ViewResult)){
+                return result;
+            }else
+            {
+                return View("~/Administration/Views/Product/Edit.cshtml", ((ViewResult)result).Model);
+            }
+            //return base.Edit(id);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public override ActionResult Edit(ProductModel model, bool continueEditing)
+        {
+
+            ActionResult result = base.Edit(model, continueEditing);
+            if (result.GetType() != typeof(ViewResult))
+            {
+                return result;
+            }
+            else
+            {
+                return View("~/Administration/Views/Product/Edit.cshtml", ((ViewResult)result).Model);
+            }
+
+            //return base.Edit(model, continueEditing);
+        }
+
+        public override ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -150,9 +290,264 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.PublishedOnly"), Value = "1" });
             model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly"), Value = "2" });
 
-            return View("~/Administration/Views/Product/List.cshtml",model);
+            return View("~/Administration/Views/Product/List.cshtml", model);
+            //return View(model);
         }
 
+        [NonAction]
+        protected override void PrepareCategoryMappingModel(ProductModel model, Product product, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (!excludeProperties && product != null)
+                model.SelectedCategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
+
+            //var allCategories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var allCategories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in allCategories)
+            {
+                c.Selected = model.SelectedCategoryIds.Contains(int.Parse(c.Value));
+                model.AvailableCategories.Add(c);
+            }
+        }
+
+        public override ActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.AddRequiredProductModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+
+            ViewBag.productIdsInput = productIdsInput;
+            ViewBag.btnId = btnId;
+
+            return View(model);
+        }
+
+        public override ActionResult RelatedProductAddPopup(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.AddRelatedProductModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        public override ActionResult CrossSellProductAddPopup(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.AddCrossSellProductModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        public override ActionResult AssociatedProductAddPopup(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.AddAssociatedProductModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        public override ActionResult BulkEdit()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new BulkEditListModel();
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        public override ActionResult AssociateProductToAttributeValuePopup()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
+
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            foreach (var m in manufacturers)
+                model.AvailableManufacturers.Add(m);
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
 
     }
 }

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -99,6 +99,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAllProducts", "Plugins\Nop.Plugin.DiscountRules.HasAllProducts\Nop.Plugin.DiscountRules.HasAllProducts.csproj", "{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Catalog.GBS", "Plugins\Nop.Plugin.Catalog.GBS\Nop.Plugin.Catalog.GBS.csproj", "{4CE2D650-1213-4A22-A389-8825885EC516}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAttribute", "Plugins\Nop.Plugin.DiscountRules.HasAttribute\Nop.Plugin.DiscountRules.HasAttribute.csproj", "{C2802D42-066A-4264-B141-5DD0FD32F5AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasCategory", "Plugins\Nop.Plugin.DiscountRules.HasCategory\Nop.Plugin.DiscountRules.HasCategory.csproj", "{2632BC9B-9359-4707-9D8F-D112D4463417}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -526,6 +530,30 @@ Global
 		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|x86.ActiveCfg = Release|Any CPU
 		{4CE2D650-1213-4A22-A389-8825885EC516}.Release|x86.Build.0 = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD}.Release|x86.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Debug|x86.Build.0 = Debug|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|x86.ActiveCfg = Release|Any CPU
+		{2632BC9B-9359-4707-9D8F-D112D4463417}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -574,6 +602,8 @@ Global
 		{AE79E188-83B5-490C-A7CB-733383122457} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{4CE2D650-1213-4A22-A389-8825885EC516} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{C2802D42-066A-4264-B141-5DD0FD32F5AD} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{2632BC9B-9359-4707-9D8F-D112D4463417} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE149CF7-63BA-47B5-A6D0-85D344969A2C}
