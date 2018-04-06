@@ -728,6 +728,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             
             int iframeDataId = 0;
             int customImgId = 0;
+            int envColor = 0;
             foreach (var item in productMappings)
             {
                 switch (item.ProductAttribute.Name)
@@ -738,14 +739,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     case "CustomImgUrl":
                         customImgId = item.Id;
                         break;
+                    case "Envelope Color":
+                        envColor = item.Id;
+                        break;
                     default:
                         break;
                 }
 
 
             }
+
+
             string customImgXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", customImgId, cartImageSrc);
-   
             var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
             optionsAttributesXml += formOptionsAttributeXml;
 
