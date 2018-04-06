@@ -313,6 +313,7 @@ namespace Nop.Services.Custom.Orders
                         {
                             ExtendedOrderItem extendedOrderItem = new ExtendedOrderItem();
                             extendedOrderItem.OrderItemID = item.Id;
+                            extendedOrderItem.sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
                             bool isCCProduct = ccService.IsProductForCc(item.ProductId);
                             if (isCCProduct)
                             {
@@ -504,8 +505,9 @@ namespace Nop.Services.Custom.Orders
                 Dictionary<string, string> paramDicEx = new Dictionary<string, string>();
                 paramDicEx.Add("@nopOrderItemID", item.OrderItemID.ToString());
                 paramDicEx.Add("@ccID", item.ccID.ToString());
+                paramDicEx.Add("@sku", item.sku);
 
-                var insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID";
+                var insert = "EXEC Insert_tblNOPOrderItem @nopOrderItemID,@ccID,@sku";
                 manager.SetParameterizedQueryNoData(insert, paramDicEx);
 
             }
@@ -1009,7 +1011,7 @@ namespace Nop.Services.Custom.Orders
                     {
                         ccID = getCCIdFromItem(item.AttributesXml);
                     }
-
+                    string sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
 
 
                     Dictionary<string, Object> paramDic = new Dictionary<string, Object>();
@@ -1031,8 +1033,10 @@ namespace Nop.Services.Custom.Orders
                     paramDic.Add("@UnitPriceExclTax", UnitPriceExclTax);
                     paramDic.Add("@UnitPriceInclTax", UnitPriceInclTax);
                     paramDic.Add("@ccID", ccID);
+                    paramDic.Add("@sku", sku);
 
-                    insert = "EXEC usp_InsertFailedOrderItems @GBSOrderID,@StoreID,@CustomerId,@ProductID,@Quantity,@AttributesXml,@AttributeDescription,@discountAmountInclTax,@discountAmountExclTax,@OriginalProductCost,@PriceInclTax,@PriceExclTax,@UnitPriceExclTax,@UnitPriceInclTax,@ccID";
+
+                    insert = "EXEC usp_InsertFailedOrderItems @GBSOrderID,@StoreID,@CustomerId,@ProductID,@Quantity,@AttributesXml,@AttributeDescription,@discountAmountInclTax,@discountAmountExclTax,@OriginalProductCost,@PriceInclTax,@PriceExclTax,@UnitPriceExclTax,@UnitPriceInclTax,@ccID,@sku";
 
                     manager.SetParameterizedQueryNoData(insert, paramDic);
 
@@ -1089,6 +1093,7 @@ namespace Nop.Services.Custom.Orders
         public int ID { get; set; }
         public int OrderItemID { get; set; }
         public int ccID { get; set; }
+        public string sku { get; set; }
     }
 
 
