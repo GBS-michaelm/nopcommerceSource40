@@ -22,6 +22,7 @@ using Nop.Plugin.Catalog.GBS.DataAccess;
 using Nop.Web.Models.Topics;
 using System.Data;
 using Nop.Core.Infrastructure;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -338,6 +339,47 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             }
 
             return (GBSProduct)instance;
+        }
+
+        /// <summary>
+        /// Get category list
+        /// </summary>
+        /// <param name="categoryService">Category service</param>
+        /// <returns>Category list</returns>
+        public virtual List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager)
+        {
+
+            if (cacheManager == null)
+            {
+                DBManager manager = new DBManager();
+                string select = "EXEC usp_getCategorySelectList";
+                Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+
+                string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
+
+                var result = JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);
+
+                return result;
+            }
+            else
+            {
+                string cacheKey = "category_select_list";
+                var result = cacheManager.Get(cacheKey, () =>
+                {
+                    DBManager manager = new DBManager();
+                    string select = "EXEC usp_getCategorySelectList";
+                    Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+
+                    string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
+
+                    return JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);
+
+                    
+                });
+                return result;
+            }
+
+
         }
         #endregion
     }

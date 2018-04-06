@@ -76,11 +76,18 @@
   <ItemGroup>
     <Compile Include="CategoryNavigationSettings.cs" />
     <Compile Include="Controllers\GBSCatalogController.cs" />
+    <Compile Include="Controllers\GBSOrderAdminController.cs" />
+    <Compile Include="Controllers\GBSManufacturerAdminController.cs" />
+    <Compile Include="Controllers\GBSDiscountAdminController.cs" />
+    <Compile Include="Controllers\GBSCustomerRoleAdminController.cs" />
+    <Compile Include="Controllers\GBSCategoryAdminController.cs" />
+    <Compile Include="Controllers\GBSProductAdminController.cs" />
     <Compile Include="Controllers\WidgetsCategoryNavigationController.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Factories\CatalogModelFactoryCustom.cs" />
     <Compile Include="Factories\ICatalogModelFactoryCustom.cs" />
+    <Compile Include="Infrastructure\PluginViewEngine.cs" />
     <Compile Include="Models\CategoryNavigationModelCustom.cs" />
     <Compile Include="Models\CategorySimpleModelCustom.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
@@ -127,6 +134,11 @@
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj">
       <Project>{75fd4163-333c-4dd5-854d-2ef294e45d94}</Project>
       <Name>Nop.Web.Framework</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Administration\Nop.Admin.csproj">
+      <Project>{152c761a-dd2e-4c1f-af89-dfb2547a3bca}</Project>
+      <Name>Nop.Admin</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
