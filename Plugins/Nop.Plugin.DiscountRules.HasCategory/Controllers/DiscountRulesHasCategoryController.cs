@@ -17,6 +17,9 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
+using Nop.Core.Caching;
+using Nop.Plugin.Catalog.GBS.Factories;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
 {
@@ -33,6 +36,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IProductService _productService;
+        private readonly ICacheManager _cacheManager;
+        private readonly ICatalogModelFactoryCustom _catalogModelFactoryCustom;
+
 
         public DiscountRulesHasCategoryController(IDiscountService discountService,
             ISettingService settingService, 
@@ -43,7 +49,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             IManufacturerService manufacturerService,
             IStoreService storeService, 
             IVendorService vendorService,
-            IProductService productService)
+            IProductService productService,
+            ICacheManager cacheManager,
+            ICatalogModelFactoryCustom catalogModelFactoryCustom)
         {
             this._discountService = discountService;
             this._settingService = settingService;
@@ -55,6 +63,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._productService = productService;
+            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static"); 
+            this._catalogModelFactoryCustom = catalogModelFactoryCustom;
+
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
@@ -132,9 +143,12 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            //var categories = _categoryService.GetAllCategories(showHidden: true);
+            //foreach (var c in categories)
+            //    model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+            var categories = _catalogModelFactoryCustom.GetCategoryList(_categoryService, _cacheManager);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
