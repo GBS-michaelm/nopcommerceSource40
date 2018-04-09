@@ -778,3 +778,9 @@ a.mc-img-link img {
     max-height: 860px;
     z-index: 0;
 }
+
+.no-company-found {
+    display: none;
+    color: #dddddd
+}
+

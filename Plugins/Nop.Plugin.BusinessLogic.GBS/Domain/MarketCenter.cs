@@ -537,7 +537,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
                     searchAllStringBuilder.Append("<li><a href='" + marketcenter.SeName + "'> " + marketcenter.Name + " </a></li>");
                 }
-            }           
+            }
+            //searchAllStringBuilder.Append("<li><a href='#' class='no-company-found'>No Companies Found</a></li>");
             searchAllStringBuilder.Append("</ul>");
             searchAllStringBuilder.Append("</div>");
             searchAllStringBuilder.Append("<label class='lbl-filter'>...or select from some of our most popular companies:</label>");
