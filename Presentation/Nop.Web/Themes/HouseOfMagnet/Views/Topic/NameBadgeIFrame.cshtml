@@ -11,7 +11,7 @@
 @using System.Xml;
 @using Nop.Core;
 @using Nop.Core.Domain.Orders;
-@using Nop.Services.Orders; 
+@using Nop.Services.Orders;
 @using Nop.Plugin.BusinessDataAccess.GBS;
 @{
 
@@ -21,6 +21,7 @@
     Layout = "~/Views/Shared/_Empty.cshtml";
 
     string page = string.Empty;
+    int canvasOnHom = 0;
     //try
     //{
     //int prodId = Convert.ToInt32(Request.QueryString["id"]);
@@ -52,10 +53,12 @@
     namebadgeDic.Add("@key", "NameBadgeURL");
 
     namebadgeIframeData = manager.GetParameterizedDataView(query, namebadgeDic);
-    if(namebadgeIframeData.Count > 0)
+    if (namebadgeIframeData.Count > 0)
     {
         page = namebadgeIframeData[0]["value"].ToString();
     }
+    //handle for which html to use
+    canvasOnHom = page.Contains("pageid") ? 1 : 0;
 
     string attributeXml = string.Empty;
     bool editActive = false;
@@ -126,35 +129,45 @@
     <input type="hidden" id="hdn-qty" value="@qty" />
     <input type="hidden" id="hdn-category-id" value="@categoryId" />
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
+    <input type="hidden" id="hdn-canvas-status" value="@canvasOnHom" />
 
-    <div class="gluon-template"  style="overflow:hidden; height: 100%">
+
+    <div class="gluon-template" style="overflow:hidden; height: 100%">
         <iframe id="hom-nb-iframe" src="@T("hom.url")@page" style="height:1500px; width:100%;"></iframe>
     </div>
 }
- <!--product attributes-->
-@*<script type="text/javascript"> 
-    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-    var eventer = window[eventMethod];
-    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-    var imageUrl = '';
-    var check = true;
- 
-    // Listen to message from child window
-    eventer(messageEvent, function (e) {
-        var cartImageSrc = (JSON.parse(e.data).hasOwnProperty('399') || JSON.parse(e.data).hasOwnProperty('misc3')) ? "http://gluon.houseofmagnets.com" + JSON.parse(e.data)[320] : "undefined";
-        AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
-        
-    }, false);    
-</script>*@
+<!--product attributes-->
+@*<script type="text/javascript">
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+        var imageUrl = '';
+        var check = true;
+
+        // Listen to message from child window
+        eventer(messageEvent, function (e) {
+            var cartImageSrc = (JSON.parse(e.data).hasOwnProperty('399') || JSON.parse(e.data).hasOwnProperty('misc3')) ? "http://gluon.houseofmagnets.com" + JSON.parse(e.data)[320] : "undefined";
+            AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
+
+        }, false);
+    </script>*@
 
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var iframe = document.getElementById('hom-nb-iframe');
-        
+        //var iframe = document.getElementById('hom-nb-iframe');
+
         window.addEventListener("message", function (e) {
-            addToCart(e);
+            if ($("#hdn-canvas-status").val() == 1) {
+                //canvas hom ver addToCart
+
+
+
+            }else {
+                addToCart(e);
+            }
+            
         }, false);
 
         function addToCart(e) {
@@ -166,7 +179,7 @@
 
             var dataTest = e.data;
             var dataJson = dataHomJson['formData'];
-            
+
             //convert json to form
             var data = new FormData();
             for (var key in dataJson) {
@@ -174,38 +187,29 @@
             }
 
             $.ajax(
-            {
-                type: "POST",
-                dataType: "html",
-                url: formURL,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (msg) {
-                    var obj = $.parseJSON(msg);
-                    //console.log("msg: " + msg);
-                    //console.log("redirect value: " + obj['redirect']);
-                    //window.top.location.href = document.getElementById('nopcart').value + obj['redirect'];
-                    window.top.location.href = obj['redirect'];
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    //if fails
-                    console.log("fail");
-                }
-            });
+                {
+                    type: "POST",
+                    dataType: "html",
+                    url: formURL,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        var obj = $.parseJSON(msg);
+                        //console.log("msg: " + msg);
+                        //console.log("redirect value: " + obj['redirect']);
+                        //window.top.location.href = document.getElementById('nopcart').value + obj['redirect'];
+                        window.top.location.href = obj['redirect'];
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        //if fails
+                        console.log("fail");
+                    }
+                });
 
 
         }
 
-
-
-        @*if($("#hdn-iframe-data").val() != "")
-        {
-            $("#gluon-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
-        }
-        $("#btn-add-to-cart").click(function () {
-            console.log("addto cart clicked");
-        })*@
     });
 </script>
 
