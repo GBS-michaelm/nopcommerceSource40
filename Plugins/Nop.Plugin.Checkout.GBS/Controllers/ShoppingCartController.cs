@@ -728,6 +728,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             
             int iframeDataId = 0;
             int customImgId = 0;
+            int envColor = 0;
             foreach (var item in productMappings)
             {
                 switch (item.ProductAttribute.Name)
@@ -738,14 +739,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     case "CustomImgUrl":
                         customImgId = item.Id;
                         break;
+                    case "Envelope Color":
+                        envColor = item.Id;
+                        break;
                     default:
                         break;
                 }
 
 
             }
+
+
             string customImgXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", customImgId, cartImageSrc);
-   
             var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
             optionsAttributesXml += formOptionsAttributeXml;
 
@@ -1296,8 +1301,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                                     if (string.IsNullOrEmpty(backStyle) && attr.ProductAttribute.Name == "Back")
                                     {
-                                        backStyle = form["text357"];
-                                        if (!string.IsNullOrEmpty(form["text357"].ToString()))
+
+                                        backStyle = !string.IsNullOrEmpty(form["text357"]) ? form["text357"] : "";
+                                        //if (!string.IsNullOrEmpty(form["text357"].ToString()))
+                                        if(!string.IsNullOrEmpty(backStyle))
                                         {
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, backStyle);
                                         }                                                                               
@@ -1309,8 +1316,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
                                         whereAmI = "productAttr loop #3  attr form:  " + form["text281"];
 
-                                        companyName = form["text281"];
-                                        if (!string.IsNullOrEmpty(form["text281"].ToString()))
+                                        companyName = !string.IsNullOrEmpty(form["text281"]) ? form["text281"] : "";
+                                        //if (!string.IsNullOrEmpty(form["text281"].ToString()))
+                                        if(!string.IsNullOrEmpty(companyName))
                                         {
 
                                             whereAmI = "productAttr loop #3 inside if";
@@ -1331,12 +1339,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                                     whereAmI = "productAttr loop #5  attr name: " + attr.ProductAttribute.Name;
                                     if (string.IsNullOrEmpty(customerTitle) && attr.ProductAttribute.Name == "Customer Title")
                                     {
-                                        if (!string.IsNullOrEmpty(form["chooseTitle"].ToString()))
+
+                                        customerTitle = !string.IsNullOrEmpty(form["chooseTitle"]) ? form["chooseTitle"] : "";
+                                        string customTest = !string.IsNullOrEmpty(form["customTitle"]) ? form["customTitle"] : "";
+
+                                        //if (!string.IsNullOrEmpty(form["chooseTitle"].ToString()))
+                                        if (!string.IsNullOrEmpty(customerTitle))
                                         {
                                             customerTitle = form["chooseTitle"];
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
                                         }
-                                        else if (!string.IsNullOrEmpty(form["customTitle"].ToString()))
+                                        //else if (!string.IsNullOrEmpty(form["customTitle"].ToString()))
+                                        else if(!string.IsNullOrEmpty(customTest))
                                         {
                                             customerTitle = form["customTitle"];
                                             attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, customerTitle);
