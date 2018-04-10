@@ -189,32 +189,74 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
+            //var products = _productService.SearchProducts(
+            //    categoryIds: new List<int> { model.SearchCategoryId },
+            //    manufacturerId: model.SearchManufacturerId,
+            //    storeId: model.SearchStoreId,
+            //    vendorId: model.SearchVendorId,
+            //    productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+            //    keywords: model.SearchProductName,
+            //    pageIndex: command.Page - 1,
+            //    pageSize: command.PageSize,
+            //    showHidden: true
+            //    );
 
-            var categories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true);
+            ////var allcategories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
+            //        pageSize: command.PageSize,
+            //        showHidden: true);
+
+           //var categoriesList = new List<Category>();
+
+            //var categories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
+            //        pageSize: command.PageSize,
+            //        showHidden: true).SortCategoriesForTree();
+
+            var childrenCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, false, true).SortCategoriesForTree();
+
+            if (model.SearchCategoryId != 0)
+            {
+                //foreach (Category category in allcategories)
+                //{
+
+                //    if (isADescendant(category,model.SearchCategoryId))
+                //    {
+                //        categoriesList.Add(category);
+                //    }
+                //}
+
+                childrenCategories = _categoryService.GetAllCategoriesByParentCategoryId(model.SearchCategoryId,false,true).SortCategoriesForTree();
+            }
+
+            var categories = new PagedList<Category>(childrenCategories, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult();
             gridModel.Data = categories.Select(x => new RequirementModel.CategoryModel
             {
                    Id = x.Id,
-                   Name = x.Name,
+                   Name = x.GetFormattedBreadCrumb(_categoryService),
                    Published = x.Published
             });
+
             gridModel.Total = categories.TotalCount;
 
             return Json(gridModel);
+        }
+
+        private bool isADescendant(Category category, int parentId)
+        {
+            if (category.ParentCategoryId == 0)
+            {
+                return false;
+            }
+
+            if (category.ParentCategoryId == parentId)
+            {
+                return true;
+            }
+            else
+            {
+                return isADescendant(_categoryService.GetCategoryById(category.ParentCategoryId), parentId);
+            }
         }
 
         [HttpPost]

@@ -6,7 +6,6 @@ CurrencyExchange.ECB
 DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
 DiscountRequirement.HasAttribute
-DiscountRequirement.HasCategory
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
 FoxNetSoft.CDNConnector
@@ -49,3 +48,4 @@ Widgets.CustomersCanvas
 Widgets.GoogleAnalytics
 Widgets.Marketing
 Widgets.NivoSlider
+DiscountRequirement.HasCategory
