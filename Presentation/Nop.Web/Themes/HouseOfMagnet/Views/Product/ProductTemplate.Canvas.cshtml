@@ -2,8 +2,7 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
-@using Nop.Plugin.Payments.GBS;
-@using System.Data;
+
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -50,38 +49,11 @@
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
 @Html.Partial("_LoadingGif")
 
-@{
-    try
-    {
-        //Get Page ID 
-        DBManager db = new DBManager();
-        Dictionary<string, string> param = new Dictionary<string, string>();
-
-        int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
-        int count = 1;
-        int categoryID = 0;
-        foreach (var item in Model.Breadcrumb.CategoryBreadcrumb)
-        {
-            if (count == modelCount)
-            {
-                categoryID = item.Id;
-            }
-            count++;
-        }
-        param.Add("@categoryID", categoryID.ToString());
-        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
-        string pageID = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
-    }
-    catch(Exception ex)
-    {
-
-    }
-}
-
-<div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>lo
+<div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
 
 <div class="page product-details-page">
     <div class="page-body">
+
         @Html.Widget("productdetails_top", Model.Id)
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
@@ -129,6 +101,7 @@
                                     @Html.Partial("_DeliveryInfo", Model)
                                     <!--sample download-->
                                     @Html.Partial("_DownloadSample", Model)
+
                                     <!--rental info-->
                                     @{
                                         var dataDictRental = new ViewDataDictionary();
@@ -175,8 +148,8 @@
                                     </div>
                                     @Html.Partial("_ShareButton", Model)
                                     <div class="category-tag">
-                                        @Html.Widget("product_category_titles", Model.Id)
-                                        @*@if (Model.ProductTags.Count > 0)
+                                       @* @Html.Widget("product_category_titles", Model.Id)
+                                        @if (Model.ProductTags.Count > 0)
                                             {
                                             @Html.Partial("_ProductTags", Model.ProductTags)
                                             }*@

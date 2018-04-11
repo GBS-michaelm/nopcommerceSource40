@@ -2,16 +2,32 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
+@using Nop.Plugin.Payments.GBS;
+@using System.Data;
 <style>
 
     .min-qty-notification {
         top: -55px !important;
     }
 </style>
+@{
+
+    //Get Page ID
+    DBManager db = new DBManager();
+    Dictionary<string, string> param = new Dictionary<string, string>();
+
+    int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
+    int categoryID = 0;
+    categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
+    param.Add("@categoryID", categoryID.ToString());
+    DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
+    string pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+
+}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
-    string pageID = "42";
+
 
 
 }
@@ -132,7 +148,7 @@
     }
 
 
-    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&pageid=" + pageId + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
