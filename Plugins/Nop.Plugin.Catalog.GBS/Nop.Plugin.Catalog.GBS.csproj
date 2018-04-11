@@ -84,6 +84,9 @@
     <Compile Include="Controllers\GBSProductAdminController.cs" />
     <Compile Include="Controllers\WidgetsCategoryNavigationController.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="Factories\CatalogModelFactory.cs" />
+    <Compile Include="Factories\Helpers.cs" />
+    <Compile Include="Factories\ProductModelFactory.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Factories\CatalogModelFactoryCustom.cs" />
     <Compile Include="Factories\ICatalogModelFactoryCustom.cs" />

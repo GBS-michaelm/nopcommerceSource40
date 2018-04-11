@@ -13,6 +13,7 @@ using Autofac.Core;
 using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Services.Catalog;
 using Nop.Plugin.Catalog.GBS.Services;
+using Nop.Web.Factories;
 
 namespace Nop.Plugin.Catalog.GBS
 {
@@ -31,6 +32,8 @@ namespace Nop.Plugin.Catalog.GBS
         {            
             builder.RegisterType<CatalogModelFactoryCustom>().As<ICatalogModelFactoryCustom>().InstancePerDependency();
             builder.RegisterType<GBSProductAttributeFormatter>().As<IProductAttributeFormatter>();
+            builder.RegisterType<Nop.Plugin.Catalog.GBS.Factories.CatalogModelFactory>().As<ICatalogModelFactory>().InstancePerDependency();
+            builder.RegisterType<Nop.Plugin.Catalog.GBS.Factories.ProductModelFactory>().As<IProductModelFactory>().InstancePerDependency();
 
         }
 
@@ -39,7 +42,7 @@ namespace Nop.Plugin.Catalog.GBS
         /// </summary>
         public int Order
         {
-            get { return 2; }
+            get { return 2000; }
         }
     }
 }
