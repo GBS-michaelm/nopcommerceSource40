@@ -38,7 +38,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
-    string pageId = string.Empty;
+    string pageId = Request.QueryString["pageid"];
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -49,10 +49,6 @@
             page = item.SpecificationAttributeOption.Name;
         }
 
-        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
-        {
-            pageId = item.CustomValue;
-        }
     }
 
 
@@ -176,7 +172,7 @@
 
             }
 
-            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
+            previewDisplay = (opc || opcAlt) ?   cartImageSrc : "undefined";
 
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
