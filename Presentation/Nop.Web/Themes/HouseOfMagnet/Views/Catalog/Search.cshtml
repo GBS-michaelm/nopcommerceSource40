@@ -57,8 +57,8 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.cid, new { @class = "control-label col-sm-2 col-md-2" })
                             <div class="col-sm-6 col-md-6">
-                                @*@Html.DropDownListFor(model => model.cid, Model.AvailableCategories, new { @class = "form-control dropdown-toggle category-iteam category-select" })*@
-                                <select id="footer-search-category" class="form-control dropdown-toggle category-iteam category-select">
+                                @Html.DropDownListFor(model => model.cid, Model.AvailableCategories, new { @class = "form-control dropdown-toggle category-iteam category-select" })
+                                @*<select id="footer-search-category" class="form-control dropdown-toggle category-iteam category-select">
                                     @foreach (var item in Model.AvailableCategories)
                                     {
                                         if (@item.Text != string.Empty)
@@ -66,7 +66,7 @@
                                             <option value="@item.Value">@item.Text</option>
                                         }
                                     }
-                                </select>
+                                </select>*@
                             </div>
                         </div>
                         <div class="form-group">

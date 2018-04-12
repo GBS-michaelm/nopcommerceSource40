@@ -18,6 +18,7 @@
     }
 
     var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    ViewBag.catId = Model.Id;
 }
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
