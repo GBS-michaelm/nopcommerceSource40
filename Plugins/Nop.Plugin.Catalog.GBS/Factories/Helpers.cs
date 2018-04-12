@@ -22,8 +22,13 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 select = "EXEC usp_GetClassicImage @categoryId, @sku";
             }
 
-            var result = (string)manager.GetParameterizedScalar(select, paramDicEx3);
-            return result;
+           
+            var result = manager.GetParameterizedScalar(select, paramDicEx3);
+            if (result is DBNull)
+            {
+                return null;
+            }
+            return (string)result;
         }
     }
 }

@@ -9,7 +9,6 @@ DiscountRequirement.HasAttribute
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
 FoxNetSoft.CDNConnector
-FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
 FoxNetSoft.Plugin.Misc.SpeedFilters
 FoxNetSoft.SpeedTab
@@ -49,3 +48,4 @@ Widgets.GoogleAnalytics
 Widgets.Marketing
 Widgets.NivoSlider
 DiscountRequirement.HasCategory
+FoxNetSoft.Plugin.Misc.MSSQLProvider

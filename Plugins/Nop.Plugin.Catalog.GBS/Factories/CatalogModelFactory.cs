@@ -194,79 +194,20 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             {
                 categtoryModel = base.PrepareCategoryModel(category, command);
             }
-            var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
-            if (miscPlugins.Count > 0)
+            var categoryCacheKey = "preparecategorymodelFactory" + category.Id;
+            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, () =>
             {
-                var result = Helpers.GetPictureUrl(categtoryModel.Id);
-                if (_pictureService.GetPictureById(category.PictureId) == null)
-                {
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        categtoryModel.PictureModel.ImageUrl = result;
-                        categtoryModel.PictureModel.FullSizeImageUrl = result;
-                        categtoryModel.PictureModel.ThumbImageUrl = result;
-                    }
-                }
-                foreach (var subCategory in categtoryModel.SubCategories)
-                {
-                    var subCat = _categoryService.GetCategoryById(subCategory.Id);
-                    if (_pictureService.GetPictureById(subCat.PictureId) == null)
-                    {
-                        result = Helpers.GetPictureUrl(subCategory.Id);
-                        if (!string.IsNullOrEmpty(result))
-                        {
-                            subCategory.PictureModel.ImageUrl = result;
-                            subCategory.PictureModel.FullSizeImageUrl = result;
-                            subCategory.PictureModel.ThumbImageUrl = result;
-                        }
-                    }
-                }
-                foreach (var product in categtoryModel.Products)
-                {
-                    var picModels = _pictureService.GetPicturesByProductId(product.Id);
 
-                    if (picModels == null || picModels.Count == 0)
-                    {
-                        result = Helpers.GetPictureUrl(categtoryModel.Id, product.Sku);
-                        if (!string.IsNullOrEmpty(result))
-                        {
-                            product.DefaultPictureModel.ImageUrl = result;
-                            product.DefaultPictureModel.FullSizeImageUrl = result;
-                            product.DefaultPictureModel.ThumbImageUrl = result;
-                        }
-                    }
-                }
-                
-            }
-            return categtoryModel;
-        }
-
-        /// <summary>
-        /// Prepare homepage category models
-        /// </summary>
-        /// <returns>List of homepage category models</returns>
-        public override List<CategoryModel> PrepareHomepageCategoryModels()
-        {
-            var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();
-            var foxModel = modelFactories.Where(x => x.GetType().FullName.Contains("FoxNetSoft.Plugin.Misc.MSSQLProvider")).FirstOrDefault();
-            var categtoryModels = new List<CategoryModel>();
-            if (foxModel != null)
-            {
-                categtoryModels = foxModel.PrepareHomepageCategoryModels();
-
-            }
-            else
-            {
-                categtoryModels = base.PrepareHomepageCategoryModels();
-            }
-            var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
-            if (miscPlugins.Count > 0)
-            {
-                foreach (var categtoryModel in categtoryModels)
+                if (string.IsNullOrEmpty(categtoryModel.PictureModel.ImageUrl))
                 {
-                    var category = _categoryService.GetCategoryById(categtoryModel.Id);
+                    categtoryModel.PictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl();
+                    categtoryModel.PictureModel.FullSizeImageUrl = _pictureService.GetDefaultPictureUrl();
+                    categtoryModel.PictureModel.ThumbImageUrl = _pictureService.GetDefaultPictureUrl();
+                }
+                var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
+                if (miscPlugins.Count > 0)
+                {
                     var result = Helpers.GetPictureUrl(categtoryModel.Id);
-
                     if (_pictureService.GetPictureById(category.PictureId) == null)
                     {
                         if (!string.IsNullOrEmpty(result))
@@ -305,11 +246,90 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                             }
                         }
                     }
-                    
-                }
-            }
 
-            return categtoryModels;
+                }
+                return categtoryModel;
+            });
+
+
+            return finalCategtoryModel;
+        }
+
+        /// <summary>
+        /// Prepare homepage category models
+        /// </summary>
+        /// <returns>List of homepage category models</returns>
+        public override List<CategoryModel> PrepareHomepageCategoryModels()
+        {
+            var categoryCacheKey = "preparehomepagecategorymodelfactory";
+            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, () =>
+            {
+                var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();
+                var foxModel = modelFactories.Where(x => x.GetType().FullName.Contains("FoxNetSoft.Plugin.Misc.MSSQLProvider")).FirstOrDefault();
+                var categtoryModels = new List<CategoryModel>();
+                if (foxModel != null)
+                {
+                    categtoryModels = foxModel.PrepareHomepageCategoryModels();
+
+                }
+                else
+                {
+                    categtoryModels = base.PrepareHomepageCategoryModels();
+                }
+                var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
+                if (miscPlugins.Count > 0)
+                {
+                    foreach (var categtoryModel in categtoryModels)
+                    {
+                        var category = _categoryService.GetCategoryById(categtoryModel.Id);
+                        var result = Helpers.GetPictureUrl(categtoryModel.Id);
+
+                        if (_pictureService.GetPictureById(category.PictureId) == null)
+                        {
+                            if (!string.IsNullOrEmpty(result))
+                            {
+                                categtoryModel.PictureModel.ImageUrl = result;
+                                categtoryModel.PictureModel.FullSizeImageUrl = result;
+                                categtoryModel.PictureModel.ThumbImageUrl = result;
+                            }
+                        }
+                        foreach (var subCategory in categtoryModel.SubCategories)
+                        {
+                            var subCat = _categoryService.GetCategoryById(subCategory.Id);
+                            if (_pictureService.GetPictureById(subCat.PictureId) == null)
+                            {
+                                result = Helpers.GetPictureUrl(subCategory.Id);
+                                if (!string.IsNullOrEmpty(result))
+                                {
+                                    subCategory.PictureModel.ImageUrl = result;
+                                    subCategory.PictureModel.FullSizeImageUrl = result;
+                                    subCategory.PictureModel.ThumbImageUrl = result;
+                                }
+                            }
+                        }
+                        foreach (var product in categtoryModel.Products)
+                        {
+                            var picModels = _pictureService.GetPicturesByProductId(product.Id);
+
+                            if (picModels == null || picModels.Count == 0)
+                            {
+                                result = Helpers.GetPictureUrl(categtoryModel.Id, product.Sku);
+                                if (!string.IsNullOrEmpty(result))
+                                {
+                                    product.DefaultPictureModel.ImageUrl = result;
+                                    product.DefaultPictureModel.FullSizeImageUrl = result;
+                                    product.DefaultPictureModel.ThumbImageUrl = result;
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                return categtoryModels;
+            });
+
+            return finalCategtoryModel;
         }
 
         /// <summary>
