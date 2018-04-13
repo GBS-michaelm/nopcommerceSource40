@@ -113,7 +113,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                                 return result;
 
                             //if (sci.ProductId == restrictedAttributeId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
-                            if ((int)dRow["AttributeId"] == restrictedAttributeId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
+                            if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId && quantityMin <= (int)dRow["TotalQuantity"] && (int)dRow["TotalQuantity"] <= quantityMax)
                             {
                                 found1 = true;
                                 break;
@@ -132,7 +132,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                                 //parsing error; exit;
                                 return result;
 
-                            if ((int)dRow["AttributeId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
+                            if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
                             {
                                 found1 = true;
                                 break;
@@ -145,7 +145,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                         int restrictedAttributeId;
                         if (int.TryParse(restrictedAttribute, out restrictedAttributeId))
                         {
-                            if ((int)dRow["AttributeId"] == restrictedAttributeId)
+                            if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId)
                             {
                                 found1 = true;
                                 break;

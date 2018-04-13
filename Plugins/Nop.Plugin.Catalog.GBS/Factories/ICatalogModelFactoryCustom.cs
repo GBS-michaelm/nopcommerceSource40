@@ -57,7 +57,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// </summary>
         /// <param name="categoryService">Category service</param>
         /// <returns>Category list</returns>
-        List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager);
+        List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, int storeId = 0);
 
         #endregion
     }

@@ -1101,9 +1101,15 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                     //adjust rate
                     List<DiscountForCaching> appliedDiscounts;
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out appliedDiscounts);
 
+                    var shippingTotal = shippingOption.Rate;
+
+                    if (shippingOption.ShippingRateComputationMethodSystemName == "Nop.Plugin.Shipping.GBS")
+                    {
+                     shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
+                     shippingOption.Rate, cart, out appliedDiscounts);
+                    }
+                    
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
@@ -1181,8 +1187,13 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                     //adjust rate
                     List<DiscountForCaching> appliedDiscounts;
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
+                    var shippingTotal = shippingOption.Rate;
+
+                    if (shippingOption.ShippingRateComputationMethodSystemName == "Nop.Plugin.Shipping.GBS")
+                    {
+                        shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
                         shippingOption.Rate, cart, out appliedDiscounts);
+                    }
 
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);

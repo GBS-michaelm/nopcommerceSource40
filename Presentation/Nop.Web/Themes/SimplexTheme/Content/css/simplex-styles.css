@@ -11320,3 +11320,14 @@ div .mega-menu {
 .orderplace{
     width: 165px;
 }
+
+.impersonate {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 24px;
+    background-color: #a80101;
+}
+
+.impersonate a {
+    text-decoration: underline !important;
+}

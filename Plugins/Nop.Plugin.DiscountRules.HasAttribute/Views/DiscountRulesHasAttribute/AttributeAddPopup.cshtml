@@ -29,54 +29,12 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchProductName)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopEditorFor(model => model.SearchProductName)
-                                    </div>
-                                </div>
                                 <div class="form-group" @(Model.AvailableAttributes.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         @Html.NopLabelFor(model => model.SearchAttributeId)
                                     </div>
                                     <div class="col-sm-7">
                                         @Html.NopDropDownList("SearchAttributeId", Model.AvailableAttributes)
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchVendorId)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchStoreId)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchProductTypeId)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchManufacturerId)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +96,7 @@
                                         template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredAttribute(#=Id#)" class="btn btn-default" />'
                                     }, {
                                         field: "Name",
-                                        title: "Attribute name"
+                                        title: "Product type"
                                     }, {
                                         field: "Published",
                                         title: "@T("Admin.Catalog.Products.Fields.Published")",
@@ -167,21 +125,9 @@
             });
         });
 
-        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $("#search-products").click();
-                return false;
-            }
-        });
-
         function additionalData() {
             var data = {
-                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchAttributeId: $('#SearchAttributeId').val(),
-                SearchManufacturerId: $('#SearchManufacturerId').val(),
-                SearchStoreId: $('#SearchStoreId').val(),
-                SearchVendorId: $('#SearchVendorId').val(),
-                SearchProductTypeId: $('#SearchProductTypeId').val()
             };
             addAntiForgeryToken(data);
             return data;
