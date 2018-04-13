@@ -55,6 +55,11 @@ namespace Nop.Plugin.Checkout.GBS.Infrastructure
                             new { controller = "GBSShoppingCart", action = "NameBadgeIframeAddToCart" },
                             new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
 
+            routes.MapLocalizedRoute("CanvasHOMAddIframeNameBadgeToCart",
+                            "addiframehomcanvasnamebadgetocart",
+                            new { controller = "GBSShoppingCart", action = "CanvasNameBadgeIframeAddToCart" },
+                            new[] { "Nop.Plugin.ShoppingCart.GBS.Controllers" });
+
             routes.MapLocalizedRoute("GBSAddProductToCart-Amalgamation",
                             "addproducttocart/amalgamation/{productId}/{shoppingCartTypeId}/{quantity}",
                             new { controller = "GBSShoppingCart", action = "AddProductToCart_Amalgamation" },
