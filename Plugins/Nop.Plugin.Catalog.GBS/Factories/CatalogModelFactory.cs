@@ -195,7 +195,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 categtoryModel = base.PrepareCategoryModel(category, command);
             }
             var categoryCacheKey = "preparecategorymodelFactory" + category.Id;
-            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, () =>
+            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 1440, () =>
             {
 
                 if (string.IsNullOrEmpty(categtoryModel.PictureModel.ImageUrl))
