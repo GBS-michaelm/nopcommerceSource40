@@ -8315,15 +8315,23 @@
     max-height: 250px;
 }
 /********************* Start of Envelope Calss **********************/
-.product-grid .Envelope img {
+.product-grid .Envelope img, .product-grid .Business-Card-Horizontal img,
+.product-grid .Business-Card-Vertical img, .product-grid .Car-Magnet img,
+.product-grid .Letterhead img, .product-grid .Note-Card img,
+.product-grid .Name-Plate img, .product-grid .Directional-Sign img,
+.product-grid .Rider-Sign img, .product-grid .Tri-Fold-Brochure img {
     /*width: 250px;*/
     max-height: 250px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 5px 8px 0 rgba(0, 0, 0, 0.1);
-	border:1px solid #efefef;
-}
-.Envelope .detailimg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 5px 8px 0 rgba(0, 0, 0, 0.1);
-	border:1px solid #efefef;
+    border: 1px solid #efefef;
+}
+.Envelope .detailimg, .Business-Card-Horizontal .detailimg,
+.Business-Card-Vertical .detailimg, .Car-Magnet .detailimg,
+.Letterhead .detailimg, .Note-Card .detailimg,
+.Name-Plate .detailimg, .Directional-Sign .detailimg,
+.Rider-Sign .detailimg, .Tri-Fold-Brochure .detailimg {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 5px 8px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #efefef;
 }
 /********************* Start of other-products-page Calss **********************/
 .other-products-page-pen {
