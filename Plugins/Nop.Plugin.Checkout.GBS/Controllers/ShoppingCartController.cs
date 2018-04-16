@@ -643,7 +643,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
+        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "false", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
         {
             var customer = _workContext.CurrentCustomer;
             IList<string> warnings = new List<string>();
@@ -1528,7 +1528,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult CanvasNameBadgeIframeAddToCart(string jsonStuff)
+        public ActionResult CanvasNameBadgeIframeAddToCart(string data)
         {
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
@@ -1543,14 +1543,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             try
             {
 
-                Stuff json = JsonConvert.DeserializeObject<Stuff>(jsonStuff);
+                Stuff json = JsonConvert.DeserializeObject<Stuff>(data);
                 int qty = json.badgeQty;
                 string productSku = json.productSku;
                 string cartImage = json.previewFileFront;
 
+
+
+
+
                 Product product = productService.GetProductBySku(productSku);
                
-                //SubmitItem(product.Id.ToString(), jsonStuff, qty.ToString(), cartImage, "false");
+                //SubmitItem(product.Id.ToString(), data, qty.ToString(), cartImage, "false");
                 //breaks on generic object 
 
                 //use own add to cart and xml attr build
@@ -1558,25 +1562,26 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
 
                 ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
-                
+
 
                 foreach (var attr in productAttributes)
                 {
                     //might over write values??
-                    
-                    
-                    if(attr.ProductAttribute.Name == "Customer Name")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerName);
-                    if(attr.ProductAttribute.Name == "Customer Title")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle);
-                    if(attr.ProductAttribute.Name == "Customer Title 2")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle2);
-                    if(attr.ProductAttribute.Name == "Preview File Front")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
-                    if(attr.ProductAttribute.Name == "Print File Front")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
-                    
-                    if (attr.ProductAttribute.Name == "Frame Style") {
+
+
+                    if (attr.ProductAttribute.Name == "Customer Name")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerName);
+                    if (attr.ProductAttribute.Name == "Customer Title")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle);
+                    if (attr.ProductAttribute.Name == "Customer Title 2")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle2);
+                    if (attr.ProductAttribute.Name == "CustomImgUrl")
+                       attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
+                    if (attr.ProductAttribute.Name == "Print File Front")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
+
+                    if (attr.ProductAttribute.Name == "Frame Style")
+                    {
                         int frameOptionValueId = 0;
                         productAttributeService.GetProductAttributeValueById(attr.ProductAttributeId);
                         foreach (ProductAttributeValue val in attr.ProductAttributeValues)
@@ -1589,7 +1594,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                         }
                         attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, frameOptionValueId.ToString());
                     }
-                        
+
 
                     //attributesXml = attr.ProductAttribute.Name == "Back" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : ""; //back stuff
                     //attributesXml = attr.ProductAttribute.Name == "Company Name" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : "";
@@ -1625,7 +1630,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Error("Canvas Name Badge on HOM Error: json : " + jsonStuff + " where am i : " + whereAmI, ex);
+                _logger.Error("Canvas Name Badge on HOM Error: json : " + data + " where am i : " + whereAmI, ex);
             }
 
             return Json(new

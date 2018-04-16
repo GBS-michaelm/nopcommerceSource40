@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using System.Linq;
 using Nop.Core.Plugins;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Catalog.GBS.Services
 {
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Catalog.GBS.Services
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
+        private readonly CategoryNavigationSettings _categoryNavigationSettings;
 
         #endregion
 
@@ -44,7 +46,9 @@ namespace Nop.Plugin.Catalog.GBS.Services
             IPriceCalculationService priceCalculationService,
             ShoppingCartSettings shoppingCartSettings,
             IPluginFinder pluginFinder,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            CategoryNavigationSettings categoryNavigationSettings
+            )
             : base(workContext, 
                   productAttributeService,
                   productAttributeParser, 
@@ -70,6 +74,7 @@ namespace Nop.Plugin.Catalog.GBS.Services
             this._shoppingCartSettings = shoppingCartSettings;
             this._pluginFinder = pluginFinder;
             this._storeContext = storeContext;
+            this._categoryNavigationSettings = categoryNavigationSettings;
         }
         #endregion
 
@@ -82,8 +87,16 @@ namespace Nop.Plugin.Catalog.GBS.Services
             if (miscPlugins.Count > 0)
             {
                 var mappings = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
+                List<string> BlackList = new List<string>();
+
+                if (!string.IsNullOrEmpty(_categoryNavigationSettings.AttributeInfoBlackList))
+                {
+                    BlackList = _categoryNavigationSettings.AttributeInfoBlackList.ToLower().Split(',').ToList();
+
+                }
+
                 //find mappings with Display Order of 77
-                var mappingsToDelete = mappings.Where(attribute => attribute.DisplayOrder == 77).ToList();
+                var mappingsToDelete = mappings.Where(attribute => (attribute.DisplayOrder == 77 || BlackList.Contains(attribute.ProductAttribute.Name.ToLower()))).ToList();
                 foreach (var mapping in mappingsToDelete)
                 {
                     attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, mapping);
