@@ -5,10 +5,12 @@ Checkout.GBS
 CurrencyExchange.ECB
 DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
-DiscountRequirement.HasAttribute
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
+DiscountRequirement.HasCategory
+DiscountRequirement.HasAttribute
 FoxNetSoft.CDNConnector
+FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
 FoxNetSoft.Plugin.Misc.SpeedFilters
 FoxNetSoft.SpeedTab
@@ -47,5 +49,3 @@ Widgets.CustomersCanvas
 Widgets.GoogleAnalytics
 Widgets.Marketing
 Widgets.NivoSlider
-DiscountRequirement.HasCategory
-FoxNetSoft.Plugin.Misc.MSSQLProvider

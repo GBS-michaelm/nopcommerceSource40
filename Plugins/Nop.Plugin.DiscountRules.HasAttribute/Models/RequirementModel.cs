@@ -23,7 +23,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Models
                 AvailableAttributes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchAttributeId")]
+            [NopResourceDisplayName("Attribute")]
             public int SearchAttributeId { get; set; }
 
 

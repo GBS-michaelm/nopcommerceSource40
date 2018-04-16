@@ -189,45 +189,45 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            //var products = _productService.SearchProducts(
-            //    categoryIds: new List<int> { model.SearchCategoryId },
-            //    manufacturerId: model.SearchManufacturerId,
-            //    storeId: model.SearchStoreId,
-            //    vendorId: model.SearchVendorId,
-            //    productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-            //    keywords: model.SearchProductName,
-            //    pageIndex: command.Page - 1,
-            //    pageSize: command.PageSize,
-            //    showHidden: true
-            //    );
-
             ////var allcategories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
             //        pageSize: command.PageSize,
             //        showHidden: true);
 
-           //var categoriesList = new List<Category>();
 
-            //var categories = _categoryService.GetAllCategories(pageIndex: command.Page - 1,
-            //        pageSize: command.PageSize,
-            //        showHidden: true).SortCategoriesForTree();
+            var categories = new PagedList<Category>(new List<Category>(), command.Page - 1, command.PageSize);
 
-            var childrenCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, false, true).SortCategoriesForTree();
-
-            if (model.SearchCategoryId != 0)
+            if (model.SearchCategoryId == 0)
             {
-                //foreach (Category category in allcategories)
-                //{
+                categories = (PagedList<Category>)_categoryService.GetAllCategories(pageIndex: command.Page - 1,
+                    pageSize: command.PageSize,
+                    showHidden: true);
+            }
+            else
+            {
+                var categories1 = _categoryService.GetAllCategoriesByParentCategoryId(model.SearchCategoryId, false, true);
+                var sortedList = (List<Category>)categories1;
+                sortedList.Sort(CompareCategoryByName);
+                categories1 = sortedList;
 
-                //    if (isADescendant(category,model.SearchCategoryId))
-                //    {
-                //        categoriesList.Add(category);
-                //    }
-                //}
+                var categoriesList = new PagedList<Category>(new List<Category>(), command.Page - 1, command.PageSize);
 
-                childrenCategories = _categoryService.GetAllCategoriesByParentCategoryId(model.SearchCategoryId,false,true).SortCategoriesForTree();
+                foreach (Category category in categories1)
+                {
+
+                    if (isADescendant(category, model.SearchCategoryId))
+                    {
+                        categoriesList.Add(category);
+                    }
+                }
+
+                categories = categoriesList;
             }
 
-            var categories = new PagedList<Category>(childrenCategories, command.Page - 1, command.PageSize);
+
+            //var xx = (PagedList<Category>)categories;
+            //xx.Sort(CompareCategoryByName);
+            //categories = xx;
+
 
             var gridModel = new DataSourceResult();
             gridModel.Data = categories.Select(x => new RequirementModel.CategoryModel
@@ -237,7 +237,7 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                    Published = x.Published
             });
 
-            gridModel.Total = categories.TotalCount;
+            gridModel.Total = categories.Count;
 
             return Json(gridModel);
         }
@@ -257,6 +257,11 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             {
                 return isADescendant(_categoryService.GetCategoryById(category.ParentCategoryId), parentId);
             }
+        }
+
+        public static int CompareCategoryByName(Category cat1, Category cat2)
+        {
+            return String.Compare(cat1.Name, cat2.Name);
         }
 
         [HttpPost]
@@ -296,25 +301,13 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
                         ids.Add(tmp1);
                 }
 
-                int id1;
-                id1 = ids[0];
-
-                //var products = _productService.GetProductsByIds(ids.ToArray());
-                //for (int i = 0; i <= products.Count - 1; i++)
-                //{
-                //    result += products[i].Name;
-                //    if (i != products.Count - 1)
-                //        result += ", ";
-                //}
-
-                var categories = _categoryService.GetAllCategories();
-                var categories1 = _categoryService.GetAllCategoriesByParentCategoryId(id1);
-                for (int i = 0; i <= categories1.Count - 1; i++)
+                for (int i = 0; i <= ids.Count - 1; i++)
                 {
-                    result += categories1[i].Name;
-                    if (i != categories1.Count - 1)
+                    result += _categoryService.GetCategoryById(ids[i]).Name;
+                    if (i != ids.Count - 1)
                         result += ", ";
                 }
+
             }
 
             return Json(new { Text = result });

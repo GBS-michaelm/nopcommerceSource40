@@ -51,7 +51,6 @@
 
     }
 
-
     //Handles edit from cart
     if (cartItemID != 0)
     {
@@ -90,18 +89,14 @@
         <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 
-
-
 }
 @Html.Partial("_LoginModal", loginModel)
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
 
-
     var imageUrl = '';
 
     var iframe = document.getElementById('chili-iframe');
-
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
@@ -172,19 +167,13 @@
 
             }
 
-            previewDisplay = (opc || opcAlt) ?   cartImageSrc : "undefined";
-
+            previewDisplay = (opc || opcAlt) ? cartImageSrc : "undefined";
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
-
-
-
-
 </script>
-
 @*<script type="text/javascript">
         $(document).ready(function () {
             if($("#hdn-iframe-data").val() != "")
@@ -193,4 +182,3 @@
             }
         });
     </script>*@
-

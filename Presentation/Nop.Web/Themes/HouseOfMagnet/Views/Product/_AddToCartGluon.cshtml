@@ -11,18 +11,24 @@
     }
 </style>
 
-@{
+@{string pageId = string.Empty;
 
-    //Get Page ID
-    DBManager db = new DBManager();
-    Dictionary<string, string> param = new Dictionary<string, string>();
+    try
+    {
+        DBManager db = new DBManager();
+        Dictionary<string, string> param = new Dictionary<string, string>();
 
-    int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
-    int categoryID = 0;
-    categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
-    param.Add("@categoryID", categoryID.ToString());
-    DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
-    string pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+        int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
+        int categoryID = 0;
+        categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
+        param.Add("@categoryID", categoryID.ToString());
+        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
+        pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+    }
+    catch (Exception ex)
+    {
+
+    }
 
 }
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
