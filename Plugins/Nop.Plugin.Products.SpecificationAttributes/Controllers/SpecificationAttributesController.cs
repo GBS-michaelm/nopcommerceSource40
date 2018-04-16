@@ -548,7 +548,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                                         _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
                                                 }
 
-                                        }
+                                            }
                                         }
                                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
 
@@ -566,6 +566,29 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                         {
                             productOverviewModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
                                 _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
+
+                            var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+
+                            var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
+                            if (productAttributeMappings != null)
+                            {
+                                foreach (var productAttributeMapping in productAttributeMappings)
+                                {
+                                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                                    {
+                                        var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
+                                        productDetailsModel.DefaultPictureModel.ImageUrl = attrValues[0];
+                                    }
+                                    else if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                                    {
+                                        productDetailsModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
+                                            _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
+                                    }
+
+                                }
+                            }
+                            return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
+
                         }
                         return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModel);
                     }

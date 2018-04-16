@@ -99,16 +99,16 @@
 
             console.log(" inside canvas on hom function");
 
-            var jsonStuff = e.data;
+            var data = e.data;
 
-            console.log("jsonStuff : " + jsonStuff);
+            console.log("jsonStuff : " + data);
 
             $.ajax({
                 type: "POST",
                 url: "/addiframehomcanvasnamebadgetocart",               
                 contentType: "application/json; charset=utf-8",    
                 dataType: "json",
-                data: JSON.stringify({ 'jsonStuff': jsonStuff }),
+                data: JSON.stringify({ 'data': data }),
 
                 success: function (msg) {
 
@@ -116,7 +116,14 @@
                     //redirect
                     //var obj = $.parseJSON(msg);
                     //window.top.location.href = obj['redirect'];
-                    window.top.location.href = msg['redirect'];
+                    
+
+                    if (location.href.includes("/cart")) {
+                        location.reload();
+                    } else {
+                        window.top.location.href = msg['redirect'];
+                    }
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
