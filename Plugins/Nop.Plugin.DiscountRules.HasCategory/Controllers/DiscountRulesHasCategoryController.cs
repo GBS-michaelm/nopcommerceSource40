@@ -228,7 +228,6 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             //xx.Sort(CompareCategoryByName);
             //categories = xx;
 
-
             var gridModel = new DataSourceResult();
             gridModel.Data = categories.Select(x => new RequirementModel.CategoryModel
             {
