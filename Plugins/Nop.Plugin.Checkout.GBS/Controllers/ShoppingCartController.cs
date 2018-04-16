@@ -1512,6 +1512,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string _customerName = "";
             public string _customerTitle = "";
             public string _customerTitle2 = "";
+            public int _itemCartTotal = 0;
 
             public int badgeQty { get { return _badgeQty; } set { _badgeQty = value; } }
             public string frameStyle { get { return _frameStyle; } set { _frameStyle = value; } }
@@ -1522,6 +1523,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string customerName { get { return _customerName; } set { _customerName = value; } }
             public string customerTitle { get { return _customerTitle; } set { _customerTitle = value; } }
             public string customerTitle2 { get { return _customerTitle2; } set { _customerTitle2 = value; } }
+            public int itemCartTotal { get { return _itemCartTotal; } set { _itemCartTotal = value; } }
 
         }
 
@@ -1547,7 +1549,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 int qty = json.badgeQty;
                 string productSku = json.productSku;
                 string cartImage = json.previewFileFront;
-
+                int itemCartTotal = json.itemCartTotal;
 
 
 
@@ -1622,9 +1624,13 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     redirect = redirectLink;
                 }
 
+                //session handle for multiple cart add
+                bool doneAdding = TimeForRedirect(itemCartTotal);
+
                 return Json(new
                 {
                     redirect = redirect,
+                    timetoredirect = doneAdding,
                 });
 
             }
@@ -1641,6 +1647,26 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         }
         
+        private bool TimeForRedirect(int qty)
+        {
+            bool redirect = false;
+
+            Session["IframeNameBadgeMultipleProducts"] = qty;
+            
+            int curAdded = Int32.Parse(Session["IframeNameBadgeMultipleCurrentTotalAdded"].ToString());
+
+            curAdded++;
+
+            Session["IframeNameBadgeMultipleCurrentTotalAdded"] = curAdded;
+
+            if(curAdded == qty)
+            {
+                redirect = true;
+            }
+            
+            return redirect;
+        }
+
         private string GetFrameStyleValue(string frameId)
         {
             string frameValue = "";

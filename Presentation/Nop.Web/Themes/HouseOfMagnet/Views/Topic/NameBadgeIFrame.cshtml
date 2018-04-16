@@ -63,6 +63,7 @@
     //string attributeXml = string.Empty;
     //bool editActive = false;
 
+    Session["IframeNameBadgeMultipleCurrentTotalAdded"] = 0;
 
     @*<input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
@@ -70,7 +71,8 @@
     @*<input type="hidden" id="hdn-category-id" value="@categoryId" />*@
     @*<input type="hidden" id="hdn-iframe-data" value="@iframeData" />*@
     <input type="hidden" id="hdn-canvas-status" value="@canvasOnHom" />
-    
+
+
     <div class="gluon-template" style="overflow:hidden; height: 100%">
         <iframe id="hom-nb-iframe" src="@T("hom.url")@page" style="height:1500px; width:100%;"></iframe>
     </div>
@@ -118,9 +120,7 @@
                     //window.top.location.href = obj['redirect'];
                     
 
-                    if (location.href.includes("/cart")) {
-                        location.reload();
-                    } else {
+                    if (msg['timetoredirect'] == true) {
                         window.top.location.href = msg['redirect'];
                     }
 
@@ -165,7 +165,9 @@
                         //console.log("msg: " + msg);
                         //console.log("redirect value: " + obj['redirect']);
                         //window.top.location.href = document.getElementById('nopcart').value + obj['redirect'];
+                        
                         window.top.location.href = obj['redirect'];
+                                             
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         //if fails
