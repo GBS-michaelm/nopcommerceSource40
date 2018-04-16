@@ -134,30 +134,10 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //attributes
-            model.AvailableAttributes.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var attributes = _categoryService.GetAllCategories(showHidden: true);
+            //model.AvailableAttributes.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var attributes = _specificationAttributeService.GetSpecificationAttributes();
             foreach (var c in attributes)
-                model.AvailableAttributes.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(attributes), Value = c.Id.ToString() });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
-            //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
-
-            //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
+                model.AvailableAttributes.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
 
             ViewBag.attributeIdsInput = attributeIdsInput;
             ViewBag.btnId = btnId;
@@ -172,25 +152,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return Content("Access denied");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                model.SearchVendorId = _workContext.CurrentVendor.Id;
-            }
-
-            //var products = _productService.SearchProducts(
-            //    categoryIds: new List<int> { model.SearchCategoryId },
-            //    manufacturerId: model.SearchManufacturerId,
-            //    storeId: model.SearchStoreId,
-            //    vendorId: model.SearchVendorId,
-            //    productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-            //    keywords: model.SearchProductName,
-            //    pageIndex: command.Page - 1,
-            //    pageSize: command.PageSize,
-            //    showHidden: true
-            //    );
-
-            var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(37);
+            var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(model.SearchAttributeId);
 
             var gridModel = new DataSourceResult();
             gridModel.Data = attributes.Select(x => new RequirementModel.AttributeModel
@@ -244,7 +206,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute.Controllers
                 int id1;
                 id1 = ids[0];
 
-                var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(37);
+                var attributes = _specificationAttributeService.GetSpecificationAttributeOptionsByIds(ids.ToArray());
                 for (int i = 0; i <= attributes.Count - 1; i++)
                 {
                     result += attributes[i].Name;
