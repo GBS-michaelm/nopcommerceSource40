@@ -38,7 +38,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
-    string pageId = string.Empty;
+    string pageId = Request.QueryString["pageid"];
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -49,12 +49,7 @@
             page = item.SpecificationAttributeOption.Name;
         }
 
-        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
-        {
-            pageId = item.CustomValue;
-        }
     }
-
 
     //Handles edit from cart
     if (cartItemID != 0)
@@ -94,18 +89,14 @@
         <iframe id="gluon-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 
-
-
 }
 @Html.Partial("_LoginModal", loginModel)
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
 
-
     var imageUrl = '';
 
     var iframe = document.getElementById('chili-iframe');
-
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
@@ -176,19 +167,13 @@
 
             }
 
-            previewDisplay = (opc || opcAlt) ?  cartImageSrc : "undefined";
-
+            previewDisplay = (opc || opcAlt) ? cartImageSrc : "undefined";
 
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
-
-
-
-
 </script>
-
 @*<script type="text/javascript">
         $(document).ready(function () {
             if($("#hdn-iframe-data").val() != "")
@@ -197,4 +182,3 @@
             }
         });
     </script>*@
-

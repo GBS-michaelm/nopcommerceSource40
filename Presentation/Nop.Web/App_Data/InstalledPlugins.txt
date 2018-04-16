@@ -7,6 +7,8 @@ DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
+DiscountRequirement.HasCategory
+DiscountRequirement.HasAttribute
 FoxNetSoft.CDNConnector
 FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
@@ -47,5 +49,3 @@ Widgets.CustomersCanvas
 Widgets.GoogleAnalytics
 Widgets.Marketing
 Widgets.NivoSlider
-DiscountRequirement.HasCategory
-DiscountRequirement.HasAttribute

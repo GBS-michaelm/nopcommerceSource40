@@ -16,11 +16,13 @@
 
 #agentPacks li {
     list-style: disc !important;
+    margin-left: 20px;
 }
 
 .agentpacks-promo-header {
     color: #234782;
     font-weight: bold;
+    margin-top: 10px;
 }
 
 #agentPacks div.topic-html-content {
@@ -131,3 +133,21 @@
     width: 820px;
 }
 
+
+.mc-category-gallery .item-box.col-xs-6.col-sm-3.col-md-3 {
+    width: 225px;
+    height: 250px;
+    margin: 20px;
+    border: 1px solid #e9e9e9;
+    padding-top: 25px;
+}
+
+.mc-category-gallery .category-item.product-category-item {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.mc-category-gallery .picture .product-img img {
+    width: 190px;
+}

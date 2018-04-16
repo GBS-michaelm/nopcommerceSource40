@@ -346,7 +346,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// </summary>
         /// <param name="categoryService">Category service</param>
         /// <returns>Category list</returns>
-        public virtual List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager)
+        public virtual List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, int storeId = 0)
         {
 
             if (cacheManager == null)
@@ -354,7 +354,12 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 DBManager manager = new DBManager();
                 string select = "EXEC usp_getCategorySelectList";
                 Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                if (storeId > 0)
+                {
+                    select = "EXEC usp_getCategorySelectList @StoreId";
+                    paramDicEx.Add("@StoreId", storeId);
 
+                }
                 string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
 
                 var result = JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);
@@ -363,13 +368,18 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             }
             else
             {
-                string cacheKey = "category_select_list";
+                string cacheKey = "category_select_list_"+storeId;
                 var result = cacheManager.Get(cacheKey, () =>
                 {
                     DBManager manager = new DBManager();
                     string select = "EXEC usp_getCategorySelectList";
                     Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
+                    if (storeId > 0)
+                    {
+                        select = "EXEC usp_getCategorySelectList @StoreId";
+                        paramDicEx.Add("@StoreId", storeId);
 
+                    }
                     string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
 
                     return JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);

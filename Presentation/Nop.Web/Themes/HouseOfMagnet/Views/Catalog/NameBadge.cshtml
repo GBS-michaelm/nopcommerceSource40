@@ -36,6 +36,7 @@
 @{ 
     var productId = 0000;
     var canvas = false;
+    var canvasOnHom = false;
     var categoryId = Model.Id;
 
     var topicService = EngineContext.Current.Resolve<ITopicService>();
@@ -65,6 +66,7 @@
             if (canvas)
             {
                 @* check if product has canvas data and has or has not been added to nop yet *@
+
                 @* canvas *@
                 @*<div>
                     @Html.Action("CategoryNameBadges", "NameBadge", new { isDefault = true, categoryid = Model.Id })
@@ -75,10 +77,10 @@
                 //IFRAME VERSION
                 //both gluon and canvas versions
                 //url differences are handled in the database tblNopHOMReference
-                                
+                
                 Session.Add("categoryId", categoryId); //category id to get iframe url
                 int topicID = topicService.GetTopicBySystemName("hom_iframe_namebadge").Id;
-                @* iframe garbage *@
+                
                 <div id="nbIframe" class="nb">
                     @Html.Action("TopicDetails", "Topic", new { topicId = topicID })
                 </div>

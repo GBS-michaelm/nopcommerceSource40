@@ -38,6 +38,9 @@ using Nop.Services.Logging;
 using Nop.Services.Custom.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomersCanvas.Services;
+using Nop.Core.Plugins;
+using Nop.Plugin.Catalog.GBS;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -80,6 +83,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         private readonly ICcService ccService = EngineContext.Current.Resolve<ICcService>();
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IPluginFinder _pluginFinder;
 
 
 
@@ -116,7 +120,8 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             IProductAttributeParser productAttributeParser,
             ILogger logger,
             ShoppingCartSettings shoppingCartSettings,
-            IShoppingCartModelFactory shoppingCartModelFactory)
+            IShoppingCartModelFactory shoppingCartModelFactory,
+            IPluginFinder pluginFinder)
         {
             _specificationAttributesSettings = specificationAttributesSettings;
             _customerService = customerService;
@@ -152,6 +157,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             this._gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
             this._shoppingCartSettings = shoppingCartSettings;
             this._shoppingCartModelFactory = shoppingCartModelFactory;
+            this._pluginFinder = pluginFinder;
 
         }
 
@@ -303,7 +309,17 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             }
             else
             {
-                id = Convert.ToInt32(additionalData);
+                string idString = Convert.ToString(additionalData);
+                var success = Int32.TryParse(idString, out id);
+                var catId = 0;
+                if (!success)
+                {
+                    id = ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1;
+                    catId = ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2;
+                    //id = ((dynamic)additionalData).id1;
+                    //catId = ((dynamic)additionalData).id2;
+                }
+                //id = Convert.ToInt32(additionalData);
                 if (id <= 0)
                     return Content("");
 
@@ -588,6 +604,21 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 
                     }
                     var productOverviewModels = _productModelFactory.PrepareProductOverviewModels(products, false, true, null, false, false).FirstOrDefault();
+                    var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
+                    if (miscPlugins.Count > 0)
+                    {
+                        var picModels = _pictureService.GetPicturesByProductId(product.Id);
+                        if (picModels == null || picModels.Count == 0)
+                        {
+                            var result = Nop.Plugin.Catalog.GBS.Factories.Helpers.GetPictureUrl(catId, product.Sku);
+                            if (!string.IsNullOrEmpty(result))
+                            {
+                                productOverviewModels.DefaultPictureModel.ImageUrl = result;
+                                productOverviewModels.DefaultPictureModel.FullSizeImageUrl = result;
+                                productOverviewModels.DefaultPictureModel.ThumbImageUrl = result;
+                            }
+                        }
+                    }
                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModels);
                 }
 
