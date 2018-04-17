@@ -162,7 +162,7 @@
                 @Html.Raw(@allString)
             </select>*@
 
-            <div id="officeSearchWrap" style="display: none;">
+            <div id="officeSearchWrap" style="display: none; z-index: 9000">
                 @Html.Raw(@allString)
             </div>
 
@@ -175,7 +175,7 @@
     </div>
 
 <div class="listing-page">
-    <div id="leftColumn" class="sidebar col-md-3" style="z-index : -1">
+    <div id="leftColumn" class="sidebar col-md-3" style="z-index : 0">
         <div class="sidebar-title">
             @*<h3>Refine Your Choices</h3>
             <a href="#">Clear</a>*@
@@ -215,7 +215,7 @@
             @Html.Widget("left_side_column_after")
         }*@
     </div>
-    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : -1">
+    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : 0">
         @*<div class="right-column-title">
 
         </div>*@

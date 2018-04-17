@@ -103,12 +103,13 @@
 }
 
 #officeSearchWrap {
+    position: relative;
     width: 85%;
     background-color: white;
-    z-index: 5;
+    /*z-index: 5;*/
     height: auto;
-    max-height : 350px;
-    overflow-y : auto;
+    max-height: 350px;
+    overflow-y: auto;
 }
 
 #officeSearchWrap li {
