@@ -129,46 +129,53 @@
 <div id="searchArea">
     <div id="searchAreaLeft">
         <p>Find Your Office: </p>
-
-        @{ 
-            StringBuilder sb = new StringBuilder();
-
-            //category stuff
-            var catService = EngineContext.Current.Resolve<ICategoryService>();
+                
+            <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
             
-            //class attribute way
-            List<Category> childCategoriesList = new List<Category>();
-            for (int i = 0; i < company.childCompanyIds.Count; i++)
-            {
-                Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-                childCategoriesList.Add(childCompany);
+            @{
+                StringBuilder sb = new StringBuilder();
+
+                //category stuff
+                var catService = EngineContext.Current.Resolve<ICategoryService>();
+
+                //class attribute way
+                List<Category> childCategoriesList = new List<Category>();
+                for (int i = 0; i < company.childCompanyIds.Count; i++)
+                {
+                    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+                    childCategoriesList.Add(childCompany);
+                }
+
+                var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+                foreach (var item in companiesInOrder)
+                {
+                    //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                    sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
+                }
+
+                string allString = sb.ToString();
+
             }
 
-            var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
-            foreach (var item in companiesInOrder)
-            {
-                sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            }
-            
-            string allString = sb.ToString();
-
-        }
-        
-            <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
+            @*<select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
                 <option value="">Select Office</option>
                 @Html.Raw(@allString)
-            </select>
-       
-    </div>
+            </select>*@
 
-    <div id="searchAreaRight">  
-        <p><b>Can't find your office?</b></p>
-        <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
+            <div id="officeSearchWrap" style="display: none;">
+                @Html.Raw(@allString)
+            </div>
+
+        </div>
+
+        <div id="searchAreaRight">
+            <p><b>Can't find your office?</b></p>
+            <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
+        </div>
     </div>
-</div>
 
 <div class="listing-page">
-    <div id="leftColumn" class="sidebar col-md-3">
+    <div id="leftColumn" class="sidebar col-md-3" style="z-index : -1">
         <div class="sidebar-title">
             @*<h3>Refine Your Choices</h3>
             <a href="#">Clear</a>*@
@@ -208,7 +215,7 @@
             @Html.Widget("left_side_column_after")
         }*@
     </div>
-    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery">
+    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : -1">
         @*<div class="right-column-title">
 
         </div>*@
@@ -231,13 +238,19 @@
         $(document).ready(function () {
             //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
 
+            //$("#officeSearchWrap").hide();
+
             $("#myWorkPlace").click(SetAsMyWorkPlace);
 
-            var length = $('#marketCenterDropDown > option').length;
+
+            //***************TODO*************
+            //change to the li length/count for hide
+
+            //var length = $('#marketCenterDropDown > option').length; 
             console.log("length: " + length);
-            if (length <= 1) {               
+            if ($("#officeSearchWrap").val()) {               
                 $("#searchAreaLeft").hide();
-            }
+            }          
 
             if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
                 $(".parent-gateway-description").height($(".parent-gateway-name").height());
@@ -253,6 +266,28 @@
 
             $("#myWorkPlace").html("<i class='fa fa-check'></i> I Work Here");
 
+        }
+
+
+        function CompanySearch(elem) {
+
+            console.log("company Searching");
+
+            var selected = $(elem).closest('#searchAreaLeft').find('#officeSearchWrap');
+            console.log("selected: " + selected);
+
+            if ($(elem).val()) {
+                console.log("show");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').show();
+            } else {
+                console.log("hide");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
+            }
+
+            $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
+                itemSelector: 'li',
+                $searchInput: $(elem),
+            });
         }
 
 

@@ -95,18 +95,50 @@
 
 }
 
-#marketCenterDropDown {
-    margin-top : 3px;
+#officeSearch {
+    margin-top: 3px;
     height: 31px;
+    width: 85%;
     background-color: white;
 }
 
-#searchAreaRight {
+#officeSearchWrap {
+    width: 85%;
+    background-color: white;
+    z-index: 5;
+    height: auto;
+    max-height : 350px;
+    overflow-y : auto;
+}
+
+#officeSearchWrap li {
+    background-color: #fff;
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+}
+
+#officeSearchWrap li:hover {
+    background-color: #ddd;
+}
+
+#officeSearchWrap a {
+    color: black !important;
+}
+
+
+    /*#marketCenterDropDown {
+    margin-top: 3px;
+    height: 31px;
+    background-color: white;
+}*/
+    #searchAreaRight {
     margin-top: 7px;
-    margin-right : 10px;
-    float : right;
-    text-align : right;
-    width : 45%;
+    margin-right: 10px;
+    float: right;
+    text-align: right;
+    width: 45%;
 }
 
 #searchAreaRight a {
