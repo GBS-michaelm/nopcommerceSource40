@@ -252,9 +252,13 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 var picModels = _pictureService.GetPicturesByProductId(product.Id);
                 if (picModels == null || picModels.Count == 0)
                 {
-                    var catId = model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
-
-                    var result = Helpers.GetPictureUrl(catId, model.Sku);
+                    var result = string.Empty;
+                    var catId = 0;
+                    if (model.Breadcrumb.CategoryBreadcrumb.Count > 0)
+                    {
+                         catId = model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
+                         result = Helpers.GetPictureUrl(catId, model.Sku);
+                    }
                     if (!string.IsNullOrEmpty(result))
                     {
                         model.DefaultPictureModel.ImageUrl = result;
