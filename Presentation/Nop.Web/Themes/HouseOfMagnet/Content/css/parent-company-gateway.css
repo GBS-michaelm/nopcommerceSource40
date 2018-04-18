@@ -100,15 +100,18 @@
     height: 31px;
     width: 85%;
     background-color: white;
+    padding: 5px;
 }
 
 #officeSearchWrap {
+    position: relative;
     width: 85%;
     background-color: white;
-    z-index: 5;
+    /*z-index: 5;*/
     height: auto;
-    max-height : 350px;
-    overflow-y : auto;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 5px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 #officeSearchWrap li {
