@@ -200,12 +200,12 @@
                                         }
                                         else
                                         {
-                                            if (!item.AttributeInfo.ToLower().Contains("customimgurl"))
-                                            {
+                                            //if (!item.AttributeInfo.ToLower().Contains("customimgurl"))
+                                            //{
                                                 @Html.Raw(item.AttributeInfo)
-                                            }
+                                            //}
                                         }
-
+                                        
                                     </div>
                                 }
                                 @if (Model.CustomProperties != null)
@@ -329,10 +329,15 @@
                                     var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                     editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
 
-                                    <div class="edit-item">
-                                        <a href="@editCartItemUrl">@T("Common.Edit")</a>
-                                    </div>
+                                    if (!editCartItemUrl.Contains("name-badges"))
+                                    {
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                                                        
                                 }
+                                
 
                                 @if (item.Warnings.Count > 0)
                                 {

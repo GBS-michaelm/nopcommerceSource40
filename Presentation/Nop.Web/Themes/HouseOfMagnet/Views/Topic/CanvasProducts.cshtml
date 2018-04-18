@@ -33,7 +33,7 @@
     var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(prodId);
     string attributeXml = string.Empty;
     bool editActive = false;
-    string pageId = string.Empty;
+    string pageId = Request.QueryString["pageid"];
 
     //string productXml = string.Empty;
     //Set iframe url
@@ -45,10 +45,6 @@
             page = item.SpecificationAttributeOption.Name;
         }
 
-        if (item.SpecificationAttributeOption.SpecificationAttribute.Name == "PageId")
-        {
-            pageId = item.CustomValue;
-        }
     }
 
 

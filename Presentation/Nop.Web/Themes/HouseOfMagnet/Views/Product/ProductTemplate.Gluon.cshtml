@@ -2,7 +2,6 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
-
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -48,9 +47,7 @@
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
 @Html.Partial("_LoadingGif")
-
 <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
-
 
 <div class="page product-details-page">
     <div class="page-body">
@@ -83,11 +80,11 @@
                                 <div class="detail-left">
                                     <!--short description-->
                                     @if (!String.IsNullOrEmpty(Model.ShortDescription))
-                    {
-                        <div class="short-description">
-                            @Html.Raw(Model.ShortDescription)
-                        </div>
-    }
+                                    {
+                                        <div class="short-description">
+                                            @Html.Raw(Model.ShortDescription)
+                                        </div>
+                                    }
                                     @Html.Widget("productdetails_overview_top", Model.Id)
                                     <!--product reviews-->
                                     @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
@@ -103,55 +100,55 @@
                                     @Html.Partial("_DownloadSample", Model)
                                     <!--rental info-->
                                     @{
-                        var dataDictRental = new ViewDataDictionary();
-                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
-                        @Html.Partial("_RentalInfo", Model, dataDictRental)
+                                        var dataDictRental = new ViewDataDictionary();
+                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
+                                        @Html.Partial("_RentalInfo", Model, dataDictRental)
                                     }
                                     <!--product attributes-->
                                     @{
-                        var dataDictAttributes = new ViewDataDictionary();
-                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
-                        @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
+                                        var dataDictAttributes = new ViewDataDictionary();
+                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                                        @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
                                     }
                                     <!--gift card-->
                                     @{
-                        var dataDictGiftCard = new ViewDataDictionary();
-                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-                        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                                        var dataDictGiftCard = new ViewDataDictionary();
+                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                                        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                     }
                                     <div class="price-section">
                                         <!--product price-->
                                         @{
-                            var dataDictPrice = new ViewDataDictionary();
-                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-                            @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                                            var dataDictPrice = new ViewDataDictionary();
+                                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                                            @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
                                         }
                                         <!--addtocart-->
                                         @{
-                            var dataDictAddToCart = new ViewDataDictionary();
-                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                            @Html.Partial("_AddToCartGluon", Model, dataDictAddToCart)
+                                            var dataDictAddToCart = new ViewDataDictionary();
+                                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                            @Html.Partial("_AddToCartGluon", Model, dataDictAddToCart)
                                         }
                                     </div>
                                     <div class="overview-buttons">
                                         <!--wishlist, compare, email a friend-->
                                         @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
                                         @{
-                            var dataDictAddToWishlist = new ViewDataDictionary();
-                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                            @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                            var dataDictAddToWishlist = new ViewDataDictionary();
+                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                            @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
                                         }
                                         @*@Html.Partial("_CompareProductsButton", Model)
-                            @Html.Partial("_ProductEmailAFriendButton", Model)
-                            @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)*@
+                                            @Html.Partial("_ProductEmailAFriendButton", Model)
+                                            @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)*@
                                     </div>
                                     @Html.Partial("_ShareButton", Model)
                                     <div class="category-tag">
-                                        @Html.Widget("product_category_titles", Model.Id)
-                                        @*@if (Model.ProductTags.Count > 0)
-                            {
-                            @Html.Partial("_ProductTags", Model.ProductTags)
-                            }*@
+                                        @* @Html.Widget("product_category_titles", Model.Id)
+                                                       @if (Model.ProductTags.Count > 0)
+                                            {
+                                            @Html.Partial("_ProductTags", Model.ProductTags)
+                                            }*@
                                     </div>
                                     @Html.Widget("productdetails_overview_bottom", Model.Id)
                                 </div>
@@ -171,22 +168,19 @@
                                     ViewBag.productId = Model.Id;
                                 }
                                 @Html.Partial("_ProductTierPrices", Model.TierPrices)
-
                             </div>
                             <div class="detailpage-tab">
                                 @Html.Widget("productdetails_before_collateral")
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <div class="product-collateral">
                     @*<div class="product-slider">@Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
                     <div class="product-slider">@Html.Action("RelatedProducts", "Product", new { productId = Model.Id })</div>
                 </div>
             </div>
-                                    }
+        }
         @*@Html.Widget("productdetails_bottom", Model.Id)*@
     </div>
 </div>

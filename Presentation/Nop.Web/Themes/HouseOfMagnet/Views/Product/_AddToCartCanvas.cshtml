@@ -2,17 +2,39 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
+@using Nop.Plugin.Payments.GBS;
+@using System.Data;
 <style>
 
     .min-qty-notification {
         top: -55px !important;
     }
 </style>
+@{
+
+    string pageId = string.Empty;
+    //Get Page ID
+    try
+    {
+        DBManager db = new DBManager();
+        Dictionary<string, string> param = new Dictionary<string, string>();
+
+        int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
+        int categoryID = 0;
+        categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
+        param.Add("@categoryID", categoryID.ToString());
+        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
+        pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+    }
+    catch (Exception ex)
+    {
+
+    }
+
+}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
-    string pageID = "42";
-
 
 }
 @if (!Model.AddToCart.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)
@@ -78,13 +100,10 @@
 
                     @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
                 </div>
-
             </div>
         }
         @Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)
     </div>
-
-
 
     string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
     string updateCartItemId = string.Empty;
@@ -125,14 +144,12 @@
         }
     }
 
-
     if (Request.QueryString["updatecartitemid"] != null)
     {
         updateCartItemId = "&updatecartitemid=" + Request.QueryString["updatecartitemid"].ToString();
     }
 
-
-    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&pageid=" + pageId + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
@@ -149,15 +166,12 @@
         }
     }, 100);
 
-
-
     $(document).ready(function () {
         var productAttr = JSON.parse(JSON.stringify(@Html.Raw(Json.Encode(Model.ProductAttributes))));
         console.log(productAttr);
         var jsonArray = {};
         var option;
         var jsonStr
-
 
          $("#add-to-cart-button").click(function () {
             // for (var i = 0; i < productAttr.length; i++) {

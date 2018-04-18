@@ -106,7 +106,11 @@ namespace Nop.Plugin.Order.GBS.Orders
 
                 List<int> discountIds = new List<int>();
 
-                GetDiscountAmount(requirementsForCaching, topLevelGroup.InteractionType.Value, customer, topLevelGroup, discount, ref discountIds);
+                if (topLevelGroup != null)
+                {
+                    GetDiscountAmount(requirementsForCaching, topLevelGroup.InteractionType.Value, customer, topLevelGroup, discount, ref discountIds);
+                }
+                
 
                 foreach (var Id in discountIds)
                 {

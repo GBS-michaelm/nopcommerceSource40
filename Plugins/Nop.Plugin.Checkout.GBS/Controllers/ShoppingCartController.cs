@@ -643,7 +643,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
+        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "false", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
         {
             var customer = _workContext.CurrentCustomer;
             IList<string> warnings = new List<string>();
@@ -728,6 +728,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             
             int iframeDataId = 0;
             int customImgId = 0;
+            int envColor = 0;
             foreach (var item in productMappings)
             {
                 switch (item.ProductAttribute.Name)
@@ -738,14 +739,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     case "CustomImgUrl":
                         customImgId = item.Id;
                         break;
+                    case "Envelope Color":
+                        envColor = item.Id;
+                        break;
                     default:
                         break;
                 }
 
 
             }
+
+
             string customImgXml = string.Format("<ProductAttribute ID=\"{0}\"><ProductAttributeValue><Value>{1}</Value></ProductAttributeValue></ProductAttribute>", customImgId, cartImageSrc);
-   
             var formOptionsAttributeXml = GetFormOptionsAttributesXml(product, formOptions);
             optionsAttributesXml += formOptionsAttributeXml;
 
@@ -1494,7 +1499,177 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
 
         }
+
+        class Stuff
+        {
+
+            public int _badgeQty = 0;
+            public string _frameStyle = "";
+            public string _productSku = "";
+            public string _printFileFront = "";
+            public string _previewFileFront = "";
+            public string _ccStateId = "";
+            public string _customerName = "";
+            public string _customerTitle = "";
+            public string _customerTitle2 = "";
+            public int _itemCartTotal = 0;
+
+            public int badgeQty { get { return _badgeQty; } set { _badgeQty = value; } }
+            public string frameStyle { get { return _frameStyle; } set { _frameStyle = value; } }
+            public string productSku { get { return _productSku; } set { _productSku = value; } }
+            public string proofPdfUrl { get { return _printFileFront; } set { _printFileFront = value; } }
+            public string previewFileFront { get { return _previewFileFront; } set { _previewFileFront = value; } }
+            public string ccStateId { get { return _ccStateId; } set { _ccStateId = value; } }
+            public string customerName { get { return _customerName; } set { _customerName = value; } }
+            public string customerTitle { get { return _customerTitle; } set { _customerTitle = value; } }
+            public string customerTitle2 { get { return _customerTitle2; } set { _customerTitle2 = value; } }
+            public int itemCartTotal { get { return _itemCartTotal; } set { _itemCartTotal = value; } }
+
+        }
+
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult CanvasNameBadgeIframeAddToCart(string data)
+        {
+            IProductService productService = EngineContext.Current.Resolve<IProductService>();
+            IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+            IProductAttributeParser productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+            Customer customer = _workContext.CurrentCustomer;
+            string redirect = "";
+            string attributesXml = "";
+            IList<string> warnings = new List<string>();
+            
+            string whereAmI = "CanvasNameBadgeIframeAddToCart init";
+            
+            try
+            {
+
+                Stuff json = JsonConvert.DeserializeObject<Stuff>(data);
+                int qty = json.badgeQty;
+                string productSku = json.productSku;
+                string cartImage = json.previewFileFront;
+                int itemCartTotal = json.itemCartTotal;
+
+
+
+
+                Product product = productService.GetProductBySku(productSku);
+               
+                //SubmitItem(product.Id.ToString(), data, qty.ToString(), cartImage, "false");
+                //breaks on generic object 
+
+                //use own add to cart and xml attr build
+
+
+
+                ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
+
+
+                foreach (var attr in productAttributes)
+                {
+                    //might over write values??
+
+
+                    if (attr.ProductAttribute.Name == "Customer Name")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerName);
+                    if (attr.ProductAttribute.Name == "Customer Title")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle);
+                    if (attr.ProductAttribute.Name == "Customer Title 2")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle2);
+                    if (attr.ProductAttribute.Name == "CustomImgUrl")
+                       attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
+                    if (attr.ProductAttribute.Name == "Print File Front")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
+
+                    if (attr.ProductAttribute.Name == "Frame Style")
+                    {
+                        int frameOptionValueId = 0;
+                        productAttributeService.GetProductAttributeValueById(attr.ProductAttributeId);
+                        foreach (ProductAttributeValue val in attr.ProductAttributeValues)
+                        {
+                            if (val.Name.ToLower() == json.frameStyle.ToLower())
+                            {
+                                frameOptionValueId = val.Id;
+                                break;
+                            }
+                        }
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, frameOptionValueId.ToString());
+                    }
+
+
+                    //attributesXml = attr.ProductAttribute.Name == "Back" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : ""; //back stuff
+                    //attributesXml = attr.ProductAttribute.Name == "Company Name" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : "";
+
+                }
+
+                whereAmI = "CanvasNameBadgeIframeAddToCart add to cart";
+
+                
+
+                warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: qty);
+                
+                //Product accessoryProduct = productService.GetProductBySku(productSku);
+
+                whereAmI = "CanvasNameBadgeIframeAddToCart Redirect check for accessories ";
+                ActionResult action = null;
+                JsonResult redirectJson = (JsonResult)CheckForAccessories(action, product);
+
+                if (redirectJson == null)
+                {
+                    redirect = Url.RouteUrl("ShoppingCart");
+                }
+                else
+                {
+                    Type t = redirectJson.Data.GetType();
+                    PropertyInfo redirectData = t.GetProperty("redirect");
+                    string redirectLink = (string)redirectData.GetValue(redirectJson.Data);
+                    redirect = redirectLink;
+                }
+
+                //session handle for multiple cart add
+                bool doneAdding = TimeForRedirect(itemCartTotal);
+
+                return Json(new
+                {
+                    redirect = redirect,
+                    timetoredirect = doneAdding,
+                });
+
+            }
+            catch(Exception ex)
+            {
+                _logger.Error("Canvas Name Badge on HOM Error: json : " + data + " where am i : " + whereAmI, ex);
+            }
+
+            return Json(new
+            {
+                redirect = Url.RouteUrl("ShoppingCart"),
+            });
+
+
+        }
         
+        private bool TimeForRedirect(int qty)
+        {
+            bool redirect = false;
+
+            Session["IframeNameBadgeMultipleProducts"] = qty;
+            
+            int curAdded = Int32.Parse(Session["IframeNameBadgeMultipleCurrentTotalAdded"].ToString());
+
+            curAdded++;
+
+            Session["IframeNameBadgeMultipleCurrentTotalAdded"] = curAdded;
+
+            if(curAdded == qty)
+            {
+                redirect = true;
+            }
+            
+            return redirect;
+        }
+
         private string GetFrameStyleValue(string frameId)
         {
             string frameValue = "";

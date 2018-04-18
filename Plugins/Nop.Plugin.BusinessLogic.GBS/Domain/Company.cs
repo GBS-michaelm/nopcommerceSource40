@@ -164,8 +164,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
                         MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
                         
-                        IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
-                        string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
+                        //IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+                        //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
 
                         //this.PictureModel = categoryModel.PictureModel;
                         
@@ -179,11 +179,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                             return innerCompanyDataView;
                         });
 
-                        if (companyDataView.Count > 0)
-                        {
-                            categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
-                            //description text stuff like pricing and stuff 
-                        }
+                        //if (companyDataView.Count > 0)
+                        //{
+                        //    categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
+                        //    //description text stuff like pricing and stuff 
+                        //}
 
                         categories.Add(categoryModel);
 

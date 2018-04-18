@@ -5,10 +5,10 @@ Checkout.GBS
 CurrencyExchange.ECB
 DiscountRequirement.HadSpentAmount
 DiscountRequirement.HasAllProducts
-DiscountRequirement.HasAttribute
-DiscountRequirement.HasCategory
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
+DiscountRequirement.HasCategory
+DiscountRequirement.HasAttribute
 FoxNetSoft.CDNConnector
 FoxNetSoft.Plugin.Misc.MSSQLProvider
 FoxNetSoft.Plugin.Misc.PriceImportExport
