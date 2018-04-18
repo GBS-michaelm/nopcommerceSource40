@@ -137,37 +137,42 @@
 
 <div id="searchArea">
     <div id="searchAreaLeft">
-        <p>Find Your Team: </p>
+        <p id="find">Find Your Team: </p>
 
-        @{ 
-            StringBuilder sb = new StringBuilder();
+        @{
+        StringBuilder sb = new StringBuilder();
 
-            //category stuff
-            var catService = EngineContext.Current.Resolve<ICategoryService>();
-            
-            //class attribute way
-            List<Category> childCategoriesList = new List<Category>();
-            for (int i = 0; i < company.childCompanyIds.Count; i++)
-            {
-                Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-                childCategoriesList.Add(childCompany);
-            }
+        //category stuff
+        var catService = EngineContext.Current.Resolve<ICategoryService>();
 
-            var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
-            foreach (var item in companiesInOrder)
-            {
-                sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            }
+        //class attribute way
+        List<Category> childCategoriesList = new List<Category>();
+        for (int i = 0; i < company.childCompanyIds.Count; i++)
+        {
+            Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+            childCategoriesList.Add(childCompany);
+        }
 
-            string allString = sb.ToString();
+        var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+        foreach (var item in companiesInOrder)
+        {
+            //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+            sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
+        }
+
+        string allString = sb.ToString();
 
         }
-        
-            <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
-                <option value="">Select Team</option>
-                @Html.Raw(@allString)
-            </select>
-       
+
+        @*<select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
+            <option value="">Select Office</option>
+            @Html.Raw(@allString)
+        </select>*@
+
+        <div id="officeSearchWrap" style="display: none; z-index: 9000">
+            @Html.Raw(@allString)
+        </div>
+
     </div>
 
     <div id="searchAreaRight">
@@ -244,12 +249,15 @@
 
             $("#myWorkPlace").click(SetAsMyWorkPlace);
 
-            var length = $('#marketCenterDropDown > option').length;
+
+            //***************TODO*************
+            //change to the li length/count for hide
+
+            //var length = $('#marketCenterDropDown > option').length; 
             console.log("length: " + length);
-            if (length <= 1) {
+            if (isEmpty($("#officeSearchWrap"))) {
                 $("#searchAreaLeft").hide();
             }
-
 
             if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
                 $(".parent-gateway-description").height($(".parent-gateway-name").height());
@@ -259,6 +267,9 @@
 
         });
 
+        function isEmpty(element) {
+            return !$.trim(element.html())
+        }
 
 
         function SetAsMyWorkPlace() {
@@ -268,12 +279,28 @@
 
         }
 
+        function CompanySearch(elem) {
+
+            console.log("company Searching");
+
+            var selected = $(elem).closest('#searchAreaLeft').find('#officeSearchWrap');
+            console.log("selected: " + selected);
+
+            if ($(elem).val()) {
+                console.log("show");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').show();
+            } else {
+                console.log("hide");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
+            }
+
+            $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
+                itemSelector: 'li',
+                $searchInput: $(elem),
+            });
+        }
+
 
         </script>
-
-
-
-    
-
 
 </div>
