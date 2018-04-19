@@ -2,6 +2,11 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@using Nop.Services.Catalog;
+@using Nop.Services.Stores;
+@using Nop.Services.Security;
+@using Nop.Services.Seo;
+@using Nop.Core.Domain.Catalog;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -42,6 +47,40 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
     }
     TempData["productAttributes"] = Model.ProductAttributes;
+
+    //Replace Breadcrumb Model With New Breadcrumb From Cart
+    string categoryID = (!string.IsNullOrEmpty(Request.QueryString["categoryid"])) ? Request.QueryString["categoryid"] : string.Empty;
+    if (!string.IsNullOrEmpty(categoryID))
+    {
+        var _categoryService = EngineContext.Current.Resolve<ICategoryService>();
+        var _aclService = EngineContext.Current.Resolve<IAclService>();
+        var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
+        var category = _categoryService.GetCategoryById(Convert.ToInt32(categoryID));
+        var _catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
+        var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
+        {
+            Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+            ProductId = Model.Id,
+            ProductName = Model.Name,
+            ProductSeName = Model.SeName
+        };
+
+        if (category != null)
+        {
+
+            foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+            {
+                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
+                {
+                    Id = catBr.Id,
+                    Name = catBr.Name,
+                    SeName = catBr.GetSeName(),
+                    IncludeInTopMenu = catBr.IncludeInTopMenu
+                });
+            }
+        }
+        Model.Breadcrumb = breadcrumbModel;
+    }
 }
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)

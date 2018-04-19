@@ -26,6 +26,7 @@
     string sku = Request.QueryString["sku"];
 
     string iframeData = string.Empty;
+    string categoryID = (!string.IsNullOrEmpty(Request.QueryString["categoryid"])) ? Request.QueryString["categoryid"] : "";
     var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
@@ -48,6 +49,20 @@
         {
             page = item.SpecificationAttributeOption.Name;
         }
+
+    }
+
+
+    try
+    {
+        Dictionary<string, string> param = new Dictionary<string, string>();
+
+        param.Add("@categoryID", categoryID.ToString());
+        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
+        pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+    }
+    catch (Exception ex)
+    {
 
     }
 
@@ -75,7 +90,7 @@
         editActive = true;
     }
 
-    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId;
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId + "&categoryid=" + categoryID;
 
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />

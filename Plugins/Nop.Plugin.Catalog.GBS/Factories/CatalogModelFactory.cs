@@ -261,7 +261,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// <returns>List of homepage category models</returns>
         public override List<CategoryModel> PrepareHomepageCategoryModels()
         {
-            var categoryCacheKey = "preparehomepagecategorymodelfactory";
+            var categoryCacheKey = "preparehomepagecategorymodelfactory" + _storeContext.CurrentStore.Id;
             var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, () =>
             {
                 var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();

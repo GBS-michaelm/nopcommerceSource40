@@ -10,26 +10,11 @@
         top: -55px !important;
     }
 </style>
+
 @{
+    int categoryID = 0;
+    categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
 
-    string pageId = string.Empty;
-    //Get Page ID
-    try
-    {
-        DBManager db = new DBManager();
-        Dictionary<string, string> param = new Dictionary<string, string>();
-
-        int modelCount = Model.Breadcrumb.CategoryBreadcrumb.Count;
-        int categoryID = 0;
-        categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
-        param.Add("@categoryID", categoryID.ToString());
-        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
-        pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
-    }
-    catch (Exception ex)
-    {
-
-    }
 
 }
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
@@ -149,7 +134,7 @@
         updateCartItemId = "&updatecartitemid=" + Request.QueryString["updatecartitemid"].ToString();
     }
 
-    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&pageid=" + pageId + "&qty=";
+    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&categoryid=" + categoryID + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
