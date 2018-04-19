@@ -145,20 +145,19 @@
                                     
                                 </div>
 								
-						@{
-								var isSingleCard = true;
-							{
-								var categories = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>().GetProductCategoriesByProductId(Model.Id);
-								
-								foreach (var cat in categories)
-								{		
-									if (cat.CategoryId == 89) // 89 is the Category Id of View All Sets.  It is ASSUMED that every set will be tagged under View All Sets
-									{
-										isSingleCard = false;
-									}
-								}
-								
-							}
+						@{  var isSingleCard = true;
+                            {
+                                var categories = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>().GetProductCategoriesByProductId(Model.Id);
+
+                                foreach (var cat in categories)
+                                {
+                                    if (cat.CategoryId == 90) // 90 is the Category Id of View All Single Cards.  It is ASSUMED that every single card will be tagged under View All Single Cards
+                                    {
+                                        isSingleCard = true;
+                                    }
+                                }
+
+                            }
 						}	
 
                                 @if (isSingleCard)

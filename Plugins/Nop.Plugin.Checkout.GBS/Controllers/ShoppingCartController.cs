@@ -643,7 +643,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
+        public ActionResult SubmitItem(string productId, string dataJson, string quantity, string cartImageSrc, string editActive = "false", string formOptions = "", string cartItemId = "", string productXml = "")//, int cartItemId = 0)
         {
             var customer = _workContext.CurrentCustomer;
             IList<string> warnings = new List<string>();
@@ -1512,6 +1512,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string _customerName = "";
             public string _customerTitle = "";
             public string _customerTitle2 = "";
+            public int _itemCartTotal = 0;
 
             public int badgeQty { get { return _badgeQty; } set { _badgeQty = value; } }
             public string frameStyle { get { return _frameStyle; } set { _frameStyle = value; } }
@@ -1522,13 +1523,14 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string customerName { get { return _customerName; } set { _customerName = value; } }
             public string customerTitle { get { return _customerTitle; } set { _customerTitle = value; } }
             public string customerTitle2 { get { return _customerTitle2; } set { _customerTitle2 = value; } }
+            public int itemCartTotal { get { return _itemCartTotal; } set { _itemCartTotal = value; } }
 
         }
 
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult CanvasNameBadgeIframeAddToCart(string jsonStuff)
+        public ActionResult CanvasNameBadgeIframeAddToCart(string data)
         {
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
@@ -1543,14 +1545,18 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             try
             {
 
-                Stuff json = JsonConvert.DeserializeObject<Stuff>(jsonStuff);
+                Stuff json = JsonConvert.DeserializeObject<Stuff>(data);
                 int qty = json.badgeQty;
                 string productSku = json.productSku;
                 string cartImage = json.previewFileFront;
+                int itemCartTotal = json.itemCartTotal;
+
+
+
 
                 Product product = productService.GetProductBySku(productSku);
                
-                //SubmitItem(product.Id.ToString(), jsonStuff, qty.ToString(), cartImage, "false");
+                //SubmitItem(product.Id.ToString(), data, qty.ToString(), cartImage, "false");
                 //breaks on generic object 
 
                 //use own add to cart and xml attr build
@@ -1558,25 +1564,26 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
 
                 ICollection<ProductAttributeMapping> productAttributes = product.ProductAttributeMappings;
-                
+
 
                 foreach (var attr in productAttributes)
                 {
                     //might over write values??
-                    
-                    
-                    if(attr.ProductAttribute.Name == "Customer Name")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerName);
-                    if(attr.ProductAttribute.Name == "Customer Title")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle);
-                    if(attr.ProductAttribute.Name == "Customer Title 2")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle2);
-                    if(attr.ProductAttribute.Name == "Preview File Front")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
-                    if(attr.ProductAttribute.Name == "Print File Front")
-                    attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
-                    
-                    if (attr.ProductAttribute.Name == "Frame Style") {
+
+
+                    if (attr.ProductAttribute.Name == "Customer Name")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerName);
+                    if (attr.ProductAttribute.Name == "Customer Title")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle);
+                    if (attr.ProductAttribute.Name == "Customer Title 2")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.customerTitle2);
+                    if (attr.ProductAttribute.Name == "CustomImgUrl")
+                       attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
+                    if (attr.ProductAttribute.Name == "Print File Front")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
+
+                    if (attr.ProductAttribute.Name == "Frame Style")
+                    {
                         int frameOptionValueId = 0;
                         productAttributeService.GetProductAttributeValueById(attr.ProductAttributeId);
                         foreach (ProductAttributeValue val in attr.ProductAttributeValues)
@@ -1589,7 +1596,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                         }
                         attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, frameOptionValueId.ToString());
                     }
-                        
+
 
                     //attributesXml = attr.ProductAttribute.Name == "Back" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : ""; //back stuff
                     //attributesXml = attr.ProductAttribute.Name == "Company Name" ? productAttributeParser.AddProductAttribute(attributesXml, attr, json.) : "";
@@ -1597,6 +1604,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
 
                 whereAmI = "CanvasNameBadgeIframeAddToCart add to cart";
+
+                
+
                 warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: qty);
                 
                 //Product accessoryProduct = productService.GetProductBySku(productSku);
@@ -1617,15 +1627,19 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     redirect = redirectLink;
                 }
 
+                //session handle for multiple cart add
+                bool doneAdding = TimeForRedirect(itemCartTotal);
+
                 return Json(new
                 {
                     redirect = redirect,
+                    timetoredirect = doneAdding,
                 });
 
             }
             catch(Exception ex)
             {
-                _logger.Error("Canvas Name Badge on HOM Error: json : " + jsonStuff + " where am i : " + whereAmI, ex);
+                _logger.Error("Canvas Name Badge on HOM Error: json : " + data + " where am i : " + whereAmI, ex);
             }
 
             return Json(new
@@ -1636,6 +1650,26 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         }
         
+        private bool TimeForRedirect(int qty)
+        {
+            bool redirect = false;
+
+            Session["IframeNameBadgeMultipleProducts"] = qty;
+            
+            int curAdded = Int32.Parse(Session["IframeNameBadgeMultipleCurrentTotalAdded"].ToString());
+
+            curAdded++;
+
+            Session["IframeNameBadgeMultipleCurrentTotalAdded"] = curAdded;
+
+            if(curAdded == qty)
+            {
+                redirect = true;
+            }
+            
+            return redirect;
+        }
+
         private string GetFrameStyleValue(string frameId)
         {
             string frameValue = "";

@@ -8,6 +8,8 @@
 @using Nop.Services.Catalog;
 @using Nop.Plugin.Checkout.GBS;
 @using System.Xml;
+@using System.Text.RegularExpressions;
+@using Newtonsoft.Json.Linq;
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
@@ -30,7 +32,8 @@
     IList<string> attrValues = null;
     var cart = _workContext.CurrentCustomer.ShoppingCartItems
     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-
+    string attributeXml = string.Empty;
+    Dictionary<int, string> xmlDict = new Dictionary<int, string>();
     foreach (var item in cart)
     {
         if (item.StoreId == _storeContext.CurrentStore.Id)
@@ -62,6 +65,12 @@
             }
         }
     }
+
+    
+
+
+
+
 
     /* This stores all attribute XML into a dictionary */
     var customer = _workContext.CurrentCustomer;
@@ -160,6 +169,22 @@
                 <tbody>
                     @foreach (var item in Model.Items.Reverse())
                     {
+                        string currentXml = attrDict[item.Id];
+                        string categoryID = string.Empty;
+                        string productPageUrl = string.Empty;
+                        if (currentXml.Contains("category"))
+                        {
+                            XmlDocument xmldoc = new XmlDocument();
+                            xmldoc.LoadXml(currentXml);
+                            XmlNodeList nodeList = xmldoc.GetElementsByTagName("ProductAttribute");
+                            var node = xmldoc.FirstChild.FirstChild.InnerText;
+                            JObject jObject = JObject.Parse(node);
+                            categoryID = (string)jObject.SelectToken("category[0].id");
+                            productPageUrl = "/" + item.ProductSeName + "?categoryid=" + categoryID;
+                        } else
+                        {
+                            productPageUrl = "/" + item.ProductSeName;
+                        }
                         <tr class="cart-item-row hidden-xs desktop-original">
 
                             @if (Model.ShowProductImages)
@@ -188,7 +213,8 @@
                                 </td>
                             }
                             <td class="product-info">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
+                              
+                                <a href="@productPageUrl" class="product-name">@item.ProductName</a>
                                 @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                 {
                                     <div class="attributes">
@@ -200,12 +226,12 @@
                                         }
                                         else
                                         {
-                                            if (!item.AttributeInfo.ToLower().Contains("customimgurl"))
-                                            {
+                                            //if (!item.AttributeInfo.ToLower().Contains("customimgurl"))
+                                            //{
                                                 @Html.Raw(item.AttributeInfo)
-                                            }
+                                            //}
                                         }
-
+                                        
                                     </div>
                                 }
                                 @if (Model.CustomProperties != null)
@@ -286,7 +312,9 @@
                                 {
                                     if (attrDict[item.Id].Contains("399") && !attrDict[item.Id].Contains("515"))
                                     {
-                                        var editCartItemUrl = "/gluon?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
+                                       
+
+                                        var editCartItemUrl = "/gluon?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity + "&categoryid=" + categoryID;
 
 
                                         <div class="edit-item">
@@ -307,8 +335,8 @@
                                 {
                                     if (attrDict[item.Id].Contains("399"))
                                     {
-                                        var editCartItemUrl = "/canvas?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity;
-
+                                      
+                                        var editCartItemUrl = "/canvas?sku=" + item.Sku + "&id=" + item.ProductId + "&updatecartitemid=" + item.Id + "&cartid=1&qty=" + item.Quantity + "&categoryid=" + categoryID;
 
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -329,10 +357,15 @@
                                     var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                     editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
 
-                                    <div class="edit-item">
-                                        <a href="@editCartItemUrl">@T("Common.Edit")</a>
-                                    </div>
+                                    if (!editCartItemUrl.Contains("name-badges"))
+                                    {
+                                        <div class="edit-item">
+                                            <a href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                                                        
                                 }
+                                
 
                                 @if (item.Warnings.Count > 0)
                                 {

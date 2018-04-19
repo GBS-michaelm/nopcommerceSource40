@@ -3174,12 +3174,14 @@ a.eu-cookie-privacyinfo-tag {
     text-decoration: line-through;
     color: #999;
     margin-bottom: 5px;
+    line-height: .5;
 }
 
     .product-details-page .old-product-price label {
         display: inline;
         font-weight: normal;
         font-size: 15px;
+        line-height: .5;
     }
 
 .product-details-page .product-price label {
