@@ -11,7 +11,7 @@
 @Html.FastCategoryListFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
 @*@Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])*@
 
-<script>
+@*<script>
     $(document).ready(function () {
         $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoMultiSelect({
             select: function (e) {
@@ -34,4 +34,4 @@
             }
         }).data("kendoMultiSelect");
     });
-</script>
+</script>*@

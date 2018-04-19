@@ -1769,7 +1769,7 @@
                             @Html.EditorFor(model => model.SelectedCategoryIds, "MultiSelectBasic")
 
                             @*@Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })*@
-                            <script>
+                            @*<script>
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
@@ -1788,7 +1788,7 @@
                                     </text>
                             }
                                 });
-                            </script>
+                            </script>*@
                         </div>
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
