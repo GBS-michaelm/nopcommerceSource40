@@ -1766,10 +1766,10 @@
                             @Html.NopLabelFor(model => model.SelectedCategoryIds)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.EditorFor(model => model.SelectedCategoryIds, "MultiSelectBasic", new { SelectList = Model.AvailableCategories })
+                            @Html.EditorFor(model => model.SelectedCategoryIds, "MultiSelectBasic")
 
-                            @*@Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })
-                            <script>
+                            @*@Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })*@
+                            @*<script>
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
