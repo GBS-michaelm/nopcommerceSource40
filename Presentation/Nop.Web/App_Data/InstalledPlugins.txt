@@ -1,4 +1,3 @@
-BreadCrumb.GBS
 BusinessLogic.GBS
 Catalog.GBS
 Checkout.GBS
