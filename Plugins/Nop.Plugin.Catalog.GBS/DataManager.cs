@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Newtonsoft.Json;
+using System.Linq;
+using Microsoft.SqlServer.Server;
 
 /// <summary>
 /// Summary description for DBManager
@@ -226,7 +228,7 @@ namespace Nop.Plugin.Catalog.GBS.DataAccess
             }
 
         }
-        public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict)
+        public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict, Dictionary<string,string> paramTypes = null)
         {
             try
             {
@@ -240,7 +242,12 @@ namespace Nop.Plugin.Catalog.GBS.DataAccess
                     {
                         foreach (var item in myDict)
                         {
-                            cmd.Parameters.AddWithValue(item.Key, item.Value);
+                            SqlParameter tvpParam = cmd.Parameters.AddWithValue(item.Key, item.Value);
+                            if (item.Value.GetType() == typeof(DataTable))
+                            {
+                                tvpParam.SqlDbType = SqlDbType.Structured;
+                                tvpParam.TypeName = paramTypes[item.Key];
+                            }
                         }
                     }
                     Open();
@@ -260,6 +267,8 @@ namespace Nop.Plugin.Catalog.GBS.DataAccess
             }
 
         }
+
+
         public SqlDataReader GetParameterizedDataReader(string query, Dictionary<string, Object> myDict)
         {
             try
