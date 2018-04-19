@@ -1604,6 +1604,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                 }
 
                 whereAmI = "CanvasNameBadgeIframeAddToCart add to cart";
+
+                
+
                 warnings = _shoppingCartService.AddToCart(customer, product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, attributesXml, quantity: qty);
                 
                 //Product accessoryProduct = productService.GetProductBySku(productSku);

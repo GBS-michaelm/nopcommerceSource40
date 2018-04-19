@@ -173,10 +173,17 @@
 
         if ($(elem).val()) {
             console.log("show");
+            //$(".no-company-found").hide();
+            //might have to search to overload top lvl hide
             $(elem).closest('.all-search-wrap').find('.allSearchList').show();
+            //$(".no-company-found").hide();
+
         } else {
             console.log("hide");
-            $(elem).closest('.all-search-wrap').find('.allSearchList').hide();
+            //TODO
+            //set up a no results found <li>
+            $(".no-company-found").show();
+            //$(elem).closest('.all-search-wrap').find('.allSearchList').hide();
         }
      
         $($(elem).closest('.all-search-wrap').find('.allSearchList')).searchIt({
