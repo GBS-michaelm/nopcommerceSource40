@@ -194,7 +194,14 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             {
                 categtoryModel = base.PrepareCategoryModel(category, command);
             }
-            var categoryCacheKey = "preparecategorymodelFactory" + category.Id;
+            //var categoryCacheKey = "preparecategorymodelFactory" + category.Id;
+            var categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+                category.Id,
+                1,
+                1,
+                _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id,
+                1);
             var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 1440, () =>
             {
 
