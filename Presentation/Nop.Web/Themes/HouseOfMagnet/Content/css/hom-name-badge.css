@@ -9,3 +9,11 @@
 #gluon-iframe {
     /*height: 100% !important;*/
 }
+
+#spinnerAddToCart {
+    display: none;
+    position: relative;
+    z-index: 4;
+    top: -1248px;
+    left: 500px;
+}
