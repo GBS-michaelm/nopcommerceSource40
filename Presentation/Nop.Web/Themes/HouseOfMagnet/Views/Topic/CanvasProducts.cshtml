@@ -100,11 +100,9 @@
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
 
-
     var imageUrl = '';
 
     var iframe = document.getElementById('canvas-iframe');
-
 
     window.addEventListener("message", function (e) {
         if (e.data == "VALIDATEUPO") {
@@ -177,15 +175,10 @@
 
             previewDisplay = (opc || opcAlt) ? cartImageSrc : "undefined";
 
-
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
-
-
-
-
 </script>
 @*eventer(messageEvent, function (e) {
         var cartImageSrc = JSON.parse(e.data)[536];
