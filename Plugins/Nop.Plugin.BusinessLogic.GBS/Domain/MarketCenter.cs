@@ -411,7 +411,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 //call build for featured list
                 //top companies only (isFeatured)
                 string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
-                string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
+                //string childLinksHtml = featuredMarketCenterList.Count > 0 ? BuildChildCompanyHtml(featuredMarketCenterList, type) : "";
+                string childLinksHtml = allList.Count > 0 ? BuildChildCompanyHtml(allList, type) : "";
+
                 string AllSearch = allList.Count > 0 ? SearchAllHtml(allList, type) : "";
 
                 //call build html for each alpha list      
@@ -716,6 +718,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             foreach (var marketcenter in marketcenterList)
             {
+                                
                 if(marketcenter.childCompanies.Count > 0)
                 {
 

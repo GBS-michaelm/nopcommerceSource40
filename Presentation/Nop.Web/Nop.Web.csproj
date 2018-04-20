@@ -3145,6 +3145,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ImageModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Administration\Views\Shared\EditorTemplates\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>

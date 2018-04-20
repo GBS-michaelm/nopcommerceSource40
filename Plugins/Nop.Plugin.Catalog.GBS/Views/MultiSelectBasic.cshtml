@@ -1,0 +1,13 @@
+﻿@model List<int>
+
+@using Nop.Plugin.Catalog.GBS.HtmlHelpers;
+
+@{ 
+    if(ViewData["SelectList"] == null)
+    {
+        ViewData["SelectList"] = new List<SelectListItem>();
+    }
+}
+@Html.FastCategoryListFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
+@*@Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])*@
+
