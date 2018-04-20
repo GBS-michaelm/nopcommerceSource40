@@ -10,7 +10,7 @@ namespace Nop.Plugin.Catalog.GBS
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            //ViewEngines.Engines.Insert(0, new PluginViewEngine());
+          //  ViewEngines.Engines.Insert(0, new GBSCatalogViewEngine());
 
             //product admin
             routes.MapLocalizedRoute("SportsTeamsList",

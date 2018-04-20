@@ -1,69 +1,66 @@
-﻿using System;
+﻿using Nop.Web.Framework.Themes;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using Nop.Web.Framework.Themes;
 
 namespace Nop.Plugin.Catalog.GBS.Infrastructure
 {
-    public class PluginViewEngine : ThemeableRazorViewEngine
+    public class GBSCatalogViewEngine : ThemeableRazorViewEngine
     {
-
-        private readonly string[] _emptyLocations = new string[0];
-
-        public PluginViewEngine()
+        public GBSCatalogViewEngine()
         {
-            var loaction = new[] { "~/Plugins/Catalog.GBS/Views/{1}/{0}.cshtml" };
-            PartialViewLocationFormats = loaction;
-            ViewLocationFormats = loaction;
+            AddViewLocationFormats();
+        }
+
+        public void AddViewLocationFormats()
+        {
+            var additionalViewLocationFormats = new List<string>()
+              {
+                "~/Plugins/Catalog.GBS/Views/{0}.cshtml",
+                "~/Plugins/Catalog.GBS/Views/{1}/{0}.cshtml"
+              };
+
+            var currentViewLocationFormats = ViewLocationFormats.ToList();
+
+            currentViewLocationFormats.InsertRange(0, additionalViewLocationFormats);
+
+            ViewLocationFormats = currentViewLocationFormats.ToArray();
+
+            var currentPartialViewLocationFormats = PartialViewLocationFormats.ToList();
+
+            currentPartialViewLocationFormats.InsertRange(0, additionalViewLocationFormats);
+
+            PartialViewLocationFormats = currentPartialViewLocationFormats.ToArray();
+        }
+
+        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        {
+            ViewEngineResult viewEngineResult = base.FindPartialView(controllerContext, partialViewName, useCache);
+
+            if (useCache && viewEngineResult.View == null)
+            {
+                viewEngineResult = base.FindPartialView(controllerContext, partialViewName, false);
+            }
+
+            return viewEngineResult;
+        }
+
+        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+        {
+            ViewEngineResult viewEngineResult = base.FindView(controllerContext, viewName, masterName, useCache);
+
+            if (useCache && viewEngineResult.View == null)
+            {
+                viewEngineResult = base.FindView(controllerContext, viewName, masterName, false);
+            }
+
+            return viewEngineResult;
         }
 
 
-        protected override string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
-        {
-            searchedLocations = _emptyLocations;
-            if (string.IsNullOrEmpty(name))
-            {
-                return string.Empty;
-            }
-            string areaName = GetAreaName(controllerContext.RouteData);
 
-            //little hack to get nop's admin area to be in /Administration/ instead of /Nop/Admin/ or Areas/Admin/
-            if (!string.IsNullOrEmpty(areaName) && areaName.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var newLocations = areaLocations.ToList();
-                newLocations.Insert(0, "~/Administration/Views/{1}/{0}.cshtml");
-                newLocations.Insert(0, "~/Administration/Views/Shared/{0}.cshtml");
-                //newLocations.Insert(0, "~/Administration/Views/Category/{0}.cshtml");
-                //newLocations.Insert(0, "~/Administration/Views/Product/{0}.cshtml");
-                //newLocations.Insert(0, "~/Administration/Views/Common/{0}.cshtml");
-
-                areaLocations = newLocations.ToArray();
-            }
-
-            bool flag = !string.IsNullOrEmpty(areaName);
-            List<ViewLocation> viewLocations = GetViewLocations(locations, flag ? areaLocations : null);
-            if (viewLocations.Count == 0)
-            {
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Properties cannot be null or empty.", new object[] { locationsPropertyName }));
-            }
-            bool flag2 = IsSpecificPath(name);
-            string key = this.CreateCacheKey(cacheKeyPrefix, name, flag2 ? string.Empty : controllerName, areaName, theme);
-            if (useCache)
-            {
-                var cached = this.ViewLocationCache.GetViewLocation(controllerContext.HttpContext, key);
-                if (cached != null)
-                {
-                    return cached;
-                }
-            }
-            if (!flag2)
-            {
-                return this.GetPathFromGeneralName(controllerContext, viewLocations, name, controllerName, areaName, theme, key, ref searchedLocations);
-            }
-            return this.GetPathFromSpecificName(controllerContext, name, key, ref searchedLocations);
-        }
     }
 }

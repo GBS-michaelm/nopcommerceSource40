@@ -85,6 +85,7 @@
     <Compile Include="Controllers\WidgetsCategoryNavigationController.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Factories\CatalogModelFactory.cs" />
+    <Compile Include="Factories\HtmlHelpers.cs" />
     <Compile Include="Factories\Helpers.cs" />
     <Compile Include="Factories\ProductModelFactory.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
@@ -164,6 +165,7 @@
     <None Include="Views\CategoryNavigationCustom.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\MultiSelectBasic.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
