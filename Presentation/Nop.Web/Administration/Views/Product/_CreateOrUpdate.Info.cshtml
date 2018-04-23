@@ -1767,6 +1767,7 @@
                         </div>
                         <div class="@rightColumnClass">
                             @Html.EditorFor(model => model.SelectedCategoryIds, "MultiSelectBasic")
+                            
 
                             @*@Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })*@
                             @*<script>
@@ -1789,6 +1790,31 @@
                             }
                                 });
                             </script>*@
+                            <div id="catButtonWrapper">
+                                <button type="button" id="loadCategories" class="btn btn-primary" onclick="KendoLoad1(); KendoLoad2();">Show Categories</button>
+                                Clicking this button will display the category editor after a few moments.
+                            </div>
+                            <script>
+                                   function KendoLoad2() {
+                                    var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
+                                    categoryIdsInput.setOptions({
+                                        autoClose: false
+                                    });
+
+                                    @if (Model.AvailableCategories.Count == 0)
+                            {
+                                <text>
+                                    categoryIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
+                                    });
+                                    categoryIdsInput._placeholder();
+                                    categoryIdsInput._enable();
+                                    </text>
+                            }
+                                };
+                                $("#catButtonWrapper").
+                            </script>
                         </div>
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
