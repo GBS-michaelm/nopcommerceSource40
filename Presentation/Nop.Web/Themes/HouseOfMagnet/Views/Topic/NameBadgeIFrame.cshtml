@@ -76,6 +76,13 @@
     <div class="gluon-template" style="overflow:hidden; height: 100%">
         <iframe id="hom-nb-iframe" src="@T("hom.url")@page" style="height:1500px; width:100%;"></iframe>
     </div>
+
+    <div id="spinnerAddToCart">
+        <img src="https://www.houseofmagnets.com/img/loader2.gif" alt="spinner loader thing" />
+    </div>
+
+    //https://devnop.houseofmagnets.com/content/images/thumbs/arnold.jpg
+
 }
 
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
@@ -151,6 +158,9 @@
             for (var key in dataJson) {
                 data.append(dataJson[key].name, dataJson[key].value);
             }
+
+            //show spinner
+            $("#spinnerAddToCart").show();
 
             $.ajax(
                 {
