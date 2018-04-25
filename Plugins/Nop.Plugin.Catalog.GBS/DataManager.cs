@@ -10,6 +10,7 @@ using Nop.Services.Logging;
 using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.SqlServer.Server;
+using System.Text;
 
 /// <summary>
 /// Summary description for DBManager
@@ -312,10 +313,13 @@ namespace Nop.Plugin.Catalog.GBS.DataAccess
                 using (SqlDataReader reader = GetParameterizedDataReader(query, myDict))
                 {
                     string jsonString = "";
+                    StringBuilder sb = new StringBuilder();
+
                     while (reader.Read())
                     {
-                        jsonString += reader.GetValue(0).ToString();
+                        sb.Append(reader.GetValue(0).ToString());
                     }
+                    jsonString = sb.ToString();
                     return jsonString;
                 }
 

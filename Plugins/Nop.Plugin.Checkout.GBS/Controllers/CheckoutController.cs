@@ -437,7 +437,21 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                         ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
                     }
                 }
-                
+
+                Match addy1Match = null;
+                if (!string.IsNullOrEmpty(model.NewAddress.Address1))
+                {
+                    Regex regex = new Regex(@"(?:P(?:ost(?:al)?)?[\.\-\s]*(?:(?:O(?:ffice)?[\.\-\s]*)?B(?:ox|in|\b|\d)|o(?:ffice|\b)(?:[-\s]*\d)|code)|box[-\s\b]*\d)");
+
+                    addy1Match = regex.Match(model.NewAddress.Address1);
+                    if (addy1Match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.Address1", "Please use a valid street address");
+                    }
+
+                }
+
+                //same for address 2
 
                 if (ModelState.IsValid)
                 {

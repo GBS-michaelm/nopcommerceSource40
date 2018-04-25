@@ -28,7 +28,7 @@ namespace Nop.Services.Order.GBS
         {
             get
             {
-                return 2;
+                return 2000;
             }
         }
 

@@ -3,6 +3,7 @@
 @using Nop.Services.Discounts;
 @{
     var discountService = EngineContext.Current.Resolve<IDiscountService>();
+    string discountGroupName = Html.Raw(HttpContext.Current.Session["discountGroupName"]).ToString();
 }
     @using Nop.Web.Models.ShoppingCart;
     
@@ -30,7 +31,15 @@
             @foreach (var discount in Model.AppliedDiscountsWithCodes)
             {
                 <div class="current-code">
-                    <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discountService.GetDiscountById(discount.Id).Name)</span>
+                    @if ((discount.CouponCode == "newhirekit" || discount.CouponCode == "agentpack") && discountGroupName != "")
+                    {
+                        <span class="applied-discount-code">Code Entered: @discountGroupName</span>
+                    }
+                    else
+                    {
+                        @*<span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discountService.GetDiscountById(discount.Id).Name)</span>*@
+                        <span class="applied-discount-code">Code Entered: @discountService.GetDiscountById(discount.Id).Name</span>
+                    }
                     @*empty value (little hack for FormValueExistsAttribute)*@
                     <input type="submit" name="removediscount-@discount.Id" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
                 </div>
@@ -45,5 +54,8 @@
                     }
                 });
             });
+
+
+
         </script>
     }
