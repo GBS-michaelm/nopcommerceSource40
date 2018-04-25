@@ -2064,6 +2064,7 @@
     <Content Include="Themes\SimplexTheme\Content\img\glyphicons-halflings.png" />
     <Content Include="Themes\SimplexTheme\Content\js\bootstrap.min.js" />
     <Content Include="Themes\SimplexTheme\Content\js\head.min.js" />
+    <Content Include="Themes\SimplexTheme\Content\js\modal.js" />
     <Content Include="Themes\SimplexTheme\Content\js\owl.carousel.js" />
     <Content Include="Themes\SimplexTheme\Content\js\respond.min.js" />
     <Content Include="Themes\SimplexTheme\Content\js\selectivizr-min.js" />
@@ -3143,6 +3144,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Product\ProductTemplate.NameBadge.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\NameBadge.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ImageModal.cshtml" />
+    <Content Include="Themes\SimplexTheme\Views\Shared\_ImageModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Administration\Views\Shared\EditorTemplates\" />

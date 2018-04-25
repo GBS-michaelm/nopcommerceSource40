@@ -37,6 +37,7 @@
     bool editActive = false;
     bool isAuthenticated = workContext.CurrentCustomer.IsRegistered();
     string customerEmail = workContext.CurrentCustomer.Email;
+    string categoryID = (!string.IsNullOrEmpty(Request.QueryString["categoryid"])) ? Request.QueryString["categoryid"] : "";
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -47,7 +48,7 @@
             page = item.SpecificationAttributeOption.Name;
         }
     }
-    page = page + sku;
+    page = page + sku + "&categoryid=" + categoryID;
 
     //Handles edit from cart
     if (cartItemID != 0)
