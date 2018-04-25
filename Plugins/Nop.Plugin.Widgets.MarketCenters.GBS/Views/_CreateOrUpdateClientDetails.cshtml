@@ -1,0 +1,256 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.ClientDetailsModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        bindBootstrapTabSelectEvent('client-edit');
+    });
+</script>
+
+<div class="content test234">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "client-advanced-mode" })
+                </div>
+            </div>
+        </div>
+        <div id="client-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-details", @T("MarketCenters.Client.Tabs.Details"), true)
+                @Html.RenderBootstrapTabHeader("tab-contact", @T("MarketCenters.Client.Tabs.Contact"))
+                @Html.RenderBootstrapTabHeader("tab-style", @T("MarketCenters.Client.Tabs.Style"))
+                @Html.RenderBootstrapTabHeader("tab-client-products", @T("MarketCenters.Client.Tabs.Products"))
+                @Html.RenderBootstrapTabHeader("tab-proofs", @T("MarketCenters.Client.Tabs.Proofs"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-details", @TabDetails(), true)
+                @Html.RenderBootstrapTabContent("tab-contact", @TabContact())
+                @Html.RenderBootstrapTabContent("tab-style", @TabStyle())
+                @Html.RenderBootstrapTabContent("tab-client-products", @TabClientProducts())
+                @Html.RenderBootstrapTabContent("tab-proofs", @TabProofs())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new Nop.Web.Framework.Events.AdminTabStripCreated(this.Html, "client-edit");
+    EngineContext.Current.Resolve<Nop.Services.Events.IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabDetails()
+{
+    <div class="raw clearfix">
+        <div class="col-md-12">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("MarketCenters.Client.CompanyTitle")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Id)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.Id)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Name)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShortVariableName)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShortVariableName)
+                                @Html.ValidationMessageFor(model => model.ShortVariableName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.DisplayOrder)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayOrder)
+                                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("MarketCenters.Client.RelationshipsTitle")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ParentCompany)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.ParentCompany, Model.AvailableParentCompany)
+                                @Html.ValidationMessageFor(model => model.ParentCompany)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.RelatedCompany)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.RelatedCompany, Model.AvailableRelatedCompaneis)
+                                @Html.ValidationMessageFor(model => model.RelatedCompany)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("MarketCenters.Client.BrandingTitle")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Visible)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Visible)
+                                @Html.ValidationMessageFor(model => model.Visible)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.LogoDisplay)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.LogoDisplay)
+                                @Html.ValidationMessageFor(model => model.LogoDisplay)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.AlternateLogoId)
+                            </div>
+                            <div class="col-md-9">
+                                <div class="filecontrol">
+                                    @Html.NopEditorFor(model => model.AlternateLogoId)
+                                </div>
+                                @Html.ValidationMessageFor(model => model.AlternateLogoId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.LeadingHeader)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.LeadingHeader, Model.LeadingHeaderList)
+                                @Html.ValidationMessageFor(model => model.LeadingHeader)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.LeadingCustomHeader)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.LeadingCustomHeader, "RichEditor")
+                                @Html.ValidationMessageFor(model => model.LeadingCustomHeader)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("MarketCenters.Client.AccessTitle")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.UrlStub)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.UrlStub)
+                                @Html.ValidationMessageFor(model => model.UrlStub)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.SelectedCustomerRoleIds)
+                                @Html.ValidationMessageFor(model => model.SelectedCustomerRoleIds)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SelectedStoreIds)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.SelectedStoreIds)
+                                @Html.ValidationMessageFor(model => model.SelectedStoreIds)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.AuthorizeAPI)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AuthorizeAPI)
+                                @Html.ValidationMessageFor(model => model.AuthorizeAPI)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.RequirePassword)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.RequirePassword)
+                                @Html.ValidationMessageFor(model => model.RequirePassword)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@helper TabContact()
+{
+    @Html.Action("Contacts", "MarketCenters")
+}
+@helper TabStyle()
+{
+    @Html.Action("StyleGuide", "MarketCenters")
+}
+@helper TabClientProducts()
+{
+    @Html.Action("ApprovedProducts", "MarketCenters")
+}
+@helper TabProofs()
+{
+    @Html.Action("Proofs", "MarketCenters")
+
+}
+

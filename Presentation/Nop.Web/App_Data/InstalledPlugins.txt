@@ -45,3 +45,4 @@ FoxNetSoft.Plugin.Misc.PriceImportExport
 SevenSpikes.Nop.Plugins.QuickView
 SevenSpikes.Nop.Plugins.CloudZoom
 FoxNetSoft.Plugin.Misc.MSSQLProvider
+Widgets.MarketCenters.GBS

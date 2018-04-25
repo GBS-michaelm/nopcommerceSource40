@@ -1,0 +1,9 @@
+﻿Group: Misc
+FriendlyName: Widgets MarketCenters GBS
+SystemName: Widgets.MarketCenters.GBS
+Version: 3.90
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.MarketCenters.GBS.dll
+Descriptin: This plugin allow to set MarketCenters

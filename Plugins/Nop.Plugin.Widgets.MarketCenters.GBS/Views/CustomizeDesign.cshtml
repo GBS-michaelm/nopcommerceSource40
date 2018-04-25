@@ -1,0 +1,263 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.StyleGuideModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    //page title
+    ViewBag.Title = T("MarketCenters.Client.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ClientDetails");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Content/css/Admin_MarketCenters.css");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css");
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js");    
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/Admin_MarketCenters.js");
+
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "associate-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            Customize Values for Product Name
+            <small><i class="fa fa-arrow-circle-left"></i><a href="/Plugin/MarketCenters/CreateClient">@T("MarketCenters.Client.Proof.BackToProof")</a></small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="raw clearfix">
+                <div class="col-md-12">
+                    <div class="panel-group">
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingOne">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                            @*Logos*@
+                                                            @T("MarketCenters.Client.StyleGuide.Logos")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                    <div class="panel-body">
+                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingTwo">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                            @T("MarketCenters.Client.StyleGuide.Textures")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                                                    <div class="panel-body">
+
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.PrimaryColor)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.PrimaryColor, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.SecondaryColor)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.SecondaryColor, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.AccentColor)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.AccentColor, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.LightBodyColor)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.LightBodyColor, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.DarkBodyColor)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.DarkBodyColor, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.LightBackground)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.LightBackground, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.DarkBackground)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="input-group colorpicker-component inputColorPicker">
+                                                                    @Html.TextBoxFor(model => model.DarkBackground, new { @class = "form-control text-box single-line" })
+                                                                    <span class="input-group-addon"><i></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.Background1)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="filecontrol">
+                                                                    @Html.NopEditorFor(model => model.Background1)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.Background2)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="filecontrol">
+                                                                    @Html.NopEditorFor(model => model.Background2)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.Background3)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="filecontrol">
+                                                                    @Html.NopEditorFor(model => model.Background3)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+                                                                @Html.NopLabelFor(model => model.ColorPalette)
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                @Html.NopEditorFor(model => model.ColorPalette)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingThree">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                            @T("MarketCenters.Client.StyleGuide.Fonts")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                    <div class="panel-body">
+                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingFour">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                                            @T("MarketCenters.Client.StyleGuide.AdvancedEditor")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                    <div class="panel-body">
+                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingFive">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
+                                                            @T("MarketCenters.Client.StyleGuide.Symbols")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                    <div class="panel-body">
+                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingSix">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseThree">
+                                                            @T("MarketCenters.Client.StyleGuide.PlaceholderText")
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                    <div class="panel-body">
+                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/Customize-product.jpg" class="img-responsive" alt="">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,587 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.StyleGuideModel
+<div class="raw clearfix">
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Logos*@                    
+                    @T("MarketCenters.Client.StyleGuide.Logos")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimaryHorizontalLight)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.PrimaryHorizontalLight)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimaryHorizontalDark)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.PrimaryHorizontalDark)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimarySquareLight)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.PrimarySquareLight)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimarySquareDark)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.PrimarySquareDark)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.OneColorBlackHorizontal)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.OneColorBlackHorizontal)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.OneColorBlackVertical)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.OneColorBlackVertical)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.OneColorWhiteHorizontal)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.OneColorWhiteHorizontal)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.OneColorWhiteVertical)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.OneColorWhiteVertical)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AltHorizontalLight)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.AltHorizontalLight)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AltHorizontalDark)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.AltHorizontalDark)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AltSquareLight)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.AltSquareLight)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AltSquareDark)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.AltSquareDark)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Colors and Background Textures*@
+                    @T("MarketCenters.Client.StyleGuide.Textures")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimaryColor)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.PrimaryColor, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.SecondaryColor)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.SecondaryColor, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AccentColor)
+                        </div>
+                        <div class="col-md-8">                            
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.AccentColor, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.LightBodyColor)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.LightBodyColor, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.DarkBodyColor)
+                        </div>
+                        <div class="col-md-8">                            
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.DarkBodyColor, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.LightBackground)
+                        </div>
+                        <div class="col-md-8">                            
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.LightBackground, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.DarkBackground)
+                        </div>
+                        <div class="col-md-8">                            
+                            <div class="input-group colorpicker-component inputColorPicker">
+                                @Html.TextBoxFor(model => model.DarkBackground, new { @class = "form-control text-box single-line" })
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Background1)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.Background1)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Background2)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.Background2)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Background3)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="filecontrol">
+                                @Html.NopEditorFor(model => model.Background3)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.ColorPalette)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.ColorPalette)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.AssignColor)
+                        </div>
+                        <div class="col-md-8">
+                            <a href="#">@T("MarketCenters.Client.StyleGuide.EditColor")</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Fonts*@
+                    @T("MarketCenters.Client.StyleGuide.Fonts")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimaryFont)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="font-control">
+                                @Html.NopDropDownListFor(model => model.PrimaryFont, Model.AvailablePrimaryFonts)
+                                <ul class="edit-item">
+                                    <li><a href="#"><i class="fa fa-bold" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-italic" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-underline" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PrimaryLetterSpecing)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.PrimaryLetterSpecing)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.SecondaryFont)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="font-control">
+                                @Html.NopDropDownListFor(model => model.SecondaryFont, Model.AvailableSecondaryFonts)
+                                <ul class="edit-item">
+                                    <li><a href="#"><i class="fa fa-bold" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-italic" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-underline" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.SecondaryLetterSpecing)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.SecondaryLetterSpecing)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.BodyCopyFont)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="font-control">
+                                @Html.NopDropDownListFor(model => model.BodyCopyFont, Model.AvailableBodyCopyFonts)
+                                <ul class="edit-item">
+                                    <li><a href="#"><i class="fa fa-bold" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-italic" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-underline" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.BodyLetterSpecing)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.BodyLetterSpecing)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Symbols*@
+                    @T("MarketCenters.Client.StyleGuide.Symbols")
+                </div>
+                <div class="panel-body">
+                    <div class="lockicons"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Symbol1)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="upload-checkbox">
+                                <div class="filecontrol">
+                                    @Html.NopEditorFor(model => model.Symbol1)
+                                </div>
+                                <div class="checkbox-custom"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Symbol2)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="upload-checkbox">
+                                <div class="filecontrol">
+                                    @Html.NopEditorFor(model => model.Symbol2)
+                                </div>
+                                <div class="checkbox-custom"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Symbol3)
+                        </div>
+                        <div class="col-md-8">
+                            <div class="upload-checkbox">
+                                <div class="filecontrol">
+                                    @Html.NopEditorFor(model => model.Symbol3)
+                                </div>
+                                <div class="checkbox-custom"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Advanced Editor*@
+                    @T("MarketCenters.Client.StyleGuide.AdvancedEditor")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.EnableAdvacedEditor)
+                        </div>
+                        <div class="col-md-7">
+                            @Html.NopEditorFor(model => model.EnableAdvacedEditor)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.ForceAdvacedEditor)
+                        </div>
+                        <div class="col-md-7">
+                            @Html.NopEditorFor(model => model.ForceAdvacedEditor)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Product Color Family*@
+                    @T("MarketCenters.Client.StyleGuide.ProductColorFamily")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.Pen)
+                        </div>
+                        <div class="col-md-7">
+                            @Html.NopDropDownListFor(model => model.Pen, Model.AvailablePens)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.ColorEnvelope)
+                        </div>
+                        <div class="col-md-7">
+                            @Html.NopDropDownListFor(model => model.ColorEnvelope, Model.AvailableColorEnvelopes)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @*Placeholder Text*@
+                    @T("MarketCenters.Client.StyleGuide.PlaceholderText")
+                </div>
+                <div class="panel-body">
+                    <div class="lockicons"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AgentName)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.AgentName)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Title)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Title)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MobilePhone)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.MobilePhone)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.OfficePhone)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.OfficePhone)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Fax)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Fax)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Email)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Email)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Website)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Website)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Address)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Address)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Liecense)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.Liecense)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.DisclaimerText)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="upload-checkbox">
+                                @Html.NopEditorFor(model => model.DisclaimerText)
+                                <div class="checkbox-custom2"><input type="checkbox" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
