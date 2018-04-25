@@ -1,0 +1,38 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.ClientDetailsModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    //page title
+    ViewBag.Title = T("MarketCenters.Client.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ClientDetails");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Content/css/Admin_MarketCenters.css");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css");
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js");    
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/Admin_MarketCenters.js");
+    
+    
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "client-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("MarketCenters.Client.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i><a href="/Plugin/MarketCenters">@T("MarketCenters.Client.BackToList")</a></small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @Html.Partial("~/Plugins/Widgets.MarketCenters.GBS/Views/_CreateOrUpdateClientDetails.cshtml", Model)
+}

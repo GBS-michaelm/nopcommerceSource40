@@ -1,0 +1,104 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.ClientDetailsModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    //page title
+    ViewBag.Title = T("MarketCenters.Client.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ClientDetails");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Content/css/Admin_MarketCenters.css");
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/Admin_MarketCenters.js");
+
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "associate-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            Associate Business Card Backs to MCBC000014
+            <small><i class="fa fa-arrow-circle-left"></i><a href="/Plugin/MarketCenters/CreateClient">@T("MarketCenters.Client.Proof.BackToProof")</a></small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="row clearfix">
+                <div class="col-sm-3">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h2 style="margin-top:0px;">@T("MarketCenters.Client.Proof.Categories")</h2>
+                                <p>@T("MarketCenters.Client.Proof.BusinessCardCustomBlocks")</p>
+                                <div class="sidenav">
+                                    <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/business-nav.jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                @*Business Card Custom Blocks*@
+                                @T("MarketCenters.Client.Proof.BusinessCardCustomBlocks")
+                            </div>
+                            <div class="panel-body">
+                                <div class="row business-card-item">
+                                    <div class="col-sm-5 text-center">
+                                        <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/business-card.jpg" class="img-responsive" alt="">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <h4><strong>@T("MarketCenters.Client.Proof.BusinessCardTtle"): MCBC0000014</strong></h4>
+                                    </div>
+                                </div>                                
+                                <div class="row business-card-item">
+                                    <div class="col-sm-5 text-center">
+                                        <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/business-card2.jpg" class="img-responsive" alt="">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <h4><strong>@T("MarketCenters.Client.Proof.BusinessCardTtle"): MCBC0000014</strong></h4>
+
+                                    </div>
+                                </div>                                
+                                <div class="row business-card-item">
+                                    <div class="col-sm-5 text-center">
+                                        <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/business-card3.jpg" class="img-responsive" alt="">
+                                    </div>
+                                    <div class="col-sm-77">
+                                        <h4><strong>@T("MarketCenters.Client.Proof.BusinessCardTtle"): MCBC0000014</strong></h4>
+
+                                    </div>
+                                </div>    
+                                
+                                <div class="row business-card-item">
+                                    <div class="col-sm-5 text-center">
+                                        <img src="/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/business-card4.jpg" class="img-responsive" alt="">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <h4><strong>@T("MarketCenters.Client.Proof.BusinessCardTtle"): MCBC0000014</strong></h4>
+
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+

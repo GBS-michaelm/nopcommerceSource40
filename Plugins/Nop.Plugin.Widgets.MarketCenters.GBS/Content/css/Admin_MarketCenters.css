@@ -1,0 +1,47 @@
+.sidenav img{text-align:center; height:auto; max-width:100%; }
+.business-card{width:100%; text-align:center; padding:15px 0px; }
+.card-links{width:100%; text-align:center; padding:15px 0px 0px 0px; }
+.card-links a{margin:0px 12px; text-decoration:underline; }
+.proof-link{border-left:4px #a3c9de solid; background:#b9dff4; padding:15px 15px; font-size:14px; color:#333; }
+.proof-link strong{text-transform:uppercase; }
+.business-cardinfo{padding-top:15px; }
+.business-cardinfo h3{margin:0px; padding:0px 0px 10px 0px; font-size:20px; font-weight:600; }
+.proof-list{list-style:none; padding:0px; margin:0px; }
+.proof-list li{list-style:none; margin:0px; padding:5px 0px }
+.proof-list li a{text-decoration:underline; }
+.proof-time{color:#333; }
+.business-horizontal{padding:10px; }
+.business-horizontal img{max-width:100%; height:auto } 
+.buttons-group{padding-top:15px; width:100%; }
+.card-item{float:left; width:100%; padding:0px 0px 10px 0px; } 
+
+.filecontrol{position:relative; width:100%; }
+.filecontrol .row .col-md-12 {position:inherit; }
+.filecontrol .remove-image-button{position:absolute; right:5px; top:5px; display:none; }
+.filecontrol .remove-image-button .bg-red{background:url(/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/remove-file.png) no-repeat; border:0px; width:20px; height:20px; background-color:transparent!important; font-size:0px; }   
+.filecontrol .remove-image-button .bg-red:hover{background:url(/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/remove-file.png) no-repeat; background-color:transparent!important; box-shadow:none; }
+.filecontrol .qq-uploader{position:relative; padding-right:112px; }
+.filecontrol .qq-uploader-selector .qq-upload-button{position:absolute!important; right:0px; border-radius:0px;
+background:url(/Plugins/Widgets.MarketCenters.GBS/content/SampleImages/pick-img.png) no-repeat; width:112px; height:34px; border:0px; font-size:0px; float:right; margin-right:0px;}
+.filecontrol .upload-image-button{width:100%; }    
+.filecontrol .qq-upload-list{width:100%; float:none; border:1px #cacaca solid;  height:34px; border-radius:3px; }
+.filecontrol .qq-upload-list li {font-size: 13px;line-height: 23px;padding: 5px 2px 2px 7px; overflow:hidden; }
+.filecontrol .qq-upload-list li.qq-upload-success{ background-color:transparent!important; color:#333;}
+.filecontrol .uploaded-image{display:none; }
+.form-group .form-control{border-radius:3px; }
+.color-contorl{position:relative; }
+.color-contorl .color-pick{width:40px; height:32px; border-radius:0px 2px 2px 0px; position:absolute; right:1px; background:#eeeeee; border-left:1px #d2d6de solid; top:1px; }
+.color-contorl .color-pick em{width:17px; height:17px; position:absolute; left:0px; right:0px; top:0px; bottom:0px; margin:auto; }
+.upload-checkbox{position:relative; padding-right:30px; }
+.checkbox-custom{position:absolute; right:0px; top:6px; }
+.checkbox-custom2{position:absolute; right:0px; top:0px; }
+.lockicons{width:100%; text-align:right; font-size:25px; }
+.lockicons i{position:relative; right:-5px; top:-5px; }
+.font-control{position:relative; padding-right:112px; }
+.edit-item{position:absolute; right:0px; top:0px; border:1px #d2d6de solid; border-radius:3px; list-style:none; padding:0px; margin:0px; }
+.edit-item li{float:left; border-left:1px #d2d6de solid; list-style:none; }
+.edit-item li:first-child{border-left:0px; }
+.edit-item li a{padding:5px 10px; display:block; color:#353535; text-align:center; }
+.edit-item li a i{padding-right:0px!important; margin-right:0px;}
+.edit-item li a:hover{color:#000; background:#f5f5f5; }
+.business-card-item{margin-bottom:30px;  }

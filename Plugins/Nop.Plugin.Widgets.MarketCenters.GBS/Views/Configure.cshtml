@@ -1,0 +1,257 @@
+﻿@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI
+@model Nop.Plugin.Widgets.MarketCenters.GBS.Models.Clients.ClientListModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = T("MarketCenters.Title.Manage").Text;
+    Html.SetActiveMenuItemSystemName("ClientList");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Content/css/Admin_MarketCenters.css");
+    Html.AppendCssFileParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css");
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js");    
+    Html.AppendScriptParts("~/Plugins/Widgets.MarketCenters.GBS/Scripts/Admin_MarketCenters.js");    
+}
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("MarketCenters.Title.Manage")
+    </h1>
+    <div class="pull-right">
+        <a href="/Plugin/MarketCenters/CreateClient" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-success">
+                <i class="fa fa-download"></i>
+                @T("Admin.Common.Export")
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">&nbsp;</span>
+            </button>
+            @*<ul class="dropdown-menu" role="menu">
+                <li>
+                    <a href="@Url.Action("ExportXml")">
+                        <i class="fa fa-file-code-o"></i>
+                        @T("Admin.Common.ExportToXml")
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ExportXlsx")">
+                        <i class="fa fa-file-excel-o"></i>
+                        @T("Admin.Common.ExportToExcel")
+                    </a>
+                </li>
+            </ul>*@
+        </div>
+        <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+            <i class="fa fa-upload"></i>
+            @T("Admin.Common.Import")
+        </button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        bindBootstrapTabSelectEvent('marketcenters-tabs');
+    });
+</script>
+<div class="content">
+    <div class="form-horizontal">
+        <div id="marketcenters-tabs" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-clients", @T("MarketCenters.Tabs.Clients"), true)
+                @Html.RenderBootstrapTabHeader("tab-templates", @T("MarketCenters.Tabs.Templates"))
+                @Html.RenderBootstrapTabHeader("tab-products", @T("MarketCenters.Tabs.Products"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-clients", @TabClient(), true)
+                @Html.RenderBootstrapTabContent("tab-templates", @TabTemplate())
+                @Html.RenderBootstrapTabContent("tab-products", @TabProducts())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new Nop.Web.Framework.Events.AdminTabStripCreated(this.Html, "marketcenters-tabs");
+    EngineContext.Current.Resolve<Nop.Services.Events.IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabClient()
+{    
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <div class="panel-group">
+        <div class="panel panel-default panel-search">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.NopLabelFor(model => model.CompanyName)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.NopEditorFor(model => model.CompanyName)
+                            </div>
+                        </div>
+                        <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                            <div class="col-md-4">
+                                @Html.NopLabelFor(model => model.SearchStoreId)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="button" id="search-clients" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="clients-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#clients-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ClientList", "MarketCenters", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Widgets.MarketCenters.GBS.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                        //,fields: {
+                                        //    Id: { editable: false, type: "number" },
+                                        //    Name: { editable: true, type: "string" },
+                                        //    Parent: { editable: false, type: "string" },
+                                        //    AccountRep: { editable: false, type: "string" },
+                                        //    Proofs: { editable: false, type: "number" },
+                                        //    InMenu: { editable: false, type: "boolean" },
+                                        //}
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                            },
+                            @*editable: {
+                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                mode: "inline"
+            },*@
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("MarketCenters.Client.Name")"
+                                },
+                                {
+                                    field: "Parent",
+                                    title: "@T("MarketCenters.Client.Parent")"
+                                },
+                                {
+                                    field: "AccountRep",
+                                    title: "@T("MarketCenters.Client.AccountRep")"
+                                },
+                                {
+                                    field: "Proofs",
+                                    title: "@T("MarketCenters.Client.Proofs")"
+                                },
+                                {
+                                    field: "InMenu",
+                                    title: "@T("MarketCenters.Client.InMenu")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(InMenu) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                },{
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="/Admin/MarketCenters/EditClient/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
+                        });
+                    });
+                </script>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        //search button
+                        $('#search-clients').click(function() {
+                            //search
+                            var grid = $('#clients-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            return false;
+                        });
+
+                        $("#@Html.FieldIdFor(model => model.CompanyName)").keydown(function(event) {
+                            if (event.keyCode == 13) {
+                                $("#search-clients").click();
+                                return false;
+                            }
+                        });
+                    });
+
+                    function additionalData() {
+                        var data = {
+                            CompanyName: $('#@Html.FieldIdFor(model => model.CompanyName)').val(),
+                            SearchStoreId: $('#SearchStoreId').val()
+                        };
+                        addAntiForgeryToken(data);
+                        return data;
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+}
+@helper TabTemplate()
+{
+    <div>Template information</div>
+}
+@helper TabProducts()
+{
+    <div>Products information</div>
+}
