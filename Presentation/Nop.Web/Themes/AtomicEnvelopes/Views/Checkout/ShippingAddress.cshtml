@@ -15,8 +15,10 @@
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
-        {
+        <form id="formForValid" asp-controller="Checkout" asp-action="ShippingAddress" method="post">
+        @{ 
+        //@using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
+        //{
             if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
             {
                     <div class="section pickup-in-store">
@@ -336,9 +338,11 @@
                 </div>
             }
             <div class="buttons">
-                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
+                <input type="submit" name="nextstep" id="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
+        //}
         }
+        </form>
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
@@ -347,3 +351,69 @@
         </div>
     </div>
 </div>
+
+<input id="validationCustom" type="hidden" value="0" />
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#formForValid").submit(function (e){
+            e.preventDefault();
+
+            console.log("stop submit");
+
+            var pattern = /(?:P(?:ost(?:al)?)?[\.\-\s]*(?:(?:O(?:ffice)?[\.\-\s]*)?B(?:ox|in|\b|\d)|o(?:ffice|\b)(?:[-\s]*\d)|code)|box[-\s\b]*\d)/;
+
+            var check = pattern.test($("#NewAddress_Address1").val());
+            if (check) {
+                console.log("po box found");
+
+
+
+            } else {
+                console.log("no po box");
+            }
+
+        });
+
+
+
+
+        //$("#nextstep").click(function (e) {  
+            
+            
+            //console.log("stuff");
+            //if ($("validationCustom").val() == "0") {
+                
+
+            //    console.log("stoping the base form submit");
+                
+
+            //    //reg check
+
+            //    var i = 1;
+            //    if (i == 1) {
+            //        $("validationCustom").val("1");
+            //        console.log("pass test");
+            //        $("#nextstep").click();
+
+            //    } else {
+            //        $("validationCustom").val("0");
+            //        console.log("fail test");
+            //    }
+
+
+            //}
+            //else {
+            //    console.log("submit as normal");
+            //}
+
+        //});
+
+    });
+
+
+
+
+</script>
