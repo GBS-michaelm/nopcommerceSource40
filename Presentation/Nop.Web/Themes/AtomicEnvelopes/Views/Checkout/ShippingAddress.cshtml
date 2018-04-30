@@ -367,18 +367,33 @@
         $("#NewAddress_Address2").closest('.inputs').append("<span id='address2Error' class='error-span'>Please use a valid street address</span>");
         $("#NewAddress_ZipPostalCode").closest('.inputs').append("<span id='zipError' class='error-span'>Not valid zip code format</span>");
 
+        $("#NewAddress_Address1").on('input', function () {
+            SetPassFalse();
+        });
+
+        $("#NewAddress_Address2").on('input', function () {
+            SetPassFalse();
+        });
+
+        $("#NewAddress_ZipPostalCode").on('input', function () {
+            SetPassFalse();
+        });
+
+        //set a loop that checks if any of the .text-box have the not valid class
+        //if so disable the submit button
+        //may change overall submit logic by preventing the need for the orignal checks
+        //****prevent submit until no errors are found on inputs*****
 
 
+        $("#nextstep").prop('disabled', true);
 
+        //may need to add the same for billing address check
+        //just same as the form section below
+        //or bind both to same function
         $("#formForValid").submit(function (e) {
-
             e.preventDefault();
-                
+                            
             if (!$("#validationCustom").val() == "1") {
-                
-
-                
-
 
                 console.log("stop submit");
 
@@ -404,10 +419,8 @@
                 if (haltSubmit >= 3) {
                     //form submit
                     $("#validationCustom").val("1");
-                    console.log("Submitting form");
-
-                    //some how disable prevent default
-
+                    console.log("Submitting form");          
+                    $("#nextstep").prop('disabled', false);
                     $("#formForValid").submit();
                 }
 
@@ -415,6 +428,8 @@
             else {
 
                 //continue as normal
+                 //some how disable prevent default
+                $(this).unbind('submit').submit();
             }
             
         });
@@ -541,7 +556,14 @@
 
     });
 
-
+    function SetPassFalse() {
+        console.log("force re check for errors because of change to text field");
+        if ($("#validationCustom").val() != "0") {
+            $("#validationCustom").val("0");
+            $("#nextstep").prop('disabled', true);
+            console.log("valid custom val : " + $("#validationCustom").val());
+        }
+    }
 
 
 </script>
