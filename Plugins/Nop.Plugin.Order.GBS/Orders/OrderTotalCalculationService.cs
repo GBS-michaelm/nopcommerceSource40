@@ -22,6 +22,8 @@ using Nop.Core.Caching;
 using Nop.Core.Plugins;
 using Nop.Plugin.DataAccess.GBS;
 using System.Data;
+using System.Web;
+using Nop.Plugin.Order.GBS.Controllers;
 
 namespace Nop.Plugin.Order.GBS.Orders
 {
@@ -31,6 +33,7 @@ namespace Nop.Plugin.Order.GBS.Orders
         private readonly IDiscountService _discountService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
+        private readonly HttpContextBase _httpContext;
 
         public GBSOrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
@@ -49,7 +52,8 @@ namespace Nop.Plugin.Order.GBS.Orders
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings,
             ICacheManager cacheManager,
-            IPluginFinder pluginFinder) : base (workContext,
+            IPluginFinder pluginFinder,
+            HttpContextBase httpContext) : base (workContext,
             storeContext,
             priceCalculationService,
             taxService,
@@ -70,6 +74,7 @@ namespace Nop.Plugin.Order.GBS.Orders
             this._discountService = discountService;
             this._pluginFinder = pluginFinder;
             this._storeContext = storeContext;
+            this._httpContext = httpContext;
         }
 
         protected IList<DiscountService.DiscountRequirementForCaching> GetReqirementsForCaching(IEnumerable<DiscountRequirement> requirements)
@@ -91,6 +96,8 @@ namespace Nop.Plugin.Order.GBS.Orders
             var baseDiscount = base.GetOrderTotalDiscount(customer, orderTotal, out appliedDiscounts);
 
             List<decimal> discountValues = new List<decimal>();
+
+            _httpContext.Session["discountGroupName"] = "";
 
             foreach (var discount in appliedDiscounts)
             {
@@ -125,6 +132,7 @@ namespace Nop.Plugin.Order.GBS.Orders
                         foreach (DataRow dRow in dView.Table.Rows)
                         {
                             discountValues.Add((decimal)dRow["DiscountPrice"]);
+                            _httpContext.Session["discountGroupName"] = dRow["DiscountRequirementRuleSystemName"];
                         }
                     }
 

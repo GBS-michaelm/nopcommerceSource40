@@ -732,6 +732,10 @@ a.mc-img-link img {
     height: auto;
 }
 
+.modal-body {
+    text-align: left;
+}
+
 .modal-content h3 {
     text-align: center;
 }
@@ -786,4 +790,6 @@ a.mc-img-link img {
     display: none;
     color: #dddddd
 }
+
+
 
