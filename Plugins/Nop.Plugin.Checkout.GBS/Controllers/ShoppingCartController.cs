@@ -1508,6 +1508,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string _productSku = "";
             public string _printFileFront = "";
             public string _previewFileFront = "";
+            public string _printFileFrontIntranet = "";
+            public string _previewFileFrontIntranet = "";
             public string _ccStateId = "";
             public string _customerName = "";
             public string _customerTitle = "";
@@ -1519,6 +1521,8 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public string productSku { get { return _productSku; } set { _productSku = value; } }
             public string proofPdfUrl { get { return _printFileFront; } set { _printFileFront = value; } }
             public string previewFileFront { get { return _previewFileFront; } set { _previewFileFront = value; } }
+            public string proofPdfUrlIntranet { get { return _printFileFrontIntranet; } set { _printFileFrontIntranet = value; } }
+            public string previewFileFrontIntranet { get { return _previewFileFrontIntranet; } set { _previewFileFrontIntranet = value; } }
             public string ccStateId { get { return _ccStateId; } set { _ccStateId = value; } }
             public string customerName { get { return _customerName; } set { _customerName = value; } }
             public string customerTitle { get { return _customerTitle; } set { _customerTitle = value; } }
@@ -1581,7 +1585,10 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
                     if (attr.ProductAttribute.Name == "Print File Front")
                         attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
-
+                    if (attr.ProductAttribute.Name == "Intranet PDF")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrlIntranet);
+                    if (attr.ProductAttribute.Name == "Intranet Preview")
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFrontIntranet);
                     if (attr.ProductAttribute.Name == "Frame Style")
                     {
                         int frameOptionValueId = 0;
