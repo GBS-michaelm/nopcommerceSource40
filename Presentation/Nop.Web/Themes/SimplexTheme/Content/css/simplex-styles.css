@@ -11333,3 +11333,9 @@ div .mega-menu {
 .impersonate a {
     text-decoration: underline !important;
 }
+
+/*temporary removal of address back until CC fixes issue*/
+
+#addressblock #placementmenu, #addressblock #iron-label-3 {
+    display: none;
+}
