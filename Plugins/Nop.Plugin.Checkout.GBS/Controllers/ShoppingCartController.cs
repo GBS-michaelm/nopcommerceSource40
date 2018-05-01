@@ -1519,9 +1519,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             public int badgeQty { get { return _badgeQty; } set { _badgeQty = value; } }
             public string frameStyle { get { return _frameStyle; } set { _frameStyle = value; } }
             public string productSku { get { return _productSku; } set { _productSku = value; } }
-            public string proofPdfUrl { get { return _printFileFront; } set { _printFileFront = value; } }
+            public string printFileFront { get { return _printFileFront; } set { _printFileFront = value; } }
             public string previewFileFront { get { return _previewFileFront; } set { _previewFileFront = value; } }
-            public string proofPdfUrlIntranet { get { return _printFileFrontIntranet; } set { _printFileFrontIntranet = value; } }
+            public string printFileFrontIntranet { get { return _printFileFrontIntranet; } set { _printFileFrontIntranet = value; } }
             public string previewFileFrontIntranet { get { return _previewFileFrontIntranet; } set { _previewFileFrontIntranet = value; } }
             public string ccStateId { get { return _ccStateId; } set { _ccStateId = value; } }
             public string customerName { get { return _customerName; } set { _customerName = value; } }
@@ -1584,9 +1584,9 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     if (attr.ProductAttribute.Name == "CustomImgUrl")
                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFront);
                     if (attr.ProductAttribute.Name == "Print File Front")
-                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrl);
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.printFileFront);
                     if (attr.ProductAttribute.Name == "Intranet PDF")
-                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.proofPdfUrlIntranet);
+                        attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.printFileFrontIntranet);
                     if (attr.ProductAttribute.Name == "Intranet Preview")
                         attributesXml = productAttributeParser.AddProductAttribute(attributesXml, attr, json.previewFileFrontIntranet);
                     if (attr.ProductAttribute.Name == "Frame Style")

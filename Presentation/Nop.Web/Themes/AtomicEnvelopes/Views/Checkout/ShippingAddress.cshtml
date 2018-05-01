@@ -22,10 +22,10 @@
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        <form id="formForValid" asp-controller="Checkout" asp-action="ShippingAddress" method="post">
-            @{
-                //@using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
-                //{
+        @*<form id="formForValid" asp-controller="Checkout" asp-action="ShippingAddress" method="post">
+            @{*@
+                @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
+                {
                 if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
                 {
                     <div class="section pickup-in-store">
@@ -347,9 +347,9 @@
                 <div class="buttons">
                     <input type="submit" name="nextstep" id="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
                 </div>
-                //}
-            }
-        </form>
+                }
+            @*}
+        </form>*@
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
@@ -369,75 +369,26 @@
 
         $("#NewAddress_Address1").on('input', function () {
             SetPassFalse();
+            CheckAllInputsWithCustomRules();
         });
 
         $("#NewAddress_Address2").on('input', function () {
             SetPassFalse();
+            CheckAllInputsWithCustomRules();
         });
 
         $("#NewAddress_ZipPostalCode").on('input', function () {
             SetPassFalse();
+            CheckAllInputsWithCustomRules();
         });
 
         //set a loop that checks if any of the .text-box have the not valid class
         //if so disable the submit button
         //may change overall submit logic by preventing the need for the orignal checks
         //****prevent submit until no errors are found on inputs*****
-
-
-        $("#nextstep").prop('disabled', true);
-
-        //may need to add the same for billing address check
-        //just same as the form section below
-        //or bind both to same function
-        $("#formForValid").submit(function (e) {
-            e.preventDefault();
-                            
-            if (!$("#validationCustom").val() == "1") {
-
-                console.log("stop submit");
-
-                var haltSubmit = 0;
-                //check address 1 2 and zip for error class
-                //if no error class present, submit form else remain in prevent default
-                if (!$("#NewAddress_Address1").hasClass('field-rule-error')) {
-                    console.log("Address 1 error freee");
-                    haltSubmit++;
-                }
-
-                if (!$("#NewAddress_Address2").hasClass('field-rule-error')) {
-                    console.log("Address 2 error freee");
-                    haltSubmit++;
-                }
-
-                if (!$("#NewAddress_ZipPostalCode").hasClass('field-rule-error')) {
-                    console.log("Zip error freee");
-                    haltSubmit++;
-                }
-
-                console.log("Halt Submit Total : " + haltSubmit);
-                if (haltSubmit >= 3) {
-                    //form submit
-                    $("#validationCustom").val("1");
-                    console.log("Submitting form");          
-                    $("#nextstep").prop('disabled', false);
-                    $("#formForValid").submit();
-                }
-
-            }
-            else {
-
-                //continue as normal
-                 //some how disable prevent default
-                $(this).unbind('submit').submit();
-            }
-            
-        });
-
-
-        //have a key up check for custom validation that changes classes to prevent submit
-        //and then a final check on the submit to make sure those no valid classes are not present
-        //$("#NewAddress_Address1").on('input', function () {
+        
+        $("#nextstep").prop('disabled', true);      
+                
         $("#NewAddress_Address1").focusout(function () {
             console.log("address 1 input change: " + $("#NewAddress_Address1").val());
 
@@ -461,6 +412,7 @@
                 if ($("#NewAddress_Address1").hasClass('field-rule-error')) {
                     $("#NewAddress_Address1").removeClass('field-rule-error');
                     $("#address1Error").hide();
+                    CheckAllInputsWithCustomRules();
                 }
 
             }
@@ -490,6 +442,7 @@
                 if ($("#NewAddress_Address2").hasClass('field-rule-error')) {
                     $("#NewAddress_Address2").removeClass('field-rule-error');
                     $("#address2Error").hide();
+                    CheckAllInputsWithCustomRules();
                 }
 
             }
@@ -517,52 +470,36 @@
                 if ($("#NewAddress_ZipPostalCode").hasClass('field-rule-error')) {
                     $("#NewAddress_ZipPostalCode").removeClass('field-rule-error');
                     $("#zipError").hide();
+                    CheckAllInputsWithCustomRules();
                 }
 
             }
 
         });
-
-        //$("#nextstep").click(function (e) {
-
-
-        //console.log("stuff");
-        //if ($("validationCustom").val() == "0") {
-
-
-        //    console.log("stoping the base form submit");
-
-
-        //    //reg check
-
-        //    var i = 1;
-        //    if (i == 1) {
-        //        $("validationCustom").val("1");
-        //        console.log("pass test");
-        //        $("#nextstep").click();
-
-        //    } else {
-        //        $("validationCustom").val("0");
-        //        console.log("fail test");
-        //    }
-
-
-        //}
-        //else {
-        //    console.log("submit as normal");
-        //}
-
-        //});
-
+               
     });
 
     function SetPassFalse() {
         console.log("force re check for errors because of change to text field");
-        if ($("#validationCustom").val() != "0") {
-            $("#validationCustom").val("0");
-            $("#nextstep").prop('disabled', true);
-            console.log("valid custom val : " + $("#validationCustom").val());
+        $("#nextstep").prop('disabled', true);
+    }
+
+    function CheckAllInputsWithCustomRules() {
+        console.log("check each");
+        var errorFound = false;
+
+        $(".text-box").each(function (index) {
+            if ($(this).hasClass("field-rule-error")) {
+                errorFound = true;
+                console.log("error class found");
+            }            
+        });
+
+        if (!errorFound) {
+            $("#nextstep").prop('disabled', false);
+            console.log("error free: button enabled");
         }
+
     }
 
 
