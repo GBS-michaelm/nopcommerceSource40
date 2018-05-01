@@ -7,7 +7,22 @@
 @using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using System.Text;
+@using Nop.Services.Catalog;
 
+@{
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    <script>var eachQuantity = @eachQuantity;</script>
+
+}
 
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
