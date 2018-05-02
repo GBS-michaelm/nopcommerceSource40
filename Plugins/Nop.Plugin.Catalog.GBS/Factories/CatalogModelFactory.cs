@@ -196,7 +196,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             }
             var categoryCacheKey = "preparecategorymodelFactory_" + category.Id + "_" + _storeContext.CurrentStore.Id + "_"+ _workContext.WorkingLanguage.Id;
 
-            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 1440, () =>
+            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 60, () =>
             {
 
                 if (string.IsNullOrEmpty(categtoryModel.PictureModel.ImageUrl))
