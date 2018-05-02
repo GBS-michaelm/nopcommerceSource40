@@ -762,6 +762,7 @@
     <Content Include="Themes\AdhesiveMagnets\Content\images\filters-checkbox-checked.png" />
     <Content Include="Themes\AdhesiveMagnets\Content\images\filters-checkbox.png" />
     <Content Include="Themes\AdhesiveMagnets\Content\images\filters-toggle.png" />
+    <Content Include="Themes\AtomicEnvelopes\Content\css\atm-error-handle.css" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\ie8.css" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\print.css" />
     <Content Include="Themes\AtomicEnvelopes\Content\css\styles.css" />

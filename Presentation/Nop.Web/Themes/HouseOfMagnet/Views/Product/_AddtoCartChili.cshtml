@@ -2,18 +2,28 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
-<style>
+@using Nop.Services.Catalog;
 
+@{
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    <script>var eachQuantity = @eachQuantity;</script>
+
+}
+<style>
     .min-qty-notification {
         top: -55px !important;
     }
 </style>
-@{
-    int categoryID = 0;
-    categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
-
-
-}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
@@ -42,7 +52,7 @@
             <div class="clear"></div>
             <div class="min-qty-notification">@Model.AddToCart.MinimumQuantityNotification</div>
         }
-
+            
         @if (!Model.AddToCart.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
@@ -75,13 +85,18 @@
                         </script>
                     }
                 </div>
+
                 <div class="product-add-button">
                     @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
+
                     <button id="add-to-cart-button" type="button" class=" button button-rounded button-reveal button-small button-green tright" data-productid="@Model.AddToCart.ProductId" onclick="">
+
                         <i class="icon-line-arrow-right"></i><span>Customize</span>
                     </button>
+
                     @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
                 </div>
+
             </div>
         }
         @Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)
@@ -141,7 +156,7 @@
     //{
     //    sku = Model.Sku;
     //}
-    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&categoryid=" + categoryID + "&qty=";
+    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
@@ -178,7 +193,7 @@
 
             //var jsonSend = JSON.stringify(jsonArray);
             //TempData["productOptions"] = jsonSend;
-
+            
             SetProductOption("", htmlDecode("@url") + $(".qty-value").val());
         });
 

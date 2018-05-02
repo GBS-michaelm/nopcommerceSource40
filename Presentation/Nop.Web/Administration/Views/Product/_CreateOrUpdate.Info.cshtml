@@ -1791,10 +1791,26 @@
                                 });
                             </script>*@
                             <div id="catButtonWrapper">
-                                <button type="button" id="loadCategories" class="btn btn-primary" onclick="KendoLoad1(); KendoLoad2();">Show Categories</button>
-                                Clicking this button will display the category editor after a few moments.
+                                <button type="button" id="loadCategories" class="btn btn-primary" onclick="loadCats();">Show Categories</button>
+                                <span id="mainmessage">Clicking this button will display the category editor after a few moments.</span><span id="pleasewait" style="display:none">Please Wait <img src="~/Content/Images/loading.gif" /></span>
                             </div>
                             <script>
+                                function loadCats() {
+                                    $('#mainmessage').css('display', 'none');
+                                    $('#pleasewait').css('display', 'inline');
+                                    setTimeout(loadCats2
+                                    ,3);
+
+                                };
+
+                                function loadCats2() {
+                                    $.when(
+                                        KendoLoad1(),
+                                        KendoLoad2()).then(function () {
+                                            $('#pleasewait').css('display', 'none');
+                                            $('#loadCategories').css('display', 'none');
+                                        });
+                                };
                                    function KendoLoad2() {
                                     var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
@@ -1813,7 +1829,7 @@
                                     </text>
                             }
                                 };
-                                $("#catButtonWrapper").
+                                //$("#catButtonWrapper").
                             </script>
                         </div>
                     </div>

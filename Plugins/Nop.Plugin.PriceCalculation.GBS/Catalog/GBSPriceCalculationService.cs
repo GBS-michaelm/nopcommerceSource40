@@ -148,6 +148,9 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                                 }
                             }
 
+                            //new amalgamation logic based on spec attr goes here
+                            //will do a look up for each cart item that has a matching whatami of the current items whatami 
+
                             for (int i = 0; i < categoryGroupMembersIds.Count; i++)
                             {
                                 foreach (ShoppingCartItem item in AmalgamationList)
@@ -312,7 +315,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 
             masterIdProductIdGroupId[0] = masterCategoryID;
             masterIdProductIdGroupId[1] = lowestPricedProductID;
-            masterIdProductIdGroupId[2] = groupId;
+            masterIdProductIdGroupId[2] = groupId; //will change to product spec whatami id
             
             return masterIdProductIdGroupId;
         }

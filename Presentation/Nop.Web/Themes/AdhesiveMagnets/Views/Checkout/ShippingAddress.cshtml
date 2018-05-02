@@ -347,3 +347,146 @@
         </div>
     </div>
 </div>
+<script>
+
+    $(document).ready(function () {
+
+        $("#NewAddress_Address1").closest('.inputs').append("<span id='address1Error' class='error-span'>Please use a valid street address</span>");
+        $("#NewAddress_Address2").closest('.inputs').append("<span id='address2Error' class='error-span'>Please use a valid street address</span>");
+        $("#NewAddress_ZipPostalCode").closest('.inputs').append("<span id='zipError' class='error-span'>Not valid zip code format</span>");
+
+        $("#NewAddress_Address1").on('input', function () {
+            SetPassFalse();
+            CheckAllInputsWithCustomRules();
+        });
+
+        $("#NewAddress_Address2").on('input', function () {
+            SetPassFalse();
+            CheckAllInputsWithCustomRules();
+        });
+
+        $("#NewAddress_ZipPostalCode").on('input', function () {
+            SetPassFalse();
+            CheckAllInputsWithCustomRules();
+        });
+
+        //set a loop that checks if any of the .text-box have the not valid class
+        //if so disable the submit button
+        //may change overall submit logic by preventing the need for the orignal checks
+        //****prevent submit until no errors are found on inputs*****
+
+        $("#nextstep").prop('disabled', true);
+
+        $("#NewAddress_Address1").focusout(function () {
+            console.log("address 1 input change: " + $("#NewAddress_Address1").val());
+
+            //PO Box Regex
+            var pattern = /(?:P(?:ost(?:al)?)?[\.\-\s]*(?:(?:O(?:ffice)?[\.\-\s]*)?B(?:ox|in|\b|\d)|o(?:ffice|\b)(?:[-\s]*\d)|code)|box[-\s\b]*\d)/;
+
+            var check = pattern.test($("#NewAddress_Address1").val());
+            if (check) {
+                console.log("po box found");
+
+                //add error class to element
+                //only add class once, if class exists already ignore add
+                //append span to display error
+                if (!$("#NewAddress_Address1").hasClass('field-rule-error')) {
+                    $("#NewAddress_Address1").addClass('field-rule-error');
+                    $("#address1Error").show();
+                }
+
+            } else {
+                console.log("no po box");
+                if ($("#NewAddress_Address1").hasClass('field-rule-error')) {
+                    $("#NewAddress_Address1").removeClass('field-rule-error');
+                    $("#address1Error").hide();
+                    CheckAllInputsWithCustomRules();
+                }
+
+            }
+
+        });
+
+        $("#NewAddress_Address2").focusout(function () {
+            console.log("address 2 input change: " + $("#NewAddress_Address2").val());
+
+            //PO Box Regex
+            var pattern = /(?:P(?:ost(?:al)?)?[\.\-\s]*(?:(?:O(?:ffice)?[\.\-\s]*)?B(?:ox|in|\b|\d)|o(?:ffice|\b)(?:[-\s]*\d)|code)|box[-\s\b]*\d)/;
+
+            var check = pattern.test($("#NewAddress_Address2").val());
+            if (check) {
+                console.log("po box found");
+
+                //add error class to element
+                //only add class once, if class exists already ignore add
+                //append span to display error
+                if (!$("#NewAddress_Address2").hasClass('field-rule-error')) {
+                    $("#NewAddress_Address2").addClass('field-rule-error');
+                    $("#address2Error").show();
+                }
+
+            } else {
+                console.log("no po box");
+                if ($("#NewAddress_Address2").hasClass('field-rule-error')) {
+                    $("#NewAddress_Address2").removeClass('field-rule-error');
+                    $("#address2Error").hide();
+                    CheckAllInputsWithCustomRules();
+                }
+
+            }
+
+        });
+
+        $("#NewAddress_ZipPostalCode").focusout(function () {
+            console.log("address 1 input change: " + $("#NewAddress_ZipPostalCode").val());
+
+            //PO Box Regex
+            var pattern = /(^\d{5}(-\d{4})?$)|(^[abceghjklmnprstvxyABCEGHJKLMNPRSTVXY]{1}\d{1}[a-zA-Z]{1} *\d{1}[a-zA-Z]{1}\d{1}$)/;
+
+            var check = pattern.test($("#NewAddress_ZipPostalCode").val());
+            if (!check) {
+                console.log("bad zip found");
+
+
+                if (!$("#NewAddress_ZipPostalCode").hasClass('field-rule-error')) {
+                    $("#NewAddress_ZipPostalCode").addClass('field-rule-error');
+                    $("#zipError").show();
+                }
+
+            } else {
+                console.log("good zip");
+                if ($("#NewAddress_ZipPostalCode").hasClass('field-rule-error')) {
+                    $("#NewAddress_ZipPostalCode").removeClass('field-rule-error');
+                    $("#zipError").hide();
+                    CheckAllInputsWithCustomRules();
+                }
+
+            }
+
+        });
+
+    });
+
+    function SetPassFalse() {
+        console.log("force re check for errors because of change to text field");
+        $("#nextstep").prop('disabled', true);
+    }
+
+    function CheckAllInputsWithCustomRules() {
+        console.log("check each");
+        var errorFound = false;
+
+        $(".text-box").each(function (index) {
+            if ($(this).hasClass("field-rule-error")) {
+                errorFound = true;
+                console.log("error class found");
+            }
+        });
+
+        if (!errorFound) {
+            $("#nextstep").prop('disabled', false);
+            console.log("error free: button enabled");
+        }
+
+    }
+</script>
