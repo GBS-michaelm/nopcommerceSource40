@@ -118,12 +118,12 @@
                                 </div>
                                 <div class="detail-left">
                                     <!--short description-->
-                                    @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                                    @*@if (!String.IsNullOrEmpty(Model.ShortDescription))
                                     {
                                         <div class="short-description">
                                             @Html.Raw(Model.ShortDescription)
                                         </div>
-                                    }
+                                    }*@
                                     @Html.Widget("productdetails_overview_top", Model.Id)
                                     <!--product reviews-->
                                     @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)

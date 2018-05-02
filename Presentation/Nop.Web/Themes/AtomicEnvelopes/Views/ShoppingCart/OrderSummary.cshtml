@@ -21,9 +21,10 @@
                }
            </ul>
        </div>
-       }     
+       }
        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-       using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+       //using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+       using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
        {
            @Html.AntiForgeryToken()
        <div class="table-wrapper">
@@ -126,7 +127,7 @@
                                }
                                @if (Model.IsEditable && item.AllowItemEditing)
                                {
-                                   var editCartItemUrl = Url.RouteUrl("Product", new {SeName = item.ProductSeName});
+                                   var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                    editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
                                    <div class="edit-item">
                                        <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -187,15 +188,15 @@
                </tbody>
            </table>
        </div>
-        if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
-        {
-            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
-            //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
-            //of course, you can modify appropriate locales to include VAT info there
+       if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+       {
+           var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+           //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+           //of course, you can modify appropriate locales to include VAT info there
         <div class="tax-shipping-info">
             @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
         </div>
-        }
+       }
        <div class="cart-options">
            @if (Model.IsEditable)
            {
@@ -287,7 +288,7 @@
        if (Model.IsEditable)
        {
             @Html.Action("CrossSellProducts", "Product")
-       }
+           }
        }
    }
    else
