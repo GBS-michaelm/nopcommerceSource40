@@ -1,9 +1,10 @@
 ﻿@model ShoppingCartModel.DiscountBoxModel
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Discounts;
+
 @{
     var discountService = EngineContext.Current.Resolve<IDiscountService>();
-    string discountGroupName = Html.Raw(HttpContext.Current.Session["discountGroupName"]).ToString();
+    string discountGroupName = HttpContext.Current.Session["discountGroupName"].ToString();
 }
     @using Nop.Web.Models.ShoppingCart;
     
