@@ -79,8 +79,10 @@
                     displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
                     displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3centamt]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
                     displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
-                    <span id="measurementEquation">1 @packType  = @eachQuantity @eachUnit<span>s</span></span>
-
+                    if (eachQuantity != "1")
+                    {
+                        <span id="measurementEquation">1 @packType  = @eachQuantity @eachUnit<span>s</span></span>
+                    }
                 }
                 <table class="table table-bordered  table-striped">
                     <tr>
