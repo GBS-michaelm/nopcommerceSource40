@@ -22,8 +22,7 @@
            </ul>
        </div>
        }
-       @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-       //using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+       @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@       
        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
        {
            @Html.AntiForgeryToken()
