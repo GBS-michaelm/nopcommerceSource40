@@ -513,26 +513,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             return null;
         }
 
-        public string GetDiscountGroupName(int Id)
-        {
-            string discountGroupName = "";
-
-            DBManager dbmanager = new DBManager();
-            Dictionary<string, string> paramDic = new Dictionary<string, string>();
-            string select = "EXEC usp_getDiscountAmount " + Id + "";
-            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
-
-            if (dView.Count > 0)
-            {
-                foreach (DataRow dRow in dView.Table.Rows)
-                {
-                    discountGroupName = dRow["DiscountRequirementRuleSystemName"].ToString();
-                    ViewBag.DiscountGroupName = discountGroupName;
-                }
-            }
-
-            return discountGroupName;
-        }
+        
 
     }
 }

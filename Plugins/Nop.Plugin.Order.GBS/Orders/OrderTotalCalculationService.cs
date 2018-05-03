@@ -97,8 +97,6 @@ namespace Nop.Plugin.Order.GBS.Orders
 
             List<decimal> discountValues = new List<decimal>();
 
-            _httpContext.Session["discountGroupName"] = "";
-
             foreach (var discount in appliedDiscounts)
             {
                 //discount requirements
@@ -132,7 +130,6 @@ namespace Nop.Plugin.Order.GBS.Orders
                         foreach (DataRow dRow in dView.Table.Rows)
                         {
                             discountValues.Add((decimal)dRow["DiscountPrice"]);
-                            _httpContext.Session["discountGroupName"] = dRow["DiscountRequirementRuleSystemName"];
                         }
                     }
 
@@ -202,5 +199,6 @@ namespace Nop.Plugin.Order.GBS.Orders
 
             return result;
         }
+
     }
 }

@@ -11,17 +11,21 @@ using System.Collections.Generic;
 using System.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using System.Web;
 
 namespace Nop.Plugin.DiscountRules.HasAttribute
 {
     public partial class HasAttributeDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         private readonly ISettingService _settingService;
+        private readonly HttpContextBase _httpContext;
 
         public HasAttributeDiscountRequirementRule(ISettingService settingService,
-            ICategoryService categoryService)
+            ICategoryService categoryService,
+            HttpContextBase httpContext)
         {
             this._settingService = settingService;
+            this._httpContext = httpContext;
         }
 
         /// <summary>
@@ -31,6 +35,8 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
         /// <returns>Result</returns>
         public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
         {
+            _httpContext.Session["discountGroupName"] = "";
+
             if (request == null)
                 throw new ArgumentNullException("request");
 
@@ -163,12 +169,33 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
 
             if (allFound)
             {
-                //valid
+                _httpContext.Session["discountGroupName"] = GetDiscountGroupName(request.DiscountRequirementId);
+
                 result.IsValid = true;
                 return result;
             }
 
             return result;
+        }
+
+        public string GetDiscountGroupName(int Id)
+        {
+            string discountGroupName = "";
+
+            DBManager dbmanager = new DBManager();
+            Dictionary<string, string> paramDic = new Dictionary<string, string>();
+            string select = "EXEC usp_getDiscountGroupName " + Id + "";
+            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
+
+            if (dView.Count > 0)
+            {
+                foreach (DataRow dRow in dView.Table.Rows)
+                {
+                    discountGroupName = dRow["DiscountRequirementRuleSystemName"].ToString();
+                }
+            }
+
+            return discountGroupName;
         }
 
         /// <summary>
