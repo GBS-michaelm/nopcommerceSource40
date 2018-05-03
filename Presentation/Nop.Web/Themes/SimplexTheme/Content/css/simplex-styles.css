@@ -11334,8 +11334,9 @@ div .mega-menu {
     text-decoration: underline !important;
 }
 
-/*temporary removal of address back until CC fixes issue*/
+/*temporary removal of address back until CC fixes issue
 
 #addressblock #placementmenu, #addressblock #iron-label-3 {
     display: none;
 }
+*/
