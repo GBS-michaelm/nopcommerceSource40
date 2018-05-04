@@ -139,12 +139,12 @@
 							@Html.Widget("productdetails_bottom", Model.Id)
 							@Html.Widget("productdetails_before_collateral", Model.Id)
 
-							@if (!String.IsNullOrEmpty(Model.ShortDescription))
+							@*@if (!String.IsNullOrEmpty(Model.ShortDescription))
 							{
 								<div class="short-description">
 									@Html.Raw(Model.ShortDescription)
 								</div>
-							}
+							}*@
 							@Html.Raw(Model.FullDescription)
 
 							@{

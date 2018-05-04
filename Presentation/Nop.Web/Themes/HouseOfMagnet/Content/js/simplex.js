@@ -200,6 +200,10 @@ function ChangeQuantity1(e) {
 
     document.getElementById(e.id).value = qtyValue;
     //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
+    if (typeof eachQuantity !== 'undefined') {
+        if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
+    }
+
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
     //document.getElementById("newprice").textContent = "$"+final;
     $(".newprice-value-" + e.dataset.productid).text("$" + final);
@@ -225,6 +229,9 @@ function IncreaseQuantity(e) {
     document.getElementById(e.id).value = qtyValue;
 
     //  document.getElementById("eachprice").textContent = "(Ea. $"+document.getElementById("pricescript").textContent+")";
+    if (typeof eachQuantity !== 'undefined') {
+        if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
+    }
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
     //document.getElementById("newprice").textContent = "$"+final;
@@ -259,6 +266,9 @@ function DecreaseQuantity(e) {
         document.getElementById(e.id).value = qtyValue;
         //document.getElementById("newprice").textContent = "$" + final;
         //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
+        if (typeof eachQuantity !== 'undefined') {
+            if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
+        }
         $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
         $(".newprice-value-" + e.dataset.productid).text("$" + final);

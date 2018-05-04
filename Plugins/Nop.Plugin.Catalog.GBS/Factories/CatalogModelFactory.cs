@@ -194,9 +194,9 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             {
                 categtoryModel = base.PrepareCategoryModel(category, command);
             }
-            var categoryCacheKey = "preparecategorymodelFactory_" + category.Id + "_" + _storeContext.CurrentStore.Id + "_"+ _workContext.WorkingLanguage.Id;
+            var categoryCacheKey = "preparecategorymodelFactory_" + category.Id + "_" + _storeContext.CurrentStore.Id + "_"+ _workContext.WorkingLanguage.Id + "_" + string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds());
 
-            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 1440, () =>
+            var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 60, () =>
             {
 
                 if (string.IsNullOrEmpty(categtoryModel.PictureModel.ImageUrl))

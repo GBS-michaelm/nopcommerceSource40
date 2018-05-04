@@ -4,6 +4,27 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Plugin.Payments.GBS;
 @using System.Data;
+@using Nop.Services.Catalog;
+
+@{
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    var quantityArray = Newtonsoft.Json.JsonConvert.SerializeObject(Model.TierPrices);
+    <script>
+        var eachQuantity = @eachQuantity;
+        var quantityArray = @Html.Raw(@quantityArray);;
+    </script>
+
+}
 <style>
 
     .min-qty-notification {
@@ -54,7 +75,27 @@
                     </div>
                     @if (Model.AddToCart.AllowedQuantities.Count > 0)
                     {
-                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control" })
+                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty-dropdown form-control" })
+                        <script>
+                            function setPrice() {
+                                    var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)').val());
+                                    var selectedQuantityPrice = $.grep(quantityArray, function (e) { return e.Quantity === selectedQuantity })[0].Price;
+                                    var selectedQuantityPriceCalculated = selectedQuantityPrice.slice(1) * selectedQuantity;
+                                    $(".newprice-value-" +@Model.Id).text("$" + selectedQuantityPriceCalculated.toFixed(2));
+                                    var eachPrice = selectedQuantityPrice.slice(1);
+                                    $(".eachprice-value-" +@Model.Id).text("(Ea. $" + eachPrice +")");
+                            }
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)").change(function (event) {
+                                    setPrice();
+                                });
+                                $(window).load(function () {
+                                    setPrice();
+                                });
+
+                            });
+
+                        </script>
                     }
                     else
                     {
