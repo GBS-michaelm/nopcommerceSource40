@@ -283,34 +283,10 @@
     <Content Include="Scripts\bootstrap\bootstrap.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\EditorConfigAttributes\attribute-editor-behaviour.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\attribute-templates-behaviour.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\au-responsive-image.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\EditorConfigAttributes\demo\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\EditorConfigAttributes\editor-admin-design-folder.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\editor-admin-design.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\EditorConfigAttributes\editor-admin-driver.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\editor-admin-list.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\editor-admin-text.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\EditorConfigAttributes\editor-admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\EditorConfigAttributes\editor-admin.vulcanized.html">
@@ -395,9 +371,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="readme.MD" />
-    <None Include="Scripts\EditorConfigAttributes\bower.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Scripts\FlipBook\ccFlipBook.js.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
