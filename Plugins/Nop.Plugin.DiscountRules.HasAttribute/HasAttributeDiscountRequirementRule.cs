@@ -85,7 +85,7 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
 
             DBManager dbmanager = new DBManager();
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
-            string select = "EXEC usp_getAttributeQty " + _workContext.CurrentCustomer.Id + "," + request.Store.Id + "";
+            string select = "EXEC usp_getAttributeTotals " + _workContext.CurrentCustomer.Id + "," + request.Store.Id + "";
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
 
 
@@ -133,16 +133,29 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
                             if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[0], out restrictedAttributeId))
                                 //parsing error; exit;
                                 return result;
-                            int quantity;
-                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[1], out quantity))
+                            int qtyPrice;
+                            if (!int.TryParse(restrictedAttribute.Split(new[] { ':' })[1], out qtyPrice))
                                 //parsing error; exit;
                                 return result;
 
-                            if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= quantity)
+                            if (DiscountBasedOnPrice(request.DiscountRequirementId))
                             {
-                                found1 = true;
-                                break;
+                                int totalPrice = Convert.ToInt32(dRow["TotalPrice"]);
+                                if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId && totalPrice >= qtyPrice)
+                                {
+                                    found1 = true;
+                                    break;
+                                }
                             }
+                            else
+                            {
+                                if ((int)dRow["SpecificationAttributeOptionId"] == restrictedAttributeId && (int)dRow["TotalQuantity"] >= qtyPrice)
+                                {
+                                    found1 = true;
+                                    break;
+                                }
+                            }
+                            
                         }
                     }
                     else
@@ -196,6 +209,26 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
             }
 
             return discountGroupName;
+        }
+
+        public bool DiscountBasedOnPrice(int Id)
+        {
+            bool basedOnPrice = false;
+
+            DBManager dbmanager = new DBManager();
+            Dictionary<string, string> paramDic = new Dictionary<string, string>();
+            string select = "EXEC usp_getDiscountBasedOnPrice " + Id + "";
+            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
+
+            if (dView.Count > 0)
+            {
+                foreach (DataRow dRow in dView.Table.Rows)
+                {
+                    basedOnPrice = (bool)dRow["isBasedOnPrice"];
+                }
+            }
+
+            return basedOnPrice;
         }
 
         /// <summary>
