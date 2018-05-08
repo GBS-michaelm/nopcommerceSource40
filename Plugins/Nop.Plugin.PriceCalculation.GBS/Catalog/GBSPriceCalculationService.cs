@@ -20,6 +20,9 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 {
     class GBSPriceCalculationService : PriceCalculationService
     {
+
+        ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -77,10 +80,29 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 //        categoryIds += productCategories[i].CategoryId.ToString();
                 //    }
                 //}
+                var preCheckSpecAttrs = specService.GetProductSpecificationAttributes(product.Id);
+                int whatId = 0;
+                foreach (var spec in preCheckSpecAttrs)
+                {
+                    if (spec.SpecificationAttributeOption.SpecificationAttribute.Name == "WhatAmI")
+                    {
+                        whatId = spec.SpecificationAttributeOption.Id;
+                    }
+                }
 
+                DataView amalgamationCheckDataView = cacheManager.Get("checkSpecAttrAmalgamation" + product.Id, 60, () => {
 
+                    string whichAmalgamationToUseQuery = "EXEC usp_SelectGBSAmalgamationFeaturedIds  @specificationAttributeOptionId";
+                    Dictionary<string, Object> amalgamationCheckDic = new Dictionary<string, Object>();
+                    amalgamationCheckDic.Add("@specificationAttributeOptionId", whatId);
+                    DataView innerAmalgamationCheckDataView = manager.GetParameterizedDataView(whichAmalgamationToUseQuery, amalgamationCheckDic);
 
+                    return innerAmalgamationCheckDataView;
 
+                });
+                
+                //useCategoryAmalgamation = amalgamationCheckDataView.Count > 0 ? false : true;
+                
                 #region categoryAmalgamation
                 //Original category version of amalgmation
 
@@ -110,8 +132,15 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                     foreach (var cat in categoryIdsList)
                     {
                         amalgamationDic["@CategoryId"] = cat;
-                        DataView amalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
 
+                        DataView amalgamationDataView = cacheManager.Get("marketCenterChildCompany" + cat, 60, () => {
+
+                            DataView innerAmalgamationDataView = manager.GetParameterizedDataView(amalgamationDataQuery, amalgamationDic);
+
+                            return innerAmalgamationDataView;
+
+                        });
+                        
                         if (amalgamationDataView != null && amalgamationDataView.Count > 0 && curProductPackType == "Carton")
                         {
                             ICollection<ShoppingCartItem> cartItemList = customer.ShoppingCartItems;
@@ -211,11 +240,11 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 else
                 {
                     //Get product categories
-                    List<int> categoryIdsList = new List<int>();
-                    foreach (var category in productCategories)
-                    {
-                        categoryIdsList.Add(category.CategoryId);
-                    }
+                    //List<int> categoryIdsList = new List<int>();
+                    //foreach (var category in productCategories)
+                    //{
+                    //    categoryIdsList.Add(category.CategoryId);
+                    //}
 
                     //get product whatamI and pack type
                     string curProductPackType = "";
@@ -236,7 +265,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                     }
 
                     //use product whatami and categories to check if amalgamation is on, via function
-                    featuredProductId = curProductWhatAmIId != 0 ? CheckAmalgamation(categoryIdsList, curProductWhatAmIId) : 0;
+                    featuredProductId = curProductWhatAmIId != 0 ? CheckAmalgamation(curProductWhatAmIId, product.Id) : 0; //categoryIdsList, 
                     //return featured productid
                                                             
                     //do amalgamation checks, else just use regular cart price calculation
@@ -381,10 +410,17 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
             DBManager manager = new DBManager();
             List<int> categoryGroupMemberIdsList = new List<int>();
 
+
+            DataView categoryGroupMembersDataView = cacheManager.Get("categoryGroupMembersAmalgamation" + groupId.ToString(), 60, () => {
+
             string groupIdDataQuery = "EXEC usp_SelectGBSAllCategoryGroupMembers @amalgamationGroupId";
             Dictionary<string, Object> categoryGroupMembersDic = new Dictionary<string, Object>();
             categoryGroupMembersDic.Add("@amalgamationGroupId", groupId);
-            DataView categoryGroupMembersDataView = manager.GetParameterizedDataView(groupIdDataQuery, categoryGroupMembersDic);
+            DataView innerCategoryGroupMembersDataView = manager.GetParameterizedDataView(groupIdDataQuery, categoryGroupMembersDic);
+
+                return innerCategoryGroupMembersDataView;
+
+            });
 
             if (categoryGroupMembersDataView.Count > 0)
             {
@@ -401,30 +437,40 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
         }
 
         #region AmalgamtionSpecAttrFunctions
-        private int CheckAmalgamation(List<int> categoryIds, int whatAmIId)
+        private int CheckAmalgamation(int whatAmIId, int productId) //List<int> categoryIds,
         {
             DBManager manager = new DBManager();
             List<int> featuredIdsList = new List<int>();
             int featuredProductID = 0;
 
-            string amalgamationCheck = "EXEC usp_SelectGBSAmalgamationFeaturedIds @CategoryId, @WhatAmI";
+            string amalgamationCheck = "EXEC usp_SelectGBSAmalgamationFeaturedIds  @specificationAttributeOptionId"; //@CategoryId,
 
             //foreach product category query to see if amalgamation is on
-            foreach (var categoryId in categoryIds)
-            {
-
+            //foreach (var categoryId in categoryIds)
+            //{
+            
+            DataView amalgamationCheckDataView = cacheManager.Get("checkSpecAttrAmalgamation" + productId.ToString(), 60, () => {
+                
                 Dictionary<string, Object> amalgamationCheckDic = new Dictionary<string, Object>();
-                amalgamationCheckDic.Add("@CategoryId", categoryId);
-                amalgamationCheckDic.Add("@WhatAmI", whatAmIId);
+                //amalgamationCheckDic.Add("@CategoryId", categoryId);
+                amalgamationCheckDic.Add("@specificationAttributeOptionId", whatAmIId);
 
-                DataView amalgamationCheckDataView = manager.GetParameterizedDataView(amalgamationCheck, amalgamationCheckDic);
+                DataView innerAmalgamationCheckDataView = manager.GetParameterizedDataView(amalgamationCheck, amalgamationCheckDic);
                 //if is on add that category data(catid, featuredid) to a list
-                if (amalgamationCheckDataView.Count > 0)
+
+                return innerAmalgamationCheckDataView;
+
+            });
+
+            if (amalgamationCheckDataView.Count > 0)
                 {
-                    featuredIdsList.Add(Int32.Parse(amalgamationCheckDataView[0]["FeaturedProductId"].ToString()));
+                    for (int i = 0; i < amalgamationCheckDataView.Count; i++)
+                    {
+                        featuredIdsList.Add(Int32.Parse(amalgamationCheckDataView[i]["FeaturedProductId"].ToString()));
+                    }                  
                 }
 
-            }
+            //}
 
             //list will usually only have 1 member
             //in the event of two a comparision between the featured ids price must be made
