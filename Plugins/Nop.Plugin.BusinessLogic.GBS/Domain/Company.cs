@@ -132,73 +132,79 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public List<CategoryModel> GetNonMarketCenterCompanyCategories(int parentCompanyId)
         {
 
-            List<CategoryModel> categories = new List<CategoryModel>();
-            
-            try
+            List<CategoryModel> NMCcategories = new List<CategoryModel>();
+            NMCcategories = cacheManager.Get("GetNonMarketCenterCompanyCategories" + parentCompanyId, 60, () =>
             {
-                DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
-                    Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
-                    nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
+                List<CategoryModel> categories = new List<CategoryModel>();
 
-                    string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
-                    DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
-
-                    return innerCompanyDataView;
-                });
-
-                if (nonMarketCenterCompanyDataView.Count > 0)
+                try
                 {
+                            DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
+                                Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
+                                nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
 
-                    for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
-                    {
+                                string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
+                                DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
 
-                        Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
-                        ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
-                        CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
-                        catalogPagingFilteringModel.PageSize = 1;
-                        //this.PagingFilteringContext = catalogPagingFilteringModel;
-                        CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-                        this.Name = categoryModel.Name;
-                        this.Description = categoryModel.Description;
-                        this.SeName = categoryModel.SeName;
+                                return innerCompanyDataView;
+                            });
 
-                        MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
+                            if (nonMarketCenterCompanyDataView.Count > 0)
+                            {
+
+                                for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
+                                {
+
+                                    Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
+                                    ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+                                    CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+                                    catalogPagingFilteringModel.PageSize = 1;
+                                    //this.PagingFilteringContext = catalogPagingFilteringModel;
+                                    CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+                                    this.Name = categoryModel.Name;
+                                    this.Description = categoryModel.Description;
+                                    this.SeName = categoryModel.SeName;
+
+                                    MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
                         
-                        //IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
-                        //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
+                                    //IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+                                    //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
 
-                        //this.PictureModel = categoryModel.PictureModel;
+                                    //this.PictureModel = categoryModel.PictureModel;
                         
-                        DataView companyDataView = cacheManager.Get("company" + category.Id, 60, () => {
-                            Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-                            companyDic.Add("@CategoryId", category.Id);
+                                    DataView companyDataView = cacheManager.Get("company" + category.Id, 60, () => {
+                                        Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+                                        companyDic.Add("@CategoryId", category.Id);
 
-                            string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
-                            DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+                                        string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+                                        DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
-                            return innerCompanyDataView;
-                        });
+                                        return innerCompanyDataView;
+                                    });
 
-                        //if (companyDataView.Count > 0)
-                        //{
-                        //    categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
-                        //    //description text stuff like pricing and stuff 
-                        //}
+                                    //if (companyDataView.Count > 0)
+                                    //{
+                                    //    categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
+                                    //    //description text stuff like pricing and stuff 
+                                    //}
 
-                        categories.Add(categoryModel);
+                                    categories.Add(categoryModel);
 
-                    }
+                                }
 
-                }
-            }catch(Exception ex)
-            {
-                logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
+                            }
+                        }catch(Exception ex)
+                        {
+                            logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
                 
-                throw ex;
+                            throw ex;
 
-            }        
-            
-            return categories;
+                        }
+                return categories;
+            });
+
+          
+            return NMCcategories;
             
         }
         
