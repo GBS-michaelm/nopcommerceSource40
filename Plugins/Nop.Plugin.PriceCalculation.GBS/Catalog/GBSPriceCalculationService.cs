@@ -105,7 +105,7 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 
                 });
 
-                if (amalgamationCheckDataView.Count < 1)
+                if (amalgamationCheckDataView == null || amalgamationCheckDataView.Count < 1)
                 {
                     useCategoryAmalgamation = true;
                 }
