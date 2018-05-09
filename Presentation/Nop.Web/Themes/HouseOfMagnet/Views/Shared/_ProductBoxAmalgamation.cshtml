@@ -176,6 +176,9 @@
                     displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
                     displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
                     displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3centamt]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
                     displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
                     <span class="actual-price">@displayPriceString</span>
                 }

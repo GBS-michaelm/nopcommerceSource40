@@ -11,10 +11,10 @@ namespace Nop.Plugin.Catalog.GBS
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapGenericPathRoute("CategoryGenericUrl",
-                                       "{generic_se_name}",
-                                       new { controller = "Catalog", action = "Category" },
-                                       new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
+            //routes.MapGenericPathRoute("CategoryGenericUrl",
+            //                           "{generic_se_name}",
+            //                           new { controller = "Catalog", action = "Category" },
+            //                           new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
 
 
             //  ViewEngines.Engines.Insert(0, new GBSCatalogViewEngine());
