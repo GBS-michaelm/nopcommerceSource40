@@ -3150,6 +3150,8 @@
     <Content Include="Themes\PurplePizza\Views\Product\ProductTemplate.Simple.cshtml" />
     <Content Include="Themes\PurplePizza\Views\Product\_ProductPrice.cshtml" />
     <Content Include="Themes\PurplePizza\Views\Product\_ProductTierPrices.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.ProductsInGridOrLinesExtraData.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxExtraData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Administration\Views\Shared\EditorTemplates\" />
