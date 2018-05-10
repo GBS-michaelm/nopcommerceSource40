@@ -148,6 +148,18 @@
       <Name>Nop.Web.Framework</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
+      <Project>{4f1f649c-1020-45be-a487-f416d9297ff3}</Project>
+      <Name>Nop.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Catalog.GBS\Nop.Plugin.Catalog.GBS.csproj">
+      <Project>{4ce2d650-1213-4a22-a389-8825885ec516}</Project>
+      <Name>Nop.Plugin.Catalog.GBS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Order.GBS\Nop.Plugin.Order.GBS.csproj">
+      <Project>{ae79e188-83b5-490c-a7cb-733383122457}</Project>
+      <Name>Nop.Plugin.Order.GBS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
