@@ -307,7 +307,8 @@ namespace Nop.Plugin.Catalog.GBS.Factories
 
             if (result.Count > 0)
             {
-                if (fpid is DBNull) { return null; }
+                var temp = 0; ;
+                if (!int.TryParse(fpid.ToString(), out temp)) { return null; }
                 featuredProductId = (int)result[0]["FeaturedProductId"];
                 if (featuredProductId == 0)
                 {
