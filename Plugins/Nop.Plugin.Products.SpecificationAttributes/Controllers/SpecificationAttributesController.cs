@@ -41,6 +41,7 @@ using Nop.Plugin.Widgets.CustomersCanvas.Services;
 using Nop.Core.Plugins;
 using Nop.Plugin.Catalog.GBS;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -1318,10 +1319,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             var product = _productService.GetProductById(productID);
             decimal finalprice = product.Price;
 
-            foreach (var price in product.TierPrices)
+            var tieredPrices = _productModelFactory.PrepareProductDetailsModel(product).TierPrices;
+            foreach (var price in tieredPrices)
             {
-                if (quantity >= price.Quantity)
-                    finalprice = price.Price;
+                if (quantity >= price.Quantity) 
+                    finalprice = decimal.Parse(price.Price, NumberStyles.Currency); 
             }
             return Json(finalprice.ToString("0.00"), JsonRequestBehavior.AllowGet);
         }

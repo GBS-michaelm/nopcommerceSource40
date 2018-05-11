@@ -303,8 +303,11 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             string select = "EXEC usp_SelectTblNopCategory @categoryId";
             DataView result = manager.GetParameterizedDataView(select, paramDicEx);
             int featuredProductId = 0;
+            var fpid = result[0]["FeaturedProductId"];
+
             if (result.Count > 0)
             {
+                if (fpid is DBNull) { return null; }
                 featuredProductId = (int)result[0]["FeaturedProductId"];
                 if (featuredProductId == 0)
                 {

@@ -13,8 +13,8 @@ namespace Nop.Plugin.Catalog.GBS
         {
             //routes.MapGenericPathRoute("CategoryGenericUrl",
             //                           "{generic_se_name}",
-            //                           new { controller = "Catalog", action = "Category" },
-            //                           new[] { "Nop.Plugin.Catalog.GBS.Controllers" });
+            //                           new { controller = "GBSCatalog", action = "Category" },
+            //                           new[] { "Nop.Plugin.Catalog.GBS.Controllers", "Nop.Web.Controllers" });
 
 
             //  ViewEngines.Engines.Insert(0, new GBSCatalogViewEngine());
