@@ -141,7 +141,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
         }
 
-        //[OutputCache(Duration = 3600, VaryByParam = "*")]
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
 
