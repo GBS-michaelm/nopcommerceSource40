@@ -62,17 +62,18 @@
                 }
                 @if (result.Count() == 4 && productService.GetProductById(productId).TierPrices.Count() > 0)
                 {
-                    var tier1price = productService.GetProductById(productId).TierPrices.First().Price;
-                    var tier1Qty = productService.GetProductById(productId).TierPrices.First().Quantity;
+                    var packType = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var eachUnit = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var eachQuantity = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var displayTemplate = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display").FirstOrDefault().SpecificationAttributeOption.Name; ;
+
+                    var tier1price = productService.GetProductById(productId).TierPrices.Count() > 0 ? productService.GetProductById(productId).TierPrices.First().Price : product.Price;
+                    var tier1Qty = productService.GetProductById(productId).TierPrices.Count() > 0 ? productService.GetProductById(productId).TierPrices.First().Quantity : int.Parse(eachQuantity);
                     var tier2price = productService.GetProductById(productId).TierPrices.Count() > 1 ? productService.GetProductById(productId).TierPrices.ElementAt(1).Price : 0;
                     var tier2Qty = productService.GetProductById(productId).TierPrices.Count() > 1 ? productService.GetProductById(productId).TierPrices.ElementAt(1).Quantity : 0;
                     var tier3price = productService.GetProductById(productId).TierPrices.Count() > 2 ? productService.GetProductById(productId).TierPrices.ElementAt(2).Price : 0;
                     var tier3Qty = productService.GetProductById(productId).TierPrices.Count() > 2 ? productService.GetProductById(productId).TierPrices.ElementAt(2).Quantity : 0;
 
-                    var packType = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
-                    var eachUnit = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
-                    var eachQuantity = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name;
-                    var displayTemplate = specificationAttributeService.GetProductSpecificationAttributes(productId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display").FirstOrDefault().SpecificationAttributeOption.Name; ;
                     var displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 0 ? displayTemplate.Replace("[pricetier1qty]", tier1Qty.ToString()) : "";
                     displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier1qtyXeachqty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
                     displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt]", Math.Round(tier1price, 2).ToString()) : displayPriceString;
