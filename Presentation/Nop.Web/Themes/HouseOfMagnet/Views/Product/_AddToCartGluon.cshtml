@@ -75,7 +75,7 @@
                     </div>
                     @if (Model.AddToCart.AllowedQuantities.Count > 0)
                     {
-                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty-dropdown form-control" })
+                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty-dropdown form-control qty-input" })
                         <script>
                             function setPrice() {
                                     var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)').val());
@@ -182,7 +182,7 @@
     }
 
 
-    string url = "/canvas?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&categoryid=" + categoryID + "&qty=";
+    string url = "/gluon?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&categoryid=" + categoryID + "&qty=";
 
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
     <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
