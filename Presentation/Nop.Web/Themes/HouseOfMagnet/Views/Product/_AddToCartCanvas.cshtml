@@ -72,7 +72,7 @@
                     </div>
                     @if (Model.AddToCart.AllowedQuantities.Count > 0)
                     {
-                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control" })
+                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control qty-input" })
                         <script>
                             function setPrice() {
                                     var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)').val());
