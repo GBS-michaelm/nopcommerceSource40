@@ -197,3 +197,40 @@
             }
         });
     </script>*@
+
+<style>
+    /*-----Recolor Top Bar---*/
+    .header-upper {
+        background-color: #6c8baa;
+        border-bottom: 8px solid #022c5c;
+    }
+
+    /*-----Reveal hidden back link---*/
+    .pre-header-back-link {
+        display: inherit !important;
+    }
+
+    /*-----Reverse all header icons, links, and text to white---*/
+    .shippingall, .flyout-main-wrapper .shopping-cart-link .cart-label, .header-top-right ul li a, .flyout-main-wrapper .shopping-cart-link .cart-qty {
+        color: #ffffff;
+    }
+
+    .flyout-main-wrapper .shopping-cart-link .ico-cart {
+        background: url(/Themes/HouseOfMagnet/Content/images/cart-icon_white.png) no-repeat 0px 0px;
+    }
+
+    .pre-header-back-link .topic-html-content a {
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+        .pre-header-back-link .topic-html-content a:hover {
+            color: #022c5c !important;
+        }
+
+    /*-----Hide header links, main navigation, and parts of the footer---*/
+    .header-lower, .newmenu, div .header-menu .row, a.ico-account, .header-top-right ul li.register, .header-top-right ul li.login, .header-top-right ul li.logout, .header-top-right ul li.my-account, .header-top-right ul li.my-wishlist, .goToTop #flyout-cart .shopping-cart-link, div#aboutUsSection, .row.footer-middle, .pre-header-promo-text {
+        display: none !important;
+    }
+
+</style>
