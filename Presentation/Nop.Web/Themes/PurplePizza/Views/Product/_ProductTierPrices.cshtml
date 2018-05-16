@@ -95,6 +95,10 @@
                         displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
                         displayPriceString = productService.GetProductById(productId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
                     }
+                    else if (displayTemplate.Contains("pricetier"))
+                    {
+                        displayPriceString = "$" + Math.Round(product.Price / Int32.Parse(eachQuantity), 2).ToString() + " ea";
+                    }
                     if (eachQuantity != "1")
                     {
                         <span id="measurementEquation">1 @packType  = @eachQuantity @eachUnit<span>s</span></span>

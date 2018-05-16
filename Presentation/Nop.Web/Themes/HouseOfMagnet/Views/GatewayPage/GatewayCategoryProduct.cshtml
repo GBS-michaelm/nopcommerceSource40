@@ -104,8 +104,11 @@
                     displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
                     displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
                     displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
-                }
-                <div class="gateway-pricing">@displayPriceString</div>
+                    else if (displayTemplate.Contains("pricetier"))
+                    {
+                        displayPriceString = "$" + (Model.price / Int32.Parse(eachQuantity)).ToString() + " ea";
+                    }
+                    <div class="gateway-pricing">@displayPriceString</div>
             }
             else
             {

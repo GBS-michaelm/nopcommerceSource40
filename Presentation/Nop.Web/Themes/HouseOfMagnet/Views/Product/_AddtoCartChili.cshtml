@@ -255,14 +255,7 @@
                     setPrice();
                 });
             };
-            function onUpdateReady() {
-                if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
-                    $(".qty-input").each(function (index) {
-                        setPrice();
-                    });
-                }
-            }
-            window.applicationCache.addEventListener('updateready', onUpdateReady);
+
         </script>
 
     }
