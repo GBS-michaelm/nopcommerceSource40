@@ -5,6 +5,7 @@
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
@@ -39,26 +40,30 @@
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
         @*<div class="wishlist-compare-wrapper">
-            @if (!Model.ProductPrice.DisableWishlistButton)
-            {
-                <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
-            }
-            @if (!Model.ProductPrice.DisableAddToCompareListButton)
-            {
-                <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;" />
-            }
-        </div>*@
+                @if (!Model.ProductPrice.DisableWishlistButton)
+                {
+                    <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
+                }
+                @if (!Model.ProductPrice.DisableAddToCompareListButton)
+                {
+                    <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;" />
+                }
+            </div>*@
     </div>
     <div class="caption">
         <div class="details">
             <h3 class="product-title">
                 <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.ShortDescription</a>
             </h3>
- 	    @*Html.Widget("product_artist_name", Model.Id)*@      
-            <div class="prod-box-sku" style="text-align: center;">@Model.Sku</div>
+
+            @{
+                Product product = _productService.GetProductById(Model.Id);
+            }
+            @*Html.Widget("product_artist_name", Model.Id)*@
+            <div class="prod-box-sku" style="text-align: center;">@product.Sku</div>
             <div class="prices">
-                @{ 
-                    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => 
+                @{
+                    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
                     (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display"
                     || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type"
                     || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
@@ -92,17 +97,18 @@
                     displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
                     displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
                     <span class="actual-price">@displayPriceString</span>
-                }else
+                }
+                else
                 {
                     if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                     {
-                    <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                        <span class="price old-price">@Model.ProductPrice.OldPrice</span>
                     }
                     <span class="price actual-price">@Model.ProductPrice.Price</span>
                 }
                 @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                {
+                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <span class="tax-shipping-info">
@@ -117,15 +123,15 @@
                 }
             </div>
             @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                int ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
                 {
-                    int ratingPercent = 0;
-                    if (Model.ReviewOverviewModel.TotalReviews != 0)
-                    {
-                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
-                    }
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                }
                 <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
                     @if (!Model.ProductPrice.DisableWishlistButton)
-                {
+                    {
                         <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
                     }
                     <div class="rating">
@@ -138,7 +144,7 @@
                 @Html.Raw(Model.ShortDescription)
             </p>
             <div class="add-info">
-		        @Html.Widget("productbox_addinfo_before", Model.Id)  
+                @Html.Widget("productbox_addinfo_before", Model.Id)
                 @Html.Widget("productbox_addinfo_middle", Model.Id)
                 <div class="buttons">
                     @*<input type="button" value="@T("Products.Details")" class="btn btn-primary product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />*@
@@ -154,8 +160,8 @@
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
                         @*<input type="button" value="@(addToCartText)" class="btn btn-primary product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" />*@
-  <a onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@(addToCartText)</a>
-                    }	
+                        <a onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@(addToCartText)</a>
+                    }
                 </div>
                 @*@Html.Widget("productbox_addinfo_after", Model.Id)*@
             </div>
