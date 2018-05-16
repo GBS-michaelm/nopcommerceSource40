@@ -59,7 +59,8 @@
                 {
                     @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown form-control" })
                     <script>
-                            function setPrice() {
+                        function setPrice() {
+                                    var quantityArray = @Html.Raw(@quantityArray);;
                                     var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.EnteredQuantity)').val());
                                     var selectedQuantityPrice = $.grep(quantityArray, function (e) { return e.Quantity === selectedQuantity })[0].Price;
                                     var selectedQuantityPriceCalculated = selectedQuantityPrice.slice(1) * selectedQuantity;

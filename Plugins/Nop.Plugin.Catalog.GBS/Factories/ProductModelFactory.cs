@@ -296,6 +296,53 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         //    return model;
         //}
 
+        /// <summary>
+        /// Prepare the product tier price models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of tier price model</returns>
+        protected override IList<ProductDetailsModel.TierPriceModel> PrepareProductTierPriceModels(Product product)
+        {
+
+            if (product == null)
+                throw new ArgumentNullException("product");
+            try
+            {
+                var model = product.TierPrices.OrderBy(x => x.Quantity)
+                       .FilterByStore(_storeContext.CurrentStore.Id)
+                       .FilterForCustomer(_workContext.CurrentCustomer)
+                       .FilterByDate()
+                       .RemoveDuplicatedQuantities()
+                       .Select(tierPrice =>
+                       {
+                           decimal taxRate;
+                           var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
+                               _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                           var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+
+                           if (Decimal.Round(price, 2) != price)
+                           {
+                               return new ProductDetailsModel.TierPriceModel
+                               {
+                                   Quantity = tierPrice.Quantity,
+                                   Price = "$"+price.ToString("N3")
+                               };
+                           }
+                           return new ProductDetailsModel.TierPriceModel
+                           {
+                               Quantity = tierPrice.Quantity,
+                               Price = _priceFormatter.FormatPrice(price, false, false)
+                           };
+                       }).ToList();
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                return base.PrepareProductTierPriceModels(product);
+            }
+        }
+
 
         /// <summary>
         /// Prepare the product breadcrumb model

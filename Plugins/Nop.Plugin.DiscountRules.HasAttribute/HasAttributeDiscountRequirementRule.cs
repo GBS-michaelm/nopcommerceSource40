@@ -12,8 +12,8 @@ using System.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using System.Web;
-using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Core.Domain.Catalog;
+using Nop.Web.Factories;
 
 namespace Nop.Plugin.DiscountRules.HasAttribute
 {
@@ -22,17 +22,17 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
         private readonly ISettingService _settingService;
         private readonly HttpContextBase _httpContext;
         private readonly IProductService _productService;
-        private readonly ProductModelFactory _productModelFactory;
+        private readonly IProductModelFactory _productModelFactory;
 
         public HasAttributeDiscountRequirementRule(ISettingService settingService,
             ICategoryService categoryService,
             HttpContextBase httpContext,
             IProductService productService,
-            ProductModelFactory productModelFactory)
+            IProductModelFactory productModelFactory)
         {
             this._settingService = settingService;
             this._httpContext = httpContext;
-            _productService = productService;
+            this._productService = productService;
             this._productModelFactory = productModelFactory;
         }
 
@@ -97,9 +97,9 @@ namespace Nop.Plugin.DiscountRules.HasAttribute
             DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
 
 
-            //Product product = null;
-            //product = _productService.GetProductById(216);
-            //var tieredPrices = _productModelFactory.PrepareProductDetailsModel(product).TierPrices;
+            Product product = null;
+            product = _productService.GetProductById(216);
+            var tieredPrices = _productModelFactory.PrepareProductDetailsModel(product).TierPrices;
 
 
             bool allFound = true;
