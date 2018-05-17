@@ -1,0 +1,171 @@
+﻿@model ProductOverviewModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog;
+@using Nop.Services.Catalog;
+@using Nop.Core.Domain.Catalog;
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+
+    if (ViewBag.catId == null)
+    {
+        ViewBag.catId = 0;
+    }
+
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
+}
+
+<div class="product-item clearfix" data-productid="@Model.Id">
+    @Html.Widget("product_listing_widget", new { id1 = Model.Id, id2 = ViewBag.catId })
+    <div class="picture">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </a>
+        @*<div class="wishlist-compare-wrapper">
+                @if (!Model.ProductPrice.DisableWishlistButton)
+                {
+                    <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
+                }
+                @if (!Model.ProductPrice.DisableAddToCompareListButton)
+                {
+                    <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;" />
+                }
+            </div>*@
+    </div>
+    <div class="caption">
+        <div class="details">
+            <h3 class="product-title">
+                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.ShortDescription</a>
+            </h3>
+
+            @{
+                Product product = _productService.GetProductById(Model.Id);
+            }
+            @*Html.Widget("product_artist_name", Model.Id)*@
+            <div class="prod-box-sku" style="text-align: center;">@product.Sku</div>
+            <div class="prices">
+                @{
+                    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
+                    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display"
+                    || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type"
+                    || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+                    || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit"
+                    ));
+                }
+                @if (result.Count() == 4 && _productService.GetProductById(Model.Id).TierPrices.Count() > 0)
+                {
+                    var tier1price = _productService.GetProductById(Model.Id).TierPrices.First().Price;
+                    var tier1Qty = _productService.GetProductById(Model.Id).TierPrices.First().Quantity;
+                    var tier2price = _productService.GetProductById(Model.Id).TierPrices.Count() > 1 ? _productService.GetProductById(Model.Id).TierPrices.ElementAt(1).Price : 0;
+                    var tier2Qty = _productService.GetProductById(Model.Id).TierPrices.Count() > 1 ? _productService.GetProductById(Model.Id).TierPrices.ElementAt(1).Quantity : 0;
+                    var tier3price = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? _productService.GetProductById(Model.Id).TierPrices.ElementAt(2).Price : 0;
+                    var tier3Qty = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? _productService.GetProductById(Model.Id).TierPrices.ElementAt(2).Quantity : 0;
+
+                    var packType = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var eachUnit = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var eachQuantity = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name;
+                    var displayTemplate = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display").FirstOrDefault().SpecificationAttributeOption.Name; ;
+                    var displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 0 ? displayTemplate.Replace("[pricetier1qty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : "";
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt]", Math.Round(tier1price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1centamt]", Math.Round(tier1price / Int32.Parse(eachQuantity), 2).ToString().TrimStart('0').TrimStart('.')) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qty]", (tier2Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt]", Math.Round(tier2price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2centamt]", Math.Round(tier2price / Int32.Parse(eachQuantity), 2).ToString().TrimStart('0').TrimStart('.')) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3centamt]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.Id).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
+                    <span class="actual-price">@displayPriceString</span>
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                    {
+                        <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                    }
+                    <span class="price actual-price">@Model.ProductPrice.Price</span>
+                }
+                @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                {
+                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                    //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                    //of course, you can modify appropriate locales to include VAT info there
+                    <span class="tax-shipping-info">
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                    </span>
+                }
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                {
+                    <div class="base-price-pangv">
+                        @Model.ProductPrice.BasePricePAngV
+                    </div>
+                }
+            </div>
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                int ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                {
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                }
+                <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                    @if (!Model.ProductPrice.DisableWishlistButton)
+                    {
+                        <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
+                    }
+                    <div class="rating">
+                        <div style="width: @(ratingPercent)%">
+                        </div>
+                    </div>
+                </div>
+            }
+            <p class="description">
+                @Html.Raw(Model.ShortDescription)
+            </p>
+            <div class="add-info">
+                @Html.Widget("productbox_addinfo_before", Model.Id)
+                @Html.Widget("productbox_addinfo_middle", Model.Id)
+                <div class="buttons">
+                    @*<input type="button" value="@T("Products.Details")" class="btn btn-primary product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />*@
+                    @if (!Model.ProductPrice.DisableBuyButton)
+                    {
+                        var addToCartText = T("ShoppingCart.AddToCart").Text;
+                        if (Model.ProductPrice.IsRental)
+                        {
+                            addToCartText = T("ShoppingCart.Rent").Text;
+                        }
+                        if (Model.ProductPrice.AvailableForPreOrder)
+                        {
+                            addToCartText = T("ShoppingCart.PreOrder").Text;
+                        }
+                        @*<input type="button" value="@(addToCartText)" class="btn btn-primary product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" />*@
+                        <a onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" class="button button-3d button-rounded button-darkgreen"><i class="icon-search"></i>@(addToCartText)</a>
+                    }
+                </div>
+                @*@Html.Widget("productbox_addinfo_after", Model.Id)*@
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -14,7 +14,8 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 @using Nop.Plugin.BusinessLogic.GBS.Models;
-
+@using Nop.Services.Logging;
+@using System.Web.Mvc;
 
 
 @{
@@ -22,12 +23,12 @@
 
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-accessory.css", themeName));
-       
+
 }
 
-@{ 
+@{
     IProductService productService = EngineContext.Current.Resolve<IProductService>();
-
+    ILogger logger = EngineContext.Current.Resolve<ILogger>();
 }
 
 <div class="style-msg successmsg">
@@ -47,18 +48,33 @@
 </div>
 
 
-<div id = "accessoryTopSection" >
+<div id="accessoryTopSection">
+    @{
+        try
+        {
+            @Html.Action("AccessoryCategories", "AccessoryPage", new { groupid = Model.groupId })
+        }
+        catch (Exception ex)
+        {
+            string groupIdDefault = "empty";
+            groupIdDefault = !string.IsNullOrEmpty(Model.groupId.ToString()) ? Model.groupId.ToString() : groupIdDefault;
 
-        @Html.Action("AccessoryCategories", "AccessoryPage", new {groupid = Model.groupId})
+            //log the error
+            logger.Error("Accessory Page Load Error. groupId : " + groupIdDefault + " ", ex);
+
+            //redirect to cart
+            Url.RequestContext.HttpContext.Response.Redirect("/cart");
+        }
+    }
+
 
 </div>
 <div id="accessoryBottomSection">
-       
-        @*@Html.Action("CrossSellProducts", "Product")*@     
-        @* , new { productId1 = 4429 } *@
 
-        @Html.Action("AccessoryCrossSells", "AccessoryPage", new { productId = Model.productId })  
-        
+    @*@Html.Action("CrossSellProducts", "Product")*@
+    @* , new { productId1 = 4429 } *@
+
+    @Html.Action("AccessoryCrossSells", "AccessoryPage", new { productId = Model.productId })
+
 
 </div>
-   

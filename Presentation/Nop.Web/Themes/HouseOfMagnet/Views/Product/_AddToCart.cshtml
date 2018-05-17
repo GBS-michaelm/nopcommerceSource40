@@ -1,6 +1,30 @@
 ﻿@model ProductDetailsModel.AddToCartModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
+@using Nop.Services.Catalog;
+@using Nop.Web.Factories;
+
+@{
+    var minQuantity = Model.EnteredQuantity;
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _productModelFactory = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductModelFactory>();
+    var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(_productService.GetProductById(Model.ProductId));
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    var quantityArray = Newtonsoft.Json.JsonConvert.SerializeObject(productDetailsModel.TierPrices);
+    <script>
+        var eachQuantity = @eachQuantity;
+        var quantityArray = @Html.Raw(@quantityArray);;
+    </script>    
+}
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
@@ -20,7 +44,7 @@
                   @Model.CustomerEnteredPriceRange
               </div>
           </div>
-    }
+        }
     @if (!String.IsNullOrEmpty(Model.MinimumQuantityNotification))
     {
         <div class="min-qty-notification">@Model.MinimumQuantityNotification</div>
@@ -35,13 +59,49 @@
                 @if (Model.AllowedQuantities.Count > 0)
                 {
                     @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown form-control" })
+                    <script>
+                        function setPrice() {
+                                    var quantityArray = @Html.Raw(@quantityArray);;
+                                    var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.EnteredQuantity)').val());
+                                    var selectedQuantityPrice = $.grep(quantityArray, function (e) { return e.Quantity === selectedQuantity })[0].Price;
+                                    var selectedQuantityPriceCalculated = selectedQuantityPrice.slice(1) * selectedQuantity;
+                                    $(".newprice-value-" +@Model.ProductId).text("$" + selectedQuantityPriceCalculated.toFixed(2));
+                                    var eachPrice = selectedQuantityPrice.slice(1);
+                                    $(".eachprice-value-" +@Model.ProductId).text("(Ea. $" + eachPrice +")");
+                            }
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => Model.EnteredQuantity)").change(function (event) {
+                                    setPrice();
+                                });
+                                $(window).load(function () {
+                                    setPrice();
+                                });
+
+                            });
+
+                    </script>
                 }
                 else
                 {
+                    <script>
+                            function decQ(e) {
+                                if (parseInt(e.value) > @minQuantity){
+                                    DecreaseQuantity(e);
+                                }
+                            }
+                            function chgQ(e) {
+                                if (parseInt(e.value) > @minQuantity){
+                                    ChangeQuantity1(e);
+                                } else {
+                                    e.value = "@minQuantity";
+                                    ChangeQuantity1(e);
+                                }
+                            }
+                    </script>
                     <div class="addtocart-quantity-box">
-                        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input form-control" ,@onkeyup="ChangeQuantity1(this)", @data_productid = Model.ProductId})
+                        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "chgQ(this)", @data_productid = Model.ProductId })
                         <span class="increase-quantity" onclick="IncreaseQuantity(@Html.FieldIdFor(model => model.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                        <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.FieldIdFor(model => model.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                        <span class="decrease-quantity" onclick="decQ(@Html.FieldIdFor(model => Model.EnteredQuantity))"><i class="fa fa-minus" aria-hidden="true"></i></span>
                     </div>
                     //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                     <script type="text/javascript">
@@ -85,20 +145,53 @@
                 </div>
             }
 	    </div>
-    }
+                }
     @Html.Widget("productdetails_add_info", Model.ProductId)
 </div>
-<script type="text/javascript">
-    var done = false;
-    var everythingLoaded = setInterval(function () {
-        if (/loaded|complete/.test(document.readyState) && !done) {
-            clearInterval(everythingLoaded);
-            $(".qty-input").each(function (index) {
-                ChangeQuantity1(this);
-            }); 
-          //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
-            done = true;
-        }
-    }, 100);
-</script>
+                if (!(Model.AllowedQuantities.Count > 0))
+                {
+                    <script type="text/javascript">
+                        //var done = false;
+                        //var everythingLoaded = setInterval(function () {
+                        //    if (/loaded|complete/.test(document.readyState) && !done) {
+                        //        clearInterval(everythingLoaded);
+                        //        $(".qty-input").each(function (index) {
+                        //            ChangeQuantity1(this);
+                        //        });
+                        //        //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+                        //        done = true;
+                        //    }
+                        //}, 100);
+                        document.onreadystatechange = function () {
+                            if (document.readyState === "complete") {
+                                $(".qty-input").each(function (index) {
+                                    ChangeQuantity1(this);
+                                });
+                            }
+                        }
+                    </script>
+                }
+                else
+                {
+                    <script type="text/javascript">
+                        //var done = false;
+                        //var everythingLoaded = setInterval(function () {
+                        //    if (/loaded|complete/.test(document.readyState) && !done) {
+                        //        clearInterval(everythingLoaded);
+                        //        $(".qty-input").each(function (index) {
+                        //            setPrice();
+                        //        });
+                        //        done = true;
+                        //    }
+                        //}, 100);
+                        document.onreadystatechange = function () {
+                            if (document.readyState === "complete") {
+                                $(".qty-input").each(function (index) {
+                                    setPrice();
+                                });
+                            }
+                        }
+                    </script>
+
+                    }
                 }

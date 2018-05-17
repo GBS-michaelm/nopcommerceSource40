@@ -16,6 +16,22 @@
     Model.CustomProperties = helpers.GetNoteCardSetCount();
 }
 
+<script type="text/javascript" src="/Themes/SimplexTheme/Content/js/modal.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        SetImageModal('.detailimg');
+
+    });
+
+</script>
+<style>
+    .detailimg {
+        cursor:pointer;
+    }
+</style>
+@Html.Partial("_ImageModal")
+
 <div class="order-summary-content">
     @Html.Widget("order_summary_content_before")
     @Html.Partial("_OrderReviewData", Model.OrderReviewData)
@@ -34,19 +50,19 @@
         }
         @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 
-    using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
-    {
+        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
+        {
 
-        <div class="update-continue-button">
-            <div class="common-buttons pull-right">
-                <div class="continue-shopping">
-                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black btn-order-summary-continue-shopping" />
-                </div>
-                <div class="update-cart">
-                    <button type="submit" name="checkout" value="checkout" class="button button-rounded button-reveal button-large button-green tright btn-order-summary-check-out-top"><i class="icon-line-arrow-right"></i> <span>@T("Checkout.Button")</span></button>
+            <div class="update-continue-button">
+                <div class="common-buttons pull-right">
+                    <div class="continue-shopping">
+                        @*<input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" />*@
+                    </div>
+                    <div class="update-cart">
+                        <button type="submit" name="checkout" value="checkout" class="button button-rounded button-reveal button-large button-green tright btn-order-summary-check-out-top"><i class="icon-line-arrow-right"></i> <span>@T("Checkout.Button")</span></button>
+                    </div>
                 </div>
             </div>
-        </div>
             @Html.AntiForgeryToken()
             <div class="panel panel-default cart-item-table">
                 <table class="cart table table-bordered">
@@ -105,7 +121,9 @@
                                 {
                                     <td class="product-picture">
                                         @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>*@
-                                        @Html.Widget("product_details_widget", item.ProductId)
+                                        @*@Html.Widget("product_details_widget", item.ProductId)*@
+                                        @Html.Widget("shoppingcart_custom_image", item.Id)
+
                                     </td>
                                 }
                                 <td class="product-info">
@@ -380,102 +398,102 @@
                 {
                     <div class="update-continue-button">
                         <div class="common-buttons pull-right">
-                            <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button button-3d button-small button-rounded button-black" /></div>
+                            <div class="continue-shopping"><input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-link" /></div>
                             <div class="update-cart"><input type="submit" name="updatecart" onclick="ordertable();" value="@T("ShoppingCart.UpdateCart")" class="button button-3d button-small button-rounded button-teal" /></div>
                         </div>
                     </div>
                 }
             </div>
-        if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
-        {
-            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
-            //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
-            //of course, you can modify appropriate locales to include VAT info there
-            <div class="tax-shipping-info">
-                @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
-            </div>
-        }
-
-        <div class="cart-footer row">
-            @Html.Widget("order_summary_cart_footer")
-
-            @if (Model.IsEditable)
+            if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
             {
-                if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                //of course, you can modify appropriate locales to include VAT info there
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </div>
+            }
+
+            <div class="cart-footer row">
+                @Html.Widget("order_summary_cart_footer")
+
+                @if (Model.IsEditable)
                 {
-                    <div class="col-md-12">
-                        <div class="min-amount-warning">
-                            @Model.MinOrderSubtotalWarning
+                    if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                    {
+                        <div class="col-md-12">
+                            <div class="min-amount-warning">
+                                @Model.MinOrderSubtotalWarning
+                            </div>
+                        </div>
+                    }
+                }
+                @*Helpful Information Fully Dynamic Alex Kang*@
+                @if (Model.IsEditable)
+                {
+                    <div class="col-sm-4 col-md-3">
+                        @Html.Partial("HelpfulInformation")
+                    </div>
+                }
+
+                @if (Model.IsEditable)
+                {
+                    <div class="col-sm-4 col-md-3">
+                        <div class="cart-collaterals">
+                            <div class="gbs-panel-white">
+                                @Html.Partial("_DiscountBox", Model.DiscountBox)
+                                @Html.Widget("order_summary_content_deals")
+                            </div>
+                            <div class="gbs-panel-white">
+                                @Html.Partial("_GiftCardBox", Model.GiftCardBox)
+                            </div>
                         </div>
                     </div>
                 }
-            }
-            @*Helpful Information Fully Dynamic Alex Kang*@
-            @if (Model.IsEditable)
-            {
-                <div class="col-sm-4 col-md-3">
-                    @Html.Partial("HelpfulInformation")
-                </div>
-            }
-
-            @if (Model.IsEditable)
-            {
-                <div class="col-sm-4 col-md-3">
-                    <div class="cart-collaterals">
+                @if (Model.IsEditable)
+                {
+                    <div class="col-sm-4 col-md-3">
                         <div class="gbs-panel-white">
-                            @Html.Partial("_DiscountBox", Model.DiscountBox)
-                            @Html.Widget("order_summary_content_deals")
-                        </div>
-                        <div class="gbs-panel-white">
-                            @Html.Partial("_GiftCardBox", Model.GiftCardBox)
+                            @Html.Partial("EstimateShipping", Model.EstimateShipping)
                         </div>
                     </div>
-                </div>
-            }
-            @if (Model.IsEditable)
-            {
-                <div class="col-sm-4 col-md-3">
-                    <div class="gbs-panel-white">
-                        @Html.Partial("EstimateShipping", Model.EstimateShipping)
-                    </div>
-                </div>
-            }
-            <div class="col-xs-offset-0 col-sm-offset-3 col-md-offset-0 col-xs-12 col-sm-6 col-md-3 pull-right order-totals">
-                <div class="totals">
-                    @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
-                    @if (Model.IsEditable)
-                    {
+                }
+                <div class="col-xs-offset-0 col-sm-offset-3 col-md-offset-0 col-xs-12 col-sm-6 col-md-3 pull-right order-totals">
+                    <div class="totals">
+                        @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+                        @if (Model.IsEditable)
+                        {
 
-                        <div class="checkout-buttons">
-                            @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
-                            {
-                                <script type="text/javascript">
-                                    $(document).ready(function () {
-                                        $('#checkout').click(function () {
-                                            //terms of services
-                                            var termOfServiceOk = true;
-                                            if ($('#termsofservice').length > 0) {
-                                                //terms of service element exists
+                            <div class="checkout-buttons">
+                                @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                                {
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#checkout').click(function () {
+                                                //terms of services
+                                                var termOfServiceOk = true;
+                                                if ($('#termsofservice').length > 0) {
+                                                    //terms of service element exists
 
-                                                if (!$('#termsofservice').is(':checked')) {
-                                                    //$("#terms-of-service-warning-box").dialog();
-                                                    $("#terms-of-service-warning-box").modal();
-                                                    termOfServiceOk = false;
+                                                    if (!$('#termsofservice').is(':checked')) {
+                                                        //$("#terms-of-service-warning-box").dialog();
+                                                        $("#terms-of-service-warning-box").modal();
+                                                        termOfServiceOk = false;
+                                                    }
+                                                    else {
+                                                        termOfServiceOk = true;
+                                                    }
+
                                                 }
-                                                else {
-                                                    termOfServiceOk = true;
-                                                }
-
-                                            }
-                                            return termOfServiceOk;
+                                                return termOfServiceOk;
+                                            });
                                         });
-                                    });
-                                </script>
+                                    </script>
                                     <button type="submit" id="checkout" name="checkout" value="checkout" class="button button-rounded button-reveal button-large button-green tright">
                                         <i class="icon-line-arrow-right"></i> <span>@T("Checkout.Button")</span>
                                     </button>
-                            }
-                        </div>
+                                }
+                            </div>
                             <div class="addon-buttons">
                                 @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                                 @Html.Partial("_ButtonPaymentMethod", Model)
@@ -484,13 +502,13 @@
                             <div class="card-image-section-wrap  mt-1">
                                 @Html.Partial("_CardImage")
                             </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-        if (Model.IsEditable)
-        {
-            @Html.Action("CrossSellProducts", "Product")
+            if (Model.IsEditable)
+            {
+                @Html.Action("CrossSellProducts", "Product")
             }
         }
     }
@@ -507,14 +525,14 @@
 </div>
 @*JavaScript for mobile and desktop resize*@
 <script type="text/javascript">
-                                    function ordertable() {
-                                        var docWidth = $(document).width();
-                                        if (docWidth > 767) {
-                                            //mobile
-                                            $("tr.mobile-duplicate").html("");
-                                        } else {
-                                            //desktop
-                                            $("tr.desktop-original").html("");
-                                        }
-                                    }
+    function ordertable() {
+        var docWidth = $(document).width();
+        if (docWidth > 767) {
+            //mobile
+            $("tr.mobile-duplicate").html("");
+        } else {
+            //desktop
+            $("tr.desktop-original").html("");
+        }
+    }
 </script>

@@ -1,10 +1,58 @@
 ﻿@model MiniShoppingCartModel
 @using Nop.Web.Models.ShoppingCart;
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core.Domain.Orders;
+@using Nop.Services.Catalog;
+
+@{ 
+    /* This adds custom images to cart */
+    Dictionary<int, string> imgUrlDict = new Dictionary<int, string>();
+    Dictionary<int, string> attrDict = new Dictionary<int, string>();
+    var _workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+    var parser = EngineContext.Current.Resolve<IProductAttributeParser>();
+    IList<string> attrValues = null;
+    var cart = _workContext.CurrentCustomer.ShoppingCartItems
+    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+    foreach (var item in cart)
+    {
+        if (item.StoreId == _storeContext.CurrentStore.Id)
+        {
+
+            var productAttributeMappings = parser.ParseProductAttributeMappings(item.AttributesXml);
+            if (productAttributeMappings != null)
+            {
+                foreach (var productAttributeMapping in productAttributeMappings)
+                {
+                    if (productAttributeMapping.ProductAttribute.Name == "CustomImgUrl")
+                    {
+                        attrValues = parser.ParseValues(item.AttributesXml, productAttributeMapping.Id);
+                        if (!imgUrlDict.ContainsKey(item.Id))
+                        {
+                            imgUrlDict.Add(item.Id, attrValues[0]);
+                        }
+                    }
+
+                }
+            }
+
+            if (!attrDict.ContainsKey(item.Id))
+            {
+                attrDict[item.Id] = item.AttributesXml;
+            }
+        }
+    }
+
+
+}
 <div id="flyout-cart" class="flyout-main-wrapper">
     <div class="shopping-cart-link">
         <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
             <span class="cart-label">@T("ShoppingCart")</span>
-            <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.TotalProducts) @T("admin.currentcarts.totalitems")</span>
+            <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.Items.Count) @T("admin.currentcarts.totalitems")</span>
         </a>
     </div>
     <div class="flyout-cart-wrapper" id="flyout-cart-wrapper">
@@ -16,7 +64,7 @@
                 }
                 else
                 {
-                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts))))
+                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.Items.Count))))
                 }
             </div>
             @if (Model.TotalProducts > 0)
@@ -29,10 +77,26 @@
                             @if (Model.ShowProductImages)
                             {
                                 <div class="picture">
-                                    @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
-                                        <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
-                                    </a>*@
-                                    @Html.Widget("product_details_widget", item.ProductId)
+                                    @if (imgUrlDict.ContainsKey(item.Id) && !attrDict[item.Id].Contains("515"))
+                                    {
+                                        string url = imgUrlDict[item.Id];
+                                        if (!url.Contains("undefined"))
+                                        {
+                                            @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@url" title="@item.Picture.Title" /></a>*@
+                                        @Html.Widget("shoppingcart_custom_image", item.Id)
+
+                                        }
+                                    else
+                                    {
+                                            @Html.Widget("product_details_widget", item.ProductId)
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        @*<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>*@
+                                        @Html.Widget("product_details_widget", item.ProductId)
+                                    }
                                 </div>
                             }
                             <div class="product">

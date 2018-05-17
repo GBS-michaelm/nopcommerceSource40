@@ -18,6 +18,9 @@
     }
 
     var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/search-it.js");
+
 }
 
 @using Nop.Core.Domain.Common;
@@ -32,15 +35,15 @@
         <div class="pager clearfix">
             @{
 
-                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+                //var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
             }
-            @if (!pager.IsEmpty())
+            @*@if (!pager.IsEmpty())
             {
                 @pager
-            }
-            @Html.Widget("categorydetails_bottom", Model.Id)
+            }*@
+            @*@Html.Widget("categorydetails_bottom", Model.Id)*@
         </div>
-        @Html.Widget("categorydetails_top", Model.Id)
+        @*@Html.Widget("categorydetails_top", Model.Id)*@
         @*description*@
         @*@if (!String.IsNullOrWhiteSpace(Model.Description))
             {
@@ -48,7 +51,7 @@
                     @Html.Raw(Model.Description)
                 </div>
             }*@
-        @Html.Widget("categorydetails_before_subcategories", Model.Id)
+        @*@Html.Widget("categorydetails_before_subcategories", Model.Id)*@
         @*subcategories*@
         @*@if (Model.SubCategories.Count > 0)
             {
@@ -93,11 +96,11 @@
                     }
                 </div>
             }*@
-        @Html.Widget("categorydetails_before_featured_products", Model.Id)
+        @*@Html.Widget("categorydetails_before_featured_products", Model.Id)*@
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
-            <div class="featured-product-grid">
+            @*<div class="featured-product-grid">
                 <div class="page-title panel-heading">
                     <h1>@T("Products.FeaturedProducts")</h1>
                 </div>
@@ -113,14 +116,14 @@
                         }
                     </div>
                 </div>
-            </div>
+            </div>*@
         }
-        @Html.Widget("categorydetails_after_featured_products", Model.Id)
-        @if (Model.Products.Count > 0)
+        @*@Html.Widget("categorydetails_after_featured_products", Model.Id)*@
+        @*@if (Model.Products.Count > 0)
         {
             @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
-        }
-        @Html.Widget("categorydetails_before_filters", Model.Id)
+        }*@
+        @*@Html.Widget("categorydetails_before_filters", Model.Id)*@
         @*<div class="product-filters-wrapper">
             @*filtering*@
         @*  @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
@@ -136,12 +139,12 @@
                 }
             </div>*@
 
-        @Html.Widget("categorydetails_before_product_list", Model.Id)
+        @*@Html.Widget("categorydetails_before_product_list", Model.Id)*@
         @*product grid and list*@
         @if (Model.Products.Count > 0)
         {
             @*<div class="product-grid clearfix">*@
-            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list col-xs-12 col-sm-12 col-md-12 product-align" : "product-grid col-xs-12 col-sm-4 col-md-4 product-align")">
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list col-xs-12 col-sm-12 col-md-12 product-align" : "product-grid col-xs-12 col-sm-4 col-md-4 product-align")">
                 <div class="row">
                     @foreach (var product in Model.Products)
                     {
@@ -152,9 +155,9 @@
                         </div>
                     }
                 </div>
-            </div>
+            </div>*@
         }
-        <div class="pager clearfix">
+        @*<div class="pager clearfix">
             @{
 
                 pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
@@ -164,6 +167,6 @@
                 @pager
             }
             @Html.Widget("categorydetails_bottom", Model.Id)
-        </div>
+        </div>*@
     </div>
 </div>

@@ -1,0 +1,66 @@
+﻿@model List<int>
+
+@using Nop.Plugin.Catalog.GBS.HtmlHelpers;
+
+@{ 
+    if(ViewData["SelectList"] == null)
+    {
+        ViewData["SelectList"] = new List<SelectListItem>();
+    }
+}
+@Html.FastCategoryListFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
+@*@Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])*@
+
+@*<script>
+    $(document).ready(function () {
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoMultiSelect({
+            select: function (e) {
+                var current = this.value();
+
+                if (this.dataSource.view()[e.item.index()].value === "0") {
+                    this.value("");
+                }
+                else if (current.indexOf("0") !== -1) {
+                    current = $.grep(current, function (value) {
+                        return value !== "0";
+                    });
+
+                    this.value(current);
+                }
+            },
+            change: function (e) {
+                if (this.value().length === 0)
+                    this.value(["0"]);
+            }
+        }).data("kendoMultiSelect");
+    });
+</script>*@
+
+<script>
+    var clicked = false;
+    function KendoLoad1() {
+        if (!clicked ){
+            $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoMultiSelect({
+                select: function (e) {
+                    var current = this.value();
+
+                    if (this.dataSource.view()[e.item.index()].value === "0") {
+                        this.value("");
+                    }
+                    else if (current.indexOf("0") !== -1) {
+                        current = $.grep(current, function (value) {
+                            return value !== "0";
+                        });
+
+                        this.value(current);
+                    }
+                },
+                change: function (e) {
+                    if (this.value().length === 0)
+                        this.value(["0"]);
+                }
+            }).data("kendoMultiSelect");
+        };
+        clicked = true;
+    }
+</script>

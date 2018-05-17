@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\nopcommerceDev\Plugins\Order.GBS\</OutputPath>
+    <OutputPath>..\..\..\publish\Plugins\Order.GBS\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Controllers\ConfigurationGBSController.cs" />
+    <Compile Include="Controllers\CustomerOrderController.cs" />
     <Compile Include="Controllers\GBSOrderController.cs" />
     <Compile Include="CustomTokenProvider.cs" />
     <Compile Include="DataManager.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Orders\OrderExtensions.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\OrderTotalCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

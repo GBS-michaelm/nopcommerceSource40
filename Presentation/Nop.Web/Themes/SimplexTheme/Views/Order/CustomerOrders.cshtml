@@ -7,6 +7,12 @@
     //page class
     Html.AppendPageCssClassParts("html-account-page");
     Html.AppendPageCssClassParts("html-order-list-page");
+
+    string status = "";
+    if (TempData["SelectedTab"] != null)
+    {
+        status = TempData.Peek("SelectedTab").ToString();
+    }
 }
 
 @using Nop.Web.Models.Customer
@@ -117,5 +123,39 @@
             }
         }
         @Html.Widget("order_listing_widget", Model.Orders)
+        @{
+            var pagerModel = Model.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel;
+
+            @*<select class="paging-size-dropdown">
+                <option selected="@(pagerModel.PageSize == 5)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=5 })">5</option>
+                <option selected="@(pagerModel.PageSize == 10)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=10 })">10</option>
+                <option selected="@(pagerModel.PageSize == 15)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=15 })">15</option>
+                <option selected="@(pagerModel.PageSize == 20)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=20 })">20</option>
+                <option selected="@(pagerModel.PageSize == 25)" value="@Url.RouteUrl("CustomerOrders", new { page=pagerModel.PageIndex,status=status, pageSize=25 })">25</option>
+            </select>*@
+
+            var pager = Html.Pager(pagerModel);
+            if (!MvcHtmlString.IsNullOrEmpty(pager))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+
+        }
     </div>
 </div>
+<script type="text/javascript">
+
+    $(function () {
+        // bind change event to select
+        $('.paging-size-dropdown').on('change', function () {
+            var url = $(this).val(); // get selected value
+            if (url) { // require a URL
+                window.location = url; // redirect
+            }
+            return false;
+        });
+    });
+
+</script>

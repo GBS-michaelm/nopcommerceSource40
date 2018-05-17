@@ -24,6 +24,7 @@
     string qty = (!string.IsNullOrEmpty(Request.QueryString["qty"])) ? Request.QueryString["qty"] : "";
     string sku = Request.QueryString["sku"];
     string iframeData = string.Empty;
+    string categoryID = (!string.IsNullOrEmpty(Request.QueryString["categoryid"])) ? Request.QueryString["categoryid"] : "";
     var SpecAttr = EngineContext.Current.Resolve<ISpecificationAttributeService>();
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
@@ -33,6 +34,8 @@
     var CurrentSpecAttr = (IList<ProductSpecificationAttribute>)SpecAttr.GetProductSpecificationAttributes(prodId);
     string attributeXml = string.Empty;
     bool editActive = false;
+    string pageId = Request.QueryString["pageid"];
+
     //string productXml = string.Empty;
     //Set iframe url
     foreach (var item in CurrentSpecAttr)
@@ -42,8 +45,21 @@
         {
             page = item.SpecificationAttributeOption.Name;
         }
+
     }
-    page = page + sku;
+
+    try
+    {
+        Dictionary<string, string> param = new Dictionary<string, string>();
+
+        param.Add("@categoryID", categoryID.ToString());
+        DataView dv = db.GetParameterizedDataView("EXEC usp_SelectCompanyExtendedData @categoryID", param);
+        pageId = (dv[0]["pageId"] != DBNull.Value) ? dv[0]["pageId"].ToString() : "0";
+    }
+    catch (Exception ex)
+    {
+
+    }
 
     //Handles edit from cart
     if (cartItemID != 0)
@@ -64,19 +80,19 @@
         xmldoc.LoadXml(attributeXml);
         XmlNodeList nodeList = xmldoc.GetElementsByTagName("ProductAttribute");
         var node = xmldoc.FirstChild.FirstChild.InnerText;
-      
+
         iframeData = node;
         editActive = true;
     }
-
+    page = page + sku + "&qty=" + qty + "&id=" + cartItemID + "&pageid=" + pageId + "&categoryid=" + categoryID;
     <input type="hidden" id="hdn-edit-active" value="@editActive.ToString()" />
     <input type="hidden" id="hdn-cart-item-id" value="@cartItemID" />
     <input type="hidden" id="hdn-qty" value="@qty" />
     <input type="hidden" id="hdn-product-id" value="@prodId" />
     <input type="hidden" id="hdn-iframe-data" value="@iframeData" />
 
-    <div class="chili-template" style="overflow:hidden; height:1200px">
-        <iframe id="chili-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
+    <div class="canvas-template" style="overflow:hidden; height:1200px">
+        <iframe id="canvas-iframe" src="@T("hom.url")@page" style="height:1200px; width:100%;"></iframe>
     </div>
 }
 <!--product attributes-->
@@ -84,16 +100,42 @@
 <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
 <script type="text/javascript">
 
-
     var imageUrl = '';
 
-    var iframe = document.getElementById('chili-iframe');
-
+    var iframe = document.getElementById('canvas-iframe');
 
     window.addEventListener("message", function (e) {
-        addToCart(e);
-    }, false);
+        if (e.data == "VALIDATEUPO") {
+            $("#hdn-authentice-type").val("UPO");
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
 
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "UPO");
+            } else {
+                $("#valid-error-summary").hide();d
+                $(".field-validation-error").hide();
+                $("#loginModal").modal();
+            }
+        }
+        else if (e.data == "VALIDATEBCT") {
+            $("#hdn-authentice-type").val("BCT");
+            if ($("#hdn-authenticated").val().toLowerCase() == "true") {
+
+                SendEmailAfterVerification($("#hdn-customer-email").val(), "BCT");
+            } else {
+                $("#valid-error-summary").hide();
+                $(".field-validation-error").hide();
+                $("#loginModal").modal();
+            }
+        } else {
+            addToCart(e);
+        }
+
+    }, false);
+    function SendEmailAfterVerification(email, type) {
+        var iframe = document.getElementById("chili-iframe").contentWindow;
+        var json = JSON.stringify({ type: type, email: email });
+        iframe.postMessage(json, "*");
+    }
     function addToCart(e) {
         console.log(e);
         var opc = false;
@@ -101,46 +143,81 @@
         var previewDisplay;
 
         if (e.data != "") {
+            console.log(e.data);
             var json = JSON.parse(e.data);
-            var cartImageSrc;
-            for (var i = 0; i < json["data"].length; i++) {
-                console.log(json["data"][i]);
-                switch (json["data"][i].option) {
-                    case 536:
-                        cartImageSrc = json["data"][i].value;
-                        break;
-                    case 399:
-                        opc = true;
-                        break
-                    default:
-                        break;
-                }
-
-            }
             if (json.hasOwnProperty('misc3')) {
                 opcAlt = true;
             }
             if (cartImageSrc == '') {
                 previewDisplay = "undefined";
             }
+
+            var cartImageSrc;
+            var bct = false;
+            for (var i = 0; i < json["data"].length; i++) {
+                console.log(json["data"][i]);
+                switch (json["data"][i].option) {
+                    case 320:
+                        cartImageSrc = json["data"][i].value;
+
+                        break;
+                    case 399:
+                        opc = true;
+                    case 515:
+                        bct = true;
+                        break
+                    default:
+                        previewDisplay = "undefined";
+                        break;
+                }
+
+            }
+
             previewDisplay = (opc || opcAlt) ? cartImageSrc : "undefined";
+
             AddItem(e.data, $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), previewDisplay, $("#hdn-edit-active").val());
 
         }
     }
-
 </script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        if ($("#hdn-iframe-data").val() != "") {
-            $("#chili-iframe").attr("src", "@T("hom.url")@page&input=" +JSON.parse($("#hdn-iframe-data").val()));
-        }
-    });
-</script>
-
-    @*eventer(messageEvent, function (e) {
+@*eventer(messageEvent, function (e) {
         var cartImageSrc = JSON.parse(e.data)[536];
         AddItem(JSON.stringify(e.data), $("#hdn-cart-item-id").val(), $("#hdn-qty").val(), $("#hdn-product-id").val(), cartImageSrc, $("#hdn-edit-active").val());
 
     }, false);*@
+
+<style>
+    /*-----Recolor Top Bar---*/
+    .header-upper {
+        background-color: #6c8baa;
+        border-bottom: 8px solid #022c5c;
+    }
+
+    /*-----Reveal hidden back link---*/
+    .pre-header-back-link {
+        display: inherit !important;
+    }
+
+    /*-----Reverse all header icons, links, and text to white---*/
+    .shippingall, .flyout-main-wrapper .shopping-cart-link .cart-label, .header-top-right ul li a, .flyout-main-wrapper .shopping-cart-link .cart-qty {
+        color: #ffffff;
+    }
+
+    .flyout-main-wrapper .shopping-cart-link .ico-cart {
+        background: url(/Themes/HouseOfMagnet/Content/images/cart-icon_white.png) no-repeat 0px 0px;
+    }
+
+    .pre-header-back-link .topic-html-content a {
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+        .pre-header-back-link .topic-html-content a:hover {
+            color: #022c5c !important;
+        }
+
+    /*-----Hide header links, main navigation, and parts of the footer---*/
+    .header-lower, .newmenu, div .header-menu .row, a.ico-account, .header-top-right ul li.register, .header-top-right ul li.login, .header-top-right ul li.logout, .header-top-right ul li.my-account, .header-top-right ul li.my-wishlist, .goToTop #flyout-cart .shopping-cart-link, div#aboutUsSection, .row.footer-middle, .pre-header-promo-text {
+        display: none !important;
+    }
+</style>

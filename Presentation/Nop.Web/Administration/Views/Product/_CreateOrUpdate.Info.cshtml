@@ -1766,8 +1766,11 @@
                             @Html.NopLabelFor(model => model.SelectedCategoryIds)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })
-                            <script>
+                            @Html.EditorFor(model => model.SelectedCategoryIds, "MultiSelectBasic")
+                            
+
+                            @*@Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })*@
+                            @*<script>
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
@@ -1786,6 +1789,47 @@
                                     </text>
                             }
                                 });
+                            </script>*@
+                            <div id="catButtonWrapper">
+                                <button type="button" id="loadCategories" class="btn btn-primary" onclick="loadCats();">Show Categories</button>
+                                <span id="mainmessage">Clicking this button will display the category editor after a few moments.</span><span id="pleasewait" style="display:none">Please Wait <img src="~/Content/Images/loading.gif" /></span>
+                            </div>
+                            <script>
+                                function loadCats() {
+                                    $('#mainmessage').css('display', 'none');
+                                    $('#pleasewait').css('display', 'inline');
+                                    setTimeout(loadCats2
+                                    ,3);
+
+                                };
+
+                                function loadCats2() {
+                                    $.when(
+                                        KendoLoad1(),
+                                        KendoLoad2()).then(function () {
+                                            $('#pleasewait').css('display', 'none');
+                                            $('#loadCategories').css('display', 'none');
+                                        });
+                                };
+                                   function KendoLoad2() {
+                                    var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
+                                    categoryIdsInput.setOptions({
+                                        autoClose: false
+                                    });
+
+                                    @if (Model.AvailableCategories.Count == 0)
+                            {
+                                <text>
+                                    categoryIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
+                                    });
+                                    categoryIdsInput._placeholder();
+                                    categoryIdsInput._enable();
+                                    </text>
+                            }
+                                };
+                                //$("#catButtonWrapper").
                             </script>
                         </div>
                     </div>

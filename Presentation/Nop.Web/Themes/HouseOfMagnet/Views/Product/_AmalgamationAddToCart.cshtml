@@ -7,7 +7,22 @@
 @using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using System.Text;
+@using Nop.Services.Catalog;
 
+@{
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    <script>var eachQuantity = @eachQuantity;</script>
+
+}
 
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
@@ -189,54 +204,58 @@
     }
     @Html.Widget("productdetails_add_info", Model.ProductId)
 </div>
-<script type="text/javascript">
-    
-    $(document).ready(function () {
+                            if (!(Model.AllowedQuantities.Count > 0))
+                            {
+                                <script type="text/javascript">
 
-        var done = false;
-        var everythingLoaded = setInterval(function () {
-            if (/loaded|complete/.test(document.readyState) && !done) {
-                clearInterval(everythingLoaded);
-                $(".amalgamation-qty-input").each(function (index) {
+                                    $(document).ready(function () {
 
-                    AmalgamationChangeQuantity(this);
+                                        var done = false;
+                                        var everythingLoaded = setInterval(function () {
+                                            if (/loaded|complete/.test(document.readyState) && !done) {
+                                                clearInterval(everythingLoaded);
+                                                $(".amalgamation-qty-input").each(function (index) {
 
-                });
-                //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
-                done = true;
-            }
-        }, 100);
-        
+                                                    AmalgamationChangeQuantity(this);
 
-        //$('.group-amalgamation-dropdown').each(function (index, value) {
+                                                });
+                                                //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+                                                done = true;
+                                            }
+                                        }, 100);
 
-        //    var dropdown = $(this);
-        //    if (dropdown.hasClass('in-cart')) {
-        //        var curInCart = dropdown.data('initqty');
+                                </script>
+                            }
+                            <script type="text/javascript">
+                                    //$('.group-amalgamation-dropdown').each(function (index, value) {
 
-        //        dropdown.val(curInCart);//.prop('selected', true);
-        //    }
+                                    //    var dropdown = $(this);
+                                    //    if (dropdown.hasClass('in-cart')) {
+                                    //        var curInCart = dropdown.data('initqty');
 
-        //});
+                                    //        dropdown.val(curInCart);//.prop('selected', true);
+                                    //    }
 
-        //$(".group-amalgamation-dropdown").val($(".group-amalgamation-dropdown").data('initqty'));
-        //$(".amalgamation-dropdown").trigger("change");
+                                    //});
 
-        //will need to change from  on change to on click for add to cart
-        //$(".group-amalgamation-dropdown").change(function () {
+                                    //$(".group-amalgamation-dropdown").val($(".group-amalgamation-dropdown").data('initqty'));
+                                    //$(".amalgamation-dropdown").trigger("change");
 
-        //    //console.log("dropdown val: " + $(this).val())
-        //    AmalgamationIncreaseQuantity($(this));
+                                    //will need to change from  on change to on click for add to cart
+                                    //$(".group-amalgamation-dropdown").change(function () {
 
-
-        //  });
-
-
-    });
+                                    //    //console.log("dropdown val: " + $(this).val())
+                                    //    AmalgamationIncreaseQuantity($(this));
 
 
-</script>
-}
+                                    //  });
+
+
+                                });
+
+
+                            </script>
+                            }
 
 
 @*@if (Model.AllowedQuantities.Count > 0)

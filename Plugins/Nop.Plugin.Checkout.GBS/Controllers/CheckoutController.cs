@@ -437,7 +437,21 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                         ModelState.AddModelError("NewAddress.ZipPostalCode", "Not Valid Zip Code Format");
                     }
                 }
-                
+
+                Match addy1Match = null;
+                if (!string.IsNullOrEmpty(model.NewAddress.Address1))
+                {
+                    Regex regex = new Regex(@"(?:P(?:ost(?:al)?)?[\.\-\s]*(?:(?:O(?:ffice)?[\.\-\s]*)?B(?:ox|in|\b|\d)|o(?:ffice|\b)(?:[-\s]*\d)|code)|box[-\s\b]*\d)");
+
+                    addy1Match = regex.Match(model.NewAddress.Address1);
+                    if (addy1Match.Success)
+                    {
+                        ModelState.AddModelError("NewAddress.Address1", "Please use a valid street address");
+                    }
+
+                }
+
+                //same for address 2
 
                 if (ModelState.IsValid)
                 {
@@ -1101,9 +1115,15 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                     //adjust rate
                     List<DiscountForCaching> appliedDiscounts;
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out appliedDiscounts);
 
+                    var shippingTotal = shippingOption.Rate;
+
+                    if (shippingOption.ShippingRateComputationMethodSystemName == "Nop.Plugin.Shipping.GBS")
+                    {
+                     shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
+                     shippingOption.Rate, cart, out appliedDiscounts);
+                    }
+                    
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
@@ -1181,8 +1201,13 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
 
                     //adjust rate
                     List<DiscountForCaching> appliedDiscounts;
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
+                    var shippingTotal = shippingOption.Rate;
+
+                    if (shippingOption.ShippingRateComputationMethodSystemName == "Nop.Plugin.Shipping.GBS")
+                    {
+                        shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
                         shippingOption.Rate, cart, out appliedDiscounts);
+                    }
 
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
@@ -1426,10 +1451,23 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
                     _baseNopCheckoutController.SelectShippingAddress(addresses[0].Id);
                 }
             }
+            var shippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+            ViewBag.ShippingMethod = shippingMethod;
+            var selectedShippingMethod = shippingMethod.ShippingMethods.Where(x => x.Selected == true).FirstOrDefault();
+            ShippingOption selectedShippingOption = shippingMethod.ShippingMethods.FirstOrDefault().ShippingOption;
+            if (selectedShippingMethod != null){
+                selectedShippingOption = selectedShippingMethod.ShippingOption;
+            }
+            if (TempData.Peek("ShippingType") != null)
+            {
+                var shippingMethodName = ((string)TempData.Peek("ShippingType")).Split('_').FirstOrDefault();
+                selectedShippingOption = shippingMethod.ShippingMethods.Where(x => x.Name == shippingMethodName).FirstOrDefault().ShippingOption;
+            }
+            if (selectedShippingOption != null)
+            {
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, selectedShippingOption, _storeContext.CurrentStore.Id);
+            }
 
-            ViewBag.ShippingMethod = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
-
-            
             //new address
             model.NewAddress.CountryId = selectedCountryId;
             _addressModelFactory.PrepareAddressModel(model.NewAddress,
@@ -1599,3 +1637,4 @@ namespace Nop.Plugin.Checkout.GBS.Controllers
         #endregion NonAction Functions
     }
 }
+

@@ -10,7 +10,7 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                if (!attribute.Name.ToLower().Contains("customimgurl") && !attribute.Name.ToLower().Contains("iframedata"))
+                if ((!attribute.Name.ToLower().Contains("customimgurl") && !attribute.Name.ToLower().Contains("iframedata")) && !(!string.IsNullOrEmpty(attribute.Description) && attribute.Description.ToUpper().Contains("DONOTDISPLAY")) && !attribute.Name.ToUpper().Contains("ENVELOPE COLOR"))
                 {
                     string controlId = string.Format("product_attribute_{0}", attribute.Id);
                     string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
@@ -340,6 +340,11 @@
                             var price = Number((data.price).replace(/[^0-9\.-]+/g,""));
                             $('.price-value-@productId').text('$'+(price*parseInt(qty)).toFixed(2));
                             $('.eachprice-value-@productId').text("(Ea. " + data.price + ")");
+                            if (typeof eachQuantity !== 'undefined') {
+                                if (eachQuantity && eachQuantity > 0) {
+                                    $('.eachprice-value-@productId').text("(Ea. $" + (parseFloat(data.price.slice(1)) / eachQuantity).toFixed(2) + ")")
+                                }
+                            }
                             $('.pricescript-value-@productId').text(price);
                         }
                         if (data.sku) {

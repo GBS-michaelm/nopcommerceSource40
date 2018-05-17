@@ -41,7 +41,7 @@ namespace Nop.Services.Custom.Customers
         private readonly CustomerSettings _customerSettings;
         private readonly IEncryptionService _encryptionService;
         private readonly ILogger _logger;
-  
+
 
         #region Ctor
 
@@ -71,7 +71,7 @@ namespace Nop.Services.Custom.Customers
             IWorkflowMessageService workflowMessageService,
             IEventPublisher eventPublisher,
             RewardPointsSettings rewardPointsSettings,
-            CustomerSettings customerSettings, 
+            CustomerSettings customerSettings,
             ILogger logger)
             : base(
             customerService,
@@ -81,7 +81,7 @@ namespace Nop.Services.Custom.Customers
             storeService,
             rewardPointService,
             workContext,
-            genericAttributeService,          
+            genericAttributeService,
             workflowMessageService,
             eventPublisher,
             rewardPointsSettings,
@@ -115,8 +115,42 @@ namespace Nop.Services.Custom.Customers
             public bool updatePassword { get; set; }
         }
 
-        
 
+        public CustomerLoginResults ValidateHOM(string usernameOrEmail, string password)
+        {
+            WebClient client = new WebClient();
+            client.Headers.Add("Content-Type", "application/json");
+            LoginModel login = new LoginModel();
+            login.username = usernameOrEmail;
+            login.password = password;
+            login.pin = "111111";
+            string loginJSON = JsonConvert.SerializeObject(login, Formatting.Indented);
+            string responseString = client.UploadString(_gbsLoginSettings.GBSLoginWebServiceAddress, loginJSON);
+            if (responseString.Contains("SUCCESS"))
+            {
+                //change password and return
+                ChangePasswordRequest pRequest = new ChangePasswordRequest(usernameOrEmail, false, _customerSettings.DefaultPasswordFormat, password);
+                ChangePasswordResult pResult = base.ChangePassword(pRequest);
+                if (pResult.Errors.Count == 0)
+                {
+                    return CustomerLoginResults.Successful;
+                }
+                else
+                {
+                    string errors = string.Empty;
+
+                    foreach (string item in pResult.Errors)
+                    {
+                        errors += " " + item.ToString();
+                    }
+                    throw new Exception("error changing password" + errors);
+                }
+            }
+            else
+            {
+                return CustomerLoginResults.WrongPassword;
+            }
+        }
 
         public override CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password)
         {
@@ -131,37 +165,7 @@ namespace Nop.Services.Custom.Customers
                 }
                 else
                 {
-                    WebClient client = new WebClient();
-                    client.Headers.Add("Content-Type", "application/json");
-                    LoginModel login = new LoginModel();
-                    login.username = usernameOrEmail;
-                    login.password = password;
-                    login.pin = "111111";
-                    string loginJSON = JsonConvert.SerializeObject(login, Formatting.Indented);
-                    string responseString = client.UploadString(_gbsLoginSettings.GBSLoginWebServiceAddress, loginJSON);
-                    if (responseString.Contains("SUCCESS"))
-                    {
-                        //change password and return
-                        ChangePasswordRequest pRequest = new ChangePasswordRequest(usernameOrEmail,false, _customerSettings.DefaultPasswordFormat, password);
-                        ChangePasswordResult pResult = base.ChangePassword(pRequest);
-                        if (pResult.Errors.Count == 0)
-                        {
-                            return CustomerLoginResults.Successful;
-                        }else
-                        {
-                            string errors = string.Empty;
-
-                            foreach(string item in pResult.Errors)
-                            {
-                                errors += " " + item.ToString();
-                            }
-                            throw new Exception("error changing password" + errors);
-                        }
-                    }
-                    else
-                    {
-                        return CustomerLoginResults.WrongPassword;
-                    }
+                    ValidateHOM(usernameOrEmail, password);
                 }
 
             }
@@ -437,5 +441,7 @@ namespace Nop.Services.Custom.Customers
             errCode = "";
             return true;
         }
+
+
     }
 }

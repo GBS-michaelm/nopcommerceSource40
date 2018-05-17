@@ -2,53 +2,126 @@
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
+@using Nop.Plugin.Payments.GBS;
+@using System.Data;
+@using Nop.Services.Catalog;
+
+@{
+    var minQuantity = Model.AddToCart.EnteredQuantity;
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+    var quantityArray = Newtonsoft.Json.JsonConvert.SerializeObject(Model.TierPrices);
+    <script>
+        var eachQuantity = @eachQuantity;
+        var quantityArray = @Html.Raw(@quantityArray);;
+    </script>
+
+}
+<style>
+
+    .min-qty-notification {
+        top: -55px !important;
+    }
+</style>
+
+@{
+    int categoryID = 0;
+     categoryID = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault().Id;
+
+
+}
 @if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
     string pageID = "42";
-   
+
 
 }
 @if (!Model.AddToCart.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)
 {
-    <div class="add-to-cart">   
-	    @if (Model.AddToCart.CustomerEntersPrice)
+    <div class="add-to-cart">
+        @if (Model.AddToCart.CustomerEntersPrice)
         {
-          <div class="customer-entered-price clearfix">
-              <div class="price-input">
-                  @Html.LabelFor(model => Model.AddToCart.CustomerEnteredPrice, new { @class = "enter-price-label" }, ":")
-                  @*round price*@
-                  @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.AddToCart.CustomerEnteredPrice)), new { @class = "enter-price-input form-control" })
-              </div>
-              <div class="price-range alert alert-info">
-                  @Model.AddToCart.CustomerEnteredPriceRange
-              </div>
-          </div>
-        }
-    @if (!String.IsNullOrEmpty(Model.AddToCart.MinimumQuantityNotification))
-    {
-        <div class="min-qty-notification">@Model.AddToCart.MinimumQuantityNotification</div>
-    }
-    @if (!Model.AddToCart.DisableBuyButton)
-    {
-        <div class="add-to-cart-panel">
-            <div class="quantity-box">
-                <div class="enter-quantity">Enter Quantity:
-                @*@Html.LabelFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-label" }, ":")*@
+            <div class="customer-entered-price clearfix">
+                <div class="price-input">
+                    @Html.LabelFor(model => Model.AddToCart.CustomerEnteredPrice, new { @class = "enter-price-label" }, ":")
+                    @*round price*@
+                    @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.AddToCart.CustomerEnteredPrice)), new { @class = "enter-price-input form-control" })
                 </div>
-                @if (Model.AddToCart.AllowedQuantities.Count > 0)
-                {
-                    @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control" })
-                }
-                else
-                {
-                    <div class="addtocart-quantity-box">
-                        @Html.TextBoxFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.AddToCart.ProductId })
-                        <span class="increase-quantity" onclick="IncreaseQuantity(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                        <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                <div class="price-range alert alert-info">
+                    @Model.AddToCart.CustomerEnteredPriceRange
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.AddToCart.MinimumQuantityNotification))
+        {
+            <div class="min-qty-notification">@Model.AddToCart.MinimumQuantityNotification</div>
+        }
+        @if (!Model.AddToCart.DisableBuyButton)
+        {
+            <div class="add-to-cart-panel">
+                <div class="quantity-box">
+                    <div class="enter-quantity">
+                        Enter Quantity:
+                        @*@Html.LabelFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-label" }, ":")*@
                     </div>
-                    //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
-                    <script type="text/javascript">
+                    @if (Model.AddToCart.AllowedQuantities.Count > 0)
+                    {
+                        @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty-dropdown form-control qty-input" })
+                        <script>
+                            function setPrice() {
+                                    var selectedQuantity = parseFloat($('#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)').val());
+                                    var selectedQuantityPrice = $.grep(quantityArray, function (e) { return e.Quantity === selectedQuantity })[0].Price;
+                                    var selectedQuantityPriceCalculated = selectedQuantityPrice.slice(1) * selectedQuantity;
+                                    $(".newprice-value-" +@Model.Id).text("$" + selectedQuantityPriceCalculated.toFixed(2));
+                                    var eachPrice = selectedQuantityPrice.slice(1);
+                                    $(".eachprice-value-" +@Model.Id).text("(Ea. $" + eachPrice +")");
+                            }
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)").change(function (event) {
+                                    setPrice();
+                                });
+                                $(window).load(function () {
+                                   // setPrice();
+                                });
+
+                            });
+
+                        </script>
+                    }
+                    else
+                    {
+                        <script>
+                            function decQ(e) {
+                                if (parseInt(e.value) > @minQuantity){
+                                    DecreaseQuantity(e);
+                                }
+                            }
+                            function chgQ(e) {
+                                if (parseInt(e.value) > @minQuantity){
+                                    ChangeQuantity1(e);
+                                } else {
+                                    e.value = "@minQuantity";
+                                    ChangeQuantity1(e);
+                                }
+                            }
+                        </script>
+                        <div class="addtocart-quantity-box">
+                            @Html.TextBoxFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "chgQ(this)", @data_productid = Model.AddToCart.ProductId })
+                            <span class="increase-quantity" onclick="IncreaseQuantity(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                            <span class="decrease-quantity" onclick="decQ(@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity))"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                        </div>
+                        //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+                        <script type="text/javascript">
                         $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => Model.AddToCart.EnteredQuantity)").keydown(function (event) {
                                 if (event.keyCode == 13) {
@@ -57,10 +130,10 @@
                                 }
                             });
                         });
-                    </script>
-                }
-            </div>
-       
+                        </script>
+                    }
+                </div>
+
                 <div class="product-add-button">
                     @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
 
@@ -71,11 +144,11 @@
 
                     @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
                 </div>
-            
-	    </div>
-    }
-    @Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)
-</div>
+
+            </div>
+        }
+        @Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)
+    </div>
 
 
 
@@ -125,23 +198,57 @@
     }
 
 
-    string url = "/gluon?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=" ;
+    string url = "/gluon?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&categoryid=" + categoryID + "&qty=";
 
-<script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
-<script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
-<script type="text/javascript">
-    var done = false;
-    var everythingLoaded = setInterval(function () {
-        if (/loaded|complete/.test(document.readyState) && !done) {
-            clearInterval(everythingLoaded);
-            $(".qty-input").each(function (index) {
-                ChangeQuantity1(this);
-            });
-            //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
-            done = true;
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
+    if (!(Model.AddToCart.AllowedQuantities.Count > 0))
+    {
+    <script type="text/javascript">
+        //var done = false;
+        //var everythingLoaded = setInterval(function () {
+        //    if (/loaded|complete/.test(document.readyState) && !done) {
+        //        clearInterval(everythingLoaded);
+        //        $(".qty-input").each(function (index) {
+        //            ChangeQuantity1(this);
+        //        });
+        //        //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+        //        done = true;
+        //    }
+        //}, 100);
+        document.onreadystatechange = function () {
+            if (document.readyState === "complete") {
+                $(".qty-input").each(function (index) {
+                    ChangeQuantity1(this);
+                });
+            }
         }
-    }, 100);
+    </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            //var done = false;
+            //var everythingLoaded = setInterval(function () {
+            //    if (/loaded|complete/.test(document.readyState) && !done) {
+            //        clearInterval(everythingLoaded);
+            //        $(".qty-input").each(function (index) {
+            //            setPrice();
+            //        });
+            //        done = true;
+            //    }
+            //}, 100);
+            document.onreadystatechange = function () {
+                if (document.readyState === "complete") {
+                    $(".qty-input").each(function (index) {
+                        setPrice();
+                    });
+                }
+            }
+        </script>
 
+    }
+    <script type="text/javascript">
 
 
     $(document).ready(function () {
@@ -159,12 +266,17 @@
             // }
 
 
-
+             LoadingUpdate();
             //var jsonSend = JSON.stringify(jsonArray);
             //TempData["productOptions"] = jsonSend;
 
             SetProductOption("", htmlDecode("@url") + $(".qty-input").val());
-         });
+        });
+
+         function LoadingUpdate() {
+             $("#dv-loading-gif").show();
+             $(".product-details-page").hide();
+         }
     });
     </script>
 

@@ -12,7 +12,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Core;
-using Nop.Web.Factories;
+using Nop.Plugin.BusinessLogic.GBS;
+using Nop.Services.Configuration;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
@@ -23,7 +24,14 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
     public class GatewayPageController : BaseController
     {
 
-        
+        private readonly GBSBusinessLogicSettings _gbsBusinessLogicSettings;
+        public GatewayPageController (
+            GBSBusinessLogicSettings gbsBusinessLogicSettings
+            )
+        {
+            this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
+        }
+
         [HttpGet]
         public ActionResult SportsTeamHtml(int id)
         {           
@@ -71,10 +79,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                         productBox.price = (int)featuredProductData.Price;
                         productBox.isFeatured = customExtendedCategoryData.isFeatured;
                         productBox.featuredProductId = customExtendedCategoryData.featuredProductId;
-                        //if category product count == 1 then sete link to productpage and not gallery page
-                        string correctUrl = LonerUrlHandle(productCategoryList, customExtendedCategoryData);
-                        productBox.productLink = correctUrl;
-                        //productBox.productLink = customExtendedCategoryData.SeName;
+                        productBox.productLink = customExtendedCategoryData.SeName;
 
                         teamProductBlocks.productBoxes.Add(productBox);
 
@@ -88,77 +93,81 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
-        //Handle for categories that only have one product 
-        private string LonerUrlHandle(IPagedList<ProductCategory> productCategoryList, SportsTeam customExtendedCategoryData)
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
-            string correctUrl = "";
-            bool moreThanTwoGroups = false;
-            bool groupIdSame = true;
-            int groupedProductGroupsCount = 0;
-            int groupId = 0;
-            bool noParentCountGreaterThanTwoProducts = false;
-      
-            foreach (var product in productCategoryList)
+            try
             {
-                if (product.Product.ProductType == ProductType.GroupedProduct)
-                {
-                    groupedProductGroupsCount++;
+                MarketCenter marketCenter = new MarketCenter(marketCenterId);
+                Dictionary<string, string> tabs = new Dictionary<string, string>();
 
-                    if (groupedProductGroupsCount > 1)
-                    {
-                        moreThanTwoGroups = true;
-                    }
-                }
-                //0 is the id for the parent group of the parent group itself, which doesn't exist because it is already the parent group
-                if (product.Product.ParentGroupedProductId != 0)
+                tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
+
+                //add tabs to list model with market center models inside
+                MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
+                foreach (var tab in tabs)
                 {
-                    if (groupId == 0)
+                    MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
+
+                    if (tab.Key == "HiddenChildrenHtml")
                     {
-                        groupId = product.Product.ParentGroupedProductId;
-                        
+                        tabsContainer.hiddenHtml = tab.Value;
+                    }
+                    else if (tab.Key == "HiddenAll")
+                    {
+                        tabsContainer.hiddenAll = tab.Value;
                     }
                     else
                     {
-                        //different group ids mean multiple group products and thus mutiple groups
-                        if (groupId != product.Product.ParentGroupedProductId)
-                        {
-                            groupIdSame = false;
-                        }
+                        mctab.tabName = tab.Key;
+                        mctab.html = tab.Value;
+                        tabsContainer.MarketCenterTabsList.Add(mctab);
                     }
+
                 }
-                
-            }
-            //no parents, so no groups, and count of products greater than 1
-            if (groupId == 0 && groupedProductGroupsCount == 0 && productCategoryList.Count > 1)
+
+                return View("MarketCenterGatewayTabs", tabsContainer);
+            }          
+            catch(Exception ex)
             {
-                noParentCountGreaterThanTwoProducts = true;
-            }
-            
-            //gallery url
-            if(moreThanTwoGroups == true || groupIdSame == false || noParentCountGreaterThanTwoProducts == true)
-            {
-                correctUrl = customExtendedCategoryData.SeName;
-            }
-            else
-            {
-                //product page url
-                IProductService iProductService = EngineContext.Current.Resolve<IProductService>();
-                IProductModelFactory productModelFactory = EngineContext.Current.Resolve<IProductModelFactory>();
 
-                Product product = iProductService.GetProductById(groupId);
-                Product[] prodArray = { product };               
-                IEnumerable<Product> products = prodArray;
+                ex = new Exception("Gateway Page Controller Fail. Market Center Id: " + marketCenterId + ".");
+                base.LogException(ex);
 
-                IEnumerable<ProductOverviewModel> productOverviewModel = productModelFactory.PrepareProductOverviewModels(products);
-                List<ProductOverviewModel> list = (List <ProductOverviewModel>)productOverviewModel;
-
-                correctUrl = list[0].SeName;         
-
+                return View();
             }
 
-            return correctUrl;
+            //return View();
+
         }
-        
-    }   
 
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
+        {
+
+            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+
+            try
+            {
+                Company parentCategory = new Company(parentCategoryId);
+
+                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+
+                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+                mcGallerCategories.CategoriesList = categories;
+
+                //return View("MarketCenterGalleryCategories", mcGallerCategories);
+            }
+            catch (Exception ex)
+            {
+                ex = new Exception("Gateway Page Controller Fail. GetNonMarketCenterCategories.");
+                base.LogException(ex);
+            }
+
+            return View("MarketCenterGalleryCategories", mcGallerCategories);
+
+        }         
+        
+    }
+       
 }

@@ -13,5 +13,7 @@ namespace Nop.Plugin.Catalog.GBS
         public int NoOfChildren { get; set; }
         public bool IsActive { get; set; }
         public string BlackList { get; set; }
+        public string CategoryTabsSpecAttrName { get; set; }
+        public string AttributeInfoBlackList { get; set; }
     }
 }

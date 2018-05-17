@@ -1,5 +1,4 @@
 ﻿@using Nop.Plugin.DataAccess.GBS;
-@using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.Themes;
@@ -7,13 +6,11 @@
 @using System.Text;
 @using Nop.Services.Catalog;
 @using Nop.Services.Seo;
-@using Nop.Core.Domain.Seo;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-
-
+    
     Layout = "~/Views/Shared/_Root.cshtml";
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
@@ -58,24 +55,13 @@
 @{
 
     DBManager manager = new DBManager();
-
-    //Dictionary<string, string> categoryDic = new Dictionary<string, string>();
-    //categoryDic.Add("@CategoryId", id);
-
-    //string categoryDataQuery = "EXEC usp_SelectGBSCustomCategoryData @CategoryId";
-    //DataView categoryDataView = manager.GetParameterizedDataView(categoryDataQuery, categoryDic);
-
-    //if(categoryDataView.Count > 0)
-    //{
-    //    categoryName = categoryDataView[0]["H1"].ToString();
-
-    //}
-
+        
     Company company = new Company(id);
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
-    string aboutYourMarketCenter = company.aboutYourMarketCenter;   
+    string aboutYourMarketCenter = company.aboutYourMarketCenter;
+    string agentPacks = company.agentPacks;
     
 }
 
@@ -107,17 +93,12 @@
 }
 
 
-
-
-
 <div id="parentTitleWrapDiv">
     
     <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
         <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
     </div>
-    
-
-   
+       
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="parent-gateway-description">
@@ -128,10 +109,6 @@
     }
   
 </div>
-
-
-
-
 
 @*<div class="category-section">
     <div class="row">
@@ -152,75 +129,53 @@
 <div id="searchArea">
     <div id="searchAreaLeft">
         <p>Find Your Office: </p>
-
-        @{ 
-            StringBuilder sb = new StringBuilder();
-
-            //category stuff
-            var catService = EngineContext.Current.Resolve<ICategoryService>();
-            //IPagedList<Category> marketCenterByNameList = catService.GetAllCategories("Market Center");
-            //for testing
-            //int catCount = marketCenterByNameList.Count();
-            //int storeId = marketCenterByNameList[0].Id;
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(storeId);
-
-            //IList<Category> allMarketCenters = catService.GetAllCategoriesByParentCategoryId(Model.Id);
-
-            //var companiesInOrder = allMarketCenters.OrderBy(x => x.Name).ToList();
-
-            //foreach (var item in companiesInOrder)
-            //{
-            //    sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            //}
-
-            //stored proc way
-            //Dictionary<string, Object> childCategoryDic = new Dictionary<string, Object>();
-            //childCategoryDic.Add("@CategoryId", id);
-            //string childCategoryDataQuery = "EXEC usp_SelectGBSChildCategoryData @CategoryId";
-            //DataView childCategoryDataView = manager.GetParameterizedDataView(childCategoryDataQuery, childCategoryDic);
-
-            //if (childCategoryDataView.Count > 0)
-            //{
-            //    for (int i = 0; i < childCategoryDataView.Count; i++)
-            //    {
-            //        sb.Append("<option value='" + childCategoryDataView[i]["slug"].ToString() + "'> " + childCategoryDataView[i]["name"].ToString() + "</option>");
-            //    }
-
-            //}
-
-            //class attribute way
-            List<Category> childCategoriesList = new List<Category>();
-            for (int i = 0; i < company.childCompanyIds.Count; i++)
-            {
-                Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-                childCategoriesList.Add(childCompany);
-            }
-
-            var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
-            foreach (var item in companiesInOrder)
-            {
-                sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            }
+                
+            <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
             
-            string allString = sb.ToString();
+            @{
+                StringBuilder sb = new StringBuilder();
 
-        }
-        
-            <select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
+                //category stuff
+                var catService = EngineContext.Current.Resolve<ICategoryService>();
+
+                //class attribute way
+                List<Category> childCategoriesList = new List<Category>();
+                for (int i = 0; i < company.childCompanyIds.Count; i++)
+                {
+                    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+                    childCategoriesList.Add(childCompany);
+                }
+
+                var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+                foreach (var item in companiesInOrder)
+                {
+                    //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                    sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
+                }
+
+                string allString = sb.ToString();
+
+            }
+
+            @*<select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
                 <option value="">Select Office</option>
                 @Html.Raw(@allString)
-            </select>
-       
-    </div>
+            </select>*@
 
-    <div id="searchAreaRight">  
-        <p><b>Can't find your office?</b></p>
-        <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
+            <div id="officeSearchWrap" style="display: none; z-index: 9000">
+                @Html.Raw(@allString)
+            </div>
+
+        </div>
+
+        <div id="searchAreaRight">
+            <p><b>Can't find your office?</b></p>
+            <p>Use the templates below or <a id="requestTemplatesLink">request templates</a> for your office.</p>
+        </div>
     </div>
-</div>
 
 <div class="listing-page">
-    <div id="leftColumn" class="sidebar col-md-3">
+    <div id="leftColumn" class="sidebar col-md-3" style="z-index : 0">
         <div class="sidebar-title">
             @*<h3>Refine Your Choices</h3>
             <a href="#">Clear</a>*@
@@ -230,7 +185,9 @@
             @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
         </div>
         <div id="agentPacks">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })
+            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
+            <h3>Discounted Agent Packs</h3>
+            @Html.Raw(@agentPacks)
         </div>
         <div id="marketCenterAbout">
             @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@
@@ -258,45 +215,56 @@
             @Html.Widget("left_side_column_after")
         }*@
     </div>
-    <div id="rightColumn" class="side-content col-md-9">
+    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : 0">
         @*<div class="right-column-title">
 
         </div>*@
-
-
 
         @Html.Widget("main_column_before")
         @RenderBody()
         @Html.Widget("main_column_after")
 
+        @* dynamic partial *@
+        @Html.Action("GetNonMarketCenterCategories", "GatewayPage", new { parentCategoryId = id })
+
+        @* static topic *@
+        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_company_gallery_general_product_categories" })
 
         @*Stuff on the Right*@
- 
-    </div>
 
+    </div>
+            
     <script type="text/javascript">
         $(document).ready(function () {
             //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
 
+            //$("#officeSearchWrap").hide();
+
             $("#myWorkPlace").click(SetAsMyWorkPlace);
 
-            var length = $('#marketCenterDropDown > option').length;
+
+            //***************TODO*************
+            //change to the li length/count for hide
+
+            //var length = $('#marketCenterDropDown > option').length; 
             console.log("length: " + length);
-            if (length <= 1) {               
+            if (isEmpty($("#officeSearchWrap"))) {               
                 $("#searchAreaLeft").hide();
-            }
+            }          
 
             if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
                 $(".parent-gateway-description").height($(".parent-gateway-name").height());
             } else {
                 $(".parent-gateway-name").height($(".parent-gateway-description").height());
             }
-
-
+            
         });
 
+        function isEmpty(element) {
+            return !$.trim(element.html())
+        }
 
-
+        
         function SetAsMyWorkPlace() {
             //some db update ajax?
 
@@ -305,11 +273,28 @@
         }
 
 
-        </script>
+        function CompanySearch(elem) {
+
+            console.log("company Searching");
+
+            var selected = $(elem).closest('#searchAreaLeft').find('#officeSearchWrap');
+            console.log("selected: " + selected);
+
+            if ($(elem).val()) {
+                console.log("show");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').show();
+            } else {
+                console.log("hide");
+                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
+            }
+
+            $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
+                itemSelector: 'li',
+                $searchInput: $(elem),
+            });
+        }
 
 
-
+        </script> 
     
-
-
 </div>

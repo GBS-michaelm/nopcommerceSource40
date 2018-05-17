@@ -8,7 +8,6 @@
 @using Nop.Services.Catalog;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Web.Factories;
-
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -19,7 +18,6 @@
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
     Html.AppendPageCssClassParts("html-product-details-page");
-
 
     Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/amalgamation.js");
 
@@ -55,7 +53,6 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
     }
-
 
 }
 @{
@@ -100,16 +97,17 @@
     if (featuredProductDataView.Count > 0)
     {
         featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
-        featuredProduct = productService.GetProductById(featuredProductId); //allow access to products tier price chart    
+        featuredProduct = productService.GetProductById(featuredProductId); //allow access to products tier price chart
     }
 
-
 }
-
 
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
+@Html.Partial("_LoadingGif")
+<div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
+
 <div class="page product-details-page grouped">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
@@ -124,30 +122,28 @@
                             @Html.Widget("product_artist_name", Model.Id)
                         </h1>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             @Html.Widget("productdetails_before_pictures", Model.Id)
                             <!--product pictures-->
                             @Html.Partial("_ProductDetailsPictures", Model)
                             @Html.Widget("productdetails_after_pictures", Model.Id)
-
                             @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
                             @Html.Widget("productdetails_bottom", Model.Id)
                             @Html.Widget("productdetails_before_collateral", Model.Id)
+                            @*@if (!String.IsNullOrEmpty(Model.ShortDescription))
+                                {
+                                    <div class="short-description">
+                                        @Html.Raw(Model.ShortDescription)
+                                    </div>
+                                }
+                                @Html.Raw*@(Model.FullDescription)
 
-                            @if (!String.IsNullOrEmpty(Model.ShortDescription))
-                            {
-                                <div class="short-description">
-                                    @Html.Raw(Model.ShortDescription)
-                                </div>
+                            @{
+                                ViewBag.productId = Model.Id;
                             }
-                            @Html.Raw(Model.FullDescription)
-
-
-                            @Html.Partial("_ProductTierPrices", Model.TierPrices)  
-                           <div class="overview">
-
+                            @Html.Partial("_ProductTierPrices", Model.TierPrices)
+                            <div class="overview">
 
                                 @Html.Widget("productdetails_overview_top", Model.Id)
                                 <!--product reviews-->
@@ -166,13 +162,9 @@
                                 @Html.Widget("product_category_titles", Model.Id)
                                 @Html.Widget("productdetails_overview_bottom", Model.Id)
                             </div>
-
                         </div>
 
-
-
                         <div class="col-md-6">
-
                             <div class="product-collateral">
                                 <!--associated products-->
                                 <div class="product-variant-list">
@@ -195,7 +187,6 @@
                                                     </div>
                                                 }
                                                 <div class="variant-overview">
-
                                                     @*@if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
                                                         {
                                                             <div class="variant-description">
@@ -273,7 +264,6 @@
                                                             else
                                                             {
 
-                                                               
                                                                 if (customChk)
                                                                 {
                                                                     @Html.Partial("_AddToCartChili", variant, dataDictAddToCart)
@@ -288,7 +278,6 @@
                                                         }
                                                         else
                                                         {
-
 
                                                             if (customChk)
                                                             {
@@ -305,17 +294,16 @@
                                                     }
                                                     <!--rental info-->
                                                     @{
-                                                                    var dataDictRental = new ViewDataDictionary();
-                                                                    dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
-                                                                    @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                        var dataDictRental = new ViewDataDictionary();
+                                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
                                                     }
                                                     <!--attributes-->
                                                     @{
-                                                                    var dataDictAttributes = new ViewDataDictionary();
-                                                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                                                    @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                        var dataDictAttributes = new ViewDataDictionary();
+                                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                                     }
-
                                                     <div class="form-group overview-buttons">
                                                         <!--wishlist-->
                                                         @{
@@ -325,18 +313,12 @@
                                                         }
                                                     </div>
 
-
-
                                                     <!--availability-->
                                                     @*@Html.Partial("_Availability", variant)*@
                                                     <!--SKU, MAN, GTIN, vendor-->
                                                     @Html.Partial("_SKU_Man_GTIN_Ven", variant)
                                                     <!--sample download-->
                                                     @Html.Partial("_DownloadSample", variant)
-
-
-
-
 
                                                     @if (Model.AssociatedProducts.Count == 0)
                                                     {
@@ -345,10 +327,10 @@
                                                         </div>
                                                     }
                                                 </div>
-
                                             </div>
                                             <!--delivery-->
                                             @{
+                                                ViewBag.productId = Model.Id;
                                                 if (@featuredProductId != 9999 && amalgamation == true)
                                                 {
                                                     @Html.Partial("_FeaturedProductTierPrices", @featuredProduct)
@@ -358,36 +340,25 @@
                                                     @Html.Partial("_ProductTierPrices", @variant.TierPrices)
                                                 }
                                             }
-                                            
                                             @*@Html.Partial("_DeliveryInfo", variant)*@
                                         </div>
-                                                            }
+                                    }
                                     @*we do not display "also purchased" for grouped products
                                         @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                     <div class="product-slider">
                         @Html.Action("RelatedProducts", "Product", new
-                   {
-                       productId = Model.Id
-                   })
+                        {
+                            productId = Model.Id
+                        })
                     </div>
-
-
-
-
-
                 </div>
-
             </div>
-                                                            }
+        }
     </div>
-
 
     <div id="amalgamationBarSection" style="display: none;">
         @{
@@ -400,12 +371,11 @@
                 CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
                 catalogPagingFilteringModel.PageSize = 1;
                 CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-                categoryModel.CustomProperties.Add("BarType", "Browse");              
+                categoryModel.CustomProperties.Add("BarType", "Browse");
                 categoryModel.CustomProperties.Add("ParentBrowseURL", categoryModel.SeName);
-                
+
                 @Html.Partial("_AmalgamationBar", categoryModel);
             }
         }
     </div>
-
 </div>

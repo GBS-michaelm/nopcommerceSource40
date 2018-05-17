@@ -5,6 +5,8 @@
 @using Nop.Web.Models.Checkout;
 @using Nop.Web.Models.ShoppingCart;
 @using Nop.Core;
+@using Nop.Web.Models.Catalog;
+@using Nop.Services.Catalog;
 @{
 
     Layout = "";
@@ -26,6 +28,10 @@
     {
         bestPrice = "pricing-box";
     }
+
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
 }
 
 <div class='col-md-3'>
@@ -55,7 +61,60 @@
                 <li>@Model.designCount designs available</li>
 
             </ul>
-            <div class='gateway-pricing'>Starting at $@Model.price</div>
+            @{
+                var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.featuredProductId).Where(x =>
+                (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display"
+                || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type"
+                || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+                || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit"
+                ));
+            }
+            @if (result.Count() == 4)
+            {
+                var packType = _specificationAttributeService.GetProductSpecificationAttributes(Model.featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
+                var eachUnit = _specificationAttributeService.GetProductSpecificationAttributes(Model.featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
+                var eachQuantity = _specificationAttributeService.GetProductSpecificationAttributes(Model.featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name;
+                var displayTemplate = _specificationAttributeService.GetProductSpecificationAttributes(Model.featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display").FirstOrDefault().SpecificationAttributeOption.Name; ;
+
+                var displayPriceString = displayTemplate.Replace("[price]", Model.price.ToString());
+                //displayPriceString = displayPriceString.Replace("[oldprice]", Model.ProductPrice.OldPrice);
+                displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
+                displayPriceString = displayPriceString.Replace("[eachqty]", eachQuantity);
+                displayPriceString = displayPriceString.Replace("[packtype]", packType);
+                if (_productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0)
+                {
+                    var tier1price = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0 ? _productService.GetProductById(Model.featuredProductId).TierPrices.First().Price : Model.price;
+                    var tier1Qty = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0 ? _productService.GetProductById(Model.featuredProductId).TierPrices.First().Quantity : int.Parse(eachQuantity);
+                    var tier2price = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? _productService.GetProductById(Model.featuredProductId).TierPrices.ElementAt(1).Price : 0;
+                    var tier2Qty = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? _productService.GetProductById(Model.featuredProductId).TierPrices.ElementAt(1).Quantity : 0;
+                    var tier3price = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? _productService.GetProductById(Model.featuredProductId).TierPrices.ElementAt(2).Price : 0;
+                    var tier3Qty = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? _productService.GetProductById(Model.featuredProductId).TierPrices.ElementAt(2).Quantity : 0;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1qty]", tier1Qty.ToString()) : "";
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier1qtyXeachqty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt]", Math.Round(tier1price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt/eachqty]", Math.Round(tier1price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qty]", tier2Qty.ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qtyXeachqty]", (tier2Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt]", Math.Round(tier2price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt/eachqty]", Math.Round(tier2price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qty]", tier3Qty.ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier3qtyXeachqty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt/eachqty]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
+                    displayPriceString = _productService.GetProductById(Model.featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
+                }
+                else if (displayTemplate.Contains("pricetier"))
+                {
+                    displayPriceString = "$" + (Model.price / Int32.Parse(eachQuantity)).ToString() + " ea";
+                }
+                    <div class="gateway-pricing">@displayPriceString</div>
+            }
+            else
+            {
+                <div class='gateway-pricing'>Starting at $@Model.price</div>
+            }
 
         </div>
         @{

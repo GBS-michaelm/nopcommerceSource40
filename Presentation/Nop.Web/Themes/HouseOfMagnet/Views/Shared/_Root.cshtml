@@ -19,7 +19,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="/" class="fixed-logo"></a>
+                        @*<a href="/" class="fixed-logo"></a>*@
                         @Html.Widget("theme_header_menu")       @*Added for the mega menu   -- Nav 7/26/17*@
                         @*@Html.Action("TopMenu", "Catalog")*@
                     </div>
@@ -28,6 +28,7 @@
         </div>
         <div class="master-wrapper-content">
             @*@Html.Widget("home_page_top")*@
+            @Html.Widget("content_before")                   @*Added for the Ribbon Plugin  -- Nav 1/18/18*@
             @*<div class="container ">
                 <div class="row">
                     <div class="col-md-12 ">     

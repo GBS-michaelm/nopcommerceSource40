@@ -49,6 +49,9 @@
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
+
+     <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
+	 
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
@@ -163,13 +166,16 @@
                                         </li>
                                     </ul>
                                 </div>
+                                @{
+                                    ViewBag.productId = Model.Id;
+                                }
                                 @Html.Partial("_ProductTierPrices", Model.TierPrices)
                                 <div class="category-tag">
-                                    @Html.Widget("product_category_titles", Model.Id)
-                                    @*@if (Model.ProductTags.Count > 0)
-            {
-            @Html.Partial("_ProductTags", Model.ProductTags)
-            }*@
+                                    @* @Html.Widget("product_category_titles", Model.Id)
+                                @if (Model.ProductTags.Count > 0)
+        {
+        @Html.Partial("_ProductTags", Model.ProductTags)
+        }*@
                                 </div>
                                 <div class="col-md-12 product-details-tabs">
                                     <ul class="nav nav-tabs">

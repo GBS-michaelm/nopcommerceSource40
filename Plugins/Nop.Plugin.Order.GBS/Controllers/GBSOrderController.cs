@@ -44,12 +44,12 @@ namespace Nop.Plugin.Order.GBS.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly HttpContextBase _httpContext;
         private readonly IOrderService _orderService;
-        private readonly IOrderModelFactory _orderModelFactory;
+        private readonly Factories.IOrderModelFactory _orderModelFactory;
         private readonly GBSOrderService _gbsOrderService;
 
 
         public GBSOrderController(
-            IOrderModelFactory orderModelFactory,
+            Factories.IOrderModelFactory orderModelFactory,
             IOrderService orderService,
             ICcService ccService,
             CcSettings ccSettings,
@@ -242,14 +242,14 @@ namespace Nop.Plugin.Order.GBS.Controllers
             var canvaseBaseUrl = _ccSettings.ServerHostUrl;
 
             string env = "LIVE";
-            if (canvaseBaseUrl.Contains("canvasDev"))
+            if (canvaseBaseUrl.ToLower().Contains("canvasdev"))
             {
                 env = "DEV";
-            }else if (canvaseBaseUrl.Contains("canvasTest"))
+            }else if (canvaseBaseUrl.ToLower().Contains("canvastest"))
             {
                 env = "TEST";
             }
-            else if (canvaseBaseUrl.Contains("canvasStage"))
+            else if (canvaseBaseUrl.ToLower().Contains("canvasstage"))
             {
                 env = "STAGE";
             }
@@ -259,6 +259,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         {
             var environment = getEnvironment();
             List<ProductFileModel> productFiles = new List<ProductFileModel>();
+            webPlatform = webPlatform.ToUpper();
             switch (webPlatform)
             {
                 case "NOP":
@@ -403,6 +404,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
         {
             var environment = getEnvironment();
             string stateID = string.Empty;
+            webPlatform = webPlatform.ToUpper();
             switch (webPlatform)
             {
                 case "NOP":
@@ -510,6 +512,8 @@ namespace Nop.Plugin.Order.GBS.Controllers
             _httpContext.Session["customerPhoneNumber"] = phnum;
             return null;
         }
+
+        
 
     }
 }
