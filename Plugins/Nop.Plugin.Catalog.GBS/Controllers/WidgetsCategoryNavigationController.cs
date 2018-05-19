@@ -20,11 +20,13 @@ using Nop.Services.Topics;
 using Nop.Core.Domain.Topics;
 using Nop.Web.Models.Catalog;
 using Nop.Services.Logging;
+using Nop.Plugin.BusinessLogic.GBS.Models;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
     public class WidgetsCategoryNavigationController : BaseController
     {
+
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactoryCustom _catalogModelFactoryCustom;
         private readonly ICatalogModelFactory _catalogModelFactory;
@@ -73,7 +75,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var categoryNavigationSettings = _settingService.LoadSetting<CategoryNavigationSettings>(storeScope);
 
-            var model = new ConfigurationModel();
+            var model = new Models.ConfigurationModel();
             model.AllCategory = categoryNavigationSettings.AllCategory;
             model.NoOfChildren = categoryNavigationSettings.NoOfChildren;
             model.IsActive = categoryNavigationSettings.IsActive;
@@ -99,7 +101,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
 
         [AdminAuthorize]
         [HttpPost]
-        public ActionResult Configure(ConfigurationModel model)
+        public ActionResult Configure(Models.ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -136,7 +138,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
@@ -188,7 +190,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult CategoryTabs(string widgetZone, object additionalData = null)
         {
             var currentCategoryId = 0;

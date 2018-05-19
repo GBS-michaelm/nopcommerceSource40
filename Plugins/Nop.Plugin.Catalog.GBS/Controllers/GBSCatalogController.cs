@@ -16,11 +16,14 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Framework.Security;
+using Nop.Plugin.BusinessLogic.GBS.Models;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
+
     public class CatalogController : Nop.Web.Controllers.CatalogController
     {
+
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactory _catalogModelFactory;
 
@@ -82,7 +85,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public override ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             return base.Category(categoryId, command);

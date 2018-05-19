@@ -150,6 +150,11 @@
       <Name>Nop.Web</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.BusinessLogic.GBS\Nop.Plugin.BusinessLogic.GBS.csproj">
+      <Project>{A6A1624E-D525-4BFF-930C-5BB19DD6E96A}</Project>
+      <Name>Nop.Plugin.BusinessLogic.GBS</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Configure.cshtml">

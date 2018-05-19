@@ -21,5 +21,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         public string MarketCenterWhatAmIReferenceName { get; set; }
         public bool MarketCenterWhatAmIReferenceName_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.CacheDurationInSeconds")]
+        public string CacheDurationInSeconds { get; set; }
+        public bool CacheDurationInSeconds_OverrideForStore { get; set; }
+
     }
 }

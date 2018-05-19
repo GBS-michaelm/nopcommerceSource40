@@ -41,6 +41,16 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.CacheDurationInSeconds_OverrideForStore, model => model.CacheDurationInSeconds, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.CacheDurationInSeconds):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CacheDurationInSeconds)
+            @Html.ValidationMessageFor(model => model.CacheDurationInSeconds)
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </td>

@@ -22,7 +22,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
     
     public class AccessoryPageController : BaseController
     {
-                
+        public const int cacheDuration = 3600;
+
         public ActionResult AccessoryPage(int groupId, int productId)
         {
             AccessoryPageModel model = new AccessoryPageModel();
@@ -32,7 +33,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             return View("AccessoryPage", model);
         }
 
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult AccessoryCategories(int groupId)
         {
             var iCategoryService = EngineContext.Current.Resolve<ICategoryService>();

@@ -9,5 +9,6 @@ namespace Nop.Plugin.BusinessLogic.GBS
 
         public string MarketCenterWhatAmIReferenceName { get; set; }
 
+        public string CacheDurationInSeconds { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult GatewayCatalogProducts(string type, int id)
         {
             switch (type)
@@ -93,7 +94,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
             try
@@ -141,7 +142,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
         }
 
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [GBSOutputCache(VaryByParam = "*")]
         public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
 

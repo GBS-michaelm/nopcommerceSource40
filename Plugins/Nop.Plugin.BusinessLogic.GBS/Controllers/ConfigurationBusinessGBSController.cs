@@ -46,6 +46,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 Hack = GBSBusinessLogicSettings.Hack,
                 MarketCenterDefaultId = GBSBusinessLogicSettings.MarketCenterDefaultId,
                 MarketCenterWhatAmIReferenceName = GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName,
+                CacheDurationInSeconds = GBSBusinessLogicSettings.CacheDurationInSeconds,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -54,6 +55,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 model.Hack_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.Hack, storeScope);
                 model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);               
                 model.MarketCenterWhatAmIReferenceName_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
+                model.CacheDurationInSeconds_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.CacheDurationInSeconds, storeScope);
             }
 
             return View("~/Plugins/BusinessLogic.GBS/Views/BusinessLogic/Configure.cshtml", model);
@@ -76,6 +78,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             GBSBusinessLogicSettings.Hack = model.Hack;
             GBSBusinessLogicSettings.MarketCenterDefaultId = model.MarketCenterDefaultId;
             GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName = model.MarketCenterWhatAmIReferenceName;
+            GBSBusinessLogicSettings.CacheDurationInSeconds = model.CacheDurationInSeconds;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -95,6 +98,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
+
+            if (model.CacheDurationInSeconds_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.CacheDurationInSeconds, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.CacheDurationInSeconds, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
