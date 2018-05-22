@@ -44,6 +44,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Infrastructure
                             new { controller = "AccessoryPage", action = "AccessoryCategories" },
                             new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
 
+            routes.MapLocalizedRoute("CanvasNameBadge",
+                            "namebadgecanvas",
+                            new { controller = "Company", action = "CanvasNameBadge" },
+                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
+
+
         }
 
 

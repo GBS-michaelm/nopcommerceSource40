@@ -68,9 +68,9 @@
                 @* check if product has canvas data and has or has not been added to nop yet *@
 
                 @* canvas *@
-                @*<div>
-                    @Html.Action("CategoryNameBadges", "NameBadge", new { isDefault = true, categoryid = Model.Id })
-                </div>*@
+                <div>
+                    @Html.Action("CanvasNameBadge", "CompanyController", new { isDefault = true, categoryid = Model.Id })
+                </div>
             }
             else
             {
