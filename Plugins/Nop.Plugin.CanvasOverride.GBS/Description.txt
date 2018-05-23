@@ -1,0 +1,9 @@
+﻿Group: GBS
+FriendlyName: GBS Canvas Override Plugin
+SystemName: Plugin.CanvasOverride.GBS
+Version: 1.0
+SupportedVersions: 3.90
+Author: Alex Kang
+DisplayOrder: 1
+FileName: Nop.Plugin.CanvasOverride.GBS
+Description: Using this plugin to override canvas core plugin.
