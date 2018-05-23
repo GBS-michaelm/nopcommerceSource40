@@ -13231,3 +13231,8 @@ body:not(.no-transition) #wrapper,
 	padding:0!important
 }
 
+
+/* -- Hide the Public Folder in the Gallery of the Editor*/
+.tabs-controls-container .tabs-ul-container li:nth-child(2) a.ng-binding {
+    display: none;
+}
