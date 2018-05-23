@@ -145,3 +145,8 @@ div .header-menu {
 .newmneu{
     display: none !important;
 }
+
+/* -- Hide the Public Folder in the Gallery of the Editor*/
+.tabs-controls-container .tabs-ul-container li:nth-child(2) a.ng-binding {
+    display: none;
+}
