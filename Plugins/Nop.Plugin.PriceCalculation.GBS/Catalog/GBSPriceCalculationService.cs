@@ -379,6 +379,8 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
 
                         }
                         break;
+                    case "Change Fee": //One time fee case
+                    case "Design Fee":
                     case "Express Production":
                         if (System.Web.HttpContext.Current.Request.Form != null)
                         {
