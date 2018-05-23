@@ -334,6 +334,18 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                             priceAdjustment = attributeValue.PriceAdjustment;
                         }
 
+                        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Design Fee" && attributeValue.Name == "Yes")
+                        {
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
+                        }
+
+                        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Change Fee" && attributeValue.Name == "Yes")
+                        {
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
+                        }
+
                         //if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "returnAddressMinimumSurcharge" && attributeValue.Name == "Yes")
                         //{
                         //    returnAddressMinimumSurchargeID = attributeValue.Id;
