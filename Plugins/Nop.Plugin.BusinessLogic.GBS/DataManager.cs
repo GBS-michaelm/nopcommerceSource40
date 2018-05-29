@@ -246,8 +246,8 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                         }
                     }
                     Open();
-                    return cmd.ExecuteScalar();
-
+                    return cmd.ExecuteScalar();            
+                    
                 }
 
             }

@@ -78,6 +78,7 @@
     <Compile Include="Models\AccessoryPageBoxModel.cs" />
     <Compile Include="Models\AccessoryPageCategoryAccessoriesModel.cs" />
     <Compile Include="Models\AccessoryPageModel.cs" />
+    <Compile Include="Models\CompanyProductsModel.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\GatewayPageProductBoxModel.cs" />
     <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />

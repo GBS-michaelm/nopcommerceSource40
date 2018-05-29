@@ -77,7 +77,7 @@
     }
 
     @{ 
-        MarketCenter marketcenter = new MarketCenter(Int32.Parse(marketCenterId));
+        MarketCenter marketcenter = MarketCenter.GetMarketCenter(Int32.Parse(marketCenterId));
 
         string mcName = marketcenter.Name;
         

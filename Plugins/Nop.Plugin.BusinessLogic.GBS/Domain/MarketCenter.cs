@@ -17,15 +17,17 @@ using System.Data.SqlClient;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
-    public class MarketCenter : CategoryModel
+    public class MarketCenter //: CategoryModel
     {
 
         DBManager manager = new DBManager();
+        static DBManager MANAGER = new DBManager();
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
         ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
         IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
         ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
         ILogger logger = EngineContext.Current.Resolve<ILogger>();
 
 
@@ -40,181 +42,213 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         string _backgroundColor = "";
         string _mainPicturePath;
         string _fontColor = "";
-        //string _gatewayHtml = "";
         bool _isTopCompany = false;
         List<MarketCenter> _childCompanies = new List<MarketCenter>();
+        string _name = "";
+        string _seName = "";
+        bool _isFeatured = false;
+        int _alphaTab = 0;
+        
+        public static MarketCenter GetMarketCenter(int marketCenterId, bool lightVer = true, bool getChildren = false)
+        {           
+            //string json = "{                              'id': 84,                              'parentCategoryIdy': 0,                              'h1': 'h1',                              'h2': 'h2',                              'topText': 'topText',                              'bottomText': 'bottomText',                              'backgroundImage': '/content/images/gateway/bg_specialty.jpg',                              'foregroundImage': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'backgroundColor': '#00355c',                              'mainPicturePath': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'fontColor': '#00355c',                              'isTopCompany': true,                              'name': 'name',                              'seName': 'seName',                              'childCompanies': [                                {                                  'SeName': 'berkshire-hathaway-homeservices-ally-real-estate-1908',                                  'id': 1908,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ally Real Estate',                                  'fontColor': '#552448',                                  'isTopCompany': false                                },                                {                                  'SeName': 'berkshire-hathaway-homeservices-ambassador-re-4784',                                  'id': 4784,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ambassador R.E.',                                  'fontColor': '#552448'                                }                              ]                            }";
+            Dictionary<string, Object> marketCenterDic = new Dictionary<string, Object>();
+            string select = "EXEC usp_SELECTGBSGetSingleMarketCenter_Lean @categoryId";
+            marketCenterDic.Add("@categoryId", marketCenterId);
+
+            string jsonResult = MANAGER.GetParameterizedJsonString(select, marketCenterDic);
+
+            List<MarketCenter> marketcentersList = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+            
+            return marketcentersList[0];
+
+        }
+
+
+        //public MarketCenter(int marketCenterId, bool lightVer = true, bool getChildren = false)
+        //{
+        //    string json = "{                              'id': 84,                              'parentCategoryIdy': 0,                              'h1': 'h1',                              'h2': 'h2',                              'topText': 'topText',                              'bottomText': 'bottomText',                              'backgroundImage': '/content/images/gateway/bg_specialty.jpg',                              'foregroundImage': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'backgroundColor': '#00355c',                              'mainPicturePath': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'fontColor': '#00355c',                              'isTopCompany': true,                              'name': 'name',                              'seName': 'seName',                              'childCompanies': [                                {                                  'SeName': 'berkshire-hathaway-homeservices-ally-real-estate-1908',                                  'id': 1908,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ally Real Estate',                                  'fontColor': '#552448',                                  'isTopCompany': false                                },                                {                                  'SeName': 'berkshire-hathaway-homeservices-ambassador-re-4784',                                  'id': 4784,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ambassador R.E.',                                  'fontColor': '#552448'                                }                              ]                            }";
+
+        //    this = JsonConvert.DeserializeObject<MarketCenter>(json);
+
+
+        //}
+
+
+        
+
+
 
         //market center type link changing stuff
-        IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
-        int specAttributeId;
-        int specAttributeValueOption;
-        int seCategoryId = 0;
+        
+        //int specAttributeId;
+        //int specAttributeValueOption;
+        //int seCategoryId = 0;
+        
+        //public MarketCenter(int marketCenterCategoryId, bool lightVer = true, bool getChildren = false, string customType = "")
+        //{
+
+        //    if(marketCenterCategoryId != 0)
+        //    {
+        //        this.id = marketCenterCategoryId;
+        //        Category category = categoryService.GetCategoryById(marketCenterCategoryId);
+        //        CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+        //        catalogPagingFilteringModel.PageSize = 1;
+        //        CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+        //        this.Name = categoryModel.Name;
+        //        this.parentCategoryId = _parentCategoryId;
+        //        this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
 
 
-        public MarketCenter(int marketCenterCategoryId, bool lightVer = true, bool getChildren = false, string customType = "")
-        {
-            
-            if(marketCenterCategoryId != 0)
-            {
-                this.id = marketCenterCategoryId;
-                Category category = categoryService.GetCategoryById(marketCenterCategoryId);
-                CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
-                catalogPagingFilteringModel.PageSize = 1;
-                CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-                this.Name = categoryModel.Name;
-                this.parentCategoryId = _parentCategoryId;
-                this.mainPicturePath = pictureService.GetPictureUrl(category.PictureId);
+        //        //get spec attribute id and spec attribute option value id
+        //        if (!string.IsNullOrEmpty(customType))
+        //        {
+        //            specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
+        //            foreach (var attr in specAttrList)
+        //            {
+        //                string typeOptionValue = "";
+        //                if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
+        //                {
+        //                    specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+        //                    typeOptionValue = attr.SpecificationAttributeOption.Name;
+        //                    if (typeOptionValue == customType)
+        //                    {
+        //                        specAttributeValueOption = attr.SpecificationAttributeOption.Id;
+        //                        break;
+        //                    }
+        //                }
+        //            }
 
+        //            //nop check for children categories, query with children category ids to see if any are in the prod attr mapping table
+        //            //check if market center is at top level for office via query
 
-                //get spec attribute id and spec attribute option value id
-                if (!string.IsNullOrEmpty(customType))
-                {
-                    specAttrList = specService.GetProductSpecificationAttributes(productId: 0);
-                    foreach (var attr in specAttrList)
-                    {
-                        string typeOptionValue = "";
-                        if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Market Center Gateway Type")
-                        {
-                            specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
-                            typeOptionValue = attr.SpecificationAttributeOption.Name;
-                            if (typeOptionValue == customType)
-                            {
-                                specAttributeValueOption = attr.SpecificationAttributeOption.Id;
-                                break;
-                            }
-                        }
-                    }
+        //            IList<Category> categoriesList = categoryService.GetAllCategoriesByParentCategoryId(marketCenterCategoryId);
 
-                    //nop check for children categories, query with children category ids to see if any are in the prod attr mapping table
-                    //check if market center is at top level for office via query
+        //            for (int x = 0; x <= categoriesList.Count; x++)
+        //            {
+        //                DataView marketCenterSeView = cacheManager.Get("marketCenterSeLink" + marketCenterCategoryId, 60, () => {
+        //                    Dictionary<string, Object> marketCenterSeDic = new Dictionary<string, Object>();
+        //                    //int catListId = categoriesList[x].Id;
 
-                    IList<Category> categoriesList = categoryService.GetAllCategoriesByParentCategoryId(marketCenterCategoryId);
+        //                    marketCenterSeDic.Add("@CategoryId", categoriesList[x].Id);
+        //                    marketCenterSeDic.Add("@SpecificationAttributeOptionId", specAttributeValueOption);
 
-                    for (int x = 0; x <= categoriesList.Count; x++)
-                    {
-                        DataView marketCenterSeView = cacheManager.Get("marketCenterSeLink" + marketCenterCategoryId, 60, () => {
-                            Dictionary<string, Object> marketCenterSeDic = new Dictionary<string, Object>();
-                            //int catListId = categoriesList[x].Id;
+        //                    string marketCenterSeDataQuery = "EXEC usp_SelectGBSMarketCenterCustomTypeCategoryId @CategoryId, @SpecificationAttributeOptionId";
+        //                    DataView innerMarketCenterSeDataView = manager.GetParameterizedDataView(marketCenterSeDataQuery, marketCenterSeDic);
 
-                            marketCenterSeDic.Add("@CategoryId", categoriesList[x].Id);
-                            marketCenterSeDic.Add("@SpecificationAttributeOptionId", specAttributeValueOption);
+        //                    return innerMarketCenterSeDataView;
+        //                });
 
-                            string marketCenterSeDataQuery = "EXEC usp_SelectGBSMarketCenterCustomTypeCategoryId @CategoryId, @SpecificationAttributeOptionId";
-                            DataView innerMarketCenterSeDataView = manager.GetParameterizedDataView(marketCenterSeDataQuery, marketCenterSeDic);
+        //                if (marketCenterSeView.Count > 0)
+        //                {
+        //                    seCategoryId = Int32.Parse(marketCenterSeView[x]["tblNopCategoryId"].ToString());
+        //                    break;
+        //                }
 
-                            return innerMarketCenterSeDataView;
-                        });
+        //            }
 
-                        if (marketCenterSeView.Count > 0)
-                        {
-                            seCategoryId = Int32.Parse(marketCenterSeView[x]["tblNopCategoryId"].ToString());
-                            break;
-                        }
+        //            if (seCategoryId == 0)
+        //            {
 
-                    }
+        //                //check child count to see if is top office
+        //                int childMarketCenterCount = GetChildCategories(marketCenterCategoryId, customType, true);
 
-                    if (seCategoryId == 0)
-                    {
+        //                if (childMarketCenterCount > 0)
+        //                {
+        //                    this.SeName = ""; //parent market center child offices will hold links to pages
+        //                }
+        //                else
+        //                {
+        //                    //generate some sort of link that knows what kind of product is missing and where to go
+        //                    this.SeName = "/request-marketcenter-product?type=" + customType + "&company=" + marketCenterCategoryId;//page for market center products that don't exist
+        //                }
 
-                        //check child count to see if is top office
-                        int childMarketCenterCount = GetChildCategories(marketCenterCategoryId, customType, true);
+        //            }
+        //            else
+        //            {
+        //                Category seCustomLinkCategory = categoryService.GetCategoryById(seCategoryId);
+        //                CategoryModel seCustomLinkCategoryModel = catalogModelFactory.PrepareCategoryModel(seCustomLinkCategory, catalogPagingFilteringModel);
 
-                        if (childMarketCenterCount > 0)
-                        {
-                            this.SeName = ""; //parent market center child offices will hold links to pages
-                        }
-                        else
-                        {
-                            //generate some sort of link that knows what kind of product is missing and where to go
-                            this.SeName = "/request-marketcenter-product?type=" + customType + "&company=" + marketCenterCategoryId;//page for market center products that don't exist
-                        }
+        //                this.SeName = seCustomLinkCategoryModel.SeName;
 
-                    }
-                    else
-                    {
-                        Category seCustomLinkCategory = categoryService.GetCategoryById(seCategoryId);
-                        CategoryModel seCustomLinkCategoryModel = catalogModelFactory.PrepareCategoryModel(seCustomLinkCategory, catalogPagingFilteringModel);
+        //            }
 
-                        this.SeName = seCustomLinkCategoryModel.SeName;
-
-                    }
-
-                }
-                else
-                {
-                    this.SeName = categoryModel.SeName;
-                }
-
-
-
-                if (lightVer == false)
-                {
-                    this.PagingFilteringContext = catalogPagingFilteringModel;
-                    this.Description = categoryModel.Description;
-                    this.MetaKeywords = categoryModel.MetaKeywords;
-                    this.MetaDescription = categoryModel.MetaDescription;
-                    this.MetaTitle = categoryModel.MetaTitle;
-                    this.PictureModel = categoryModel.PictureModel;
-                    this.PagingFilteringContext = categoryModel.PagingFilteringContext;
-                    this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
-                    this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
-                    this.SubCategories = categoryModel.SubCategories;
-                    this.FeaturedProducts = categoryModel.FeaturedProducts;
-                    this.Products = categoryModel.Products;
-                }
+        //        }
+        //        else
+        //        {
+        //            this.SeName = categoryModel.SeName;
+        //        }
 
 
 
-                DataView marketCenterDataView = cacheManager.Get("marketCenter" + marketCenterCategoryId, 60, () => {
-                    Dictionary<string, Object> marketCenterDic = new Dictionary<string, Object>();
-                    marketCenterDic.Add("@CategoryId", marketCenterCategoryId);
+        //        if (lightVer == false)
+        //        {
+        //            this.PagingFilteringContext = catalogPagingFilteringModel;
+        //            this.Description = categoryModel.Description;
+        //            this.MetaKeywords = categoryModel.MetaKeywords;
+        //            this.MetaDescription = categoryModel.MetaDescription;
+        //            this.MetaTitle = categoryModel.MetaTitle;
+        //            this.PictureModel = categoryModel.PictureModel;
+        //            this.PagingFilteringContext = categoryModel.PagingFilteringContext;
+        //            this.DisplayCategoryBreadcrumb = categoryModel.DisplayCategoryBreadcrumb;
+        //            this.CategoryBreadcrumb = categoryModel.CategoryBreadcrumb;
+        //            this.SubCategories = categoryModel.SubCategories;
+        //            this.FeaturedProducts = categoryModel.FeaturedProducts;
+        //            this.Products = categoryModel.Products;
+        //        }
 
-                    string marketCenterDataQuery = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
-                    DataView innerMarketCenterDataView = manager.GetParameterizedDataView(marketCenterDataQuery, marketCenterDic);
 
-                    return innerMarketCenterDataView;
-                });
 
-                if (marketCenterDataView.Count > 0)
-                {
-                    if (lightVer == false)
-                    {
-                        this.parentCategoryId = category.ParentCategoryId;
-                        this.h1 = !string.IsNullOrEmpty(marketCenterDataView[0]["H1"].ToString()) ? marketCenterDataView[0]["H1"].ToString() : this.Name;
-                        this.h2 = !string.IsNullOrEmpty(marketCenterDataView[0]["H2"].ToString()) ? marketCenterDataView[0]["H2"].ToString() : _h2;
-                        this.topText = !string.IsNullOrEmpty(marketCenterDataView[0]["UpperText"].ToString()) ? marketCenterDataView[0]["UpperText"].ToString() : _topText;
-                        this.bottomText = !string.IsNullOrEmpty(marketCenterDataView[0]["LowerText"].ToString()) ? marketCenterDataView[0]["LowerText"].ToString() : _bottomText;
-                        this.backgroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundPicturePath"].ToString()) ? marketCenterDataView[0]["BackgroundPicturePath"].ToString() : _backgroundImage;
-                        this.foregroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["ForegroundPicturePath"].ToString()) ? marketCenterDataView[0]["ForegroundPicturePath"].ToString() : _foregroundImage;
-                        this.backgroundColor = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundColor"].ToString()) ? marketCenterDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
-                    }
+        //        DataView marketCenterDataView = cacheManager.Get("marketCenter" + marketCenterCategoryId, 60, () => {
+        //            Dictionary<string, Object> marketCenterDic = new Dictionary<string, Object>();
+        //            marketCenterDic.Add("@CategoryId", marketCenterCategoryId);
 
-                    //marketcenter custom data      
+        //            string marketCenterDataQuery = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
+        //            DataView innerMarketCenterDataView = manager.GetParameterizedDataView(marketCenterDataQuery, marketCenterDic);
 
-                    this.isTopCompany = !string.IsNullOrEmpty(marketCenterDataView[0]["IsFeatured"].ToString()) ? Convert.ToBoolean(marketCenterDataView[0]["IsFeatured"]) : isTopCompany = _isTopCompany;
-                    if (this.isTopCompany)
-                    {
-                        if (!string.IsNullOrEmpty(marketCenterDataView[0]["LogoPicturePath"].ToString()))
-                        {
-                            this.mainPicturePath = marketCenterDataView[0]["LogoPicturePath"].ToString();
-                        }
-                        else
-                        {
-                            this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
-                        }
-                    }
+        //            return innerMarketCenterDataView;
+        //        });
 
-                }
+        //        if (marketCenterDataView.Count > 0)
+        //        {
+        //            if (lightVer == false)
+        //            {
+        //                this.parentCategoryId = category.ParentCategoryId;
+        //                this.h1 = !string.IsNullOrEmpty(marketCenterDataView[0]["H1"].ToString()) ? marketCenterDataView[0]["H1"].ToString() : this.Name;
+        //                this.h2 = !string.IsNullOrEmpty(marketCenterDataView[0]["H2"].ToString()) ? marketCenterDataView[0]["H2"].ToString() : _h2;
+        //                this.topText = !string.IsNullOrEmpty(marketCenterDataView[0]["UpperText"].ToString()) ? marketCenterDataView[0]["UpperText"].ToString() : _topText;
+        //                this.bottomText = !string.IsNullOrEmpty(marketCenterDataView[0]["LowerText"].ToString()) ? marketCenterDataView[0]["LowerText"].ToString() : _bottomText;
+        //                this.backgroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundPicturePath"].ToString()) ? marketCenterDataView[0]["BackgroundPicturePath"].ToString() : _backgroundImage;
+        //                this.foregroundImage = !string.IsNullOrEmpty(marketCenterDataView[0]["ForegroundPicturePath"].ToString()) ? marketCenterDataView[0]["ForegroundPicturePath"].ToString() : _foregroundImage;
+        //                this.backgroundColor = !string.IsNullOrEmpty(marketCenterDataView[0]["BackgroundColor"].ToString()) ? marketCenterDataView[0]["BackgroundColor"].ToString() : _backgroundColor;
+        //            }
 
-                #region child companies
-                //if (getChildren)
-                //{
-                //    GetChildCategories(marketCenterCategoryId, customType);
-                //}            
-                #endregion
-            }
-            
-        }
+        //            //marketcenter custom data      
+
+        //            this.isTopCompany = !string.IsNullOrEmpty(marketCenterDataView[0]["IsFeatured"].ToString()) ? Convert.ToBoolean(marketCenterDataView[0]["IsFeatured"]) : isTopCompany = _isTopCompany;
+        //            if (this.isTopCompany)
+        //            {
+        //                if (!string.IsNullOrEmpty(marketCenterDataView[0]["LogoPicturePath"].ToString()))
+        //                {
+        //                    this.mainPicturePath = marketCenterDataView[0]["LogoPicturePath"].ToString();
+        //                }
+        //                else
+        //                {
+        //                    this.mainPicturePath = !string.IsNullOrEmpty(marketCenterDataView[0]["MainPicturePath"].ToString()) ? marketCenterDataView[0]["MainPicturePath"].ToString() : _mainPicturePath;
+        //                }
+        //            }
+
+        //        }
+
+        //        #region child companies
+        //        //if (getChildren)
+        //        //{
+        //        //    GetChildCategories(marketCenterCategoryId, customType);
+        //        //}            
+        //        #endregion
+        //    }
+
+        //}
 
         public int id { get { return _id; } set { _id = value; } } 
         public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }
@@ -229,35 +263,39 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string fontColor { get { return _fontColor; } set { _fontColor = value; } }
         public List<MarketCenter> childCompanies { get { return _childCompanies; } set { _childCompanies = value; } }
         public bool isTopCompany { get { return _isTopCompany; } set { _isTopCompany = value; } }
-        
-        private int GetChildCategories(int marketCenterCategoryId, string type, bool countOnly = false)
-        {
-            //child companies handling
-            DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
-                Dictionary<string, Object> marketCenterChildCompanyDic = new Dictionary<string, Object>();
-                marketCenterChildCompanyDic.Add("@CategoryId", marketCenterCategoryId);
+        public string Name { get { return _name; } set { _name = value; } }
+        public string SeName { get { return _seName; } set { _seName = value; } }
+        public bool isFeatured { get { return _isFeatured; } set { _isFeatured = value; } }
+        public int alphaTab { get { return _alphaTab; } set { _alphaTab = value; } }
 
-                string marketCenterChildCompanyDataQuery = "EXEC usp_SelectGBSMarketCenterChildren @categoryId";
-                DataView innerMarketCenterChildCompanyDataView = manager.GetParameterizedDataView(marketCenterChildCompanyDataQuery, marketCenterChildCompanyDic);
+        //private int GetChildCategories(int marketCenterCategoryId, string type, bool countOnly = false)
+        //{
+        //    //child companies handling
+        //    DataView marketCenterChildCompanyDataView = cacheManager.Get("marketCenterChildCompany" + marketCenterCategoryId, 60, () => {
+        //        Dictionary<string, Object> marketCenterChildCompanyDic = new Dictionary<string, Object>();
+        //        marketCenterChildCompanyDic.Add("@CategoryId", marketCenterCategoryId);
 
-                return innerMarketCenterChildCompanyDataView;
-            });
+        //        string marketCenterChildCompanyDataQuery = "EXEC usp_SelectGBSMarketCenterChildren @categoryId";
+        //        DataView innerMarketCenterChildCompanyDataView = manager.GetParameterizedDataView(marketCenterChildCompanyDataQuery, marketCenterChildCompanyDic);
 
-            if (!countOnly)
-            {
-                if (marketCenterChildCompanyDataView.Count > 0)
-                {
-                    for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
-                    {
-                        MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()), customType: type);
-                        this.childCompanies.Add(marketCenter);
-                    }
-                }
-            }
-            
-            return marketCenterChildCompanyDataView.Count;
+        //        return innerMarketCenterChildCompanyDataView;
+        //    });
 
-        }
+        //    if (!countOnly)
+        //    {
+        //        if (marketCenterChildCompanyDataView.Count > 0)
+        //        {
+        //            for (int i = 0; i < marketCenterChildCompanyDataView.Count; i++)
+        //            {
+        //                MarketCenter marketCenter = new MarketCenter(Int32.Parse(marketCenterChildCompanyDataView[i]["id"].ToString()), customType: type);
+        //                this.childCompanies.Add(marketCenter);
+        //            }
+        //        }
+        //    }
+
+        //    return marketCenterChildCompanyDataView.Count;
+
+        //}
 
         public Dictionary<string, string> GetMarketCenterHtml(string type, bool hack)
         {
@@ -302,7 +340,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         //}
                         //else
                         //{
-                        marketcenter = new MarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
+                        marketcenter = MarketCenter.GetMarketCenter(TopLevelMarketCenterIdsInOrder[i].Id, getChildren: true);
                         //marketcenter = new MarketCenter(marketcenterCategory.Id, getChildren: true, customType: type);
                         //}                   
                         //FORCE FEATURED                     
@@ -358,11 +396,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                             //ver where ID is in url
                             int specAttrOptionId = parseResult;
 
-                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
-                            alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
-                            alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
-                            alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
-                            allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
+                            //featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
+                            //alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                            //alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                            //alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                            //allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
+                            allList = GetTabData(type, specAttrOptionId);
 
                         }
                         else
@@ -389,25 +428,32 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                                 }
                             }
 
-                            featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
-                            alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
-                            alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
-                            alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
-                            allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
+                            //featuredMarketCenterList = GetTabData(true, '!', 'Z', specAttrOptionId, type: type);
+                            //alphaList1 = GetTabData(null, '!', 'G', specAttrOptionId, type);
+                            //alphaList2 = GetTabData(null, 'H', 'P', specAttrOptionId, type);
+                            //alphaList3 = GetTabData(null, 'Q', 'Z', specAttrOptionId, type);
+                            //allList = GetTabData(null, '!', 'Z', specAttrOptionId, type);
+                            allList = GetTabData(type, specAttrOptionId);
                         }
                                                 
                     }
                     else
                     {
-                        featuredMarketCenterList = GetTabData(true);
-                        alphaList1 = GetTabData(null, '!', 'G');
-                        alphaList2 = GetTabData(null, 'H', 'P');
-                        alphaList3 = GetTabData(null, 'Q', 'Z');
-                        allList = GetTabData(null, '!', 'Z');
+                        //featuredMarketCenterList = GetTabData(true);
+                        //alphaList1 = GetTabData(null, '!', 'G');
+                        //alphaList2 = GetTabData(null, 'H', 'P');
+                        //alphaList3 = GetTabData(null, 'Q', 'Z');
+                        //allList = GetTabData(null, '!', 'Z');
+                        allList = GetTabData();
                     }
 
                 }
 
+                featuredMarketCenterList = allList.Where(x => x.isFeatured == true).ToList<MarketCenter>();
+                alphaList1 = allList.Where(x => x.alphaTab == 1).ToList<MarketCenter>();
+                alphaList2 = allList.Where(x => x.alphaTab == 2).ToList<MarketCenter>();
+                alphaList3 = allList.Where(x => x.alphaTab == 3).ToList<MarketCenter>();
+                
                 //call build for featured list
                 //top companies only (isFeatured)
                 string isfeatured = featuredMarketCenterList.Count > 0 ? BuildFeaturedCompanyHtml(featuredMarketCenterList, type) : "";
@@ -446,14 +492,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             }       
 
         }
-        
-        private List<MarketCenter> GetTabData(bool? isFeatured = null, char start = '!', char end = 'z', int specAttrOpId = 0, string type = "", bool all = false)
+
+        //private List<MarketCenter> GetTabData(bool? isFeatured = null, char start = '!', char end = 'z', int specAttrOpId = 0, string type = "", bool all = false)
+        private List<MarketCenter> GetTabData(string type = "", int specAttrOpId = 0)
         {
 
             List<MarketCenter> marketCenters = null;
-            Dictionary<string, Object> marketCenterTabDic = new Dictionary<string, Object>();            
-            marketCenterTabDic.Add("@start", start);
-            marketCenterTabDic.Add("@end", end);
+            Dictionary<string, Object> marketCenterTabDic = new Dictionary<string, Object>();
+            //marketCenterTabDic.Add("@start", start);
+            //marketCenterTabDic.Add("@end", end);
+            dynamic jsonResultPreConvert;
+            DataView marketCenterDataView = null;
 
             try
             {
@@ -473,17 +522,29 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 //{
                     if (string.IsNullOrEmpty(type))
                     {
-                        string select = "EXEC usp_SELECTGBSGetMarketCenters @start, @end";
-                        if (isFeatured != null)
-                        {
-                            select = "EXEC usp_SELECTGBSGetMarketCenters  @start, @end, @isFeatured";
-                            marketCenterTabDic.Add("@isFeatured", isFeatured);
-                        }
+                        string select = "EXEC usp_SELECTGBSGetMarketCenters_Lean";
+                    //if (isFeatured != null)
+                    //{
+                    //    select = "EXEC usp_SELECTGBSGetMarketCenters_Lean  @start, @end, @isFeatured";
+                    //    marketCenterTabDic.Add("@isFeatured", isFeatured);
+                    //}
 
-                        string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
 
-                        marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
-                    }
+                    //scaler ver
+                    string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
+
+                    marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+
+                    //dataview ver
+                    //marketCenterDataView = manager.GetParameterizedDataView(select, marketCenterTabDic);
+                    //if(marketCenterDataView.Count > 0)
+                    //{
+
+                    //}
+
+
+
+                }
                     else
                     {
                         //using type to change urls
@@ -491,16 +552,17 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                         marketCenterTabDic.Add("@specAttributeOptionId", specAttrOpId);
 
                         //string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @type, @specAttributeOptionId ";
-                        string select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @specAttributeOptionId ";
-                        if (isFeatured != null)
-                        {
-                            select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @specAttributeOptionId, @isFeatured ";
-                            marketCenterTabDic.Add("@isFeatured", isFeatured);
-                        }
+                        string select = "EXEC usp_SELECTGBSGetMarketCentersWithType_Lean @specAttributeOptionId";
+                        //if (isFeatured != null)
+                        //{
+                        //    select = "EXEC usp_SELECTGBSGetMarketCentersWithType @start, @end, @specAttributeOptionId, @isFeatured ";
+                        //    marketCenterTabDic.Add("@isFeatured", isFeatured);
+                        //}
 
                         string jsonResult = manager.GetParameterizedJsonString(select, marketCenterTabDic);
 
                         marketCenters = JsonConvert.DeserializeObject<List<MarketCenter>>(jsonResult);
+                                               
 
                     }
                 //}

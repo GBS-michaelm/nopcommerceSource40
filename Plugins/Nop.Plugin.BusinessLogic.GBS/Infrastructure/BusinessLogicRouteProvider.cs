@@ -45,7 +45,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Infrastructure
                             new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
 
             routes.MapLocalizedRoute("CanvasNameBadge",
-                            "namebadgecanvas",
+                            "namebadgecanvas/{companyId}",
                             new { controller = "Company", action = "CanvasNameBadge" },
                             new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
 

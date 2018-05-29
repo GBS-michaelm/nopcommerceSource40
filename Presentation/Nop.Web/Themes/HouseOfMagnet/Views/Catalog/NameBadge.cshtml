@@ -22,6 +22,7 @@
 
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-name-badge.css", themeName));
     Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/namebadge.js");
+    Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/company-product.js");
 }
 
 @using Nop.Core.Domain.Common;
@@ -63,13 +64,16 @@
         
 
         @{
+            canvas = false;
+
+
             if (canvas)
             {
                 @* check if product has canvas data and has or has not been added to nop yet *@
 
                 @* canvas *@
                 <div>
-                    @Html.Action("CanvasNameBadge", "CompanyController", new { isDefault = true, categoryid = Model.Id })
+                    @Html.Action("CanvasNameBadge", "Company", new { companyId = categoryId })
                 </div>
             }
             else

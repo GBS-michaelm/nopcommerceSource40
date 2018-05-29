@@ -121,19 +121,19 @@
             if (!string.IsNullOrEmpty(specOptionId))
             {
                 //if attr is found assign mc to this cat id
-                marketCenter = new MarketCenter(id, lightVer: false);
+                marketCenter = MarketCenter.GetMarketCenter(id, lightVer: false);
                 markcenterType = specOptionId;
             }
             else
             {
                 //fall back on default
-                marketCenter = new MarketCenter(Int32.Parse(marketCenterDefaultID), lightVer: false);
+                marketCenter = MarketCenter.GetMarketCenter(Int32.Parse(marketCenterDefaultID), lightVer: false);
             }
 
         }
         else
         {
-            marketCenter = new MarketCenter(id, lightVer: false);
+            marketCenter = MarketCenter.GetMarketCenter(id, lightVer: false);
         }
     }
     catch (Exception ex)

@@ -98,7 +98,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         {
             try
             {
-                MarketCenter marketCenter = new MarketCenter(marketCenterId);
+                MarketCenter marketCenter = MarketCenter.GetMarketCenter(marketCenterId);
                 Dictionary<string, string> tabs = new Dictionary<string, string>();
 
                 tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);

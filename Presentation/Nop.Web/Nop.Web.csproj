@@ -1731,6 +1731,7 @@
     <Content Include="Themes\HouseOfMagnet\Content\img\glyphicons-halflings.png" />
     <Content Include="Themes\HouseOfMagnet\Content\js\amalgamation.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\bootstrap.min.js" />
+    <Content Include="Themes\HouseOfMagnet\Content\js\company-product.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\functions.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\head.min.js" />
     <Content Include="Themes\HouseOfMagnet\Content\js\hom-quantity-calculator.js" />
@@ -3152,6 +3153,8 @@
     <Content Include="Themes\PurplePizza\Views\Product\_ProductTierPrices.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.ProductsInGridOrLinesExtraData.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxExtraData.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProducts.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Administration\Views\Shared\EditorTemplates\" />
