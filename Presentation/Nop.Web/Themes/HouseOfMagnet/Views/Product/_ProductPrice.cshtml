@@ -3,6 +3,21 @@
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
+@using Nop.Services.Catalog;
+
+@{ 
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+    var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x =>
+    (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+
+    ));
+    var eachQuantity = 0;
+    if (result.Count() == 1)
+    {
+        eachQuantity = Int32.Parse(_specificationAttributeService.GetProductSpecificationAttributes(Model.ProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name);
+    }
+
+}
 @if (!Model.CustomerEntersPrice)
 {
     <div class="prices 1111" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -31,16 +46,16 @@
                 </div>
             }
             <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-                        {<text>product-price</text>}
-                        else
-                        {<text>non-discounted-price</text>}">
+            {<text>product-price</text>}
+            else
+            {<text>non-discounted-price</text>}">
 
                 @if (!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
                 {
                     @*display "Price:" label if we have old price or discounted one*@
                     <label>@T("Products.Price"):</label>
                 }
-            
+
                 @*render price*@
 <span id="pricescript" style="display:none;" class="pricescript-value-@(Model.ProductId)" >@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)</span>
 
@@ -50,7 +65,7 @@
                       }*@>
                     @Html.Raw(Model.Price)
                 </span>
-<span id="eachprice" class="eachprice-value-@(Model.ProductId)" >(Ea. $@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))</span>
+<span id="eachprice" class="eachprice-value-@(Model.ProductId)" >(Ea. $@(eachQuantity > 0 ? (Model.PriceValue/eachQuantity).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)))</span>
             </div>
             if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
             {

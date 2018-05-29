@@ -202,7 +202,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 //get topic id from mapping table
                 var model = _catalogModelFactoryCustom.PrepareCategoryTabTopicModel(currentCategoryId);
                 if (model == null) {
-                    _logger.Error("Model is null in CategoryTabs: category id = " +currentCategoryId);
+                    _logger.Information("Model is null in CategoryTabs: category id = " +currentCategoryId);
                     return null;
                 }
                 //substitute viewpath with topic template.
@@ -210,7 +210,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
                 TopicTemplate topicTemplate = _topicTemplateService.GetTopicTemplateById(model.TopicTemplateId);
                 if (topicTemplate == null) {
-                    _logger.Error("topicTemplate is null in CategoryTabs: category id = " + currentCategoryId);
+                    _logger.Information("topicTemplate is null in CategoryTabs: category id = " + currentCategoryId);
                     return null;
                 }
 

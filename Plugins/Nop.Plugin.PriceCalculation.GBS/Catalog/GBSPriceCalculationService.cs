@@ -310,18 +310,40 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                 //eventually make this a configurable rules plugin
                 bool hasReturnAddressAttr = false;
                 var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
-                decimal returnAddressPriceAdjustment = 0;
+                decimal priceAdjustment = 0;
+                
                 //int returnAddressMinimumSurchargeID = 0;
                 //bool returnAddressMinimumSurchargeApplied = true;
+                string attributeName = string.Empty;
+                int q = quantity;
+                decimal adj = 0;
                 if (attributeValues != null)
                 {
                     foreach (var attributeValue in attributeValues)
                     {
                         if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Add Return Address" && attributeValue.Name == "Yes")
                         {
-                            hasReturnAddressAttr = true;
-                            returnAddressPriceAdjustment = attributeValue.PriceAdjustment;
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
 
+                        }
+
+                        if(attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Express Production" && attributeValue.Name == "Yes")
+                        {
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
+                        }
+
+                        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Design Fee" && attributeValue.Name == "Yes")
+                        {
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
+                        }
+
+                        if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "Change Fee" && attributeValue.Name == "Yes")
+                        {
+                            attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.Name;
+                            priceAdjustment = attributeValue.PriceAdjustment;
                         }
 
                         //if (attributeValue.ProductAttributeMapping.ProductAttribute.Name == "returnAddressMinimumSurcharge" && attributeValue.Name == "Yes")
@@ -334,36 +356,63 @@ namespace Nop.Plugin.PriceCalculation.GBS.Catalog
                         //}
                     }
                 }
-                if (hasReturnAddressAttr)
+         
+
+                switch (attributeName)
                 {
-                    int q = quantity;
-                    //quanitity is being set to 1 for product details and Customers Canvas Editor in NOP Core, so have to get it from th Form
-                    if (System.Web.HttpContext.Current.Request.Form != null) {
-                        foreach (string key in System.Web.HttpContext.Current.Request.Form.Keys)
+                    case "Add Return Address":
+                      
+                        //quanitity is being set to 1 for product details and Customers Canvas Editor in NOP Core, so have to get it from th Form
+                        if (System.Web.HttpContext.Current.Request.Form != null)
                         {
-                            if (key.Contains("EnteredQuantity")){
-                                q = Int32.Parse(System.Web.HttpContext.Current.Request.Form[key]);
+                            foreach (string key in System.Web.HttpContext.Current.Request.Form.Keys)
+                            {
+                                if (key.Contains("EnteredQuantity"))
+                                {
+                                    q = Int32.Parse(System.Web.HttpContext.Current.Request.Form[key]);
+                                }
                             }
                         }
-                    }
 
-                    if (q < 100)    //quantity is being passed from CC correctly?
-                    {
-                        finalPrice -= returnAddressPriceAdjustment;
-                        //eventually make this configurable
-                        decimal adj = (5 / (decimal)q);
-                        finalPrice += adj;
-                    }
-                    else
-                    {
-                        ////remove returnAddressMinimumSurcharge if still on
-                        //if (returnAddressMinimumSurchargeApplied)
-                        //{
-                        //    //   _productAttributeParser.ParseProductAttributeMappings(attributesXml);
-                        //}
+                        if (q < 100)    //quantity is being passed from CC correctly?
+                        {
+                            finalPrice -= priceAdjustment;
+                            //eventually make this configurable
+                            adj = (5 / (decimal)q);
+                            finalPrice += adj;
+                        }
+                        else
+                        {
+                            ////remove returnAddressMinimumSurcharge if still on
+                            //if (returnAddressMinimumSurchargeApplied)
+                            //{
+                            //    //   _productAttributeParser.ParseProductAttributeMappings(attributesXml);
+                            //}
 
-                    }
+                        }
+                        break;
+                    case "Change Fee": //One time fee case
+                    case "Design Fee":
+                    case "Express Production":
+                        if (System.Web.HttpContext.Current.Request.Form != null)
+                        {
+                            foreach (string key in System.Web.HttpContext.Current.Request.Form.Keys)
+                            {
+                                if (key.Contains("EnteredQuantity"))
+                                {
+                                    q = Int32.Parse(System.Web.HttpContext.Current.Request.Form[key]);
+                                }
+                            }
+                        }
+                      
+                        finalPrice -= priceAdjustment;
+                        finalPrice = ((finalPrice * (decimal)q) + priceAdjustment);
+                        adj = (finalPrice / (decimal)q);
+                        finalPrice = adj;
+                        break;
 
+                    default:
+                        break;
                 }
                 return finalPrice;
             }
