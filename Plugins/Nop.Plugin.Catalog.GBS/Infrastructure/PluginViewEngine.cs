@@ -19,8 +19,9 @@ namespace Nop.Plugin.Catalog.GBS.Infrastructure
         {
             var additionalViewLocationFormats = new List<string>()
               {
-                "~/Plugins/Catalog.GBS/Views/{0}.cshtml",
-                "~/Plugins/Catalog.GBS/Views/{1}/{0}.cshtml"
+                //"~/Plugins/Catalog.GBS/Views/{0}.cshtml",
+                //"~/Plugins/Catalog.GBS/Views/{1}/{0}.cshtml",
+
               };
 
             var currentViewLocationFormats = ViewLocationFormats.ToList();

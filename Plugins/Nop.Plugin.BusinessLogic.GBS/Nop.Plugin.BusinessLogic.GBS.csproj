@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nop.Plugin.BusinessLogic.GBS</RootNamespace>
     <AssemblyName>Nop.Plugin.BusinessLogic.GBS</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -40,13 +40,21 @@
       <HintPath>..\..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.OutputCache.OutputCacheModuleAsync, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.OutputCache.OutputCacheModuleAsync.1.0.1\lib\Net462\Microsoft.AspNet.OutputCache.OutputCacheModuleAsync.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.1.0.1\lib\Net462\Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
+    <Compile Include="Caching\GBSCacheManager.cs" />
     <Compile Include="Controllers\AccessoryPageController.cs" />
     <Compile Include="Controllers\ConfigurationBusinessGBSController.cs" />
     <Compile Include="Controllers\GatewayPageController.cs" />
@@ -73,6 +82,8 @@
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="GBSBusinessLogicSettings.cs" />
     <Compile Include="Infrastructure\BusinessLogicRouteProvider.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
+    <Compile Include="Infrastructure\Helpers.cs" />
     <Compile Include="Models\AccessoryPageBoxModel.cs" />
     <Compile Include="Models\AccessoryPageCategoryAccessoriesModel.cs" />
     <Compile Include="Models\AccessoryPageModel.cs" />
@@ -130,6 +141,10 @@
       <Name>Nop.Web</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

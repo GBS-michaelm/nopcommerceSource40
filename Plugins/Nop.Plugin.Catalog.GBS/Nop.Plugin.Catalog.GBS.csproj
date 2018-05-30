@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nop.Plugin.Catalog.GBS</RootNamespace>
     <AssemblyName>Nop.Plugin.Catalog.GBS</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -61,6 +61,7 @@
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -98,6 +99,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="CategoryNavigationProvider.cs" />
+    <Compile Include="Seo\GBSGenericPathRouteExtensons .cs" />
+    <Compile Include="Seo\GenericPathRoute.cs" />
     <Compile Include="Services\GBSProductAttributeFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -151,9 +154,8 @@
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Plugin.BusinessLogic.GBS\Nop.Plugin.BusinessLogic.GBS.csproj">
-      <Project>{A6A1624E-D525-4BFF-930C-5BB19DD6E96A}</Project>
+      <Project>{a6a1624e-d525-4bff-930c-5bb19dd6e96a}</Project>
       <Name>Nop.Plugin.BusinessLogic.GBS</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

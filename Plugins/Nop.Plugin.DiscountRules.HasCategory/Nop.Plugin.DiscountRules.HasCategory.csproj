@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nop.Plugin.DiscountRules.HasCategory</RootNamespace>
     <AssemblyName>Nop.Plugin.DiscountRules.HasCategory</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -154,6 +154,10 @@
       <Project>{75fd4163-333c-4dd5-854d-2ef294e45d94}</Project>
       <Name>Nop.Web.Framework</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.BusinessLogic.GBS\Nop.Plugin.BusinessLogic.GBS.csproj">
+      <Project>{a6a1624e-d525-4bff-930c-5bb19dd6e96a}</Project>
+      <Name>Nop.Plugin.BusinessLogic.GBS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Plugin.Catalog.GBS\Nop.Plugin.Catalog.GBS.csproj">
       <Project>{4ce2d650-1213-4a22-a389-8825885ec516}</Project>

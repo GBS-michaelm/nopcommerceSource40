@@ -31,6 +31,7 @@ using Nop.Web.Factories;
 using Nop.Plugin.Catalog.GBS.DataAccess;
 using Nop.Core.Plugins;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -169,6 +170,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             this._pluginFinder = pluginFinder;
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
             this._lifeTimeCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            //this._lifeTimeCacheManager = new GBSCacheManager();
 
         }
 

@@ -4,6 +4,7 @@ using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Localization;
 using Nop.Plugin.Catalog.GBS.Infrastructure;
 using Nop.Web.Framework.Seo;
+using Nop.Plugin.Catalog.GBS.Seo;
 
 namespace Nop.Plugin.Catalog.GBS
 {
@@ -11,13 +12,12 @@ namespace Nop.Plugin.Catalog.GBS
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            //routes.MapGenericPathRoute("CategoryGenericUrl",
-            //                           "{generic_se_name}",
-            //                           new { controller = "GBSCatalog", action = "Category" },
-            //                           new[] { "Nop.Plugin.Catalog.GBS.Controllers", "Nop.Web.Controllers" });
+            routes.CustomGenericPathRoute("CategoryGenericUrl",
+                                       "{generic_se_name}",
+                                       new { controller = "Catalog", action = "Category" },
+                                       new[] { "Nop.Plugin.Catalog.GBS.Controllers", "Nop.Web.Controllers" });
 
-
-            //  ViewEngines.Engines.Insert(0, new GBSCatalogViewEngine());
+              //ViewEngines.Engines.Insert(0, new GBSCatalogViewEngine());
 
             //product admin
             routes.MapLocalizedRoute("SportsTeamsList",

@@ -17,6 +17,10 @@ using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Framework.Security;
 using Nop.Plugin.BusinessLogic.GBS.Models;
+using Nop.Plugin.Catalog.GBS.DataAccess;
+using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
@@ -88,6 +92,30 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         [GBSOutputCache(VaryByParam = "*")]
         public override ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
+
+            //ActionResult result = null;
+            //DBManager manager = new DBManager();
+            //Dictionary<string, Object> paramDicEx3 = new Dictionary<string, Object>();
+            //paramDicEx3.Add("@key", "categoryCache_"+ categoryId);
+            //var select = "EXEC usp_Select_tblNopCache @key";
+
+
+            //string dbResult = (string)manager.GetParameterizedScalar(select, paramDicEx3);
+            //if (string.IsNullOrEmpty(dbResult))
+            //{
+            //    result = base.Category(categoryId, command);
+            //    var resultJson = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            //    paramDicEx3.Add("@value", resultJson);
+            //    var insert = "EXEC usp_Iinsert_tblNopCache @key, @value";
+            //    manager.SetParameterizedQueryNoData(insert, paramDicEx3);
+            //} else
+            //{
+            //    result = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewResult>(dbResult);
+            //}
+
+
+            //return result;
+
             return base.Category(categoryId, command);
         }
 

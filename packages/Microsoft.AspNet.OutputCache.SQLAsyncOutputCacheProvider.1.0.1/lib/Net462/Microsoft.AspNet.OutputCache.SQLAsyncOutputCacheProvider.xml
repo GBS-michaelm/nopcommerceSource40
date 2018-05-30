@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider">
+            <summary>
+            Async OutputCache Provider using SQL server as storage.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.Initialize(System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Initialize the SQL Async OutputCache Provider
+            </summary>
+            <param name="name"></param>
+            <param name="config"></param>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.AddAsync(System.String,System.Object,System.DateTime)">
+            <summary>
+            Asynchronously inserts the specified entry into the output cache.
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="utcExpiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.GetAsync(System.String)">
+            <summary>
+            Asynchronously returns a reference to the specified entry in the output cache.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.SetAsync(System.String,System.Object,System.DateTime)">
+            <summary>
+            Asynchronously Inserts the specified entry into the output cache, overwriting the entry if it is already cached.
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="utcExpiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.RemoveAsync(System.String)">
+            <summary>
+            Asynchronously removes the specified entry from the output cache.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.Get(System.String)">
+            <summary>
+            Returns a reference to the specified entry in the output cache.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.Add(System.String,System.Object,System.DateTime)">
+            <summary>
+            Inserts the specified entry into the output cache.
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="utcExpiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.Set(System.String,System.Object,System.DateTime)">
+            <summary>
+            Inserts the specified entry into the output cache, overwriting the entry if it is already cached
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="utcExpiry"></param>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.Remove(System.String)">
+            <summary>
+            Removes the specified entry from the output cache.
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.AddAsync(System.String,System.Object,System.Runtime.Caching.CacheItemPolicy)">
+            <summary>
+            Async Add method that supports CacheItemPolicy as Parameter
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="cacheItemPolicy"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNet.OutputCache.SQLAsyncOutputCacheProvider.SQLAsyncOutputCacheProvider.SetAsync(System.String,System.Object,System.Runtime.Caching.CacheItemPolicy)">
+            <summary>
+            Async Set method that supports CacheItemPolicy
+            </summary>
+            <param name="key"></param>
+            <param name="entry"></param>
+            <param name="cacheItemPolicy"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

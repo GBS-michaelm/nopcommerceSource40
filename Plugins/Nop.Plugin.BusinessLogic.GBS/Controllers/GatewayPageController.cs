@@ -15,6 +15,8 @@ using Nop.Core;
 using Nop.Plugin.BusinessLogic.GBS;
 using Nop.Services.Configuration;
 using Nop.Web.Models.Catalog;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
+using Nop.Core.Caching;
 
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
@@ -23,6 +25,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
     public class GatewayPageController : BaseController
     {
+        private readonly ICacheManager _lifeTimeCacheManager;
 
         private readonly GBSBusinessLogicSettings _gbsBusinessLogicSettings;
         public GatewayPageController (
@@ -30,6 +33,10 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             )
         {
             this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
+            //this._lifeTimeCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("gbs_cache_static");
+            this._lifeTimeCacheManager = new GBSCacheManager();
+
+
         }
 
         [HttpGet]
@@ -58,35 +65,40 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             {
                 case "sportsTeam":
 
-                    GatewayPageProductCategoriesModel teamProductBlocks = new GatewayPageProductCategoriesModel();
+                    GatewayPageProductCategoriesModel teamProductBlocksFinal = new GatewayPageProductCategoriesModel();
                     var iProductService = EngineContext.Current.Resolve<IProductService>();
                     var iCategoryService = EngineContext.Current.Resolve<ICategoryService>();
-                    IList<Category> teamCategoryProducts = iCategoryService.GetAllCategoriesByParentCategoryId(id);
-
-                    
-                    foreach (var category in teamCategoryProducts)
+                    teamProductBlocksFinal = _lifeTimeCacheManager.Get("GatewayCatalogProductsSportsTeam" + id.ToString() + "_" + type, 60, () =>
                     {
-                        
-                        SportsTeam customExtendedCategoryData = new SportsTeam(category.Id);
-                        IPagedList<ProductCategory> productCategoryList = iCategoryService.GetProductCategoriesByCategoryId(category.Id);
-                        Product featuredProductData = iProductService.GetProductById(customExtendedCategoryData.featuredProductId);
+                        GatewayPageProductCategoriesModel teamProductBlocks = new GatewayPageProductCategoriesModel();
+                        IList<Category> teamCategoryProducts = iCategoryService.GetAllCategoriesByParentCategoryId(id);
 
-                        GatewayPageProductBoxModel productBox = new GatewayPageProductBoxModel();
-                        productBox.name = category.Name;
-                        productBox.mainPicturePath = customExtendedCategoryData.mainPicturePath;
-                        productBox.width = featuredProductData.Width;
-                        productBox.length = featuredProductData.Length;
-                        productBox.designCount = productCategoryList.Count;
-                        productBox.price = (int)featuredProductData.Price;
-                        productBox.isFeatured = customExtendedCategoryData.isFeatured;
-                        productBox.featuredProductId = customExtendedCategoryData.featuredProductId;
-                        productBox.productLink = customExtendedCategoryData.SeName;
 
-                        teamProductBlocks.productBoxes.Add(productBox);
+                        foreach (var category in teamCategoryProducts)
+                        {
 
-                    }
+                            SportsTeam customExtendedCategoryData = new SportsTeam(category.Id);
+                            IPagedList<ProductCategory> productCategoryList = iCategoryService.GetProductCategoriesByCategoryId(category.Id);
+                            Product featuredProductData = iProductService.GetProductById(customExtendedCategoryData.featuredProductId);
+
+                            GatewayPageProductBoxModel productBox = new GatewayPageProductBoxModel();
+                            productBox.name = category.Name;
+                            productBox.mainPicturePath = customExtendedCategoryData.mainPicturePath;
+                            productBox.width = featuredProductData.Width;
+                            productBox.length = featuredProductData.Length;
+                            productBox.designCount = productCategoryList.Count;
+                            productBox.price = (int)featuredProductData.Price;
+                            productBox.isFeatured = customExtendedCategoryData.isFeatured;
+                            productBox.featuredProductId = customExtendedCategoryData.featuredProductId;
+                            productBox.productLink = customExtendedCategoryData.SeName;
+
+                            teamProductBlocks.productBoxes.Add(productBox);
+
+                        }
+                        return teamProductBlocks;
+                    });
                                      
-                    return View("GatewayCategoryProducts", teamProductBlocks);
+                    return View("GatewayCategoryProducts", teamProductBlocksFinal);
 
                 default:
                     return View();
@@ -94,40 +106,44 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
-        [GBSOutputCache(VaryByParam = "*")]
+        [OutputCache(VaryByParam = "*",Duration = 60)]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {
             try
             {
-                MarketCenter marketCenter = new MarketCenter(marketCenterId);
-                Dictionary<string, string> tabs = new Dictionary<string, string>();
-
-                tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
-
-                //add tabs to list model with market center models inside
-                MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
-                foreach (var tab in tabs)
+                //ICacheManager gbsCachManager = new GBSCacheManager();
+                MarketCenterGatewayTabsModel tabsContainerFinal = _lifeTimeCacheManager.Get("MarketCenterGatewayTabs_" + marketCenterId.ToString() + "_"+type, 60, () =>
                 {
-                    MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
+                    MarketCenter marketCenter = new MarketCenter(marketCenterId);
+                    Dictionary<string, string> tabs = new Dictionary<string, string>();
 
-                    if (tab.Key == "HiddenChildrenHtml")
-                    {
-                        tabsContainer.hiddenHtml = tab.Value;
-                    }
-                    else if (tab.Key == "HiddenAll")
-                    {
-                        tabsContainer.hiddenAll = tab.Value;
-                    }
-                    else
-                    {
-                        mctab.tabName = tab.Key;
-                        mctab.html = tab.Value;
-                        tabsContainer.MarketCenterTabsList.Add(mctab);
-                    }
+                    tabs = marketCenter.GetMarketCenterHtml(type, _gbsBusinessLogicSettings.Hack);
 
-                }
+                    //add tabs to list model with market center models inside
+                    MarketCenterGatewayTabsModel tabsContainer = new MarketCenterGatewayTabsModel();
+                    foreach (var tab in tabs)
+                    {
+                        MarketCenterGatewayTabModel mctab = new MarketCenterGatewayTabModel();
 
-                return View("MarketCenterGatewayTabs", tabsContainer);
+                        if (tab.Key == "HiddenChildrenHtml")
+                        {
+                            tabsContainer.hiddenHtml = tab.Value;
+                        }
+                        else if (tab.Key == "HiddenAll")
+                        {
+                            tabsContainer.hiddenAll = tab.Value;
+                        }
+                        else
+                        {
+                            mctab.tabName = tab.Key;
+                            mctab.html = tab.Value;
+                            tabsContainer.MarketCenterTabsList.Add(mctab);
+                        }
+
+                    }
+                    return tabsContainer;
+                });
+                return View("MarketCenterGatewayTabs", tabsContainerFinal);
             }          
             catch(Exception ex)
             {
@@ -146,18 +162,24 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
 
-            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+            MarketCenterGalleryCategoriesModel mcGallerCategoriesFinal = null;
 
             try
             {
-                Company parentCategory = new Company(parentCategoryId);
 
-                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+                mcGallerCategoriesFinal = _lifeTimeCacheManager.Get("GetNonMarketCenterCategories_" + parentCategoryId.ToString(), 60, () =>
+                {
+                    MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+                    Company parentCategory = new Company(parentCategoryId);
 
-                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
-                mcGallerCategories.CategoriesList = categories;
+                    List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
 
-                //return View("MarketCenterGalleryCategories", mcGallerCategories);
+                    mcGallerCategories = new MarketCenterGalleryCategoriesModel();
+                    mcGallerCategories.CategoriesList = categories;
+                    return mcGallerCategories;
+
+                    //return View("MarketCenterGalleryCategories", mcGallerCategories);
+                });
             }
             catch (Exception ex)
             {
@@ -165,7 +187,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 base.LogException(ex);
             }
 
-            return View("MarketCenterGalleryCategories", mcGallerCategories);
+            return View("MarketCenterGalleryCategories", mcGallerCategoriesFinal);
 
         }         
         

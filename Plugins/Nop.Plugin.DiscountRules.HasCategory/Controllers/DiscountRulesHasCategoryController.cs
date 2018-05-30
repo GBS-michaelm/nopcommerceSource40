@@ -20,6 +20,7 @@ using Nop.Web.Framework.Security;
 using Nop.Core.Caching;
 using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
 {
@@ -63,7 +64,9 @@ namespace Nop.Plugin.DiscountRules.HasCategory.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._productService = productService;
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static"); 
+            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            //this._cacheManager = new GBSCacheManager();
+
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
 
         }

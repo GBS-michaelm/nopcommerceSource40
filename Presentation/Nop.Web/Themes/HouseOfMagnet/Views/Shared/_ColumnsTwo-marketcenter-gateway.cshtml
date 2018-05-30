@@ -13,7 +13,7 @@
 @using Nop.Services.Configuration;
 @using Nop.Services.Logging;
 @using Nop.Core.Caching;
-
+@using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -46,7 +46,10 @@
 }
 
 @{
-    ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+    //ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+    //ICacheManager gbsCachManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("gbs_cache_static");
+    ICacheManager gbsCachManager = new GBSCacheManager();
+
 
     var _settingService = EngineContext.Current.Resolve<ISettingService>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
@@ -107,7 +110,7 @@
 
     MarketCenter marketCenter = null;
     string specOptionId = "";
-    marketCenter = cacheManager.Get("marketCenter_" + id.ToString(), cacheDuration, () =>
+    marketCenter = gbsCachManager.Get("marketCenterGatewayPage_" + id.ToString(), cacheDuration, () =>
     {
         try
         {

@@ -21,6 +21,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
@@ -77,7 +78,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._customerActivityService = customerActivityService;
             this._productService = productService;
             this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-
+            //this._cacheManager = new GBSCacheManager();
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
         }
 

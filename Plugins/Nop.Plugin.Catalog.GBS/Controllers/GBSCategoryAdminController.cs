@@ -48,6 +48,7 @@ using Nop.Web.Factories;
 using Nop.Admin.Controllers;
 using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
@@ -125,6 +126,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._storeService = storeService;
             this._workContext = workContext;
             this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            //this._cacheManager = new GBSCacheManager();
 
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
         }

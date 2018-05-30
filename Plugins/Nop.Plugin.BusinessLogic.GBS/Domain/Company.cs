@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Core.Domain.Media;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -19,7 +20,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     {
 
         DBManager manager = new DBManager();
-        ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        //ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        ICacheManager cacheManager = new GBSCacheManager();
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
         ILogger logger = EngineContext.Current.Resolve<ILogger>();
 

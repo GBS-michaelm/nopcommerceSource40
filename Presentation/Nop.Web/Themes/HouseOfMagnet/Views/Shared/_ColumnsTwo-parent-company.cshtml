@@ -7,6 +7,8 @@
 @using Nop.Services.Catalog;
 @using Nop.Services.Seo;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using Nop.Core.Caching;
+@using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
@@ -15,6 +17,9 @@
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
 @{
+    //ICacheManager gbsCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("gbs_cache_static");
+    ICacheManager gbsCacheManager = new GBSCacheManager();
+
     //current category ID
     int currentCategoryId = 0;
     if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
@@ -55,19 +60,24 @@
 @{
 
     DBManager manager = new DBManager();
-        
-    Company company = new Company(id);
+
+    Company company = gbsCacheManager.Get("Company_" + id.ToString(), 60, () =>
+        {
+           return new Company(id);
+        });
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
     string aboutYourMarketCenter = company.aboutYourMarketCenter;
     string agentPacks = company.agentPacks;
-    
-}
+
+    }
 
 
-@if (Model.DisplayCategoryBreadcrumb)
-{
+
+
+    @if (Model.DisplayCategoryBreadcrumb)
+    {
     <div class="breadcrumb-wrapper">
         <ul class="breadcrumb">
             <li>
@@ -133,27 +143,31 @@
             <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
             
             @{
-                StringBuilder sb = new StringBuilder();
-
-                //category stuff
-                var catService = EngineContext.Current.Resolve<ICategoryService>();
-
-                //class attribute way
-                List<Category> childCategoriesList = new List<Category>();
-                for (int i = 0; i < company.childCompanyIds.Count; i++)
+                StringBuilder sbFinal = gbsCacheManager.Get("CompanyStringBuilder_" + company.id.ToString(), 60, () =>
                 {
-                    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-                    childCategoriesList.Add(childCompany);
-                }
+                    StringBuilder sb = new StringBuilder();
 
-                var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
-                foreach (var item in companiesInOrder)
-                {
-                    //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-                    sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
-                }
+                    //category stuff
+                    var catService = EngineContext.Current.Resolve<ICategoryService>();
 
-                string allString = sb.ToString();
+                    //class attribute way
+                    List<Category> childCategoriesList = new List<Category>();
+                    for (int i = 0; i < company.childCompanyIds.Count; i++)
+                    {
+                        Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+                        childCategoriesList.Add(childCompany);
+                    }
+
+                    var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+                    foreach (var item in companiesInOrder)
+                    {
+                        //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                        sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
+                    }
+                    return sb;
+                });
+
+                string allString = sbFinal.ToString();
 
             }
 

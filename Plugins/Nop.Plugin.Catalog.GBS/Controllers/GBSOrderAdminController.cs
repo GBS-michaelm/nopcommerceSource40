@@ -42,6 +42,7 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Plugin.Catalog.GBS.Factories;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
@@ -247,6 +248,7 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._addressSettings = addressSettings;
             this._shippingSettings = shippingSettings;
             this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            //this._cacheManager = new GBSCacheManager();
 
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
         }

@@ -22,6 +22,7 @@ using Nop.Services.Events;
 using Nop.Services.Common;
 using Nop.Core.Caching;
 using System.Web;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -79,8 +80,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //DataView sportsTeamDataView = manager.GetParameterizedDataView(sportsTeamDataQuery, sportsTeamDic);
 
             ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+           // ICacheManager cacheManager = new GBSCacheManager();
 
-            DataView sportsTeamDataView = cacheManager.Get("sportsTeam" + teamId, 60, () => {
+
+            DataView sportsTeamDataView = cacheManager.Get("sportsTeamDataView_" + teamId, 60, () => {
                 Dictionary<string, Object> sportsTeamDic = new Dictionary<string, Object>();
                 sportsTeamDic.Add("@CategoryId", teamId);
 
@@ -128,7 +131,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         {
             List<SportsTeam> teams = new List<SportsTeam>();
 
-            ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            //ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            ICacheManager cacheManager = new GBSCacheManager();
 
             if (teamList.Count > 0)
             {

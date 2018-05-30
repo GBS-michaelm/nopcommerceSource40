@@ -14,15 +14,18 @@ using System.Text;
 using Newtonsoft.Json;
 using Nop.Services.Logging;
 using System.Data.SqlClient;
+using Nop.Plugin.BusinessLogic.GBS.Caching;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
+    [Serializable]
     public class MarketCenter : CategoryModel
     {
 
         DBManager manager = new DBManager();
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
-        ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+       // ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        ICacheManager cacheManager = new GBSCacheManager();
         ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
         IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
         ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
