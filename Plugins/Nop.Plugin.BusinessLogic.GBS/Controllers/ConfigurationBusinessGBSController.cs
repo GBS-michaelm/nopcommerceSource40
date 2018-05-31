@@ -46,7 +46,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 Hack = GBSBusinessLogicSettings.Hack,
                 MarketCenterDefaultId = GBSBusinessLogicSettings.MarketCenterDefaultId,
                 MarketCenterNameBadgeDefaultId = GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId,
-                
+                MarketCenterBusinessCardDefaultId = GBSBusinessLogicSettings.MarketCenterBusinessCardDefaultId,
+                MarketCenterCarMagnetDefaultId = GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId,
+
                 MarketCenterWhatAmIReferenceName = GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName,
                 ActiveStoreScopeConfiguration = storeScope
             };
@@ -55,7 +57,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             {
                 model.Hack_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.Hack, storeScope);
                 model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);
-                model.MarketCenterNameBadgeDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);
+                model.MarketCenterNameBadgeDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);               
+                model.MarketCenterBusinessCardDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterBusinessCardDefaultId, storeScope);
+                model.MarketCenterCarMagnetDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);
+
                 model.MarketCenterWhatAmIReferenceName_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
             }
 
@@ -78,8 +83,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
 
             GBSBusinessLogicSettings.Hack = model.Hack;
             GBSBusinessLogicSettings.MarketCenterDefaultId = model.MarketCenterDefaultId;
-            GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId = model.MarketCenterNameBadgeDefaultId;
-            
+            GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId = model.MarketCenterNameBadgeDefaultId;                   
+            GBSBusinessLogicSettings.MarketCenterBusinessCardDefaultId = model.MarketCenterBusinessCardDefaultId;            
+            GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId = model.MarketCenterCarMagnetDefaultId;
+
             GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName = model.MarketCenterWhatAmIReferenceName;
 
             /* We do not clear cache after each setting update.
@@ -100,6 +107,15 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);
+            
+            if (model.MarketCenterBusinessCardDefaultId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterBusinessCardDefaultId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterBusinessCardDefaultId, storeScope);            
+            if (model.MarketCenterCarMagnetDefaultId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);
 
             if (model.MarketCenterWhatAmIReferenceName_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope, false);

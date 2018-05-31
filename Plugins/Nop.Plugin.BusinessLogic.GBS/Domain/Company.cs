@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Nop.Plugin.BusinessDataAccess.GBS;
 using System.Data;
@@ -19,17 +20,15 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     public class Company //: CategoryModel
     {
 
-        DBManager manager = new DBManager();
-        static DBManager MANAGER = new DBManager();
+        //DBManager manager = new DBManager();
         ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
-        static ICategoryService CATEGORYSERVICE = EngineContext.Current.Resolve<ICategoryService>();
         IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
-        static IPictureService PICTURESERVICE = EngineContext.Current.Resolve<IPictureService>();
         ILogger logger = EngineContext.Current.Resolve<ILogger>();
 
         private int _id = 0;
-        private int _parentCategoryId = 0;    
+        private int _parentCategoryId = 0;
+        int _childCompanyId = 0;
         private string _h1 = "";
         private string _h2 = "";
         private bool _isVisible = false;
@@ -38,20 +37,25 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         private string _aboutYourMarketCenter = "";
         private string _agentPacks = "";
         private string _forgroundColor = "#000000";
-        private List<int> _childCompanyIds = new List<int>();
+        private List<Company> _childCompanyIds = new List<Company>();
         string _name = "";
         string _description = "";
         string _seName = "";
+        int _typeId = 0;
 
 
         public static Company GetCompany(int companyId, bool lightVer = true)
         {
 
+            DBManager COMPANYMANAGER = new DBManager();
+            ICategoryService CATEGORYSERVICE = EngineContext.Current.Resolve<ICategoryService>();
+            IPictureService PICTURESERVICE = EngineContext.Current.Resolve<IPictureService>();
+
             Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-            string select = "EXEC usp_SELECTGBSGetSingleCompany_Lean @categoryId";
+            string select = "EXEC usp_SELECTGBSGetCompany_Lean @categoryId";
             companyDic.Add("@categoryId", companyId);
 
-            string jsonResult = MANAGER.GetParameterizedJsonString(select, companyDic);
+            string jsonResult = COMPANYMANAGER.GetParameterizedJsonString(select, companyDic);
 
             List<Company> marketcentersList = JsonConvert.DeserializeObject<List<Company>>(jsonResult);
             Category category = CATEGORYSERVICE.GetCategoryById(marketcentersList[0].id);
@@ -143,7 +147,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             //}
 
         public int id { get { return _id; } set { _id = value; } }
-        public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }     
+        public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }
+        public int childCompanyId { get { return _childCompanyId; } set { _childCompanyId = value; } }       
         public string h1 { get { return _h1; } set { _h1 = value; } }
         public string h2 { get { return _h2; } set { _h2 = value; } }   
         public bool isVisible { get { return _isVisible; } set { _isVisible = value; } }
@@ -152,90 +157,102 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string aboutYourMarketCenter { get { return _aboutYourMarketCenter; } set { _aboutYourMarketCenter = value; } }
         public string agentPacks { get { return _agentPacks; } set { _agentPacks = value; } }
         public string foregroundColor { get { return _forgroundColor; } set { _forgroundColor = value; } }
-        public List<int> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
+        public List<Company> childCompanyIds { get { return _childCompanyIds; } set { _childCompanyIds = value; } }
         public string Name { get { return _name; } set { _name = value; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string SeName { get { return _seName; } set { _seName = value; } }
+        public int TypeId { get { return _typeId; } set { _typeId = value; } }
 
-        public List<Company> GetNonMarketCenterCompanyCategories(int parentCompanyId)
+        public List<Company> GetNonMarketCenterCompanyCategories(Company parentCompany)
         {
-
-            MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
-
             List<Company> NMCcategories = new List<Company>();
-            NMCcategories = cacheManager.Get("GetNonMarketCenterCompanyCategories" + parentCompanyId, 60, () =>
+            MediaSettings mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
+            IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            
+            NMCcategories = parentCompany.childCompanyIds.Where(x => x.TypeId == 4).ToList<Company>();
+
+            foreach (Company company in NMCcategories)
             {
-                List<Company> categories = new List<Company>();
+                Category cat = categoryService.GetCategoryById(company.childCompanyId);
+                company.logoPicturePath = pictureService.GetPictureUrl(cat.PictureId, mediaSettings.CategoryThumbPictureSize);
+            }
+            
 
-                try
-                {
-                            DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
-                                Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
-                                nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
+            //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
+            
+            //NMCcategories = cacheManager.Get("GetNonMarketCenterCompanyCategories" + parentCompanyId, 60, () =>
+            //{
+            //    List<Company> categories = new List<Company>();
 
-                                string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
-                                DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
+            //    try
+            //    {
+            //                DataView nonMarketCenterCompanyDataView = cacheManager.Get("nonmarketcentercategory" + parentCompanyId, 60, () => {
+            //                    Dictionary<string, Object> nonMarketCenterCompanyDic = new Dictionary<string, Object>();
+            //                    nonMarketCenterCompanyDic.Add("@parentCategoryId", parentCompanyId);
 
-                                return innerCompanyDataView;
-                            });
+            //                    string nonMarketCenterCompanyDataQuery = "EXEC usp_SelectNonMarketCenterCompanyCategories @parentCategoryId";
+            //                    DataView innerCompanyDataView = manager.GetParameterizedDataView(nonMarketCenterCompanyDataQuery, nonMarketCenterCompanyDic);
 
-                            if (nonMarketCenterCompanyDataView.Count > 0)
-                            {
+            //                    return innerCompanyDataView;
+            //                });
 
-                                for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
-                                {
+            //                if (nonMarketCenterCompanyDataView.Count > 0)
+            //                {
 
-                                    //Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
-                                    //ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
-                                    //CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
-                                    //catalogPagingFilteringModel.PageSize = 1;
-                                    //this.PagingFilteringContext = catalogPagingFilteringModel;
-                                    //CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-                                    //this.Name = categoryModel.Name;
-                                    //this.Description = categoryModel.Description;
-                                    //this.SeName = categoryModel.SeName;
+            //                    for (int i = 0; i < nonMarketCenterCompanyDataView.Count; i++)
+            //                    {
+
+            //                        //Category category = categoryService.GetCategoryById(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
+            //                        //ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
+            //                        //CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
+            //                        //catalogPagingFilteringModel.PageSize = 1;
+            //                        //this.PagingFilteringContext = catalogPagingFilteringModel;
+            //                        //CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
+            //                        //this.Name = categoryModel.Name;
+            //                        //this.Description = categoryModel.Description;
+            //                        //this.SeName = categoryModel.SeName;
 
 
-                                    Company company = Company.GetCompany(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
+            //                        Company company = Company.GetCompany(Int32.Parse(nonMarketCenterCompanyDataView[i]["categoryId"].ToString()));
 
-                                    
-                        
-                                    //IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
-                                    //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
 
-                                    //this.PictureModel = categoryModel.PictureModel;
-                        
-                                    //DataView companyDataView = cacheManager.Get("company" + company.id, 60, () => {
-                                    //    Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
-                                    //    companyDic.Add("@CategoryId", company.id);
 
-                                    //    string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
-                                    //    DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
+            //                        //IPictureService pictureService = EngineContext.Current.Resolve<IPictureService>();
+            //                        //string picturePath = pictureService.GetPictureUrl(category.PictureId, mediaSettings.CategoryThumbPictureSize);
 
-                                    //    return innerCompanyDataView;
-                                    //});
+            //                        //this.PictureModel = categoryModel.PictureModel;
 
-                                    //if (companyDataView.Count > 0)
-                                    //{
-                                    //    categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
-                                    //    //description text stuff like pricing and stuff 
-                                    //}
+            //                        //DataView companyDataView = cacheManager.Get("company" + company.id, 60, () => {
+            //                        //    Dictionary<string, Object> companyDic = new Dictionary<string, Object>();
+            //                        //    companyDic.Add("@CategoryId", company.id);
 
-                                    categories.Add(company);
+            //                        //    string companyDataQuery = "EXEC usp_SelectCompanyExtendedData @CategoryId";
+            //                        //    DataView innerCompanyDataView = manager.GetParameterizedDataView(companyDataQuery, companyDic);
 
-                                }
+            //                        //    return innerCompanyDataView;
+            //                        //});
 
-                            }
-                        }catch(Exception ex)
-                        {
-                            logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
-                
-                            throw ex;
+            //                        //if (companyDataView.Count > 0)
+            //                        //{
+            //                        //    categoryModel.CustomProperties.Add("LogoPicturePath", picturePath);
+            //                        //    //description text stuff like pricing and stuff 
+            //                        //}
 
-                        }
-                return categories;
-            });
-                      
+            //                        categories.Add(company);
+
+            //                    }
+
+            //                }
+            //            }catch(Exception ex)
+            //            {
+            //                logger.Error("Company.cs GetNonMarketCenterCompanyCategories : ", ex);
+
+            //                throw ex;
+
+            //            }
+            //    return categories;
+            //});
+
             return NMCcategories;
             
         }

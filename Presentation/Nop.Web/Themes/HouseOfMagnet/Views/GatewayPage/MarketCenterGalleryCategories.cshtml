@@ -5,21 +5,22 @@
 @using Nop.Web.Models.Checkout;
 @using Nop.Web.Models.ShoppingCart;
 @using Nop.Core;
+@using Nop.Plugin.BusinessLogic.GBS.Domain;
 @{
 
     Layout = "";
 
 }
 
-   <div class='pricing bottommargin clearfix'>
+<div class='pricing bottommargin clearfix'>
 
-       @{
-           foreach (var item in Model.CategoriesList)
-           {
-               
+    @{
+        foreach (var item in Model.CategoriesList)
+        {
+
             @Html.Partial("MarketCenterGalleryCategory", item)
-               
-           }
-        }
 
-   </div>
+        }
+    }
+
+</div>

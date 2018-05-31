@@ -145,16 +145,16 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         public ActionResult GetNonMarketCenterCategories(int parentCategoryId)
         {
 
-            MarketCenterGalleryCategoriesModel mcGallerCategories = null;
+            MarketCenterGalleryCategoriesModel mcGalleryCategories = null;
 
             try
             {
-                Company parentCategory = Company.GetCompany(parentCategoryId);
+                Company parentCompany = Company.GetCompany(parentCategoryId);
 
-                List<Company> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+                List<Company> categories = parentCompany.GetNonMarketCenterCompanyCategories(parentCompany);
 
-                mcGallerCategories = new MarketCenterGalleryCategoriesModel();
-                mcGallerCategories.CategoriesList = categories;
+                mcGalleryCategories = new MarketCenterGalleryCategoriesModel();
+                mcGalleryCategories.CategoriesList = categories;
 
                 //return View("MarketCenterGalleryCategories", mcGallerCategories);
             }
@@ -164,7 +164,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                 base.LogException(ex);
             }
 
-            return View("MarketCenterGalleryCategories", mcGallerCategories);
+            return View("MarketCenterGalleryCategories", mcGalleryCategories);
 
         }         
         

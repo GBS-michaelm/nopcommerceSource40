@@ -49,7 +49,28 @@
             @Html.EditorFor(model => model.MarketCenterNameBadgeDefaultId)
             @Html.ValidationMessageFor(model => model.MarketCenterNameBadgeDefaultId)
         </td>
+    </tr>    
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.MarketCenterCarMagnetDefaultId_OverrideForStore, model => model.MarketCenterCarMagnetDefaultId, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.MarketCenterCarMagnetDefaultId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarketCenterCarMagnetDefaultId)
+            @Html.ValidationMessageFor(model => model.MarketCenterCarMagnetDefaultId)
+        </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.MarketCenterBusinessCardDefaultId_OverrideForStore, model => model.MarketCenterBusinessCardDefaultId, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.MarketCenterBusinessCardDefaultId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarketCenterBusinessCardDefaultId)
+            @Html.ValidationMessageFor(model => model.MarketCenterBusinessCardDefaultId)
+        </td>
+    </tr>
+
     <tr>
         <td colspan="2">
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />

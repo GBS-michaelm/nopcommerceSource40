@@ -56,7 +56,7 @@
 
     DBManager manager = new DBManager();
         
-    Company company = new Company(id);
+    Company company = Company.GetCompany(id);
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;

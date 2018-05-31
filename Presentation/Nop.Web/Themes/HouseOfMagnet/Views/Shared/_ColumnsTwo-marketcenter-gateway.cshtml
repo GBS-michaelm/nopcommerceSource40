@@ -65,15 +65,21 @@
             id = Int32.Parse(_settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId", storeId: _storeContext.CurrentStore.Id));
             break;
 
+        case "hom_marketcenter_gateway_business_card":
+            id = Int32.Parse(_settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterBusinessCardDefaultId", storeId: _storeContext.CurrentStore.Id));
+            break;
+
+        case "hom_marketcenter_gateway_car_magnet":
+            id = Int32.Parse(_settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId", storeId: _storeContext.CurrentStore.Id));
+            break;
+
         default:
             break;
     }
-
-
-
+    
     //int id = Int32.Parse(marketCenterDefaultID);
     string markcenterType = ""; //get query string from url
-                                  //string marketcenterOverride = ""; // over ride h1 h2 etc for page
+                                //string marketcenterOverride = ""; // over ride h1 h2 etc for page
 }
 
 @{
