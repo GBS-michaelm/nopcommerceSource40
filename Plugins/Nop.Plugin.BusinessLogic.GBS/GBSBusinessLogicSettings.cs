@@ -6,6 +6,7 @@ namespace Nop.Plugin.BusinessLogic.GBS
     {       
         public bool Hack { get; set; }
         public int MarketCenterDefaultId { get; set; }
+        public int MarketCenterNameBadgeDefaultId { get; set; }
 
         public string MarketCenterWhatAmIReferenceName { get; set; }
 

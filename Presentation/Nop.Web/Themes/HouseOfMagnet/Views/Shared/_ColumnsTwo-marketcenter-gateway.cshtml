@@ -13,6 +13,7 @@
 @using Nop.Services.Configuration;
 @using Nop.Services.Logging;
 @using Nop.Core.Caching;
+@using System.Dynamic;
 
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
@@ -51,10 +52,27 @@
     ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
     ILogger logger = EngineContext.Current.Resolve<ILogger>();
-    string marketCenterDefaultID = _settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterDefaultId", storeId: _storeContext.CurrentStore.Id);
 
-    int id = @Model.Id;
-    string markcenterType = ""; ; //get query string from url
+    string sysName = ViewBag.SysName;
+
+
+
+    string marketCenterDefaultID = _settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterDefaultId", storeId: _storeContext.CurrentStore.Id);
+    int id = Int32.Parse(marketCenterDefaultID);
+    switch (sysName)
+    {
+        case "hom_marketcenter_gateway_namebadge":
+            id = Int32.Parse(_settingService.GetSettingByKey<string>("GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId", storeId: _storeContext.CurrentStore.Id));
+            break;
+
+        default:
+            break;
+    }
+
+
+
+    //int id = Int32.Parse(marketCenterDefaultID);
+    string markcenterType = ""; //get query string from url
                                   //string marketcenterOverride = ""; // over ride h1 h2 etc for page
 }
 
@@ -93,10 +111,12 @@
     MarketCenter marketCenter = null;
     string specOptionId = "";
 
+    dynamic vicsObject = new ExpandoObject();
 
-    marketCenter = cacheManager.Get("marketCenterGatewayPage_" + id, 60, () =>
+
+    vicsObject = cacheManager.Get("marketCenterGatewayPage_" + id, 60, () =>
     {
-
+        dynamic vicsObject2 = new ExpandoObject();
         try
         {
 
@@ -136,22 +156,35 @@
                     marketCenter = MarketCenter.GetMarketCenter(Int32.Parse(marketCenterDefaultID), lightVer: false);
                 }
 
+
+
+
+
             }
             else
             {
                 marketCenter = MarketCenter.GetMarketCenter(id, lightVer: false);
             }
+
         }
         catch (Exception ex)
         {
             logger.Error("_ColumnsTwo-marketcenter-gateway.cshtml Checking for spec attr option. Market Center Id : " + id + " Spec Attr Option : " + specOptionId, ex);
         }
 
-        
 
-        return marketCenter;
+        vicsObject2.MarketCenter = marketCenter;
+        vicsObject2.MarketCenterType = markcenterType;
+        return  vicsObject2;
+;
 
     });
+
+
+    marketCenter = vicsObject.MarketCenter;
+    markcenterType = vicsObject.MarketCenterType;
+
+
 
     string h1 = marketCenter.h1;
     string h2 = marketCenter.h2;
@@ -215,7 +248,7 @@
         <div id="gateway-innner">
             <div id="gatewayLayersContainer">
                 <div id="gatewayWYSIWYG" class="sports-wysiwyg">
-                    @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = marketCenterDefaultID, type = markcenterType })
+                    @Html.Action("MarketCenterGatewayTabs", "GatewayPage", new { marketCenterId = id, type = markcenterType })
                 </div>
 
                 <img id="gatewayForegroundImage" class="" src="@foregroundImage" />

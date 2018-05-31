@@ -29,7 +29,7 @@
             @Html.EditorFor(model => model.MarketCenterDefaultId)
             @Html.ValidationMessageFor(model => model.MarketCenterDefaultId)
         </td>
-    </tr> 
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.OverrideStoreCheckboxFor(model => model.MarketCenterWhatAmIReferenceName_OverrideForStore, model => model.MarketCenterWhatAmIReferenceName, Model.ActiveStoreScopeConfiguration)
@@ -38,6 +38,16 @@
         <td class="adminData">
             @Html.EditorFor(model => model.MarketCenterWhatAmIReferenceName)
             @Html.ValidationMessageFor(model => model.MarketCenterWhatAmIReferenceName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.MarketCenterNameBadgeDefaultId_OverrideForStore, model => model.MarketCenterNameBadgeDefaultId, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.MarketCenterNameBadgeDefaultId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarketCenterNameBadgeDefaultId)
+            @Html.ValidationMessageFor(model => model.MarketCenterNameBadgeDefaultId)
         </td>
     </tr>
     <tr>

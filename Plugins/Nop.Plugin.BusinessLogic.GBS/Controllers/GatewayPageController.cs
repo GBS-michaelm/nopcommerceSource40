@@ -149,9 +149,9 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
             try
             {
-                Company parentCategory = new Company(parentCategoryId);
+                Company parentCategory = Company.GetCompany(parentCategoryId);
 
-                List<CategoryModel> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
+                List<Company> categories = parentCategory.GetNonMarketCenterCompanyCategories(parentCategory.id);
 
                 mcGallerCategories = new MarketCenterGalleryCategoriesModel();
                 mcGallerCategories.CategoriesList = categories;

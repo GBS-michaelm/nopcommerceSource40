@@ -45,6 +45,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
 
                 Hack = GBSBusinessLogicSettings.Hack,
                 MarketCenterDefaultId = GBSBusinessLogicSettings.MarketCenterDefaultId,
+                MarketCenterNameBadgeDefaultId = GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId,
+                
                 MarketCenterWhatAmIReferenceName = GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName,
                 ActiveStoreScopeConfiguration = storeScope
             };
@@ -52,7 +54,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             if (storeScope > 0)
             {
                 model.Hack_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.Hack, storeScope);
-                model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);               
+                model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);
+                model.MarketCenterNameBadgeDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);
                 model.MarketCenterWhatAmIReferenceName_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
             }
 
@@ -75,6 +78,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
 
             GBSBusinessLogicSettings.Hack = model.Hack;
             GBSBusinessLogicSettings.MarketCenterDefaultId = model.MarketCenterDefaultId;
+            GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId = model.MarketCenterNameBadgeDefaultId;
+            
             GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName = model.MarketCenterWhatAmIReferenceName;
 
             /* We do not clear cache after each setting update.
@@ -90,6 +95,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);
+                        
+            if (model.MarketCenterNameBadgeDefaultId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);
 
             if (model.MarketCenterWhatAmIReferenceName_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope, false);

@@ -17,6 +17,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         public bool MarketCenterDefaultId_OverrideForStore { get; set; }
 
         
+        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterNameBadgeDefaultId")]
+        public int MarketCenterNameBadgeDefaultId { get; set; }
+        public bool MarketCenterNameBadgeDefaultId_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterWhatAmIReferenceName")]
         public string MarketCenterWhatAmIReferenceName { get; set; }
         public bool MarketCenterWhatAmIReferenceName_OverrideForStore { get; set; }
