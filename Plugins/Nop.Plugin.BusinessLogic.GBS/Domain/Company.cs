@@ -60,7 +60,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             List<Company> marketcentersList = JsonConvert.DeserializeObject<List<Company>>(jsonResult);
             Category category = CATEGORYSERVICE.GetCategoryById(marketcentersList[0].id);
             marketcentersList[0].logoPicturePath = PICTURESERVICE.GetPictureUrl(category.PictureId);
-            
+
+            if (string.IsNullOrEmpty(marketcentersList[0].h1))
+            {
+                marketcentersList[0].h1 = marketcentersList[0].Name;
+            }
+
             return marketcentersList[0];
 
         }
