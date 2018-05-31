@@ -129,50 +129,50 @@
 					</div>
 
 					<div class="row">
-						<div class="col-md-6">
-							@Html.Widget("productdetails_before_pictures", Model.Id)
-							<!--product pictures-->
-							@Html.Partial("_ProductDetailsPictures", Model)
-							@Html.Widget("productdetails_after_pictures", Model.Id)
+                        <div class="col-md-6">
+                            @Html.Widget("productdetails_before_pictures", Model.Id)
+                            <!--product pictures-->
+                            @Html.Partial("_ProductDetailsPictures", Model)
+                            @Html.Widget("productdetails_after_pictures", Model.Id)
 
-							@Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
-							@Html.Widget("productdetails_bottom", Model.Id)
-							@Html.Widget("productdetails_before_collateral", Model.Id)
+                            @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                            @Html.Widget("productdetails_bottom", Model.Id)
+                            @Html.Widget("productdetails_before_collateral", Model.Id)
 
-							@*@if (!String.IsNullOrEmpty(Model.ShortDescription))
-							{
-								<div class="short-description">
-									@Html.Raw(Model.ShortDescription)
-								</div>
-							}*@
-							@Html.Raw(Model.FullDescription)
+                            @*@if (!String.IsNullOrEmpty(Model.ShortDescription))
+        {
+            <div class="short-description">
+                @Html.Raw(Model.ShortDescription)
+            </div>
+        }*@
+                            @Html.Raw(Model.FullDescription)
 
-							@{
-								ViewBag.productId = Model.Id;
-							}
-							@Html.Partial("_ProductTierPrices", Model.TierPrices)  
-						   <div class="overview">
+                            @{
+                                ViewBag.productId = Model.Id;
+                            }
+                            @*@Html.Partial("_ProductTierPrices", Model.TierPrices) *@
+                            <div class="overview">
 
 
-								@Html.Widget("productdetails_overview_top", Model.Id)
-								<!--product reviews-->
-								@Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
-								<!--product manufacturers-->
-								@Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
-								<!--compare, email a friend-->
-								<div class="overview-buttons">
-									@Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
-									@Html.Partial("_CompareProductsButton", Model)
-									@Html.Partial("_ProductEmailAFriendButton", Model)
-									@Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)
-								</div>
-								<!--price breaks-->
-								@*@Html.Partial("_ShareButton", Model)*@
-								@*@Html.Widget("product_category_titles", Model.Id)*@
-								@*@Html.Widget("productdetails_overview_bottom", Model.Id)*@
-							</div>
+                                @Html.Widget("productdetails_overview_top", Model.Id)
+                                <!--product reviews-->
+                                @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
+                                <!--product manufacturers-->
+                                @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
+                                <!--compare, email a friend-->
+                                <div class="overview-buttons">
+                                    @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
+                                    @Html.Partial("_CompareProductsButton", Model)
+                                    @Html.Partial("_ProductEmailAFriendButton", Model)
+                                    @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)
+                                </div>
+                                <!--price breaks-->
+                                @*@Html.Partial("_ShareButton", Model)*@
+                                @*@Html.Widget("product_category_titles", Model.Id)*@
+                                @*@Html.Widget("productdetails_overview_bottom", Model.Id)*@
+                            </div>
 
-						</div>
+                        </div>
 
 
 
