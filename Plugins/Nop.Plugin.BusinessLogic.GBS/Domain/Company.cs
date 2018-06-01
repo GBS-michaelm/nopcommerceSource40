@@ -13,6 +13,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Core.Domain.Media;
 using Newtonsoft.Json;
+using Nop.Plugin.BusinessLogic.GBS.Factories;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -176,10 +177,21 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             
             NMCcategories = parentCompany.childCompanyIds.Where(x => x.TypeId == 4).ToList<Company>();
 
+            string defaultURL = pictureService.GetDefaultPictureUrl();
+
             foreach (Company company in NMCcategories)
             {
                 Category cat = categoryService.GetCategoryById(company.childCompanyId);
                 company.logoPicturePath = pictureService.GetPictureUrl(cat.PictureId, mediaSettings.CategoryThumbPictureSize);
+
+
+
+                if (company.logoPicturePath.Contains("default-image") || string.IsNullOrEmpty(company.logoPicturePath))
+                {
+                    string classicImage = Helpers.GetPictureUrl(cat.Id);
+                    company.logoPicturePath = string.IsNullOrEmpty(classicImage) ? company.logoPicturePath : classicImage; 
+                }
+                
             }
             
 
