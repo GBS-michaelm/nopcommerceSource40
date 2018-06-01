@@ -59,15 +59,18 @@
                 <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title=""> @Model.Name</a>
             </div>
             <div id="price_description">
-                @{
+
+                @if(featuredProductId != 0)
+                {
+               
                     var result = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x =>
                     (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display"
                     || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type"
                     || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
                     || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit"
                     ));
-                }
-                @if (result.Count() == 4)
+               
+                if (result.Count() == 4)
                 {
                     var packType = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
                     var eachUnit = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
@@ -109,6 +112,9 @@
                     }
                     <span class="actual-price">@displayPriceString</span>
                 }
+
+                }
+
             </div>
         </div>
     </div>

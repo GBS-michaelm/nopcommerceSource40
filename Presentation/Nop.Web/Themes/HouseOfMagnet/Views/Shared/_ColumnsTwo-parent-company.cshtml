@@ -136,21 +136,27 @@
                 StringBuilder sb = new StringBuilder();
 
                 //category stuff
-                var catService = EngineContext.Current.Resolve<ICategoryService>();
+                //var catService = EngineContext.Current.Resolve<ICategoryService>();
 
                 //class attribute way
-                List<Category> childCategoriesList = new List<Category>();
-                for (int i = 0; i < company.childCompanyIds.Count; i++)
-                {
-                    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-                    childCategoriesList.Add(childCompany);
-                }
+                //List<Category> childCategoriesList = new List<Category>();
+                //for (int i = 0; i < company.childCompanyIds.Count; i++)
+                //{
+                //    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+                //    childCategoriesList.Add(childCompany);
+                //}
 
-                var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+                //var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+
+                List<Company> companiesInOrder = new List<Company>();
+
+                companiesInOrder = company.childCompanyIds.OrderBy(x => x.Name).ToList<Company>();
+
+
                 foreach (var item in companiesInOrder)
                 {
                     //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-                    sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
+                    sb.Append("<option value='" + item.SeName + "'>" + item.Name + "</option>"); //"+ item. +"
                 }
 
                 string allString = sb.ToString();
