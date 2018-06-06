@@ -39,9 +39,10 @@ using Nop.Services.Custom.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomersCanvas.Services;
 using Nop.Core.Plugins;
-using Nop.Plugin.Catalog.GBS;
 using Newtonsoft.Json;
 using System.Globalization;
+using Nop.Plugin.BusinessLogic.GBS.Factories;
+using Nop.Plugin.Catalog.GBS;
 
 namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
 {
@@ -631,17 +632,13 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     var miscPlugins = _pluginFinder.GetPlugins<CategoryNavigationProvider>(storeId: _storeContext.CurrentStore.Id).ToList();
                     if (miscPlugins.Count > 0)
                     {
-                        var picModels = _pictureService.GetPicturesByProductId(product.Id);
-                        if (picModels == null || picModels.Count == 0)
-                        {
-                            var result = Nop.Plugin.Catalog.GBS.Factories.Helpers.GetPictureUrl(catId, product.Sku);
+                            var result = Helpers.GetPictureUrl(catId, product.Sku);
                             if (!string.IsNullOrEmpty(result))
                             {
                                 productOverviewModels.DefaultPictureModel.ImageUrl = result;
                                 productOverviewModels.DefaultPictureModel.FullSizeImageUrl = result;
                                 productOverviewModels.DefaultPictureModel.ThumbImageUrl = result;
                             }
-                        }
                     }
                     return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackground.cshtml", productOverviewModels);
                 }
