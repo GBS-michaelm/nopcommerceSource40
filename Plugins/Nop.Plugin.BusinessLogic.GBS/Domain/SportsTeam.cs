@@ -49,6 +49,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string MainPicturePath { get; set; } = "";
         public int FeaturedProductId { get; set; } = 0;
         public bool IsFeatured { get; set; } = false;
+        public string SeName { get; set; }
         //string _gatewayHtml = "";
 
         public static SportsTeam GetSportsTeam(int teamId)

@@ -318,9 +318,9 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                 var catId = 0;
                 if (!success)
                 {
-                    id = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1) ? id : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1;
-                    catId = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2) ? catId : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2;
-                    truePicturePath = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath) ? truePicturePath : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath;
+                    id = string.IsNullOrEmpty(((string)((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1)) ? id : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1;
+                    catId = string.IsNullOrEmpty(((string)((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2)) ? catId : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2;
+                    truePicturePath = string.IsNullOrEmpty(((string)((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath)) ? truePicturePath : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath;
                     //id = ((dynamic)additionalData).id1;
                     //catId = ((dynamic)additionalData).id2;
                 }

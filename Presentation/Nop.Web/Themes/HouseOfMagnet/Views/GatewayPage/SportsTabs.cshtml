@@ -219,33 +219,33 @@
         //    $("#teamSelect").remove();
         //}
 
-        $(".team-from-list").click(function () {
+        //$(".team-from-list").click(function () {
 
-            //console.log($(this).attr('id'));
+        //    //console.log($(this).attr('id'));
 
-            LoadTeamCategoryProducts($(this).attr('id'));
+        //    LoadTeamCategoryProducts($(this).attr('id'));
 
-            $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
-
-
-            //SetTeam($(this).text());
-
-            //$("#gatewayWYSIWYG").show();
-            $("#teamSelect").hide(3000, "linear");
-            $("#selectTeamDiv").show();
-            //$("#gatewayTopText").html(" ");
+        //    $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
 
 
-            //PageBodyResizeForMultipleProductRows("sports-wysiwyg");
+        //    //SetTeam($(this).text());
 
-        })
+        //    //$("#gatewayWYSIWYG").show();
+        //    $("#teamSelect").hide(3000, "linear");
+        //    $("#selectTeamDiv").show();
+        //    //$("#gatewayTopText").html(" ");
 
-        $("#changeSelectedTeam").click(function () {
-            $("#gatewayWYSIWYG").hide();
-            $("#teamSelect").show();
-            $("#selectTeamDiv").hide();
-            //PageBodyResizeForMultipleProductRows("");
-        })
+
+        //    //PageBodyResizeForMultipleProductRows("sports-wysiwyg");
+
+        //})
+
+        //$("#changeSelectedTeam").click(function () {
+        //    $("#gatewayWYSIWYG").hide();
+        //    $("#teamSelect").show();
+        //    $("#selectTeamDiv").hide();
+        //    //PageBodyResizeForMultipleProductRows("");
+        //})
 
         //$("#cssChange").click(function() {
 
@@ -271,41 +271,41 @@
         //    }
         //});
 
-        function LoadTeamCategoryProducts(id) {
+        //function LoadTeamCategoryProducts(id) {
 
-            var link = "sportsgateway/GatewayCatalogProducts/sportsTeam/" + id;
-            //console.log(id)
+        //    var link = "sportsgateway/GatewayCatalogProducts/sportsTeam/" + id;
+        //    //console.log(id)
 
-            $.ajax({
-                type: "GET",
-                url: link,
-                cache: false,
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: "html",
-                success: function (msg) {
-                    console.log("success");
-                    console.log(msg);
-                    console.log(msg.message);
-
-
-
-                    $("#gatewayWYSIWYG").html(msg);
-                    $("#gatewayWYSIWYG").show();
-                    //$("#gatewayTopText").html(msg.h1);
+        //    $.ajax({
+        //        type: "GET",
+        //        url: link,
+        //        cache: false,
+        //        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+        //        dataType: "html",
+        //        success: function (msg) {
+        //            console.log("success");
+        //            console.log(msg);
+        //            console.log(msg.message);
 
 
-                },
-                error: function (msg) {
-                    console.log("error");
-                    console.log(msg);
-                    console.log(msg.d);
-                },
-                complete: function (data) {
 
-                },
+        //            $("#gatewayWYSIWYG").html(msg);
+        //            $("#gatewayWYSIWYG").show();
+        //            //$("#gatewayTopText").html(msg.h1);
 
-            });
-        }
+
+        //        },
+        //        error: function (msg) {
+        //            console.log("error");
+        //            console.log(msg);
+        //            console.log(msg.d);
+        //        },
+        //        complete: function (data) {
+
+        //        },
+
+        //    });
+        //}
 
 
 
