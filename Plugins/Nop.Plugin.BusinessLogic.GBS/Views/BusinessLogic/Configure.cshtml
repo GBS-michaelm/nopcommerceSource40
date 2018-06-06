@@ -49,7 +49,7 @@
             @Html.EditorFor(model => model.MarketCenterNameBadgeDefaultId)
             @Html.ValidationMessageFor(model => model.MarketCenterNameBadgeDefaultId)
         </td>
-    </tr>    
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.OverrideStoreCheckboxFor(model => model.MarketCenterCarMagnetDefaultId_OverrideForStore, model => model.MarketCenterCarMagnetDefaultId, Model.ActiveStoreScopeConfiguration)
@@ -58,6 +58,16 @@
         <td class="adminData">
             @Html.EditorFor(model => model.MarketCenterCarMagnetDefaultId)
             @Html.ValidationMessageFor(model => model.MarketCenterCarMagnetDefaultId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.OverrideStoreCheckboxFor(model => model.SportsFootballDefaultId_OverrideForStore, model => model.SportsFootballDefaultId, Model.ActiveStoreScopeConfiguration)
+            @Html.NopLabelFor(model => model.SportsFootballDefaultId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SportsFootballDefaultId)
+            @Html.ValidationMessageFor(model => model.SportsFootballDefaultId)
         </td>
     </tr>
     <tr>

@@ -48,6 +48,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 MarketCenterNameBadgeDefaultId = GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId,
                 MarketCenterBusinessCardDefaultId = GBSBusinessLogicSettings.MarketCenterBusinessCardDefaultId,
                 MarketCenterCarMagnetDefaultId = GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId,
+                SportsFootballDefaultId = GBSBusinessLogicSettings.SportsFootballDefaultId,
 
                 MarketCenterWhatAmIReferenceName = GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName,
                 ActiveStoreScopeConfiguration = storeScope
@@ -59,7 +60,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
                 model.MarketCenterDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterDefaultId, storeScope);
                 model.MarketCenterNameBadgeDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterNameBadgeDefaultId, storeScope);               
                 model.MarketCenterBusinessCardDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterBusinessCardDefaultId, storeScope);
-                model.MarketCenterCarMagnetDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);
+                model.MarketCenterCarMagnetDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);               
+                model.SportsFootballDefaultId_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.SportsFootballDefaultId, storeScope);
 
                 model.MarketCenterWhatAmIReferenceName_OverrideForStore = _settingService.SettingExists(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope);
             }
@@ -85,7 +87,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             GBSBusinessLogicSettings.MarketCenterDefaultId = model.MarketCenterDefaultId;
             GBSBusinessLogicSettings.MarketCenterNameBadgeDefaultId = model.MarketCenterNameBadgeDefaultId;                   
             GBSBusinessLogicSettings.MarketCenterBusinessCardDefaultId = model.MarketCenterBusinessCardDefaultId;            
-            GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId = model.MarketCenterCarMagnetDefaultId;
+            GBSBusinessLogicSettings.MarketCenterCarMagnetDefaultId = model.MarketCenterCarMagnetDefaultId;            
+            GBSBusinessLogicSettings.SportsFootballDefaultId = model.SportsFootballDefaultId;
 
             GBSBusinessLogicSettings.MarketCenterWhatAmIReferenceName = model.MarketCenterWhatAmIReferenceName;
 
@@ -115,7 +118,12 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             if (model.MarketCenterCarMagnetDefaultId_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.MarketCenterCarMagnetDefaultId, storeScope);           
+            if (model.SportsFootballDefaultId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.SportsFootballDefaultId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(GBSBusinessLogicSettings, x => x.SportsFootballDefaultId, storeScope);
+
 
             if (model.MarketCenterWhatAmIReferenceName_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(GBSBusinessLogicSettings, x => x.MarketCenterWhatAmIReferenceName, storeScope, false);

@@ -10,6 +10,6 @@ namespace Nop.Plugin.BusinessLogic.GBS
         public int MarketCenterBusinessCardDefaultId { get; set; }
         public int MarketCenterCarMagnetDefaultId { get; set; }
         public string MarketCenterWhatAmIReferenceName { get; set; }
-
+        public int SportsFootballDefaultId { get; set; }
     }
 }

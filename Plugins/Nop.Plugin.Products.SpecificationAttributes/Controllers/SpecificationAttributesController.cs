@@ -297,6 +297,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
         public ActionResult PublicInfo(string widgetZone, object additionalData = null)
         {
             var id = 0;
+            var truePicturePath = "";
             object o = additionalData;
             IEnumerable list = o as IEnumerable;
             if (list != null)
@@ -312,11 +313,13 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
             {
                 string idString = Convert.ToString(additionalData);
                 var success = Int32.TryParse(idString, out id);
+                                
                 var catId = 0;
                 if (!success)
                 {
-                    id = ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1;
-                    catId = ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2;
+                    id = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1) ? id : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id1;
+                    catId = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2) ? catId : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).id2;
+                    truePicturePath = string.IsNullOrEmpty(((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath) ? truePicturePath : ((dynamic)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(additionalData))).mainPicturePath;
                     //id = ((dynamic)additionalData).id1;
                     //catId = ((dynamic)additionalData).id2;
                 }

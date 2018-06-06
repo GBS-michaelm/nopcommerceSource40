@@ -71,6 +71,7 @@
     <Compile Include="Domain\CompanyProduct.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\MarketCenter.cs" />
+    <Compile Include="Domain\SportsTabs.cs" />
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="Factories\Helpers.cs" />
     <Compile Include="GBSBusinessLogicSettings.cs" />

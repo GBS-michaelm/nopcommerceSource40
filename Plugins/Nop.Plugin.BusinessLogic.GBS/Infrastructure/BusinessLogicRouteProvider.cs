@@ -19,6 +19,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Infrastructure
                            new { controller = "GatewayPageController", action = "SportsTeamHtml" },
                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
 
+            routes.MapLocalizedRoute("SportsTeamGatewayTabs",
+                            "sportsgateway/SportsTeamGatewayTabs/{id}",
+                            new { controller = "GatewayPage", action = "SportsTeamGatewayTabs" },
+                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
+
             routes.MapLocalizedRoute("GatewayCatalogProducts",
                             "sportsgateway/GatewayCatalogProducts/{type}/{id}",
                             new { controller = "GatewayPage", action = "GatewayCatalogProducts" },

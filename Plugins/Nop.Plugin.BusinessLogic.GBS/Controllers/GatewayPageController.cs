@@ -32,24 +32,24 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
         }
 
-        [HttpGet]
-        public ActionResult SportsTeamHtml(int id)
-        {           
-            SportsTeam team = new SportsTeam(id);
-            team.gatewayHtml = team.GenerateTeamProductHtml();
+        //[HttpGet]
+        //public ActionResult SportsTeamHtml(int id)
+        //{           
+        //    SportsTeam team = SportsTeam.GetSportsTeam(id);
+        //    team.gatewayHtml = team.GenerateTeamProductHtml();
 
 
-            GatewayPageProductBoxModel gatewayModel = new GatewayPageProductBoxModel();
-            //gatewayModel.name = 
+        //    GatewayPageProductBoxModel gatewayModel = new GatewayPageProductBoxModel();
+        //    //gatewayModel.name = 
 
-            return Json(new
-            {
-                success = true,
-                h1 = team.h1,
-                message = team.gatewayHtml
-            }, JsonRequestBehavior.AllowGet);
+        //    return Json(new
+        //    {
+        //        success = true,
+        //        h1 = team.h1,
+        //        message = team.gatewayHtml
+        //    }, JsonRequestBehavior.AllowGet);
             
-        }
+        //}
 
         public ActionResult GatewayCatalogProducts(string type, int id)
         {
@@ -61,25 +61,28 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                     var iProductService = EngineContext.Current.Resolve<IProductService>();
                     var iCategoryService = EngineContext.Current.Resolve<ICategoryService>();
                     IList<Category> teamCategoryProducts = iCategoryService.GetAllCategoriesByParentCategoryId(id);
+                           
+                    //check if football via user setting here
+                    //if one is football assume all are football for now.
 
-                    
+
                     foreach (var category in teamCategoryProducts)
                     {
                         
-                        SportsTeam customExtendedCategoryData = new SportsTeam(category.Id);
+                        SportsTeam customExtendedCategoryData = SportsTeam.GetSportsTeam(category.Id);
                         IPagedList<ProductCategory> productCategoryList = iCategoryService.GetProductCategoriesByCategoryId(category.Id);
-                        Product featuredProductData = iProductService.GetProductById(customExtendedCategoryData.featuredProductId);
+                        Product featuredProductData = iProductService.GetProductById(customExtendedCategoryData.FeaturedProductId);
 
                         GatewayPageProductBoxModel productBox = new GatewayPageProductBoxModel();
                         productBox.name = category.Name;
-                        productBox.mainPicturePath = customExtendedCategoryData.mainPicturePath;
+                        productBox.mainPicturePath = customExtendedCategoryData.MainPicturePath;
                         productBox.width = featuredProductData.Width;
                         productBox.length = featuredProductData.Length;
                         productBox.designCount = productCategoryList.Count;
                         productBox.price = (int)featuredProductData.Price;
-                        productBox.isFeatured = customExtendedCategoryData.isFeatured;
-                        productBox.featuredProductId = customExtendedCategoryData.featuredProductId;
-                        productBox.productLink = customExtendedCategoryData.SeName;
+                        productBox.isFeatured = customExtendedCategoryData.IsFeatured;
+                        productBox.featuredProductId = customExtendedCategoryData.FeaturedProductId;
+                        //productBox.productLink = customExtendedCategoryData.SeName;
 
                         teamProductBlocks.productBoxes.Add(productBox);
 
@@ -93,6 +96,25 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
             
         }
 
+        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        public ActionResult SportsTeamGatewayTabs(int sportCategoryId)
+        {
+
+            try
+            {
+                SportsTabs sportsTabs = SportsTabs.GetSportsTabs(sportCategoryId);
+                return View("SportsTabs", sportsTabs);
+            }
+            catch(Exception ex)
+            {
+
+                ex = new Exception("Gateway Page Controller Fail. SportsTeamGatewayTabs.");
+                base.LogException(ex);
+                return View();
+            }
+                        
+        }
+        
         [OutputCache(Duration = 3600, VaryByParam = "*")]
         public ActionResult MarketCenterGatewayTabs(int marketCenterId, string type)
         {

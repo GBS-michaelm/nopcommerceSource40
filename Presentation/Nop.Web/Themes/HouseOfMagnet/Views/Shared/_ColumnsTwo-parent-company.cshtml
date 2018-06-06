@@ -150,13 +150,13 @@
 
                 List<Company> companiesInOrder = new List<Company>();
 
-                companiesInOrder = company.childCompanyIds.OrderBy(x => x.Name).ToList<Company>();
+                companiesInOrder = company.childCompanyIds.Where(x=> x.TypeId == 1).OrderBy(x => x.Name).ToList<Company>();
 
 
                 foreach (var item in companiesInOrder)
                 {
                     //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-                    sb.Append("<option value='" + item.SeName + "'>" + item.Name + "</option>"); //"+ item. +"
+                    sb.Append("<li><a href='" + item.SeName + "'>" + item.Name + "</a></li>"); //"+ item. +"
                 }
 
                 string allString = sb.ToString();
@@ -293,6 +293,9 @@
                 console.log("hide");
                 $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
             }
+
+            console.log("search thing: " + $(elem).attr('id'));
+            console.log("search thing box being queried: " + $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').attr('id'));
 
             $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
                 itemSelector: 'li',

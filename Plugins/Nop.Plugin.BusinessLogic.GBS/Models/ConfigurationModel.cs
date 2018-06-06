@@ -29,7 +29,10 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterCarMagnetDefaultId")]
         public int MarketCenterCarMagnetDefaultId { get; set; }
         public bool MarketCenterCarMagnetDefaultId_OverrideForStore { get; set; }
-
+                
+        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.SportsFootballDefaultId")]
+        public int SportsFootballDefaultId { get; set; }
+        public bool SportsFootballDefaultId_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterWhatAmIReferenceName")]
         public string MarketCenterWhatAmIReferenceName { get; set; }

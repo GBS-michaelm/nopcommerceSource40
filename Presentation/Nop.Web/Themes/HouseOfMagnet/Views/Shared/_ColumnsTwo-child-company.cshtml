@@ -150,35 +150,37 @@
 <div id="searchArea">
     <div id="searchAreaLeft">
         <p id="find">Find Your Team: </p>
+        <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
 
         @{
-        StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
-        //category stuff
-        //var catService = EngineContext.Current.Resolve<ICategoryService>();
+            //category stuff
+            //var catService = EngineContext.Current.Resolve<ICategoryService>();
 
-        //class attribute way
-        //List<Category> childCategoriesList = new List<Category>();
-        //for (int i = 0; i < company.childCompanyIds.Count; i++)
-        //{
-        //    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-        //    childCategoriesList.Add(childCompany);
-        //}
+            //class attribute way
+            //List<Category> childCategoriesList = new List<Category>();
+            //for (int i = 0; i < company.childCompanyIds.Count; i++)
+            //{
+            //    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+            //    childCategoriesList.Add(childCompany);
+            //}
 
-        //var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
+            //var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
 
-        List<Company> companiesInOrder = new List<Company>();
+            Company companyForParentSearchList = Company.GetCompany(company.parentCategoryId);
 
-        companiesInOrder = company.childCompanyIds.OrderBy(x => x.Name).ToList<Company>();
+            List<Company> companiesInOrder = new List<Company>();
 
+            companiesInOrder = companyForParentSearchList.childCompanyIds.Where(x => x.TypeId == 1).OrderBy(x => x.Name).ToList<Company>();
 
-        foreach (var item in companiesInOrder)
-        {
-            //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            sb.Append("<option value='" + item.SeName + "'>" + item.Name + "</option>"); //"+ item. +"
-        }
+            foreach (var item in companiesInOrder)
+            {
+                //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                sb.Append("<li><a href='" + item.SeName + "'>" + item.Name + "</a></li>"); //" + item. +"
+            }
 
-        string allString = sb.ToString();
+            string allString = sb.ToString();
 
         }
 
