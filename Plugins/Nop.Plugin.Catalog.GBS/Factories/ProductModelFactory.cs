@@ -33,6 +33,7 @@ using Nop.Web.Models.Media;
 using Nop.Web.Factories;
 using Nop.Plugin.Catalog.GBS.DataAccess;
 using Nop.Core.Plugins;
+using Nop.Plugin.BusinessLogic.GBS.Factories;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {

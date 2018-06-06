@@ -31,6 +31,7 @@ using Nop.Web.Factories;
 using Nop.Plugin.Catalog.GBS.DataAccess;
 using Nop.Core.Plugins;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessLogic.GBS.Factories;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -209,20 +210,15 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 if (miscPlugins.Count > 0)
                 {
                     var result = Helpers.GetPictureUrl(categtoryModel.Id);
-                    if (_pictureService.GetPictureById(category.PictureId) == null)
-                    {
                         if (!string.IsNullOrEmpty(result))
                         {
                             categtoryModel.PictureModel.ImageUrl = result;
                             categtoryModel.PictureModel.FullSizeImageUrl = result;
                             categtoryModel.PictureModel.ThumbImageUrl = result;
                         }
-                    }
                     foreach (var subCategory in categtoryModel.SubCategories)
                     {
                         var subCat = _categoryService.GetCategoryById(subCategory.Id);
-                        if (_pictureService.GetPictureById(subCat.PictureId) == null)
-                        {
                             result = Helpers.GetPictureUrl(subCategory.Id);
                             if (!string.IsNullOrEmpty(result))
                             {
@@ -230,14 +226,9 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                                 subCategory.PictureModel.FullSizeImageUrl = result;
                                 subCategory.PictureModel.ThumbImageUrl = result;
                             }
-                        }
                     }
                     foreach (var product in categtoryModel.Products)
                     {
-                        var picModels = _pictureService.GetPicturesByProductId(product.Id);
-
-                        if (picModels == null || picModels.Count == 0)
-                        {
                             result = Helpers.GetPictureUrl(categtoryModel.Id, product.Sku);
                             if (!string.IsNullOrEmpty(result))
                             {
@@ -245,7 +236,6 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                                 product.DefaultPictureModel.FullSizeImageUrl = result;
                                 product.DefaultPictureModel.ThumbImageUrl = result;
                             }
-                        }
                     }
 
                 }
@@ -285,42 +275,33 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                         var category = _categoryService.GetCategoryById(categtoryModel.Id);
                         var result = Helpers.GetPictureUrl(categtoryModel.Id);
 
-                        if (_pictureService.GetPictureById(category.PictureId) == null)
+                        if (!string.IsNullOrEmpty(result))
                         {
-                            if (!string.IsNullOrEmpty(result))
-                            {
-                                categtoryModel.PictureModel.ImageUrl = result;
-                                categtoryModel.PictureModel.FullSizeImageUrl = result;
-                                categtoryModel.PictureModel.ThumbImageUrl = result;
-                            }
+                            categtoryModel.PictureModel.ImageUrl = result;
+                            categtoryModel.PictureModel.FullSizeImageUrl = result;
+                            categtoryModel.PictureModel.ThumbImageUrl = result;
                         }
                         foreach (var subCategory in categtoryModel.SubCategories)
                         {
                             var subCat = _categoryService.GetCategoryById(subCategory.Id);
-                            if (_pictureService.GetPictureById(subCat.PictureId) == null)
+
+                            result = Helpers.GetPictureUrl(subCategory.Id);
+                            if (!string.IsNullOrEmpty(result))
                             {
-                                result = Helpers.GetPictureUrl(subCategory.Id);
-                                if (!string.IsNullOrEmpty(result))
-                                {
-                                    subCategory.PictureModel.ImageUrl = result;
-                                    subCategory.PictureModel.FullSizeImageUrl = result;
-                                    subCategory.PictureModel.ThumbImageUrl = result;
-                                }
+                                subCategory.PictureModel.ImageUrl = result;
+                                subCategory.PictureModel.FullSizeImageUrl = result;
+                                subCategory.PictureModel.ThumbImageUrl = result;
                             }
                         }
                         foreach (var product in categtoryModel.Products)
                         {
-                            var picModels = _pictureService.GetPicturesByProductId(product.Id);
 
-                            if (picModels == null || picModels.Count == 0)
+                            result = Helpers.GetPictureUrl(categtoryModel.Id, product.Sku);
+                            if (!string.IsNullOrEmpty(result))
                             {
-                                result = Helpers.GetPictureUrl(categtoryModel.Id, product.Sku);
-                                if (!string.IsNullOrEmpty(result))
-                                {
-                                    product.DefaultPictureModel.ImageUrl = result;
-                                    product.DefaultPictureModel.FullSizeImageUrl = result;
-                                    product.DefaultPictureModel.ThumbImageUrl = result;
-                                }
+                                product.DefaultPictureModel.ImageUrl = result;
+                                product.DefaultPictureModel.FullSizeImageUrl = result;
+                                product.DefaultPictureModel.ThumbImageUrl = result;
                             }
                         }
 
