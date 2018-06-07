@@ -9,40 +9,42 @@
 @using Nop.Services.Seo;
 @using Nop.Core.Domain.Seo;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using System.Linq;
+@using Nop.Core.Caching;
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-
+    ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
 
     Layout = "~/Views/Shared/_Root.cshtml";
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
 @{
-    //current category ID
-    int currentCategoryId = 0;
-    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
-    {
-        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
-    }
+//current category ID
+//int currentCategoryId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+//}
 
 
-    //current manufacturer ID
-    int currentManufacturerId = 0;
-    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
-    {
-        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
-    }
+////current manufacturer ID
+//int currentManufacturerId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+//}
 
 
-    //current product ID
-    int currentProductId = 0;
-    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
-        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
-    {
-        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
-    }
+////current product ID
+//int currentProductId = 0;
+//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+//{
+//    currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+//}
 }
 @if (IsSectionDefined("Breadcrumb"))
 {
@@ -51,15 +53,25 @@
     }
 }
 
-@{ 
+@{
     int id = @Model.Id;
 }
 
 @{
 
-    DBManager manager = new DBManager();
+    Company company = null;
 
-    Company company = new Company(id);
+    DBManager manager = new DBManager();
+    
+    company = cacheManager.Get("childCompanyGatewayPage_" + id, 60, () =>
+    {
+
+        Company company2 = Company.GetCompany(id);
+
+        return company2;
+
+    });
+    
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
@@ -89,10 +101,10 @@
                         @*<span class="delimiter">@breadcrumbDelimiter</span>*@
                     }
                 </li>
-                }
-        </ul>
-    </div>
-}
+            }
+            </ul>
+        </div>
+    }
 
 
 
@@ -107,7 +119,7 @@
     {
         <div class="parent-gateway-description">
             @*<p class="list-content">*@
-                 <h3>@categoryh2</h3>@Html.Raw(Model.Description)
+            <h3>@categoryh2</h3>@Html.Raw(Model.Description)
             @*</p>*@
         </div>
 
@@ -120,11 +132,11 @@
 
 
 @*<div class="category-section">
-    <div class="row">
-        @*<div class="col-sm-6">
-<img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
-</div>*@
-        @*<div class="col-sm-6">
+        <div class="row">
+            @*<div class="col-sm-6">
+    <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
+    </div>*@
+@*<div class="col-sm-6">
         <div class="row">
             <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
             <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
@@ -132,35 +144,43 @@
             <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
         </div>
     </div>*@
-    @*</div>*@
+@*</div>*@
 @*</div>*@
 
 <div id="searchArea">
     <div id="searchAreaLeft">
         <p id="find">Find Your Team: </p>
+        <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
 
         @{
-        StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
-        //category stuff
-        var catService = EngineContext.Current.Resolve<ICategoryService>();
+            //category stuff
+            //var catService = EngineContext.Current.Resolve<ICategoryService>();
 
-        //class attribute way
-        List<Category> childCategoriesList = new List<Category>();
-        for (int i = 0; i < company.childCompanyIds.Count; i++)
-        {
-            Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
-            childCategoriesList.Add(childCompany);
-        }
+            //class attribute way
+            //List<Category> childCategoriesList = new List<Category>();
+            //for (int i = 0; i < company.childCompanyIds.Count; i++)
+            //{
+            //    Category childCompany = catService.GetCategoryById(company.childCompanyIds[i]);
+            //    childCategoriesList.Add(childCompany);
+            //}
 
-        var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
-        foreach (var item in companiesInOrder)
-        {
-            //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
-            sb.Append("<li><a href='" + item.GetSeName() + "'> " + item.Name + " </a></li>");
-        }
+            //var companiesInOrder = childCategoriesList.OrderBy(x => x.Name).ToList();
 
-        string allString = sb.ToString();
+            Company companyForParentSearchList = Company.GetCompany(company.parentCategoryId);
+
+            List<Company> companiesInOrder = new List<Company>();
+
+            companiesInOrder = companyForParentSearchList.childCompanyIds.Where(x => x.TypeId == 1).OrderBy(x => x.Name).ToList<Company>();
+
+            foreach (var item in companiesInOrder)
+            {
+                //sb.Append("<option value='" + item.GetSeName() + "'>" + item.Name + "</option>"); //"+ item. +"
+                sb.Append("<li><a href='" + item.SeName + "'>" + item.Name + "</a></li>"); //" + item. +"
+            }
+
+            string allString = sb.ToString();
 
         }
 
@@ -185,7 +205,7 @@
     <div id="leftColumn" class="sidebar col-md-3">
         <div class="sidebar-title">
             @*<h3>Refine Your Choices</h3>
-            <a href="#">Clear</a>*@
+                <a href="#">Clear</a>*@
         </div>
 
         <div id="workPlace">
@@ -205,27 +225,27 @@
         @*Stuff on the left*@
 
         @*@if (IsSectionDefined("left"))
-        {
-            @RenderSection("left")
-        }
-        else
-        {
-            @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
+            {
+                @RenderSection("left")
+            }
+            else
+            {
+                @Html.Widget("left_side_column_before")
+                @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
 
-            @*@Html.Widget("left_side_column_after_category_navigation")
+        @*@Html.Widget("left_side_column_after_category_navigation")
             @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
             @Html.Action("VendorNavigation", "Catalog")*@
-            @*@Html.Action("PopularProductTags", "Catalog")*@
-            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
-            @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
-        }*@
+        @*@Html.Action("PopularProductTags", "Catalog")*@
+        @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
+        @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+                @Html.Widget("left_side_column_after")
+            }*@
     </div>
     <div id="rightColumn" class="side-content col-md-9 mc-category-gallery">
         @*<div class="right-column-title">
 
-        </div>*@
+            </div>*@
 
 
 
@@ -253,7 +273,7 @@
             //***************TODO*************
             //change to the li length/count for hide
 
-            //var length = $('#marketCenterDropDown > option').length; 
+            //var length = $('#marketCenterDropDown > option').length;
             console.log("length: " + length);
             if (isEmpty($("#officeSearchWrap"))) {
                 $("#searchAreaLeft").hide();
@@ -301,6 +321,6 @@
         }
 
 
-        </script>
+    </script>
 
 </div>

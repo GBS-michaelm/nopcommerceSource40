@@ -3156,6 +3156,7 @@
     <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProducts.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProduct.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\MarketCenterGateway.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\SportsTabs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Administration\Views\Shared\EditorTemplates\" />
