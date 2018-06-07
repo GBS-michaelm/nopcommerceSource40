@@ -7,10 +7,12 @@
 @using Nop.Services.Catalog;
 @using Nop.Services.Seo;
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using System.Collections.Specialized;
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-    
+    ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
     Layout = "~/Views/Shared/_Root.cshtml";
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
@@ -48,90 +50,130 @@
     }
 }
 
-@{ 
+@{
     int id = @Model.Id;
+    string markcenterType = "";
+    string missingProductName = "";
+    string requestLink = "";
 }
 
 @{
 
+
+
+    NameValueCollection nvc = Request.QueryString;
+    if (nvc.HasKeys())
+    {
+        for (int i = 0; i < nvc.Count; i++)
+        {
+            string key = nvc.GetKey(i);
+
+            if (key == "request")
+            {
+                markcenterType = nvc.Get(i);
+            }
+        }
+    }
+
+    if (!string.IsNullOrEmpty(markcenterType))
+    {
+
+        SpecificationAttributeOption specificationAttributeOption = specService.GetSpecificationAttributeOptionById(Int32.Parse(markcenterType));
+        missingProductName = specificationAttributeOption.Name.Replace("-"," ");
+
+        requestLink = "mailto: mymarketcenter@houseofmagnets.com?subject=Market Center Request " + missingProductName + "";
+
+    }
+    
     DBManager manager = new DBManager();
-        
+
     Company company = Company.GetCompany(id);
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
     string aboutYourMarketCenter = company.aboutYourMarketCenter;
     string agentPacks = company.agentPacks;
-    
-}
 
+    }
 
-@if (Model.DisplayCategoryBreadcrumb)
-{
-    <div class="breadcrumb-wrapper">
-        <ul class="breadcrumb">
-            <li>
-                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")"><i class="fa fa-home"></i></a>
-                @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
-                @foreach (var cat in Model.CategoryBreadcrumb)
-                {
-                    var isLastCategory = cat.Id == Model.Id;
-                <li>
-                    @if (isLastCategory)
-                    {
-                        <strong class="current-item active">@cat.Name</strong>
-                    }
-                    else
-                    {
-                        <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
-                        @*<span class="delimiter">@breadcrumbDelimiter</span>*@
-                    }
-                </li>
-                }
-        </ul>
-    </div>
-}
-
-
-<div id="parentTitleWrapDiv">
-    
-    <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
-        <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
-    </div>
-       
-    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    @if (!string.IsNullOrEmpty(requestLink))
     {
-        <div class="parent-gateway-description">
-            @*<p class="list-content">*@
-            <h3>@categoryh2</h3>@Html.Raw(Model.Description)
-            @*</p>*@
+        <div class="style-msg errormsg">
+            <div class="sb-msg">
+                @*<i class="icon-remove"></i>*@
+                <strong>Sorry... </strong>&nbsp;@missingProductName have not been set up for your company. 
+                <a href="@requestLink" style="color: #740d0a; text-decoration: underline!important;">Request @missingProductName</a>.
+            </div>
         </div>
     }
-  
-</div>
 
-@*<div class="category-section">
-    <div class="row">
-        @*<div class="col-sm-6">
-<img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
-</div>*@
-        @*<div class="col-sm-6">
-        <div class="row">
-            <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
-            <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
-            <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg3.jpg" width="269" height="173" alt="" /></div>
-            <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
+
+    @if (Model.DisplayCategoryBreadcrumb)
+    {
+        <div class="breadcrumb-wrapper">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")"><i class="fa fa-home"></i></a>
+                    @*<span class="delimiter">@breadcrumbDelimiter</span> </li>*@
+                    @foreach (var cat in Model.CategoryBreadcrumb)
+                    {
+                        var isLastCategory = cat.Id == Model.Id;
+                    <li>
+                        @if (isLastCategory)
+                        {
+                            <strong class="current-item active">@cat.Name</strong>
+                        }
+                        else
+                        {
+                            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                            @*<span class="delimiter">@breadcrumbDelimiter</span>*@
+                        }
+                    </li>
+                }
+                </ul>
+            </div>
+    }
+
+
+    <div id="parentTitleWrapDiv">
+
+        <div id="leftTitleWrap" class="page-title panel-heading categorytitle parent-gateway-name" style="border-left-color: @fontColor !important;">
+            <h2 style="color : @fontColor;"><b>@categoryName</b></h2>
         </div>
-    </div>*@
-    @*</div>*@
-@*</div>*@
 
-<div id="searchArea">
-    <div id="searchAreaLeft">
-        <p>Find Your Office: </p>
-                
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="parent-gateway-description">
+                @*<p class="list-content">*@
+                <h3>@categoryh2</h3>@Html.Raw(Model.Description)
+                @*</p>*@
+            </div>
+        }
+
+    </div>
+
+    @*<div class="category-section">
+            <div class="row">
+                @*<div class="col-sm-6">
+        <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" width="569" height="374" />
+        </div>*@
+    @*<div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg1.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6 small-category"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg2.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg3.jpg" width="269" height="173" alt="" /></div>
+                <div class="col-sm-6"><img src="/Themes/HouseOfMagnet/Content/images/categoryimg4.jpg" width="269" height="173" alt="" /></div>
+            </div>
+        </div>*@
+    @*</div>*@
+    @*</div>*@
+
+    <div id="searchArea">
+        <div id="searchAreaLeft">
+            <p>Find Your Office: </p>
+
             <input id="officeSearch" type='text' class='txt-office-search' placeholder="Search..." onkeyup='CompanySearch(this)' />
-            
+
             @{
                 StringBuilder sb = new StringBuilder();
 
@@ -150,7 +192,7 @@
 
                 List<Company> companiesInOrder = new List<Company>();
 
-                companiesInOrder = company.childCompanyIds.Where(x=> x.TypeId == 1).OrderBy(x => x.Name).ToList<Company>();
+                companiesInOrder = company.childCompanyIds.Where(x => x.TypeId == 1).OrderBy(x => x.Name).ToList<Company>();
 
 
                 foreach (var item in companiesInOrder)
@@ -164,9 +206,9 @@
             }
 
             @*<select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
-                <option value="">Select Office</option>
-                @Html.Raw(@allString)
-            </select>*@
+                    <option value="">Select Office</option>
+                    @Html.Raw(@allString)
+                </select>*@
 
             <div id="officeSearchWrap" style="display: none; z-index: 9000">
                 @Html.Raw(@allString)
@@ -180,130 +222,130 @@
         </div>
     </div>
 
-<div class="listing-page">
-    <div id="leftColumn" class="sidebar col-md-3" style="z-index : 0">
-        <div class="sidebar-title">
-            @*<h3>Refine Your Choices</h3>
-            <a href="#">Clear</a>*@
-        </div>
+    <div class="listing-page">
+        <div id="leftColumn" class="sidebar col-md-3" style="z-index : 0">
+            <div class="sidebar-title">
+                @*<h3>Refine Your Choices</h3>
+                    <a href="#">Clear</a>*@
+            </div>
 
-        <div id="workPlace">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
-        </div>
-        <div id="agentPacks">
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
-            <h3>Discounted Agent Packs</h3>
-            @Html.Raw(@agentPacks)
-        </div>
-        <div id="marketCenterAbout">
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@
-            <h3>About Your Market Center</h3>
-            @aboutYourMarketCenter
-        </div>
+            <div id="workPlace">
+                @Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_work_place" })
+            </div>
+            <div id="agentPacks">
+                @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_agent_packs_column" })*@
+                <h3>Discounted Agent Packs</h3>
+                @Html.Raw(@agentPacks)
+            </div>
+            <div id="marketCenterAbout">
+                @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_marketcenter_yourcenter_about" })*@
+                <h3>About Your Market Center</h3>
+                @aboutYourMarketCenter
+            </div>
 
-        @*Stuff on the left*@
+            @*Stuff on the left*@
 
-        @*@if (IsSectionDefined("left"))
-        {
-            @RenderSection("left")
-        }
-        else
-        {
-            @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
+            @*@if (IsSectionDefined("left"))
+                {
+                    @RenderSection("left")
+                }
+                else
+                {
+                    @Html.Widget("left_side_column_before")
+                    @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
 
             @*@Html.Widget("left_side_column_after_category_navigation")
-            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-            @Html.Action("VendorNavigation", "Catalog")*@
+                @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+                @Html.Action("VendorNavigation", "Catalog")*@
             @*@Html.Action("PopularProductTags", "Catalog")*@
             @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
             @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
-        }*@
-    </div>
-    <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : 0">
-        @*<div class="right-column-title">
+                    @Html.Widget("left_side_column_after")
+                }*@
+        </div>
+        <div id="rightColumn" class="side-content col-md-9 mc-category-gallery" style="z-index : 0">
+            @*<div class="right-column-title">
 
-        </div>*@
+                </div>*@
 
-        @Html.Widget("main_column_before")
-        @RenderBody()
-        @Html.Widget("main_column_after")
+            @Html.Widget("main_column_before")
+            @RenderBody()
+            @Html.Widget("main_column_after")
 
-        @* dynamic partial *@
-        @Html.Action("GetNonMarketCenterCategories", "GatewayPage", new { parentCategoryId = id })
+            @* dynamic partial *@
+            @Html.Action("GetNonMarketCenterCategories", "GatewayPage", new { parentCategoryId = id })
 
-        @* static topic *@
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_company_gallery_general_product_categories" })
+            @* static topic *@
+            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_company_gallery_general_product_categories" })
 
-        @*Stuff on the Right*@
+            @*Stuff on the Right*@
 
-    </div>
-            
-    <script type="text/javascript">
-        $(document).ready(function () {
-            //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
+        </div>
 
-            //$("#officeSearchWrap").hide();
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //$(".topic-html-content").addClass("topic-html-content-parent-gateway");
 
-            $("#myWorkPlace").click(SetAsMyWorkPlace);
+                //$("#officeSearchWrap").hide();
 
-
-            //***************TODO*************
-            //change to the li length/count for hide
-
-            //var length = $('#marketCenterDropDown > option').length; 
-            console.log("length: " + length);
-            if (isEmpty($("#officeSearchWrap"))) {               
-                $("#searchAreaLeft").hide();
-            }          
-
-            if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
-                $(".parent-gateway-description").height($(".parent-gateway-name").height());
-            } else {
-                $(".parent-gateway-name").height($(".parent-gateway-description").height());
-            }
-            
-        });
-
-        function isEmpty(element) {
-            return !$.trim(element.html())
-        }
-
-        
-        function SetAsMyWorkPlace() {
-            //some db update ajax?
-
-            $("#myWorkPlace").html("<i class='fa fa-check'></i> I Work Here");
-
-        }
+                $("#myWorkPlace").click(SetAsMyWorkPlace);
 
 
-        function CompanySearch(elem) {
+                //***************TODO*************
+                //change to the li length/count for hide
 
-            console.log("company Searching");
+                //var length = $('#marketCenterDropDown > option').length;
+                console.log("length: " + length);
+                if (isEmpty($("#officeSearchWrap"))) {
+                    $("#searchAreaLeft").hide();
+                }
 
-            var selected = $(elem).closest('#searchAreaLeft').find('#officeSearchWrap');
-            console.log("selected: " + selected);
+                if ($(".parent-gateway-name").height() > $(".parent-gateway-description").height()) {
+                    $(".parent-gateway-description").height($(".parent-gateway-name").height());
+                } else {
+                    $(".parent-gateway-name").height($(".parent-gateway-description").height());
+                }
 
-            if ($(elem).val()) {
-                console.log("show");
-                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').show();
-            } else {
-                console.log("hide");
-                $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
-            }
-
-            console.log("search thing: " + $(elem).attr('id'));
-            console.log("search thing box being queried: " + $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').attr('id'));
-
-            $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
-                itemSelector: 'li',
-                $searchInput: $(elem),
             });
-        }
+
+            function isEmpty(element) {
+                return !$.trim(element.html())
+            }
 
 
-        </script> 
-    
-</div>
+            function SetAsMyWorkPlace() {
+                //some db update ajax?
+
+                $("#myWorkPlace").html("<i class='fa fa-check'></i> I Work Here");
+
+            }
+
+
+            function CompanySearch(elem) {
+
+                console.log("company Searching");
+
+                var selected = $(elem).closest('#searchAreaLeft').find('#officeSearchWrap');
+                console.log("selected: " + selected);
+
+                if ($(elem).val()) {
+                    console.log("show");
+                    $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').show();
+                } else {
+                    console.log("hide");
+                    $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').hide();
+                }
+
+                console.log("search thing: " + $(elem).attr('id'));
+                console.log("search thing box being queried: " + $(elem).closest('#searchAreaLeft').find('#officeSearchWrap').attr('id'));
+
+                $($(elem).closest('#searchAreaLeft').find('#officeSearchWrap')).searchIt({
+                    itemSelector: 'li',
+                    $searchInput: $(elem),
+                });
+            }
+
+
+        </script>
+
+    </div>
