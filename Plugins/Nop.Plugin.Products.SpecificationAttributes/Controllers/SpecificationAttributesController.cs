@@ -602,6 +602,10 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     if (widgetZone == "product_details_widget")
                     {
                         var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
+                        if (!string.IsNullOrEmpty(truePicturePath))
+                        {
+                            productDetailsModel.DefaultPictureModel.ImageUrl = truePicturePath;
+                        }                       
                         return View("~/Plugins/Products.SpecificationAttributes/Views/SpecificationAttributes/ImageBackgroundDetail.cshtml", productDetailsModel);
                     }
                     //Shopping Cart

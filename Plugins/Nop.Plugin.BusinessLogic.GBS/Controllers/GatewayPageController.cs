@@ -16,6 +16,7 @@ using Nop.Plugin.BusinessLogic.GBS;
 using Nop.Services.Configuration;
 using Nop.Web.Models.Catalog;
 
+
 namespace Nop.Plugin.GBSGateway.GBS.Controllers
 {
 
@@ -61,10 +62,39 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                     var iProductService = EngineContext.Current.Resolve<IProductService>();
                     var iCategoryService = EngineContext.Current.Resolve<ICategoryService>();
                     IList<Category> teamCategoryProducts = iCategoryService.GetAllCategoriesByParentCategoryId(id);
-                           
+
                     //check if football via user setting here
                     //if one is football assume all are football for now.
+                    int footballId = _gbsBusinessLogicSettings.SportsFootballDefaultId;
+                    bool isFootball = false;
+                    foreach (Category cat in teamCategoryProducts)
+                    {
+                        if (!isFootball)
+                        {
+                            int curParentCategoryId = cat.ParentCategoryId;
 
+                            while (curParentCategoryId != 0)
+                            {
+                                if (curParentCategoryId == footballId)
+                                {
+                                    isFootball = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    Category higherCat = iCategoryService.GetCategoryById(curParentCategoryId);
+                                    curParentCategoryId = higherCat.ParentCategoryId;
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        
+                    }
+                    
 
                     foreach (var category in teamCategoryProducts)
                     {
@@ -75,7 +105,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
 
                         GatewayPageProductBoxModel productBox = new GatewayPageProductBoxModel();
                         productBox.name = category.Name;
-                        productBox.mainPicturePath = customExtendedCategoryData.MainPicturePath;
+                        productBox.mainPicturePath = isFootball ? "" : customExtendedCategoryData.MainPicturePath;
                         productBox.width = featuredProductData.Width;
                         productBox.length = featuredProductData.Length;
                         productBox.designCount = productCategoryList.Count;
