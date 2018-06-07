@@ -11,40 +11,42 @@
 @using Nop.Plugin.BusinessLogic.GBS.Domain;
 @using System.Linq;
 @using Nop.Core.Caching;
+@using System.Collections.Specialized;
 
 @{
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
     ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+    ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
 
     Layout = "~/Views/Shared/_Root.cshtml";
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/parent-company-gateway.css", themeName));
 }
 @{
-//current category ID
-//int currentCategoryId = 0;
-//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
-//{
-//    currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
-//}
+    //current category ID
+    //int currentCategoryId = 0;
+    //if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+    //    Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    //{
+    //    currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    //}
 
 
-////current manufacturer ID
-//int currentManufacturerId = 0;
-//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
-//{
-//    currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
-//}
+    ////current manufacturer ID
+    //int currentManufacturerId = 0;
+    //if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+    //    Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    //{
+    //    currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    //}
 
 
-////current product ID
-//int currentProductId = 0;
-//if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
-//    Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
-//{
-//    currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
-//}
+    ////current product ID
+    //int currentProductId = 0;
+    //if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+    //    Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    //{
+    //    currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    //}
 }
 @if (IsSectionDefined("Breadcrumb"))
 {
@@ -55,14 +57,47 @@
 
 @{
     int id = @Model.Id;
+    string markcenterType = "";
+    string missingProductName = "";
+    string requestLink = "";
 }
 
 @{
 
+
+
+    NameValueCollection nvc = Request.QueryString;
+    if (nvc.HasKeys())
+    {
+        for (int i = 0; i < nvc.Count; i++)
+        {
+            string key = nvc.GetKey(i);
+
+            if (key == "request")
+            {
+                markcenterType = nvc.Get(i);
+            }
+        }
+    }
+
+    if (!string.IsNullOrEmpty(markcenterType))
+    {
+
+        SpecificationAttributeOption specificationAttributeOption = specService.GetSpecificationAttributeOptionById(Int32.Parse(markcenterType));
+        missingProductName = specificationAttributeOption.Name.Replace("-", " ");
+
+        requestLink = "mailto: mymarketcenter@houseofmagnets.com?subject=Market Center Request " + missingProductName + "";
+
+    }
+
+
+
+
+
     Company company = null;
 
     DBManager manager = new DBManager();
-    
+
     company = cacheManager.Get("childCompanyGatewayPage_" + id, 60, () =>
     {
 
@@ -71,7 +106,7 @@
         return company2;
 
     });
-    
+
     string categoryName = company.h1;
     string categoryh2 = company.h2;
     string fontColor = company.foregroundColor;
@@ -79,6 +114,20 @@
     string agentPacks = company.agentPacks;
 
 }
+
+
+@if (!string.IsNullOrEmpty(requestLink))
+{
+    <div class="style-msg errormsg">
+        <div class="sb-msg">
+            @*<i class="icon-remove"></i>*@
+            <strong>Sorry... </strong>&nbsp;@missingProductName have not been set up for your company.
+            <a href="@requestLink" style="color: #740d0a; text-decoration: underline!important;">Request @missingProductName</a>.
+        </div>
+    </div>
+}
+
+
 
 @if (Model.DisplayCategoryBreadcrumb)
 {
@@ -185,9 +234,9 @@
         }
 
         @*<select id="marketCenterDropDown" class="form-control dropdown-filter" onchange="location = this.value">
-            <option value="">Select Office</option>
-            @Html.Raw(@allString)
-        </select>*@
+                <option value="">Select Office</option>
+                @Html.Raw(@allString)
+            </select>*@
 
         <div id="officeSearchWrap" style="display: none; z-index: 9000">
             @Html.Raw(@allString)
