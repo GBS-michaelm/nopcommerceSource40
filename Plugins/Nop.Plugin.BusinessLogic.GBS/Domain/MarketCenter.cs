@@ -21,7 +21,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     {
 
         DBManager manager = new DBManager();
-        static DBManager MANAGER = new DBManager();
+        
         ICategoryService categoryService = EngineContext.Current.Resolve<ICategoryService>();
         ICacheManager cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         ICatalogModelFactory catalogModelFactory = EngineContext.Current.Resolve<ICatalogModelFactory>();
@@ -50,7 +50,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         int _alphaTab = 0;
         
         public static MarketCenter GetMarketCenter(int marketCenterId, bool lightVer = true, bool getChildren = false)
-        {           
+        {
+
+            DBManager MANAGER = new DBManager();
             //string json = "{                              'id': 84,                              'parentCategoryIdy': 0,                              'h1': 'h1',                              'h2': 'h2',                              'topText': 'topText',                              'bottomText': 'bottomText',                              'backgroundImage': '/content/images/gateway/bg_specialty.jpg',                              'foregroundImage': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'backgroundColor': '#00355c',                              'mainPicturePath': 'https://pbs.twimg.com/media/DYMao8DX4AAOBBa.png',                              'fontColor': '#00355c',                              'isTopCompany': true,                              'name': 'name',                              'seName': 'seName',                              'childCompanies': [                                {                                  'SeName': 'berkshire-hathaway-homeservices-ally-real-estate-1908',                                  'id': 1908,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ally Real Estate',                                  'fontColor': '#552448',                                  'isTopCompany': false                                },                                {                                  'SeName': 'berkshire-hathaway-homeservices-ambassador-re-4784',                                  'id': 4784,                                  'parentCategoryId': 1286,                                  'h2': 'Branded Products Designed for Berkshire Hathaway HomeServices Ambassador R.E.',                                  'fontColor': '#552448'                                }                              ]                            }";
             Dictionary<string, Object> marketCenterDic = new Dictionary<string, Object>();
             string select = "EXEC usp_SELECTGBSGetSingleMarketCenter_Lean @categoryId";

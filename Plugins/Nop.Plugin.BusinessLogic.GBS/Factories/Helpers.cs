@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.BusinessDataAccess.GBS;
 using Nop.Services.Catalog;
@@ -14,6 +14,7 @@ using Nop.Plugin.Widgets.CustomersCanvas.Services;
 using Nop.Services.Logging;
 using Nop.Services.Customers;
 using Nop.Core.Caching;
+
 
 namespace Nop.Plugin.BusinessLogic.GBS.Factories
 {

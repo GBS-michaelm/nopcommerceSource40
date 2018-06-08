@@ -45,7 +45,8 @@
         </div>
 
         <div class='gateway-image'>
-            @Html.Widget("product_details_widget", Model.featuredProductId)
+            @*@Html.Widget("product_details_widget", Model.featuredProductId)*@
+            @Html.Widget("product_details_widget", new { id1 = Model.featuredProductId, mainPicturePath = Model.mainPicturePath })
         </div>
 
         <div class='pricing-features'>

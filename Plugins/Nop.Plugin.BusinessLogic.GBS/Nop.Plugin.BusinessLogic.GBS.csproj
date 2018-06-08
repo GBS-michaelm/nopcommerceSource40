@@ -69,8 +69,10 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="Domain\Accessory.cs" />
     <Compile Include="Domain\Company.cs" />
+    <Compile Include="Domain\CompanyProduct.cs" />
     <Compile Include="Domain\GBSProductCategory.cs" />
     <Compile Include="Domain\MarketCenter.cs" />
+    <Compile Include="Domain\SportsTabs.cs" />
     <Compile Include="Domain\SportsTeam.cs" />
     <Compile Include="Factories\Helpers.cs" />
     <Compile Include="GBSBusinessLogicSettings.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Models\AccessoryPageBoxModel.cs" />
     <Compile Include="Models\AccessoryPageCategoryAccessoriesModel.cs" />
     <Compile Include="Models\AccessoryPageModel.cs" />
+    <Compile Include="Models\CompanyProductsModel.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\GatewayPageProductBoxModel.cs" />
     <Compile Include="Models\GatewayPageProductCategoriesModel.cs" />

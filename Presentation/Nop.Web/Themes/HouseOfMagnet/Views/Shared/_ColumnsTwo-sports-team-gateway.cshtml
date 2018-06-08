@@ -60,14 +60,14 @@
 @{
 
     //Load Team Select
-    SportsTeam sportsTeam = new SportsTeam(id);
-    string h1 = sportsTeam.h1;
-    string h2 = sportsTeam.h2;
-    string topText = sportsTeam.topText;
-    string bottomText = sportsTeam.bottomText;
-    string backgroundColor = sportsTeam.backgroundColor;
-    string foregroundImage = sportsTeam.foregroundImage;
-    string backgroundImage = sportsTeam.backgroundImage;
+    SportsTeam sportsTeam = SportsTeam.GetSportsTeam(id);
+    string h1 = sportsTeam.H1;
+    string h2 = sportsTeam.H2;
+    string topText = sportsTeam.UpperText;
+    string bottomText = sportsTeam.LowerText;
+    string backgroundColor = sportsTeam.BackgroundColor;
+    string foregroundImage = sportsTeam.ForegroundPicturePath;
+    string backgroundImage = sportsTeam.BackgroundPicturePath;
 
     StringBuilder teamSectionStringBuilder = new StringBuilder();
     var categoryService = EngineContext.Current.Resolve<ICategoryService>();
@@ -173,16 +173,16 @@
                     
                     //console.log($(this).attr('id'));
 
-                    LoadTeamCategoryProducts($(this).attr('id'));
+                    //LoadTeamCategoryProducts($(this).attr('id'));
                     
-                    $("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
+                    //$("#selectedTeam").html("Team Selected : " + $(this).text() + "  ");
 
                     
                     //SetTeam($(this).text());
 
                     //$("#gatewayWYSIWYG").show();
-                    $("#teamSelect").hide(3000, "linear");
-                    $("#selectTeamDiv").show();
+                    //$("#teamSelect").hide(3000, "linear");
+                    //$("#selectTeamDiv").show();
                     //$("#gatewayTopText").html(" ");
 
 
@@ -190,12 +190,12 @@
 
                 })
 
-                $("#changeSelectedTeam").click(function () {
-                    $("#gatewayWYSIWYG").hide();
-                    $("#teamSelect").show();
-                    $("#selectTeamDiv").hide();
-                    //PageBodyResizeForMultipleProductRows("");
-                })
+                //$("#changeSelectedTeam").click(function () {
+                //    $("#gatewayWYSIWYG").hide();
+                //    $("#teamSelect").show();
+                //    $("#selectTeamDiv").hide();
+                //    //PageBodyResizeForMultipleProductRows("");
+                //})
 
                 //$("#cssChange").click(function() {
 
