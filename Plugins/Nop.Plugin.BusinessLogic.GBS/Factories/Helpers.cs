@@ -98,78 +98,80 @@ namespace Nop.Plugin.BusinessLogic.GBS.Factories
                     DataRow resultRow = result.Table.Rows[0];
                     jsonData = resultRow["EditorJson"].ToString();
                 }
-                if (!string.IsNullOrEmpty(jsonData))
+
+                //get template name and make Canvas API call to get the URL.
+                dynamic apiJson = new ExpandoObject();
+                string previewOptons = "{ 'width': 600, 'height': 600, 'resizeMode': 'Fit', 'proofImageRendering': { 'showStubContent': true } }";
+
+                int productId = int.MinValue;
+
+                if (!string.IsNullOrEmpty(sku))
                 {
-                    //get template name and make Canvas API call to get the URL.
-                    dynamic apiJson = new ExpandoObject();
-                    string previewOptons = "{ 'width': 600, 'height': 600, 'resizeMode': 'Fit', 'proofImageRendering': { 'showStubContent': true } }";
-
-                    int productId = int.MinValue;
-
-                    if (!string.IsNullOrEmpty(sku))
+                    productId = _productService.GetProductBySku(sku).Id;
+                }
+                else
+                {
+                    //if no sku then find featured product or return null if not exists
+                    paramDicEx3 = new Dictionary<string, Object>();
+                    paramDicEx3.Add("@categoryId", catId);
+                    select = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
+                    var catResult = manager.GetParameterizedDataView(select, paramDicEx3);
+                    if (catResult.Count > 0)
                     {
-                        productId = _productService.GetProductBySku(sku).Id;
-                    }
-                    else
-                    {
-                        //if no sku then find featured product or return null if not exists
-                        paramDicEx3 = new Dictionary<string, Object>();
-                        paramDicEx3.Add("@categoryId", catId);
-                        select = "EXEC usp_SelectGBSCustomCategoryData @categoryId";
-                        var catResult = manager.GetParameterizedDataView(select, paramDicEx3);
-                        if (catResult.Count > 0)
-                        {
-                            DataRow resultRow = catResult.Table.Rows[0];
-                            if (!int.TryParse(resultRow["FeaturedProductId"].ToString(), out productId))
-                            {
-                                return null;
-                            }
-                        }
-                        if (productId <= 0)
+                        DataRow resultRow = catResult.Table.Rows[0];
+                        if (!int.TryParse(resultRow["FeaturedProductId"].ToString(), out productId))
                         {
                             return null;
                         }
                     }
-
-                    //go get the template from specification attribute
-                    var specAttrs = specService.GetProductSpecificationAttributes(productId);
-
-                    string template = null;
-                    var specAttr = specAttrs.Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name == "Front Template").FirstOrDefault();
-                    if (specAttr != null)
-                    {
-                        template = specAttr.CustomValue;
-                    }
-                    if (string.IsNullOrEmpty(template))
+                    if (productId <= 0)
                     {
                         return null;
                     }
-                    string productDefinitions = "[{ 'surfaces': ['" + template + "'] }]";
-                    productDefinitions = productDefinitions.Replace(@"\", @"/");
-
-
-                    apiJson.previewOptions = JsonConvert.DeserializeObject<object>(previewOptons);
-                    apiJson.itemsData = JsonConvert.DeserializeObject<object>(jsonData);
-                    apiJson.productDefinitions = JsonConvert.DeserializeObject<object>(productDefinitions);
-                    apiJson.userId = "default";
-
-                    //Make API call
-                    string apiJsonString = JsonConvert.SerializeObject(apiJson);
-                    var apiURL = _ccService.ServerHostUrl() + "/api/Preview/GeneratePreview";
-                    WebClient client = new WebClient();
-                    client.Headers.Add("Content-Type", "application/json");
-                    var CustomersCanvasSecurityKey = System.Configuration.ConfigurationManager.AppSettings["CustomersCanvasApiSecurityKey"];
-                    client.Headers.Add("X-CustomersCanvasAPIKey", CustomersCanvasSecurityKey);
-
-                    string responseString = client.UploadString(apiURL, apiJsonString);
-                    List<dynamic> responseList = JsonConvert.DeserializeObject<List<Object>>(responseString);
-                    canvasURL = responseList.FirstOrDefault()[0][0].ToString();
                 }
 
+                //go get the template from specification attribute
+                var specAttrs = specService.GetProductSpecificationAttributes(productId);
+
+                string template = null;
+                var specAttr = specAttrs.Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name == "Front Template").FirstOrDefault();
+                if (specAttr != null)
+                {
+                    template = specAttr.CustomValue;
+                }
+                if (string.IsNullOrEmpty(template))
+                {
+                    return null;
+                }
+                string productDefinitions = "[{ 'surfaces': ['" + template + "'] }]";
+                productDefinitions = productDefinitions.Replace(@"\", @"/");
+
+
+                apiJson.previewOptions = JsonConvert.DeserializeObject<object>(previewOptons);
+                if (!string.IsNullOrEmpty(jsonData))
+                {
+                    apiJson.itemsData = JsonConvert.DeserializeObject<object>(jsonData);
+                }
+                apiJson.productDefinitions = JsonConvert.DeserializeObject<object>(productDefinitions);
+                apiJson.userId = "default";
+
+                //Make API call
+                string apiJsonString = JsonConvert.SerializeObject(apiJson);
+                var apiURL = _ccService.ServerHostUrl() + "/api/Preview/GeneratePreview";
+                WebClient client = new WebClient();
+                client.Headers.Add("Content-Type", "application/json");
+                var CustomersCanvasSecurityKey = System.Configuration.ConfigurationManager.AppSettings["CustomersCanvasApiSecurityKey"];
+                client.Headers.Add("X-CustomersCanvasAPIKey", CustomersCanvasSecurityKey);
+
+                string responseString = client.UploadString(apiURL, apiJsonString);
+                List<dynamic> responseList = JsonConvert.DeserializeObject<List<Object>>(responseString);
+                canvasURL = responseList.FirstOrDefault()[0][0].ToString();
+
                 return canvasURL;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                _logger.Error("Error generating Canvas URL in GetCanvasUrl().  CategoryId = "+catId+", Sku = "+sku, ex);
+                _logger.Error("Error generating Canvas URL in GetCanvasUrl().  CategoryId = " + catId + ", Sku = " + sku, ex);
 
                 return null;
             }
