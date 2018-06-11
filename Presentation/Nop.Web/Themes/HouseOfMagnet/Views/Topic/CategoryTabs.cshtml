@@ -105,9 +105,13 @@ else
                 
                    @Html.Partial("~/Themes/" + themeName + "/Views/Product/_ProductTierPrices.cshtml", tieredPrices)
                 }
-                else
+                else if (!string.IsNullOrEmpty((string)ViewBag.ProductDetailModel.ProductPrice.Price))
                 {
                     <p>Price = @ViewBag.ProductDetailModel.ProductPrice.Price</p>
+                }
+                else
+                {
+                    <p>Pricing Data Not Available</p>
                 }
             </div>
         </div>
