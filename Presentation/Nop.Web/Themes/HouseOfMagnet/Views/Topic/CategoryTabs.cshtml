@@ -99,7 +99,7 @@ else
         <div class="topic-html-content-body">
             @Html.Raw(Model.Body)
             <div class="tab-pane fade" id="pricing">
-                @if (ViewBag.ProductDetailModel.TierPrices.Count > 0)
+                @if (ViewBag.ProductDetailModel!= null && ViewBag.ProductDetailModel.TierPrices.Count > 0)
                 {                              
                     ViewBag.productId = productDetailsModel.Id;
                 
