@@ -7,7 +7,12 @@
 @{ 
     Layout = "";
     ProductDetailsModel productDetailsModel = ViewBag.ProductDetailModel;
-    List<ProductDetailsModel.TierPriceModel> tieredPrices = (List<ProductDetailsModel.TierPriceModel>)productDetailsModel.TierPrices;
+    List<ProductDetailsModel.TierPriceModel> tieredPrices = new List<ProductDetailsModel.TierPriceModel>();
+    if (productDetailsModel.TierPrices != null)
+    {
+        tieredPrices = (List<ProductDetailsModel.TierPriceModel>)productDetailsModel.TierPrices;
+    }
+
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
 }
 
