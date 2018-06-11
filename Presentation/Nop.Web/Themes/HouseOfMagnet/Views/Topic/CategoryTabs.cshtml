@@ -8,7 +8,7 @@
     Layout = "";
     ProductDetailsModel productDetailsModel = ViewBag.ProductDetailModel;
     List<ProductDetailsModel.TierPriceModel> tieredPrices = new List<ProductDetailsModel.TierPriceModel>();
-    if (productDetailsModel.TierPrices != null)
+    if (productDetailsModel != null && productDetailsModel.TierPrices != null)
     {
         tieredPrices = (List<ProductDetailsModel.TierPriceModel>)productDetailsModel.TierPrices;
     }
