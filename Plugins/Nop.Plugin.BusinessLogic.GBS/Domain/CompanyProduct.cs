@@ -126,7 +126,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             string productBorderDefault;
 
             //TEST ID 26764
-            companyCode = 26764;
+            //companyCode = 26764;
+            companyCode = 6758;
 
             //use bobby stored proc here and create 
             //company product list along with a list of fields needed

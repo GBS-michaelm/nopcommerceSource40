@@ -29,20 +29,20 @@
 @using Nop.Web.Models.Catalog;
 
 
-@Html.Widget("categorydetails_after_breadcrumb", Model.Id)
+@*@Html.Widget("categorydetails_after_breadcrumb", Model.Id)
 <div class="page category-page">
     <div class="page-body">
         <div class="pager clearfix">
-            @{
+            @{*@
 
-                //var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-            }
+                @*//var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");*@
+            @*}*@
             @*@if (!pager.IsEmpty())
             {
                 @pager
             }*@
             @*@Html.Widget("categorydetails_bottom", Model.Id)*@
-        </div>
+        @*</div>*@
         @*@Html.Widget("categorydetails_top", Model.Id)*@
         @*description*@
         @*@if (!String.IsNullOrWhiteSpace(Model.Description))
@@ -98,8 +98,8 @@
             }*@
         @*@Html.Widget("categorydetails_before_featured_products", Model.Id)*@
         @*featured products*@
-        @if (Model.FeaturedProducts.Count > 0)
-        {
+        @*@if (Model.FeaturedProducts.Count > 0)
+        {*@
             @*<div class="featured-product-grid">
                 <div class="page-title panel-heading">
                     <h1>@T("Products.FeaturedProducts")</h1>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
             </div>*@
-        }
+            //}
         @*@Html.Widget("categorydetails_after_featured_products", Model.Id)*@
         @*@if (Model.Products.Count > 0)
         {
@@ -141,8 +141,8 @@
 
         @*@Html.Widget("categorydetails_before_product_list", Model.Id)*@
         @*product grid and list*@
-        @if (Model.Products.Count > 0)
-        {
+        @*@if (Model.Products.Count > 0)
+        {*@
             @*<div class="product-grid clearfix">*@
             @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list col-xs-12 col-sm-12 col-md-12 product-align" : "product-grid col-xs-12 col-sm-4 col-md-4 product-align")">
                 <div class="row">
@@ -156,7 +156,7 @@
                     }
                 </div>
             </div>*@
-        }
+        @*}*@
         @*<div class="pager clearfix">*@
             @*@{
 
@@ -168,5 +168,5 @@
             }
             @Html.Widget("categorydetails_bottom", Model.Id)*@
         @*</div>*@
-    </div>
-</div>
+    @*</div>
+</div>*@
