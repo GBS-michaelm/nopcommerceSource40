@@ -183,22 +183,35 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// <returns>Category model</returns>
         public override CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
         {
-            var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();
-            var foxModel = modelFactories.Where(x => x.GetType().FullName.Contains("FoxNetSoft.Plugin.Misc.MSSQLProvider")).FirstOrDefault();
-            var categtoryModel = new CategoryModel();
-            if (foxModel != null)
-            {
-                categtoryModel = foxModel.PrepareCategoryModel(category, command);
+            //var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();
+            //var foxModel = modelFactories.Where(x => x.GetType().FullName.Contains("FoxNetSoft.Plugin.Misc.MSSQLProvider")).FirstOrDefault();
+            //var categtoryModel = new CategoryModel();
+            //if (foxModel != null)
+            //{
+            //    categtoryModel = foxModel.PrepareCategoryModel(category, command);
 
-            }
-            else
-            {
-                categtoryModel = base.PrepareCategoryModel(category, command);
-            }
+            //}
+            //else
+            //{
+            //    categtoryModel = base.PrepareCategoryModel(category, command);
+            //}
             var categoryCacheKey = "preparecategorymodelFactory_" + category.Id + "_" + _storeContext.CurrentStore.Id + "_"+ _workContext.WorkingLanguage.Id + "_" + string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds());
 
             var finalCategtoryModel = _lifeTimeCacheManager.Get(categoryCacheKey, 60, () =>
             {
+                var modelFactories = Nop.Core.Infrastructure.EngineContext.Current.ResolveAll<ICatalogModelFactory>();
+                var foxModel = modelFactories.Where(x => x.GetType().FullName.Contains("FoxNetSoft.Plugin.Misc.MSSQLProvider")).FirstOrDefault();
+
+                var categtoryModel = new CategoryModel();
+                if (foxModel != null)
+                {
+                    categtoryModel = foxModel.PrepareCategoryModel(category, command);
+
+                }
+                else
+                {
+                    categtoryModel = base.PrepareCategoryModel(category, command);
+                }
 
                 if (string.IsNullOrEmpty(categtoryModel.PictureModel.ImageUrl))
                 {
