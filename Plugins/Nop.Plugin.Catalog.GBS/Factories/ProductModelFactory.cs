@@ -40,7 +40,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
     /// <summary>
     /// Represents the product model factory
     /// </summary>
-    public partial class ProductModelFactory : Nop.Web.Factories.ProductModelFactory
+    public partial class ProductModelFactory : Nop.Web.Factories.ProductModelFactory, IProductModelFactoryCustom
     {
         #region Fields
         
@@ -433,6 +433,10 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             return categories[0].Category;
         }
 
+        public virtual ProductDetailsModel.ProductPriceModel GetProductPriceModel(Product product)
+        {
+            return base.PrepareProductPriceModel(product);
+        }
     }
 
     #endregion

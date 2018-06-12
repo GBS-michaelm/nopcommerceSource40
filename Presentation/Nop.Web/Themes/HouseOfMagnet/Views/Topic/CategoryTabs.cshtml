@@ -7,7 +7,12 @@
 @{ 
     Layout = "";
     ProductDetailsModel productDetailsModel = ViewBag.ProductDetailModel;
-    List<ProductDetailsModel.TierPriceModel> tieredPrices = (List<ProductDetailsModel.TierPriceModel>)productDetailsModel.TierPrices;
+    List<ProductDetailsModel.TierPriceModel> tieredPrices = new List<ProductDetailsModel.TierPriceModel>();
+    if (productDetailsModel != null && productDetailsModel.TierPrices != null)
+    {
+        tieredPrices = (List<ProductDetailsModel.TierPriceModel>)productDetailsModel.TierPrices;
+    }
+
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
 }
 
@@ -94,15 +99,19 @@ else
         <div class="topic-html-content-body">
             @Html.Raw(Model.Body)
             <div class="tab-pane fade" id="pricing">
-                @if (ViewBag.ProductDetailModel.TierPrices.Count > 0)
+                @if (ViewBag.ProductDetailModel!= null && ViewBag.ProductDetailModel.TierPrices.Count > 0)
                 {                              
                     ViewBag.productId = productDetailsModel.Id;
                 
                    @Html.Partial("~/Themes/" + themeName + "/Views/Product/_ProductTierPrices.cshtml", tieredPrices)
                 }
-                else
+                else if (ViewBag.ProductDetailModel != null && !string.IsNullOrEmpty((string)ViewBag.ProductDetailModel.ProductPrice.Price))
                 {
                     <p>Price = @ViewBag.ProductDetailModel.ProductPrice.Price</p>
+                }
+                else
+                {
+                    <p>Pricing Data Not Available</p>
                 }
             </div>
         </div>

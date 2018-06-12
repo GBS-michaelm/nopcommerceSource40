@@ -9609,6 +9609,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 
 .custom-tab li {
     margin-bottom: 5px;
+    list-style-type: disc;
 }
 
 .product-details-page .prices .product-price span {
@@ -11439,4 +11440,47 @@ body hr {
 
 .impersonate a {
     text-decoration: underline !important;
+}
+
+/*BLUEBOXFEATURE Category Tabs*/
+
+.blueboxfeature {
+    background-image: url('/Content/Images/Gateway/bkg_blueboxfeature.png'), linear-gradient(-25deg, rgba(22,65,106,1) 35%, rgb(49, 132, 207) 100%);
+    background-repeat: repeat-y;
+    border-bottom: 15px solid #122952;
+    margin-right: 30px;
+    width: 60%; /*Modified width*/
+}
+
+    .blueboxfeature h2 {
+        color: #92c5fe;
+        text-transform: uppercase;
+        font-size: 16px;
+        padding: 30px 30px 5px 45px;
+        font-family: 'Lato';
+        font-weight: normal;
+    }
+
+    .blueboxfeature h3 {
+        color: #ffffff;
+        padding: 0px 25px 30px 45px;
+        font-size: 30px;
+        line-height: 40px;
+        font-family: 'lato';
+        font-weight: normal;
+    }
+
+
+
+.category-tabs {
+    justify-content: flex-end;
+    width: 100%;
+}
+
+
+
+@media only screen and (max-width: 640px) {
+    .list-content {
+        display: none;
+    }
 }
