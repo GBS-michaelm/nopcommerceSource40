@@ -86,6 +86,7 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="Factories\CatalogModelFactory.cs" />
     <Compile Include="Factories\HtmlHelpers.cs" />
+    <Compile Include="Factories\IProductModelFactoryCustom.cs" />
     <Compile Include="Factories\ProductModelFactory.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Factories\CatalogModelFactoryCustom.cs" />
