@@ -660,7 +660,7 @@ namespace Nop.Web.Framework
             return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
 
-        /// <summary>
+        /// <summary> 
         /// Renders the standard label with a specified suffix added to label text
         /// </summary>
         /// <typeparam name="TModel">Model</typeparam>

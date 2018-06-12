@@ -9,8 +9,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Plugin.Checkout.GBS.Controllers;
-using Nop.Plugin.Checkout.GBS.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -29,17 +27,18 @@ using Nop.Services.Tax;
 using Nop.Web.Controllers;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Security.Captcha;
-using Nop.Web.Models.Checkout;
-using Nop.Web.Models.ShoppingCart;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Plugin.Widgets.CustomersCanvas.Controllers;
+using Nop.Plugin.Widgets.CustomersCanvas.Model;
+using Newtonsoft.Json;
+using Nop.Plugin.CanvasOverride.GBS.DataAccess;
+using System.Data;
 
-namespace Nop.Plugin.Checkout.GBS.Filter
+namespace Nop.Plugin.CanvasOverride.GBS
 {
     public class PostFilters : ActionFilterAttribute, IFilterProvider
     {
@@ -48,7 +47,6 @@ namespace Nop.Plugin.Checkout.GBS.Filter
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
-        private ShoppingCartModelExtension _shoppingCartModel;
         
 
         public PostFilters(
@@ -104,61 +102,14 @@ namespace Nop.Plugin.Checkout.GBS.Filter
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._workContext = workContext;
-            this._shoppingCartModel = new ShoppingCartModelExtension(
-                    shoppingCartModelFactory,
-                    pluginFinder,
-                    productService,
-                    storeContext,
-                    workContext,
-                    shoppingCartService,
-                    pictureService,
-                    localizationService,
-                    productAttributeService,
-                    productAttributeFormatter,
-                    productAttributeParser,
-                    taxService,
-                    currencyService,
-                    priceCalculationService,
-                    priceFormatter,
-                    checkoutAttributeParser,
-                    checkoutAttributeFormatter,
-                    orderProcessingService,
-                    discountService,
-                    customerService,
-                    giftCardService,
-                    dateRangeService,
-                    countryService,
-                    stateProvinceService,
-                    shippingService,
-                    orderTotalCalculationService,
-                    checkoutAttributeService,
-                    paymentService,
-                    workflowMessageService,
-                    permissionService,
-                    downloadService,
-                    cacheManager,
-                    webHelper,
-                    customerActivityService,
-                    genericAttributeService,
-                    addressAttributeFormatter,
-                    httpContext,
-                    mediaSettings,
-                    shoppingCartSettings,
-                    catalogSettings,
-                    orderSettings,
-                    shippingSettings,
-                    taxSettings,
-                    captchaSettings,
-                    addressSettings,
-                    rewardPointsSettings,
-                    customerSettings);
+
         }
 
         public IEnumerable<System.Web.Mvc.Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
         {
         
-            if (controllerContext.Controller is Nop.Web.Controllers.CheckoutController &&
-                actionDescriptor.ActionName.Equals("Confirm",
+            if (controllerContext.Controller is CcWidgetController &&
+                actionDescriptor.ActionName.Equals("ProductDetailsAfterBreadcrumb",
                     StringComparison.InvariantCultureIgnoreCase))
             {
                 return new List<System.Web.Mvc.Filter>() { new System.Web.Mvc.Filter(this, FilterScope.Action, 0) };
@@ -169,29 +120,44 @@ namespace Nop.Plugin.Checkout.GBS.Filter
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
+            var miscPlugins = _pluginFinder.GetPlugins<CanvasOverridePlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
             {
-           
+
+
+                switch (((ReflectedActionDescriptor)filterContext.ActionDescriptor).MethodInfo.Name)
+                {
+                    case "ProductDetailsAfterBreadcrumb":
               
-              //cart[0].Product
-                //switch (((ReflectedActionDescriptor)filterContext.ActionDescriptor).MethodInfo.Name)
-                //{
-                //    case "UpdateCart":
-                //        FilterModel cartFilterModel = new FilterModel(_storeContext, _workContext);
-                //        var cartResult = filterContext.Result as ViewResultBase;
-                //        ShoppingCartModel cartModel = (ShoppingCartModel)cartResult.Model;
-                //        cartModel.CustomProperties = cartFilterModel.GetNoteCardSetCount();
-                //        break;
-                //    case "UpdateWishlist":
-                //        FilterModel wishlistFilterModel = new FilterModel(_storeContext, _workContext);
-                //        var wishlistResult = filterContext.Result as ViewResultBase;
-                //        WishlistModel wishlistModel = (WishlistModel)wishlistResult.Model;
-                //        wishlistModel.CustomProperties = wishlistFilterModel.GetNoteCardSetCount();
-                //        break;
-                //    default:
-                //        break;
-                //}
+                        //var ccResult = filterContext.Result as ViewResultBase;
+                        //CcEditorLoaderModel ccModel = (CcEditorLoaderModel)ccResult.Model;
+                        //DBManager db = new DBManager();
+                        //DataTable dt = new DataTable();
+                        //Dictionary<string, Object> param = new Dictionary<string, Object>();
+                        //Dictionary<string, string> parameterTypes = new Dictionary<string, string>();
+                        //dt.Columns.Add("Sku", typeof(string));
+                        //dt.Rows.Add("CMTHH1-001-100-01278");
+
+                        //param.Add("@sku", dt);
+                        //parameterTypes.Add("@sku", "dbo.ProductList");  
+
+                        //param.Add("@id", "13073");
+
+                        //var result = db.GetParameterizedReader("EXEC usp_SelectMarketCenterProducts @id, @sku", param, 2, parameterTypes);
+                        //string editorJson = result["EditorJson"];
+                    
+                        //dynamic designData = JsonConvert.DeserializeObject<Object>(ccModel.Config);
+                        //designData.config.userInfo = JsonConvert.DeserializeObject<Object>(editorJson);
+
+                        //var serializedData = JsonConvert.SerializeObject(designData);
+
+
+
+                        //ccModel.Config = serializedData;
+                        break;
+                    default:
+                        break;
+                }
 
 
             }

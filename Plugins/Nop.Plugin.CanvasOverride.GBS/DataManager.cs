@@ -82,8 +82,58 @@ namespace Nop.Plugin.CanvasOverride.GBS.DataAccess
             }
         }
 
-                           
 
+        public Dictionary<string, string> GetParameterizedReader(string query, Dictionary<string, Object> myDict, int columns, Dictionary<string, string> paramTypes = null)
+        {
+            try
+            {
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = (SqlConnection)this.dbConnection;
+                    if (myDict.Count > 0)
+                    {
+                        foreach (var item in myDict)
+                        {
+                            SqlParameter tvpParam = cmd.Parameters.AddWithValue(item.Key, item.Value);
+                            if (item.Value.GetType() == typeof(DataTable))
+                            {
+                                tvpParam.SqlDbType = SqlDbType.Structured;
+                                tvpParam.TypeName = paramTypes[item.Key];
+                            }
+                        }
+                    }
+                    Open();
+                    var result = cmd.ExecuteReader();
+                    while (result.Read())
+                    {
+
+                        for (int i = 0; i < columns; i++)
+                        {
+                            dict[result.GetName(i)] = result.GetValue(i).ToString();
+
+                        }
+
+
+                    }
+                    return dict;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Close();
+            }
+
+        }
         public DataView GetDataView(String sqlQuery)
         {
 
