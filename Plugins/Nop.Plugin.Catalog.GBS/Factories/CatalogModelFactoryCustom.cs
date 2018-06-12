@@ -42,6 +42,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         private readonly ITopicModelFactory _topicModelFactory;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         public readonly IProductModelFactory _productModelFactory;
+        public readonly IProductModelFactoryCustom _gbsProductModelFactoryCustom;
 
         #endregion
 
@@ -58,7 +59,8 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             CategoryNavigationSettings categoryNavigationSettings,
             ITopicModelFactory topicModelFactory,
             ISpecificationAttributeService specificationAttributeService,
-            IProductModelFactory productModelFactory)
+            IProductModelFactory productModelFactory,
+            IProductModelFactoryCustom gbsProductModelFactoryCustom)
         {
             this._logger = logger;
             this._categoryService = categoryService;            
@@ -72,6 +74,9 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             this._topicModelFactory = topicModelFactory;
             this._specificationAttributeService = specificationAttributeService;
             this._productModelFactory = productModelFactory;
+            //this._gbsProductModelFactory = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Plugin.Catalog.GBS.Factories.ProductModelFactory>();
+            //this._gbsProductModelFactory = DependencyResolver.Current.GetService<ProductModelFactory>();
+            this._gbsProductModelFactoryCustom = gbsProductModelFactoryCustom;
         }
 
         #endregion
@@ -293,7 +298,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// </summary>
         /// <param name="catId">Category Id</param>
         /// <returns>TopicModel</returns>
-        public virtual ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId)
+        public virtual ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId, bool light = false)
         {
             //select from tblNOPCategory
             Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
@@ -315,10 +320,17 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                     return null;
                 }
                 //get product detail model
-
                 GBSProduct featuredProduct = ConvertToGBSProduct(_productService.GetProductById(featuredProductId));
                 featuredProduct.ReplaceTierPrices(featuredProduct.TierPrices.Distinct().ToList());
-                return _productModelFactory.PrepareProductDetailsModel(featuredProduct);
+
+                if (!light)
+                {
+                    return _productModelFactory.PrepareProductDetailsModel(featuredProduct);
+                }
+                var model = new ProductDetailsModel();
+                model.Id = featuredProductId;
+                model.ProductPrice = _gbsProductModelFactoryCustom.GetProductPriceModel(featuredProduct);
+                return model;
 
             }
             else

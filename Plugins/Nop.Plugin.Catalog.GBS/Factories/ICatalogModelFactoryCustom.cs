@@ -50,7 +50,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// </summary>
         /// <param name="catId">Category Id</param>
         /// <returns>TopicModel</returns>
-        ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId);
+        ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId, bool light = false);
 
         /// <summary>
         /// Get category list
