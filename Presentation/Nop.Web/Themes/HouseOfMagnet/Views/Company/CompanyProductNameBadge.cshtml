@@ -1,0 +1,142 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.BusinessLogic.GBS.Domain.CompanyProduct
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Web.Models.Catalog;
+@using Nop.Plugin.Catalog.GBS.Factories;
+@using Nop.Services.Catalog;
+@{
+
+    Layout = "";
+
+}
+
+@{
+
+    //string logopath = Model.CustomProperties["LogoPicturePath"].ToString();
+    var _productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+    var _specificationAttributeService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<ISpecificationAttributeService>();
+
+    var catalogModelFactoryCustom = EngineContext.Current.Resolve<ICatalogModelFactoryCustom>();
+
+    //var featuredProduct = catalogModelFactoryCustom.PrepareCategoryFeaturedProductDetailsModel(Model.Id);
+    var featuredProductId = 0;
+    var featuredProductPrice = decimal.Zero;
+    var featuredProductOldPrice = string.Empty;
+    //if (featuredProduct != null)
+    //{
+    //    featuredProductId = featuredProduct.Id;
+    //    featuredProductPrice = featuredProduct.ProductPrice.PriceValue;
+    //    featuredProductOldPrice = featuredProduct.ProductPrice.OldPrice;
+    //}
+}
+
+@*<div class='pricing bottommargin clearfix'>*@
+@*<div class="sub-category-grid row">
+  <div id="sub-category-slider" class="home-category-slider">*@
+
+
+<div id="company-product-@Model.Sku" class="item-box col-xs-6 col-sm-3 col-md-3 company-product">
+    @*  *@
+    <div class="category-item product-category-item ">
+        <div class="picture">
+            @*<a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title" class="product-img">
+            <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" />
+        </a>*@
+            <a id="a-preview-@Model.Sku" class="product-img a-preview @Model.TemplateShape" title="@Model.Name">
+                <img id="img-frame-@Model.Sku" alt="border" src="www.houseofmagnets.com/@Model.Name" class="img-frame @Model.TemplateShape" />
+                <img id="img-preview-@Model.Sku" alt="@Model.Name" class="img-preview" />  @*src="@Model.LogoOnLight_H.image"*@
+            </a>
+            <div id="dv-loading-@Model.Sku" class="dv-loading">
+                <img alt="Loading" src="www.houseofmagnets.com/img/loading.gif" width="32" height="32" /><p class="error">Data Error</p>
+            </div>
+            <div class="title">
+                @*<a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" title="@Model.PictureModel.Title"> @Model.Name</a>*@
+            </div>
+            <div id="price_description">
+                @{
+            var result = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x =>
+            (x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display"
+            || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type"
+            || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity"
+            || x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit"
+            ));
+                }
+                @if (result.Count() == 4 && _productService.GetProductById(featuredProductId).TierPrices.Count() > 0)
+        {
+            var packType = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "pack type").FirstOrDefault().SpecificationAttributeOption.Name;
+            var eachUnit = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each unit").FirstOrDefault().SpecificationAttributeOption.Name;
+            var eachQuantity = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "each quantity").FirstOrDefault().SpecificationAttributeOption.Name;
+            var displayTemplate = _specificationAttributeService.GetProductSpecificationAttributes(featuredProductId).Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name.ToLower() == "product price display").FirstOrDefault().SpecificationAttributeOption.Name; ;
+
+            var tier1price = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? _productService.GetProductById(featuredProductId).TierPrices.First().Price : featuredProductPrice;
+            var tier1Qty = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? _productService.GetProductById(featuredProductId).TierPrices.First().Quantity : int.Parse(eachQuantity);
+            var tier2price = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? _productService.GetProductById(featuredProductId).TierPrices.ElementAt(1).Price : 0;
+            var tier2Qty = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? _productService.GetProductById(featuredProductId).TierPrices.ElementAt(1).Quantity : 0;
+            var tier3price = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? _productService.GetProductById(featuredProductId).TierPrices.ElementAt(2).Price : 0;
+            var tier3Qty = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? _productService.GetProductById(featuredProductId).TierPrices.ElementAt(2).Quantity : 0;
+
+            var displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayTemplate.Replace("[pricetier1qty]", tier1Qty.ToString()) : "";
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1qtyXeachqty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt]", Math.Round(tier1price, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt/eachqty]", Math.Round(tier1price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qty]", tier2Qty.ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qtyXeachqty]", (tier2Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt]", Math.Round(tier2price, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt/eachqty]", Math.Round(tier2price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qty]", tier3Qty.ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qtyXeachqty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt/eachqty]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
+            displayPriceString = displayPriceString.Replace("[price]", Math.Round(featuredProductPrice, 2).ToString());
+            displayPriceString = displayPriceString.Replace("[oldprice]", featuredProductOldPrice);
+            displayPriceString = displayPriceString.Replace("[eachunit]", eachUnit);
+            displayPriceString = displayPriceString.Replace("[eachqty]", eachQuantity);
+            displayPriceString = displayPriceString.Replace("[packtype]", packType);
+            <span class="actual-price">@displayPriceString</span>
+}
+            </div>
+        </div>
+        <div id="product-data">
+            <input id="template-@Model.Sku" class="template" type="hidden" value="@Model.Template" />
+            <input id="template-shape-@Model.Sku" class="template-shape" type="hidden" value="@Model.TemplateShape" />
+        </div>
+        
+        <div>@Model.Sku</div>
+        <div id="@Model.Sku" class="dropdown-options">
+            <label>Choose Frame: </label>
+            <div class="frame-dropdown dv-choose-frame">
+                <select id="choose-frame-@Model.Sku">
+                    @{ 
+                        //foreach (var frameOption in @Model.FrameOptions)
+                        // {
+                        //this data should come fro mthe json return usign the sku to get the product attr options
+                        foreach ( item in collection)
+                        {
+                            
+                        }
+
+                        // }
+                        //add mixed here
+                        <option value="MIX">Mix</option>
+                    }
+                </select>
+            </div>
+            <div class="qty-dropdown">
+                <label>Quantity: </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

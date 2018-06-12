@@ -1,0 +1,71 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.BusinessLogic.GBS.Models.CompanyProductsModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@using Nop.Plugin.BusinessLogic.GBS.Domain;
+@{
+
+    Layout = "";
+
+}
+<div>
+    <input id="canvasDomain" type="hidden" value="https://canvasdev.houseofmagnets.com" />
+</div>
+
+<div id="badgeFields" class="left-side">
+    <h4>Personalize Your </h4>
+    @{
+        foreach (Field field in Model.productList[0].Fields)
+        {
+            <div class="badge-field form-block">
+                <label id="lbl-field-@field.fieldName">@field.fieldName</label>
+
+                @if (field.isRequired)
+                {
+                    <span id="sp-required-@field.fieldName" class="sp-required">* Required</span>
+                }
+
+                <div class='clear'></div>
+
+                <input id="txt-@field.fieldName" type="text" class="" value="" />
+
+                @if (field.allowBold)
+                {
+                    <a id="btn-bold-txt-@field.fieldName" class="btn-bold-control">B</a>
+                }
+
+                @if (field.allowItalic)
+                {
+                    <a id="btn-italic-txt-@field.fieldName" class="btn-italic-control">I</a>
+                }
+
+            </div>
+            <div class='clear'></div>
+        }
+    }
+
+    <div id="btnDiv">
+        <a id="btnUpdateDesigns" href="#" class="button button-3d button-large button-rounded button-darkgreen btn-update-designs">UPDATE DESIGNS</a>
+        <a id="btnAddToCart" href="#" class="button button-3d button-large button-rounded button-green btn-add-to-cart">ADD TO CART</a>
+    </div>
+
+</div>
+
+
+<div class='pricing bottommargin clearfix right-side'>
+
+    @{
+        foreach (var item in Model.productList)
+        {
+
+
+            @Html.Partial("CompanyProductNameBadge", item)
+               
+
+        }
+}
+
+</div>
