@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 using Nop.Plugin.BusinessDataAccess.GBS;
+using Nop.Services.Catalog;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -72,6 +75,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     public class CompanyProduct
     {
         DBManager manager = new DBManager();
+        ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        IProductService productService = EngineContext.Current.Resolve<IProductService>();
 
         //check bobby json to get class attributes
         [JsonProperty(PropertyName = "BGColor-Primary")]
@@ -112,7 +117,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string Template { get; set; } = "NBEX0006";
         public string TemplateShape { get; set; }
         public string BorderDefault { get; set; }
-
+        public List<string> FrameOptions { get ; set; }
 
         public List<CompanyProduct> GetProductsAndFields(int companyCode)
         {
@@ -126,8 +131,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             string productBorderDefault;
 
             //TEST ID 26764
-            //companyCode = 26764;
-            companyCode = 6758;
+            companyCode = 26764;
 
             //use bobby stored proc here and create 
             //company product list along with a list of fields needed
@@ -159,6 +163,37 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                     companyProduct.Sku = productSku;
                     companyProduct.TemplateShape = productTemplateShape;
                     companyProduct.BorderDefault = productBorderDefault;
+
+                    //may need to be apart of returned JSON for speed
+                    //PROBABLY NEEDS TO BE DB
+
+
+                    Product prod = productService.GetProductBySku(productSku);
+                    IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
+                    specAttrList = specService.GetProductSpecificationAttributes(prod.Id);
+                    foreach (var attr in specAttrList)
+                    {
+                        string typeOptionValue = "";
+                        if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Frame Style")
+                        {
+                            int specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+
+
+                            
+
+                            //typeOptionValue = attr.SpecificationAttributeOption.Name;
+                            //if (typeOptionValue == customType)
+                            //{
+                            //    specAttributeValueOption = attr.SpecificationAttributeOption.Id;
+                            //    break;
+                            //}
+                                                       
+
+                        }
+                    }
+                                       
+
+                    //add is last
                     productList.Add(companyProduct);
                     
                 }
