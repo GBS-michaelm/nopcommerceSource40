@@ -53,14 +53,14 @@
     <div class="caption">
         <div class="details">
             <h3 class="product-title">
-                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.ShortDescription</a>
+                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
             </h3>
 
             @{
                 Product product = _productService.GetProductById(Model.Id);
             }
             @*Html.Widget("product_artist_name", Model.Id)*@
-            <div class="prod-box-sku" style="text-align: center;">@product.Sku</div>
+            @*<div class="prod-box-sku" style="text-align: center;">@product.Name</div>*@
             <div class="prices">
             @{
                 var result = _specificationAttributeService.GetProductSpecificationAttributes(Model.Id).Where(x =>
