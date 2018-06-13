@@ -34,6 +34,7 @@ namespace Nop.Plugin.Catalog.GBS
             builder.RegisterType<GBSProductAttributeFormatter>().As<IProductAttributeFormatter>();
             builder.RegisterType<Nop.Plugin.Catalog.GBS.Factories.CatalogModelFactory>().As<ICatalogModelFactory>().InstancePerDependency();
             builder.RegisterType<Nop.Plugin.Catalog.GBS.Factories.ProductModelFactory>().As<IProductModelFactory>().InstancePerDependency();
+            builder.RegisterType<Nop.Plugin.Catalog.GBS.Factories.ProductModelFactory>().As<IProductModelFactoryCustom>().InstancePerDependency();
 
         }
 

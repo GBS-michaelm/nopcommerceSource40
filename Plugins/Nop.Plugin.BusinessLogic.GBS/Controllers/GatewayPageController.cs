@@ -32,26 +32,7 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
         {
             this._gbsBusinessLogicSettings = gbsBusinessLogicSettings;
         }
-
-        //[HttpGet]
-        //public ActionResult SportsTeamHtml(int id)
-        //{           
-        //    SportsTeam team = SportsTeam.GetSportsTeam(id);
-        //    team.gatewayHtml = team.GenerateTeamProductHtml();
-
-
-        //    GatewayPageProductBoxModel gatewayModel = new GatewayPageProductBoxModel();
-        //    //gatewayModel.name = 
-
-        //    return Json(new
-        //    {
-        //        success = true,
-        //        h1 = team.h1,
-        //        message = team.gatewayHtml
-        //    }, JsonRequestBehavior.AllowGet);
-            
-        //}
-
+        
         public ActionResult GatewayCatalogProducts(string type, int id)
         {
             switch (type)
@@ -95,7 +76,6 @@ namespace Nop.Plugin.GBSGateway.GBS.Controllers
                         
                     }
                     
-
                     foreach (var category in teamCategoryProducts)
                     {
                         

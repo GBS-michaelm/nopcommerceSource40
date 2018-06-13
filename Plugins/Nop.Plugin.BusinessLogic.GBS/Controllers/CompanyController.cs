@@ -36,7 +36,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Controllers
             }
             //use companyProducts View that will hold companyProduct
             
-            return View("CompanyProducts", companyProductsListForView);
+            return View("CompanyProductsNameBadges", companyProductsListForView);
 
         }
         

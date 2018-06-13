@@ -631,6 +631,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             int numLines = 0;
             char lastChar = marketcenterList[0].Name.ToUpper()[0];
 
+            tabHtmlStringBuilder.Append("<div class='columns companyname'>");
+
             tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
 
             if (lastChar >= '0' && lastChar <= '9')
@@ -642,20 +644,20 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 tabHtmlStringBuilder.Append("<li class='li-alpha-header' >" + lastChar + "</li>");
             }
 
-            int rowHandle = (marketcenterList.Count / 3);
-            int rowCount = 0;
+            //int rowHandle = (marketcenterList.Count / 3);
+            //int rowCount = 0;
 
             foreach (var marketCenter in marketcenterList)
             {
 
                 //if (numLines == ((marketcenterList.Count / 2) + 1))
-                if (((numLines % rowHandle) == 0 ) && numLines != 0 && rowCount < 2)
-                {
-                    tabHtmlStringBuilder.Append("</ul>");
-                    tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
-                    //numLines = 0;
-                    rowCount++;
-                }
+                //if (((numLines % rowHandle) == 0) && numLines != 0 && rowCount < 2)
+                //{
+                //    tabHtmlStringBuilder.Append("</ul>");
+                //    tabHtmlStringBuilder.Append("<ul class='ul-alpha-list' >");
+                //    //numLines = 0;
+                //    rowCount++;
+                //}
 
                 char firstChar = marketCenter.Name.ToUpper()[0];
 
@@ -663,19 +665,23 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 {
                     tabHtmlStringBuilder.Append("<li class='li-blank' >&nbsp;<li>");
                     tabHtmlStringBuilder.Append("<li class='li-alpha-header' >" + firstChar + "</li>");
-                    numLines++;
+                    //numLines++;
                     lastChar = firstChar;
                 }
 
                 tabHtmlStringBuilder.Append(BuildInnerTabLink(marketCenter, type));
-                numLines++;                           
+                //numLines++;
 
             }
-            
+
+
+
             tabHtmlStringBuilder.Append("</ul>");
 
+            tabHtmlStringBuilder.Append("</div>");
+
             //tabHtmlStringBuilder.Append("<div class='scrollStopper'></div>");
-                     
+
             return tabHtmlStringBuilder.ToString(); ;
         }
 

@@ -791,4 +791,15 @@ a.mc-img-link img {
     color: #dddddd
 }
 
+.columns {
+    column-width: 250px;
+    max-width: 800px;
+    padding: 0 10px 40px 10px;
+}
+
+.companyname ul {
+    align-self: stretch;
+    line-height: 15px;
+}
+
 

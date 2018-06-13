@@ -82,7 +82,7 @@
             var tier3Qty = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? _productService.GetProductById(featuredProductId).TierPrices.ElementAt(2).Quantity : 0;
 
             var displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayTemplate.Replace("[pricetier1qty]", tier1Qty.ToString()) : "";
-            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier1qtyXeachqty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1qtyXeachqty]", (tier1Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt]", Math.Round(tier1price, 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amt/eachqty]", Math.Round(tier1price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2qty]", tier2Qty.ToString()) : displayPriceString;
@@ -90,11 +90,11 @@
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt]", Math.Round(tier2price, 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amt/eachqty]", Math.Round(tier2price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qty]", tier3Qty.ToString()) : displayPriceString;
-            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier3qtyXeachqty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3qtyXeachqty]", (tier3Qty * Int32.Parse(eachQuantity)).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt]", Math.Round(tier3price, 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amt/eachqty]", Math.Round(tier3price / Int32.Parse(eachQuantity), 2).ToString()) : displayPriceString;
-            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
-            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 0 ? displayPriceString.Replace("[pricetier1amtXpricetier1qty]", Math.Round(tier1price * tier1Qty, 2).ToString()) : displayPriceString;
+            displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 1 ? displayPriceString.Replace("[pricetier2amtXpricetier2qty]", Math.Round(tier2price * tier2Qty, 2).ToString()) : displayPriceString;
             displayPriceString = _productService.GetProductById(featuredProductId).TierPrices.Count() > 2 ? displayPriceString.Replace("[pricetier3amtXpricetier3qty]", Math.Round(tier3price * tier3Qty, 2).ToString()) : displayPriceString;
             displayPriceString = displayPriceString.Replace("[price]", Math.Round(featuredProductPrice, 2).ToString());
             displayPriceString = displayPriceString.Replace("[oldprice]", featuredProductOldPrice);
@@ -112,8 +112,19 @@
         
         <div>@Model.Sku</div>
         <div id="@Model.Sku" class="dropdown-options">
-            <div class="frame-dropdown">
-                <label>Choose Frame: </label>
+            <label>Choose Frame: </label>
+            <div class="frame-dropdown dv-choose-frame">
+                <select id="choose-frame-@Model.Sku">
+                    @{ 
+                        //foreach (var frameOption in @Model.FrameOptions)
+                        // {
+                        
+                        
+                        // }
+                        //add mixed here
+                        <option value="MIX">Mix</option>
+                    }
+                </select>
             </div>
             <div class="qty-dropdown">
                 <label>Quantity: </label>
