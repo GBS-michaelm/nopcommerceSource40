@@ -57,7 +57,7 @@
                 }
 
                 @*render price*@
-<span id="pricescript" style="display:none;" class="pricescript-value-@(Model.ProductId)" >@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)</span>
+<span id="pricescript" style="display:none;" class="pricescript-value-@(Model.ProductId)" >@Model.PriceValue.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)</span>
 
                 <span id="newprice" class="newprice-value-@(Model.ProductId)"  @*@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) 
                       { 
@@ -65,7 +65,7 @@
                       }*@>
                     @Html.Raw(Model.Price)
                 </span>
-<span id="eachprice" class="eachprice-value-@(Model.ProductId)" >(Ea. $@(eachQuantity > 0 ? (Model.PriceValue/eachQuantity).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)))</span>
+<span id="eachprice" class="eachprice-value-@(Model.ProductId)" >(Ea. $@(eachQuantity > 0 ? (Model.PriceValue/eachQuantity).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) : Model.PriceValue.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)))</span>
             </div>
             if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
             {

@@ -112,8 +112,19 @@
         
         <div>@Model.Sku</div>
         <div id="@Model.Sku" class="dropdown-options">
-            <div class="frame-dropdown">
-                <label>Choose Frame: </label>
+            <label>Choose Frame: </label>
+            <div class="frame-dropdown dv-choose-frame">
+                <select id="choose-frame-@Model.Sku">
+                    @{ 
+                        //foreach (var frameOption in @Model.FrameOptions)
+                        // {
+                        
+                        
+                        // }
+                        //add mixed here
+                        <option value="MIX">Mix</option>
+                    }
+                </select>
             </div>
             <div class="qty-dropdown">
                 <label>Quantity: </label>

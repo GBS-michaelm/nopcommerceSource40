@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
     <Compile Include="Controllers\AccessoryPageController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ConfigurationBusinessGBSController.cs" />
     <Compile Include="Controllers\GatewayPageController.cs" />
     <Compile Include="DataManager.cs" />

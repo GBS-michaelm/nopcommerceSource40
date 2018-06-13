@@ -16,7 +16,7 @@
 </div>
 
 <div id="badgeFields" class="left-side">
-    <h4>Personalize You Badges</h4>
+    <h4>Personalize Your </h4>
     @{
         foreach (Field field in Model.productList[0].Fields)
         {
@@ -62,7 +62,7 @@
         {
 
 
-            @Html.Partial("CompanyProduct", item)
+            @Html.Partial("CompanyProductNameBadge", item)
                
 
         }

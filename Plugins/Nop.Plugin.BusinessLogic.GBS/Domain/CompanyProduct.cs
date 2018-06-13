@@ -5,7 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 using Nop.Plugin.BusinessDataAccess.GBS;
+using Nop.Services.Catalog;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -72,6 +76,9 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     public class CompanyProduct
     {
         DBManager manager = new DBManager();
+        ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        IProductService productService = EngineContext.Current.Resolve<IProductService>();
+        ILogger logger = EngineContext.Current.Resolve<ILogger>();
 
         //check bobby json to get class attributes
         [JsonProperty(PropertyName = "BGColor-Primary")]
@@ -112,7 +119,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string Template { get; set; } = "NBEX0006";
         public string TemplateShape { get; set; }
         public string BorderDefault { get; set; }
-
+        public List<string> FrameOptions { get ; set; }
 
         public List<CompanyProduct> GetProductsAndFields(int companyCode)
         {
@@ -125,52 +132,94 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             string productTemplateShape;
             string productBorderDefault;
 
-            //TEST ID 26764
-            companyCode = 26764;
-
-            //use bobby stored proc here and create 
-            //company product list along with a list of fields needed
-            Dictionary<string, Object> productListDic = new Dictionary<string, Object>();
-            productListDic.Add("@CategoryId", companyCode);
-
-            string select = "EXEC usp_SelectMarketCenterWtpPageJson @CategoryId";
-
-            DataView companyProductDataView = manager.GetParameterizedDataView(select, productListDic);
-            
-            if(companyProductDataView.Count > 0)
+            try
             {
-                fieldsJson = companyProductDataView[0]["NameBadgeFields"];
-                for (int i = 0; i < companyProductDataView.Count; i++)
+                //TEST ID 26764
+                //companyCode = 26764;
+                companyCode = 6758;
+
+                //use bobby stored proc here and create 
+                //company product list along with a list of fields needed
+                Dictionary<string, Object> productListDic = new Dictionary<string, Object>();
+                productListDic.Add("@CategoryId", companyCode);
+
+                string select = "EXEC usp_SelectMarketCenterWtpPageJson @CategoryId";
+
+                DataView companyProductDataView = manager.GetParameterizedDataView(select, productListDic);
+
+                if (companyProductDataView.Count > 0)
                 {
-                    if(i == 0)
+                    fieldsJson = companyProductDataView[0]["NameBadgeFields"];
+                    for (int i = 0; i < companyProductDataView.Count; i++)
                     {
-                        fieldsList = JsonConvert.DeserializeObject<List<Field>>(fieldsJson);
+                        if (i == 0)
+                        {
+                            fieldsList = JsonConvert.DeserializeObject<List<Field>>(fieldsJson);
+                        }
+
+                        companyProductsJson = companyProductDataView[i]["EditorJson"];
+                        productSku = companyProductDataView[i]["ProductCode"].ToString();
+                        productTemplateShape = productSku.Substring(4, 1) == "O" ? "oval" : "rect";
+                        productBorderDefault = productTemplateShape == "oval" ? "/images/badgeframes/OVAL-BLACK.png" : "/images/badgeframes/RECT-BLACK.png";
+                        //productTemplate = companyProductDataView[i]["Template"].ToString(); //not currently in stored proc
+
+                        CompanyProduct companyProduct = JsonConvert.DeserializeObject<CompanyProduct>(companyProductsJson);
+
+                        companyProduct.Sku = productSku;
+                        companyProduct.TemplateShape = productTemplateShape;
+                        companyProduct.BorderDefault = productBorderDefault;
+
+                        //may need to be apart of returned JSON for speed
+                        //PROBABLY NEEDS TO BE DB
+
+
+                        Product prod = productService.GetProductBySku(productSku);
+                        IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
+                        specAttrList = specService.GetProductSpecificationAttributes(prod.Id);
+                        foreach (var attr in specAttrList)
+                        {
+                            string typeOptionValue = "";
+                            if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Frame Style")
+                            {
+                                int specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+
+
+
+
+                                //typeOptionValue = attr.SpecificationAttributeOption.Name;
+                                //if (typeOptionValue == customType)
+                                //{
+                                //    specAttributeValueOption = attr.SpecificationAttributeOption.Id;
+                                //    break;
+                                //}
+
+
+                            }
+                        }
+
+
+                        //add is last
+                        productList.Add(companyProduct);
+
                     }
-                    
-                    companyProductsJson = companyProductDataView[i]["EditorJson"];
-                    productSku = companyProductDataView[i]["ProductCode"].ToString();
-                    productTemplateShape = productSku.Substring(4, 1) == "O" ? "oval" : "rect";
-                    productBorderDefault = productTemplateShape == "oval" ? "/images/badgeframes/OVAL-BLACK.png" : "/images/badgeframes/RECT-BLACK.png";
-                    //productTemplate = companyProductDataView[i]["Template"].ToString(); //not currently in stored proc
 
-                    CompanyProduct companyProduct = JsonConvert.DeserializeObject<CompanyProduct>(companyProductsJson);
 
-                    companyProduct.Sku = productSku;
-                    companyProduct.TemplateShape = productTemplateShape;
-                    companyProduct.BorderDefault = productBorderDefault;
-                    productList.Add(companyProduct);
-                    
+                    List<Field> sortedFields = fieldsList.OrderBy(x => x.sortOrder).ToList();
+
+                    foreach (Field field in sortedFields)
+                    {
+                        productList[0].Fields.Add(field);
+                    }
+
                 }
-            }
 
-            List<Field> sortedFields = fieldsList.OrderBy(x => x.sortOrder).ToList();
-
-            foreach (Field field in sortedFields)
+            }catch(Exception ex)
             {
-                productList[0].Fields.Add(field);
-            }
+                logger.Error("CompanyProduct.cs Exception: ->", ex);
+            }                              
 
             return productList;
+
         }
         
     }
