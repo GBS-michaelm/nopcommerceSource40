@@ -845,7 +845,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
             sb.Append("<div id='cantFindTab'>");
             sb.Append("    <p>Ready to make the personalizing, proofing, and purchasing of essential marketing tools for your office a whole lot easier?</p>");
             sb.Append("    <p>If your office has more than 50 agents / employees and a commitment from leadership to co-market the solution, you qualify for your own custom Market Center.</p>");
-            sb.Append("    <a id='btn-request-mc' href='' >Request a Market Center</a>");
+            sb.Append("    <a id='btn-request-mc' href='/market-center-set-up' >Request a Market Center</a>");
             sb.Append("</div>");
 
             return sb.ToString();
