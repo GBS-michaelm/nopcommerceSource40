@@ -1170,7 +1170,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
                     warnings = _shoppingCartService.AddToCart(customer, orderItem.Product, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id, orderItem.AttributesXml, quantity: Convert.ToInt32(orderItem.Quantity));
                 }
 
-                response = (SubmitItemResponse)responseJSON.Data;
+                //response = (SubmitItemResponse)responseJSON.Data;
                 if (response.status != "success" || warnings.Count > 0)
                 {
                     throw new Exception("Failed to submit item to cart");
