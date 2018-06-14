@@ -3153,8 +3153,8 @@
     <Content Include="Themes\PurplePizza\Views\Product\_ProductTierPrices.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Catalog\CategoryTemplate.ProductsInGridOrLinesExtraData.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Shared\_ProductBoxExtraData.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProducts.cshtml" />
-    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProduct.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProductsNameBadges.cshtml" />
+    <Content Include="Themes\HouseOfMagnet\Views\Company\CompanyProductNameBadge.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\Topic\MarketCenterGateway.cshtml" />
     <Content Include="Themes\HouseOfMagnet\Views\GatewayPage\SportsTabs.cshtml" />
   </ItemGroup>

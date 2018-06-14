@@ -11484,3 +11484,33 @@ body hr {
         display: none;
     }
 }
+
+
+.qq-upload-button {
+    display: inline-block;
+    text-align: center;
+    background: #022c5c !important;
+    ;
+    border-bottom: 1px solid #DDD;
+    color: #FFF;
+    font-family: "Lato", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 1px;
+    height: 34px;
+    padding: 8px 22px 8px 22px !important;
+    margin: 0px;
+    border-radius: 3px;
+    white-space: nowrap;
+    width: 140px !important;
+}
+
+.qq-upload-button-hover {
+    background: #002147 !important;
+}
+
+.overview .detail-left .attributes dl {
+    margin-bottom: 10px;
+}
