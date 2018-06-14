@@ -1,5 +1,18 @@
 ﻿
 $(document).ready(function () {
+    $(".increase-quantity.company-product-group").click(function () {
+        //CompanyProductIncreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('productid') + "_EnteredQuantity"));
+        //CompanyProductIncreaseQuantity
+
+        console.log("comp prod inc: " + $(this).data('productid'));
+    });
+
+    $(".decrease-quantity.company-product-group").click(function () {
+        //CompanyProductDecreaseTextBoxQuantityGallery($("#addtocart_" + $(this).data('textboxid') + "_EnteredQuantity"));
+        //CompanyProductDecreaseQuantity
+        console.log("comp prod dec " + $(this).data('productid'));
+    })
+
 
 
     $("#btnUpdateDesigns").click(PreCheckCreatePreviews);
@@ -11,12 +24,7 @@ $(document).ready(function () {
 function PreCheckCreatePreviews() {
 
     var valid = true;
-    //form field validations - check if they are filled in
-    //$("").each(function (index, element) {
-
-
-
-    //});
+    //for each validation here
 
     //on pass field validation
     if (valid) {
@@ -47,8 +55,6 @@ function CreatePreviews(isDefault) {
 
 function CreateSinglePreview(sku, isDefault) {
 
-    console.log("create single preview");
-
     //var userId = GLOB.UserId;
     var userId = "zxqg0uiw4hcuxn0cilcw1dtz";
     var postUrl = $("#canvasDomain").val() + "/api/Preview/GeneratePreview";
@@ -57,12 +63,12 @@ function CreateSinglePreview(sku, isDefault) {
     var productDefinitions = [];
 
     //show loading gif
-    $("#dv-loading-" + sku).show();
-    $("#dv-loading-" + sku + " p.error").hide();
-    $("#dv-loading-" + sku + " img").show();
+    //$("#dv-loading-" + wtpId).show();
+    //$("#dv-loading-" + wtpId + " p.error").hide();
+    //$("#dv-loading-" + wtpId + " img").show();
     //delete current img urls
-    $("#img-preview-" + sku).attr("src", "");
-    $("#a-preview-" + sku).attr("href", "");
+    //$("#img-preview-" + wtpId).attr("src", "");
+    //$("#a-preview-" + wtpId).attr("href", "");
     
     if (isDefault) {
         //default stuff
@@ -108,15 +114,17 @@ function CreateSinglePreview(sku, isDefault) {
             console.log(link);
 
             $("#img-preview-" + sku).unbind("load");
-            $("#img-preview-" + sku).load(function ()
-            {
-                $("#dv-loading-" + sku).fadeOut();
+            $("#img-preview-" + sku).load(function () {
+                //$("#dv-loading-" + sku).fadeOut();
             });
 
             $("#img-preview-" + sku).attr("src", link);
             $("#a-preview-" + sku).attr("href", link);
         });
-    });    
+    });
+
+
+    
 }
 
 function getItemsData(wtpId, isDefault) {
@@ -207,3 +215,12 @@ function getTemplate(baseName) {
 
     return baseName + "-" + templateNum;
 }
+
+
+
+
+
+
+//name badge enter quantity
+
+
