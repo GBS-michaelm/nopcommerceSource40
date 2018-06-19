@@ -81,6 +81,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Factories
             try
             {
                 string canvasURL = null;
+                string template = null;
 
                 DBManager manager = new DBManager();
                 Dictionary<string, Object> paramDicEx3 = new Dictionary<string, Object>();
@@ -93,14 +94,15 @@ namespace Nop.Plugin.BusinessLogic.GBS.Factories
                 }
                 var result = manager.GetParameterizedDataView(select, paramDicEx3);
 
+                //get template name and make Canvas API call to get the URL.
                 string jsonData = null;
                 if (result.Count > 0)
                 {
                     DataRow resultRow = result.Table.Rows[0];
                     jsonData = resultRow["EditorJson"].ToString();
+                    template = resultRow["TemplatePath"].ToString();
                 }
 
-                //get template name and make Canvas API call to get the URL.
                 dynamic apiJson = new ExpandoObject();
                 string previewOptons = "{ 'width': 600, 'height': 600, 'resizeMode': 'Fit', 'proofImageRendering': { 'showStubContent': true } }";
 
@@ -134,9 +136,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Factories
                 //go get the template from specification attribute
                 var specAttrs = specService.GetProductSpecificationAttributes(productId);
 
-                string template = null;
                 var specAttr = specAttrs.Where(x => x.SpecificationAttributeOption.SpecificationAttribute.Name == "Front Template").FirstOrDefault();
-                if (specAttr != null)
+                if (string.IsNullOrEmpty(template) && specAttr != null)
                 {
                     template = specAttr.CustomValue;
                 }

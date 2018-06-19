@@ -34,6 +34,13 @@
     //    featuredProductPrice = featuredProduct.ProductPrice.PriceValue;
     //    featuredProductOldPrice = featuredProduct.ProductPrice.OldPrice;
     //}
+
+
+    var minQuantity = 0;
+    var EnteredQuantity = 0;
+    var Sku = @Model.Sku;
+    var BoxId = Sku + "-box";
+
 }
 
 @*<div class='pricing bottommargin clearfix'>*@
@@ -116,11 +123,10 @@
             <div class="frame-dropdown dv-choose-frame">
                 <select id="choose-frame-@Model.Sku">
                     @{ 
-                        //foreach (var frameOption in @Model.FrameOptions)
-                        // {
-                        
-                        
-                        // }
+                        foreach (var frameOption in @Model.FrameOptions)
+                        {
+                            <option value="@frameOption">@frameOption</option>
+                        }
                         //add mixed here
                         <option value="MIX">Mix</option>
                     }
@@ -128,8 +134,63 @@
             </div>
             <div class="qty-dropdown">
                 <label>Quantity: </label>
+
+                    <div class="add-to-cart company-product-group">
+                            <div class="add-to-cart-panel">
+                                <div class="quantity-box">
+                                    <div class="enter-quantity">
+                                        Enter Quantity:
+                                        @*@Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }, ":")*@
+                                    </div>
+                                    @*@if (Model.AllowedQuantities.Count > 0)
+                                        {
+                                            @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown form-control" })
+                                        }*@
+                                    @*else
+
+                                        {*@
+                                    <div class="addtocart-quantity-box company-product-qty-box">
+                                        @*@Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.ProductId })*@
+                                        @{
+                                    var empty = 0;
+
+                                    @*if (cartitem != null)
+                                    {
+                                        @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input amalgamation-qty-input form-control amalgamation-textbox in-cart group-amalgamation-textbox amal-group", @data_productid = amalgamationID, @data_initqty = @cartitem.Quantity, data_featuredproductid = @featuredId, data_master_category_id = @masterCategoryId, data_cart_qty = "" })
+                                    }
+                                    else
+                                    {*@
+                                    @Html.TextBoxFor(model => @EnteredQuantity, new { @class = " qty-input company-product-qty-input form-control  company-product-textbox group-company-product-textbox company-product-group", @data_productid = Sku, @data_initqty = 0, data_cart_qty = "" }) @*, data_featuredproductid = @featuredId , data_master_category_id = @masterCategoryId*@
+                                    @*}*@
+                                        }
+
+                                        @*<span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity ));"><i class="fa fa-plus" aria-hidden="true"></i></span>*@
+                                        @*<span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>*@
+
+                                        <span class="increase-quantity company-product-group" data-productid="@Model.Sku" data-textboxid=""><i class="fa fa-plus" aria-hidden="true"></i></span> @*data-featuredproductid="@featuredId"*@
+                                        <span class="decrease-quantity company-product-group" data-productid="@Model.Sku" data-textboxid="@BoxId"><i class="fa fa-minus" aria-hidden="true"></i></span> @*data-featuredproductid="@featuredId" @textBoxId*@
+                                    </div>
+                                    @*//when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)*@
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $("#@Html.FieldIdFor(model => Sku)").keydown(function (event) {
+                                                if (event.keyCode == 13) {
+                                                    //$("#add-to-cart-button-Model.Id").click();
+                                                    //$("#add-to-cart-button-Model.Id").click();
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    @*}*@
+                                </div>
+                            </div>
+                                                   
+                            
+                        </div>
+
+                </div>
             </div>
-        </div>
     </div>
 </div>
 

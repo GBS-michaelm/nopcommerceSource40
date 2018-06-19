@@ -76,7 +76,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
     public class CompanyProduct
     {
         DBManager manager = new DBManager();
-        ISpecificationAttributeService specService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+        IProductAttributeService prodAttrService = EngineContext.Current.Resolve<IProductAttributeService>();
         IProductService productService = EngineContext.Current.Resolve<IProductService>();
         ILogger logger = EngineContext.Current.Resolve<ILogger>();
 
@@ -119,7 +119,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
         public string Template { get; set; } = "NBEX0006";
         public string TemplateShape { get; set; }
         public string BorderDefault { get; set; }
-        public List<string> FrameOptions { get ; set; }
+        public List<string> FrameOptions { get ; set; } = new List<string>();
 
         public List<CompanyProduct> GetProductsAndFields(int companyCode)
         {
@@ -174,28 +174,45 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
 
                         Product prod = productService.GetProductBySku(productSku);
-                        IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
-                        specAttrList = specService.GetProductSpecificationAttributes(prod.Id);
-                        foreach (var attr in specAttrList)
+
+                        foreach (ProductAttributeMapping prodAttr in prod.ProductAttributeMappings)
                         {
-                            string typeOptionValue = "";
-                            if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Frame Style")
+                            if(prodAttr.ProductAttribute.Name == "Frame Style")
                             {
-                                int specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+                                IList<ProductAttributeValue> prodAttrVals = (IList<ProductAttributeValue>)prodAttr.ProductAttributeValues; //prodAttrService.GetProductAttributeValues(prodAttr.);
 
-
-
-
-                                //typeOptionValue = attr.SpecificationAttributeOption.Name;
-                                //if (typeOptionValue == customType)
-                                //{
-                                //    specAttributeValueOption = attr.SpecificationAttributeOption.Id;
-                                //    break;
-                                //}
-
-
+                                foreach (ProductAttributeValue values in prodAttrVals)
+                                {
+                                    companyProduct.FrameOptions.Add(values.Name);
+                                }
                             }
+                            
                         }
+                        
+
+
+                        //IList<ProductSpecificationAttribute> specAttrList = new List<ProductSpecificationAttribute>();
+                        //specAttrList = specService.GetProductSpecificationAttributes(prod.Id);
+                        //foreach (var attr in specAttrList)
+                        //{
+                        //    string typeOptionValue = "";
+                        //    if (attr.SpecificationAttributeOption.SpecificationAttribute.Name == "Frame Style")
+                        //    {
+                        //        int specAttributeId = attr.SpecificationAttributeOption.SpecificationAttribute.Id;
+
+
+
+
+                        //        //typeOptionValue = attr.SpecificationAttributeOption.Name;
+                        //        //if (typeOptionValue == customType)
+                        //        //{
+                        //        //    specAttributeValueOption = attr.SpecificationAttributeOption.Id;
+                        //        //    break;
+                        //        //}
+
+
+                        //    }
+                        //}
 
 
                         //add is last

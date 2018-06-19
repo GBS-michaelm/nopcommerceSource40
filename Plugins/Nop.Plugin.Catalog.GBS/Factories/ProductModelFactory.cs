@@ -77,6 +77,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         private readonly SeoSettings _seoSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Constructors
@@ -113,7 +114,8 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             CaptchaSettings captchaSettings,
             SeoSettings seoSettings,
             ICacheManager cacheManager,
-            IPluginFinder pluginFinder) :base (
+            IPluginFinder pluginFinder,
+            ShoppingCartSettings shoppingCartSettings) :base (
                      specificationAttributeService,
                      categoryService,
                      manufacturerService,
@@ -181,6 +183,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
             this._seoSettings = seoSettings;
             this._cacheManager = cacheManager;
             this._pluginFinder = pluginFinder;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -309,6 +312,10 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 throw new ArgumentNullException("product");
             try
             {
+                if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                {
+                    return base.PrepareProductTierPriceModels(product);
+                }
                 var model = product.TierPrices.OrderBy(x => x.Quantity)
                        .FilterByStore(_storeContext.CurrentStore.Id)
                        .FilterForCustomer(_workContext.CurrentCustomer)
