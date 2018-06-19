@@ -613,6 +613,11 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                     {
                         var productDetailsModel = _productModelFactory.PrepareProductDetailsModel(product, null, false);
 
+                        if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                        {
+                            productDetailsModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
+                                _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
+                        }
 
                         var productAttributeMappings = parser.ParseProductAttributeMappings(shoppingCartItem.AttributesXml);
                         if (productAttributeMappings != null)
@@ -624,11 +629,7 @@ namespace Nop.Plugin.Products.SpecificationAttributes.Controllers
                                     var attrValues = parser.ParseValues(shoppingCartItem.AttributesXml, productAttributeMapping.Id);
                                     productDetailsModel.DefaultPictureModel.ImageUrl = attrValues[0];
                                 }
-                                else if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
-                                {
-                                    productDetailsModel.DefaultPictureModel.ImageUrl = _shoppingCartModelFactory.PrepareCartItemPictureModel(shoppingCartItem,
-                                        _mediaSettings.CartThumbPictureSize, true, shoppingCartItem.Product.Name).ImageUrl;
-                                }
+                               
 
                             }
                         }
