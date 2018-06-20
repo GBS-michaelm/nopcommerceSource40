@@ -82,11 +82,13 @@ table {
 }
 input[type="text"],
 input[type="password"],
+input[type="email"],
+.inputs input[type="tel"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
 input, textarea, select {
 	font-size: 14px;
@@ -265,6 +267,8 @@ label, label + * {
 }
 .inputs input[type="text"],
 .inputs input[type="password"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs select, .inputs textarea {
 	width: 400px;
 	max-width: 100%;
@@ -6567,7 +6571,8 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
-.login-page .returning-wrapper input[type="password"] {
+.login-page .returning-wrapper input[type="password"],
+.login-page .returning-wrapper input[type="email"]{
 	width: 300px;
 }
 
@@ -6818,7 +6823,8 @@ pre {
 
 
 .login-page .returning-wrapper input[type="text"],
-.login-page .returning-wrapper input[type="password"] {
+.login-page .returning-wrapper input[type="password"],
+.login-page .returning-wrapper input[type="email"] {
 	width: 360px;
 }
 

@@ -33,6 +33,7 @@ namespace Nop.Services.Tax
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILogger _logger;
+        private readonly IWebHelper _webHelper;
         private readonly CustomerSettings _customerSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
@@ -53,6 +54,7 @@ namespace Nop.Services.Tax
         /// <param name="countryService">Country service</param>
         /// <param name="stateProvinceService">State province service</param>
         /// <param name="logger">Logger service</param>
+        /// <param name="webHelper">Web helper</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="addressSettings">Address settings</param>
@@ -65,6 +67,7 @@ namespace Nop.Services.Tax
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             ILogger logger,
+            IWebHelper webHelper,
             CustomerSettings customerSettings,
             ShippingSettings shippingSettings,
             AddressSettings addressSettings)
@@ -78,6 +81,7 @@ namespace Nop.Services.Tax
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._logger = logger;
+            this._webHelper = webHelper;
             this._customerSettings = customerSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
@@ -95,7 +99,7 @@ namespace Nop.Services.Tax
         protected virtual bool IsEuConsumer(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             Country country = null;
 
@@ -113,8 +117,7 @@ namespace Nop.Services.Tax
             //get country by IP address
             if (country == null)
             {
-                var ipAddress = customer.LastIpAddress;
-                //ipAddress = _webHelper.GetCurrentIpAddress();
+                var ipAddress = _webHelper.GetCurrentIpAddress();
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
                 country = _countryService.GetCountryByTwoLetterIsoCode(countryIsoCode);
             }
@@ -150,7 +153,7 @@ namespace Nop.Services.Tax
             int taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var calculateTaxRequest = new CalculateTaxRequest
             {
@@ -181,16 +184,16 @@ namespace Nop.Services.Tax
                 if (pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
                     calculateTaxRequest.Address = new Address
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         Country = country,
-                        CountryId = country.Return(c => c.Id, 0),
+                        CountryId = country?.Id ?? 0,
                         StateProvince = state,
-                        StateProvinceId = state.Return(sp => sp.Id, 0),
+                        StateProvinceId = state?.Id ?? 0,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };
@@ -218,7 +221,7 @@ namespace Nop.Services.Tax
                     calculateTaxRequest.Address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
                     break;
             }
-            
+
             return calculateTaxRequest;
         }
 
@@ -255,7 +258,7 @@ namespace Nop.Services.Tax
         /// <param name="price">Price (taxable value)</param>
         /// <param name="taxRate">Calculated tax rate</param>
         /// <param name="isTaxable">A value indicating whether a request is taxable</param>
-        protected virtual void GetTaxRate(Product product, int taxCategoryId, 
+        protected virtual void GetTaxRate(Product product, int taxCategoryId,
             Customer customer, decimal price, out decimal taxRate, out bool isTaxable)
         {
             taxRate = decimal.Zero;
@@ -275,7 +278,7 @@ namespace Nop.Services.Tax
                 isTaxable = false;
             }
             //make EU VAT exempt validation (the European Union Value Added Tax)
-            if (isTaxable && 
+            if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
                 IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
             {
@@ -290,17 +293,17 @@ namespace Nop.Services.Tax
                 //ensure that tax is equal or greater than zero
                 if (calculateTaxResult.TaxRate < decimal.Zero)
                     calculateTaxResult.TaxRate = decimal.Zero;
-                
+
                 taxRate = calculateTaxResult.TaxRate;
             }
-            else 
+            else
                 if (_taxSettings.LogErrors)
+            {
+                foreach (var error in calculateTaxResult.Errors)
                 {
-                    foreach (var error in calculateTaxResult.Errors)
-                    {
-                        _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
-                    }
-                }   
+                    _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+                }
+            }
         }
 
         #endregion
@@ -357,13 +360,13 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(Product product, decimal price, 
+        public virtual decimal GetProductPrice(Product product, decimal price,
             out decimal taxRate)
         {
             var customer = _workContext.CurrentCustomer;
             return GetProductPrice(product, price, customer, out taxRate);
         }
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -375,7 +378,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetProductPrice(Product product, decimal price,
             Customer customer, out decimal taxRate)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetProductPrice(product, price, includingTax, customer, out taxRate);
         }
 
@@ -391,12 +394,12 @@ namespace Nop.Services.Tax
         public virtual decimal GetProductPrice(Product product, decimal price,
             bool includingTax, Customer customer, out decimal taxRate)
         {
-            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxCategoryId = 0;
-            return GetProductPrice(product, taxCategoryId, price, includingTax, 
+            var priceIncludesTax = _taxSettings.PricesIncludeTax;
+            var taxCategoryId = 0;
+            return GetProductPrice(product, taxCategoryId, price, includingTax,
                 customer, priceIncludesTax, out taxRate);
         }
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -419,9 +422,7 @@ namespace Nop.Services.Tax
                 return taxRate;
             }
 
-
-            bool isTaxable;
-            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
+            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out bool isTaxable);
 
             if (priceIncludesTax)
             {
@@ -456,13 +457,12 @@ namespace Nop.Services.Tax
                 }
             }
 
-
             if (!isTaxable)
             {
                 //we return 0% tax rate in case a request is not taxable
                 taxRate = decimal.Zero;
             }
-            
+
             //allowed to support negative price adjustments
             //if (price < decimal.Zero)
             //    price = decimal.Zero;
@@ -482,7 +482,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetShippingPrice(price, includingTax, customer);
         }
 
@@ -495,8 +495,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetShippingPrice(price, includingTax, customer, out taxRate);
+            return GetShippingPrice(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -515,8 +514,8 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.ShippingTaxClassId;
-            bool priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
+            var taxClassId = _taxSettings.ShippingTaxClassId;
+            var priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -533,7 +532,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetPaymentMethodAdditionalFee(price, includingTax, customer);
         }
 
@@ -546,9 +545,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetPaymentMethodAdditionalFee(price, includingTax,
-                customer, out taxRate);
+            return GetPaymentMethodAdditionalFee(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -567,8 +564,8 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
-            bool priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
+            var taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
+            var priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -596,7 +593,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetCheckoutAttributePrice(cav, includingTax, customer);
         }
 
@@ -610,8 +607,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetCheckoutAttributePrice(cav, includingTax, customer, out taxRate);
+            return GetCheckoutAttributePrice(cav, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -626,18 +622,18 @@ namespace Nop.Services.Tax
             bool includingTax, Customer customer, out decimal taxRate)
         {
             if (cav == null)
-                throw new ArgumentNullException("cav");
+                throw new ArgumentNullException(nameof(cav));
 
             taxRate = decimal.Zero;
 
-            decimal price = cav.PriceAdjustment;
+            var price = cav.PriceAdjustment;
             if (cav.CheckoutAttribute.IsTaxExempt)
             {
                 return price;
             }
 
-            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            var priceIncludesTax = _taxSettings.PricesIncludeTax;
+            var taxClassId = cav.CheckoutAttribute.TaxCategoryId;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -653,8 +649,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string fullVatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(fullVatNumber, out name, out address);
+            return GetVatNumberStatus(fullVatNumber, out string _, out string _);
         }
 
         /// <summary>
@@ -670,10 +665,10 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
-            if (String.IsNullOrWhiteSpace(fullVatNumber))
+            if (string.IsNullOrWhiteSpace(fullVatNumber))
                 return VatNumberStatus.Empty;
             fullVatNumber = fullVatNumber.Trim();
-            
+
             //GB 111 1111 111 or GB 1111111111
             //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
             var r = new Regex(@"^(\w{2})(.*)");
@@ -685,7 +680,7 @@ namespace Nop.Services.Tax
 
             return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -694,10 +689,9 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
+            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out string _, out string _);
         }
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -712,10 +706,10 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return VatNumberStatus.Empty;
 
-            if (String.IsNullOrEmpty(vatNumber))
+            if (string.IsNullOrEmpty(vatNumber))
                 return VatNumberStatus.Empty;
 
             if (_taxSettings.EuVatAssumeValid)
@@ -724,8 +718,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
 
-            Exception exception;
-            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out exception);
+            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out Exception _);
         }
 
         /// <summary>
@@ -749,18 +742,28 @@ namespace Nop.Services.Tax
 
             if (twoLetterIsoCode == null)
                 twoLetterIsoCode = string.Empty;
-            if (!String.IsNullOrEmpty(twoLetterIsoCode))
+            if (!string.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
                 twoLetterIsoCode = twoLetterIsoCode.ToUpper();
 
-            EuropaCheckVatService.checkVatService s = null;
+            EuropaCheckVatService.checkVatPortTypeClient s = null;
 
             try
             {
-                bool valid;
+                s = new EuropaCheckVatService.checkVatPortTypeClient();
+                var task = s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
+                {
+                    vatNumber = vatNumber,
+                    countryCode = twoLetterIsoCode
+                });
+                task.Wait();
 
-                s = new EuropaCheckVatService.checkVatService();
-                s.checkVat(ref twoLetterIsoCode, ref vatNumber, out valid, out name, out address);
+                var result = task.Result;
+
+                var valid = result.valid;
+                name = result.name;
+                address = result.address;
+
                 exception = null;
                 return valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid;
             }
@@ -777,9 +780,6 @@ namespace Nop.Services.Tax
 
                 if (address == null)
                     address = string.Empty;
-
-                if (s != null)
-                    s.Dispose();
             }
         }
 

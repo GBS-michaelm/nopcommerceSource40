@@ -1,8 +1,0 @@
-Group: GBS
-FriendlyName: Shipping GBS Extended Field Plugin
-SystemName: Nop.Plugin.Shipping.GBS
-Version: 1.0
-SupportedVersions: 3.90
-Author: N.Anj
-DisplayOrder: 0
-FileName: Nop.Plugin.Shipping.GBS.dll

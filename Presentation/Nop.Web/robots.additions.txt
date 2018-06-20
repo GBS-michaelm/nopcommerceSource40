@@ -1,4 +1,0 @@
-Disallow: /login
-Disallow: /register
-Disallow: /search
-Disallow: /request-quote

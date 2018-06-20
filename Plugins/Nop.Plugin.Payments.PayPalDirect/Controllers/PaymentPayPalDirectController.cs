@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Web.Mvc;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalDirect.Models;
-using Nop.Plugin.Payments.PayPalDirect.Validators;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Controllers
@@ -29,6 +32,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         private readonly ILogger _logger;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -43,6 +47,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             ILogger logger,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
+            IPermissionService permissionService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -53,6 +58,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             this._logger = logger;
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
@@ -89,7 +95,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 var webhook = new Webhook
                 {
                     event_types = new List<WebhookEventType> { new WebhookEventType { name = "*" } },
-                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook", _webHelper.GetStoreLocation(currentStore.SslEnabled))
+                    url = $"{_webHelper.GetStoreLocation(currentStore.SslEnabled)}Plugins/PaymentPayPalDirect/Webhook"
                 }.Create(apiContext);
 
                 return webhook.id;
@@ -101,9 +107,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        _logger.Error(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        _logger.Error($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => _logger.Error(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => _logger.Error($"{x.field} {x.issue}"));
                     }
                     else
                         _logger.Error(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
@@ -119,10 +125,13 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
         #region Methods
 
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        [AuthorizeAdmin]
+        [Area(AreaNames.Admin)]
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
@@ -156,10 +165,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [AuthorizeAdmin]
+        [AdminAntiForgery]
+        [Area(AreaNames.Admin)]
+        public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 
@@ -199,10 +212,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("createwebhook")]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult GetWebhookId(ConfigurationModel model)
+        [AuthorizeAdmin]
+        [AdminAntiForgery]
+        [Area(AreaNames.Admin)]
+        public IActionResult GetWebhookId(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>();
             payPalDirectPaymentSettings.WebhookId = CreateWebHook();
             _settingService.SaveSetting(payPalDirectPaymentSettings);
@@ -213,92 +230,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var model = new PaymentInfoModel();
-
-            model.CreditCardTypes = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Visa", Value = "visa" },
-                new SelectListItem { Text = "Master card", Value = "MasterCard" },
-                new SelectListItem { Text = "Discover", Value = "Discover" },
-                new SelectListItem { Text = "Amex", Value = "Amex" },
-            };
-
-            //years
-            for (var i = 0; i < 15; i++)
-            {
-                var year = (DateTime.Now.Year + i).ToString();
-                model.ExpireYears.Add(new SelectListItem
-                {
-                    Text = year,
-                    Value = year,
-                });
-            }
-
-            //months
-            for (var i = 1; i <= 12; i++)
-            {
-                model.ExpireMonths.Add(new SelectListItem
-                {
-                    Text = i.ToString("D2"),
-                    Value = i.ToString(),
-                });
-            }
-
-            //set postback values
-            model.CardNumber = Request.Form["CardNumber"];
-            model.CardCode = Request.Form["CardCode"];
-            var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(Request.Form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedCcType != null)
-                selectedCcType.Selected = true;
-            var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(Request.Form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedMonth != null)
-                selectedMonth.Selected = true;
-            var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(Request.Form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedYear != null)
-                selectedYear.Selected = true;
-
-            return View("~/Plugins/Payments.PayPalDirect/Views/PaymentInfo.cshtml", model);
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-
-            //validate
-            var validator = new PaymentInfoValidator(_localizationService);
-            var model = new PaymentInfoModel
-            {
-                CardNumber = form["CardNumber"],
-                CardCode = form["CardCode"],
-                ExpireMonth = form["ExpireMonth"],
-                ExpireYear = form["ExpireYear"]
-            };
-            var validationResult = validator.Validate(model);
-            if (!validationResult.IsValid)
-                warnings.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
-
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            return new ProcessPaymentRequest
-            { 
-                CreditCardType = form["CreditCardType"],
-                CreditCardNumber = form["CardNumber"],
-                CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
-                CreditCardExpireYear = int.Parse(form["ExpireYear"]),
-                CreditCardCvv2 = form["CardCode"]
-            };
-        }
-
         [HttpPost]
-        public ActionResult WebhookEventsHandler()
+        public IActionResult WebhookEventsHandler()
         {
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
@@ -306,17 +239,19 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             try
             {
                 var requestBody = string.Empty;
-                using (var stream = new StreamReader(Request.InputStream))
+                using (var stream = new StreamReader(this.Request.Body, Encoding.UTF8))
                 {
                     requestBody = stream.ReadToEnd();
                 }
                 var apiContext = PaypalHelper.GetApiContext(payPalDirectPaymentSettings);
 
                 //validate request
-                if (!WebhookEvent.ValidateReceivedEvent(apiContext, Request.Headers, requestBody, payPalDirectPaymentSettings.WebhookId))
+                var headers = new NameValueCollection();
+                this.Request.Headers.ToList().ForEach(header => headers.Add(header.Key, header.Value));
+                if (!WebhookEvent.ValidateReceivedEvent(apiContext, headers, requestBody, payPalDirectPaymentSettings.WebhookId))
                 {
                     _logger.Error("PayPal error: webhook event was not validated");
-                    return new HttpStatusCodeResult(HttpStatusCode.OK);
+                    return Ok();
                 }
 
                 var webhook = JsonFormatter.ConvertFromJson<WebhookEvent>(requestBody);
@@ -363,7 +298,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                             var processPaymentResult = new ProcessPaymentResult
                                             {
                                                 NewPaymentStatus = PaymentStatus.Paid,
-                                                CaptureTransactionId = sale.id
+                                                CaptureTransactionId = sale.id,
+                                                AvsResult = sale.processor_response?.avs_code ?? string.Empty,
+                                                Cvv2Result = sale.processor_response?.cvv_code ?? string.Empty
                                             };
                                             _orderProcessingService.ProcessNextRecurringPayment(recurringPayment, processPaymentResult);
                                         }
@@ -376,7 +313,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         new ProcessPaymentResult { Errors = new[] { webhook.summary }, RecurringPaymentFailed = true });
                                 }
                                 else
-                                    _logger.Error(string.Format("PayPal error: Sale is {0} for the order #{1}", sale.state, initialOrder.Id));
+                                    _logger.Error(
+                                        $"PayPal error: Sale is {sale.state} for the order #{initialOrder.Id}");
                             }
                         }
                     }
@@ -398,23 +336,23 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             }
                             if (sale.state.ToLowerInvariant().Equals("denied"))
                             {
-                                var reason = string.Format("Payment is denied. {0}", sale.fmf_details != null ?
-                                    string.Format("Based on fraud filter: {0}. {1}", sale.fmf_details.name, sale.fmf_details.description) : string.Empty);
+                                var reason =
+                                    $"Payment is denied. {(sale.fmf_details != null ? $"Based on fraud filter: {sale.fmf_details.name}. {sale.fmf_details.description}" : string.Empty)}";
                                 order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = reason,
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
-                                _logger.Error(string.Format("PayPal error: {0}", reason));
+                                _logger.Error($"PayPal error: {reason}");
                             }
                         }
                         else
-                            _logger.Error(string.Format("PayPal error: Order with guid {0} was not found", sale.invoice_number));
+                            _logger.Error($"PayPal error: Order with GUID {sale.invoice_number} was not found");
                     }
                 }
 
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
+                return Ok();
             }
             catch (PayPal.PayPalException exc)
             {
@@ -423,9 +361,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        _logger.Error(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        _logger.Error($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => _logger.Error(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => _logger.Error($"{x.field} {x.issue}"));
                     }
                     else
                         _logger.Error(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
@@ -433,7 +371,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 else
                     _logger.Error(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
 
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
+                return Ok();
             }
         }
 

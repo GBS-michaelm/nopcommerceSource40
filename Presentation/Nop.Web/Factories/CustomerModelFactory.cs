@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -26,7 +26,6 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
-using WebGrease.Css.Extensions;
 
 namespace Nop.Web.Factories
 {
@@ -49,6 +48,7 @@ namespace Nop.Web.Factories
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
         private readonly ForumSettings _forumSettings;
@@ -58,7 +58,7 @@ namespace Nop.Web.Factories
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOpenAuthenticationService _openAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
 
@@ -85,6 +85,7 @@ namespace Nop.Web.Factories
             ICustomerAttributeService customerAttributeService,
             IGenericAttributeService genericAttributeService,
             RewardPointsSettings rewardPointsSettings,
+            CommonSettings commonSettings,
             CustomerSettings customerSettings,
             AddressSettings addressSettings, 
             ForumSettings forumSettings,
@@ -94,7 +95,7 @@ namespace Nop.Web.Factories
             IOrderService orderService,
             IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IOpenAuthenticationService openAuthenticationService,
+            IExternalAuthenticationService externalAuthenticationService,
             IDownloadService downloadService,
             IReturnRequestService returnRequestService,
             MediaSettings mediaSettings,
@@ -116,6 +117,7 @@ namespace Nop.Web.Factories
             this._customerAttributeService = customerAttributeService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._commonSettings = commonSettings;
             this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
             this._forumSettings = forumSettings;
@@ -125,7 +127,7 @@ namespace Nop.Web.Factories
             this._orderService = orderService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._openAuthenticationService = openAuthenticationService;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
             this._mediaSettings = mediaSettings;
@@ -149,7 +151,7 @@ namespace Nop.Web.Factories
         public virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var result = new List<CustomerAttributeModel>();
 
@@ -181,7 +183,7 @@ namespace Nop.Web.Factories
                 }
 
                 //set already selected attributes
-                var selectedAttributesXml = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml : 
                     customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
@@ -190,7 +192,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -214,7 +216,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Any())
@@ -234,7 +236,6 @@ namespace Nop.Web.Factories
                 result.Add(attributeModel);
             }
 
-
             return result;
         }
 
@@ -250,10 +251,10 @@ namespace Nop.Web.Factories
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -299,7 +300,7 @@ namespace Nop.Web.Factories
 
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
-
+            
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -329,7 +330,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
                         model.AvailableStates.Add(new SelectListItem
                         {
@@ -340,6 +341,7 @@ namespace Nop.Web.Factories
 
                 }
             }
+
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
                 .GetLocalizedEnum(_localizationService, _workContext);
@@ -371,11 +373,12 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
-            model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
+            model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
+            model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
-            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            foreach (var ear in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
@@ -383,14 +386,15 @@ namespace Nop.Web.Factories
                 {
                     Id = ear.Id,
                     Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalIdentifier,
+                    ExternalIdentifier = ear.ExternalDisplayIdentifier,
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
 
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
-            customAttributes.ForEach(model.CustomerAttributes.Add);
+            foreach (var attribute in customAttributes)
+                model.CustomerAttributes.Add(attribute);
 
             return model;
         }
@@ -407,12 +411,12 @@ namespace Nop.Web.Factories
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-            
+
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
@@ -438,6 +442,7 @@ namespace Nop.Web.Factories
             model.FaxRequired = _customerSettings.FaxRequired;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
+            model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
@@ -479,7 +484,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
                         model.AvailableStates.Add(new SelectListItem
                         {
@@ -490,10 +495,10 @@ namespace Nop.Web.Factories
 
                 }
             }
-
+            
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
-            customAttributes.ForEach(model.CustomerAttributes.Add);
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
+                model.CustomerAttributes.Add(attribute);
 
             return model;
         }
@@ -505,10 +510,12 @@ namespace Nop.Web.Factories
         /// <returns>Login model</returns>
         public virtual LoginModel PrepareLoginModel(bool? checkoutAsGuest)
         {
-            var model = new LoginModel();
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+            var model = new LoginModel
+            {
+                UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
+            };
             return model;
         }
 
@@ -765,14 +772,16 @@ namespace Nop.Web.Factories
         public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem,Product product)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
-            var model = new UserAgreementModel();
-            model.UserAgreementText = product.UserAgreementText;
-            model.OrderItemGuid = orderItem.OrderItemGuid;
+            var model = new UserAgreementModel
+            {
+                UserAgreementText = product.UserAgreementText,
+                OrderItemGuid = orderItem.OrderItemGuid
+            };
 
             return model;
         }
@@ -795,7 +804,7 @@ namespace Nop.Web.Factories
         public virtual CustomerAvatarModel PrepareCustomerAvatarModel(CustomerAvatarModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),

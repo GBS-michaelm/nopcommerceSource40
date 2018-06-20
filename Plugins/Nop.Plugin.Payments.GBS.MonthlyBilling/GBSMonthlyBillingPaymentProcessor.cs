@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using System;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Payments.GBS.MonthlyBilling
 {
@@ -23,6 +23,8 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
         private readonly GBSMonthlyBillingPaymentSettings _monthlyBillingPaymentSettings;
+        private readonly IWebHelper _webHelper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -31,12 +33,16 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling
         public GBSMonthlyBillingPaymentProcessor(ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
-            GBSMonthlyBillingPaymentSettings purchaseOrderPaymentSettings)
+            GBSMonthlyBillingPaymentSettings purchaseOrderPaymentSettings,
+            IWebHelper webHelper,
+            IHttpContextAccessor httpContextAccessor)
         {
             this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
             this._monthlyBillingPaymentSettings = purchaseOrderPaymentSettings;
+            this._webHelper = webHelper;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -88,9 +94,8 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
-                _monthlyBillingPaymentSettings.AdditionalFee, _monthlyBillingPaymentSettings.AdditionalFeePercentage);
-            return result;
+            return this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+             _monthlyBillingPaymentSettings.AdditionalFee, _monthlyBillingPaymentSettings.AdditionalFeePercentage);          
         }
 
         /// <summary>
@@ -168,38 +173,52 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "GBSPaymentMonthlyBilling";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers" }, { "area", null } };
+            return _webHelper.GetStoreLocation() + "Admin/GBSPaymentMonthlyBilling/Configure";
         }
 
         /// <summary>
-        /// Gets a route for payment info
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>
+        /// List of validating errors
+        /// </returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = "PaymentInfo";
-            controllerName = "GBSPaymentMonthlyBilling";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers" }, { "area", null } };
+            var warnings = new List<string>();
+            return warnings;
         }
 
         /// <summary>
-        /// Get type of controller
+        /// Get payment information
         /// </summary>
-        /// <returns>Type</returns>
-        public Type GetControllerType()
+        /// <param name="form">The parsed form values</param>
+        /// <returns>
+        /// Payment info holder
+        /// </returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
         {
-            return typeof(GBSPaymentMonthlyBillingController);
+            var paymentInfo = new ProcessPaymentRequest();
+            //paymentInfo.CustomValues.Add("PO Number", form["PurchaseOrderNumber"]);
+            //paymentInfo.CustomValues.Add("PO Name", form["PurchaseOrderName"]);
+            //paymentInfo.CustomValues.Add("PO Phone", form["PurchaseOrderPhoneNumber"]);
+            _httpContextAccessor.HttpContext.Session.SetString("monthlyBillingName", form["MonthlyBillingName"]);
+            _httpContextAccessor.HttpContext.Session.SetString("monthlyBillingPhoneNumber", form["MonthlyBillingPhoneNumber"]);
+            _httpContextAccessor.HttpContext.Session.SetString("monthlyBillingReference", form["MonthlyBillingReference"]);
+            return paymentInfo;
+        }
+
+        /// <summary>
+        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// </summary>
+        /// <param name="viewComponentName">View component name</param>
+        public void GetPublicViewComponent(out string viewComponentName)
+        {
+            viewComponentName = "PaymentGBSMonthlyBilling";
         }
 
         /// <summary>

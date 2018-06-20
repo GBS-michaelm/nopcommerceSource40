@@ -1,26 +1,36 @@
 ﻿@model ShoppingCartModel.GiftCardBoxModel
-@using Nop.Web.Models.ShoppingCart;
 @if (Model.Display)
 {
     <div class="gift-card-box-wrapper">
         <div class="gbs-panel-title-uppercase">
             <strong>@T("ShoppingCart.GiftCardCouponCode")</strong>
         </div>
-  
         <div class="hint gbs-padding-bottom-10">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
         <div class="row">
             <div class="col-md-8 col-xs-8 col-sm-8">
-                <input name="giftcardcouponcode" placeholder="Gift Card Code" type="text" class="gift-card-coupon-code form-control" />
+                <input name="giftcardcouponcode" id="giftcardcouponcode" type="text" class="gift-card-coupon-code form-control" />
             </div>
             <div class="giftcard-button col-md-4 col-sm-4 col-xs-4 gbs-align-btn-with-text">
-                <input type="submit" name="applygiftcardcouponcode"  value="@T("ShoppingCart.GiftCardCouponCode.Button")" class="button button-3d button-small button-rounded button-teal" />
+                <input type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode"
+                       value="@T("ShoppingCart.GiftCardCouponCode.Button")" class="button button-3d button-small button-rounded button-teal" />
             </div>
         </div>
-        @if (!String.IsNullOrEmpty(Model.Message))
+        
+        @if (!string.IsNullOrEmpty(Model.Message))
         {
-            <div class="message bg-danger">
+            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
                 @Model.Message
             </div>
         }
     </div>
-}   
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $('#giftcardcouponcode').keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#applygiftcardcouponcode').click();
+                    return false;
+                }
+            });
+        });
+    </script>
+}

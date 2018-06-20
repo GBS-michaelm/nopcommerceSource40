@@ -1,15 +1,10 @@
-﻿using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.Routes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Login.GBS.Infrastructure
 {
-    public partial class GBSLoginRouteProvider : IRouteProvider
+	public partial class GBSLoginRouteProvider : IRouteProvider
     {
         public GBSLoginRouteProvider()
         {
@@ -24,12 +19,11 @@ namespace Nop.Plugin.Login.GBS.Infrastructure
             }
         }
 
-        public void RegisterRoutes(RouteCollection routes)
+        public void RegisterRoutes(IRouteBuilder routes)
         {
-            routes.MapLocalizedRoute("GBSLoginModal",
+            routes.MapRoute("GBSLoginModal",
                            "gbslogin/loginmodal",
-                           new { controller = "GBSLogin", action = "LoginModal" },
-                           new[] { "Nop.Plugin.Login.GBS.Controllers" });
+                           new { controller = "GBSLogin", action = "LoginModal" });
         }
     }
 }

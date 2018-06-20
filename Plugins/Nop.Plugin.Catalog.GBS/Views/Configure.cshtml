@@ -1,75 +1,51 @@
-﻿@{
-    Layout = "";
+﻿@model Nop.Plugin.Catalog.GBS.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model Nop.Plugin.Catalog.GBS.Models.ConfigurationModel
 @using Nop.Web.Framework;
-
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="WidgetsCategoryNavigation" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AllCategory_OverrideForStore, model => model.AllCategory, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AllCategory)
+                        <nop-override-store-checkbox asp-for="AllCategory_OverrideForStore" asp-input="AllCategory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AllCategory" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AllCategory)
-                        @Html.ValidationMessageFor(model => model.AllCategory)
+                        <nop-editor asp-for="AllCategory" />
+                        <span asp-validation-for="AllCategory"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.NoOfChildren_OverrideForStore, model => model.NoOfChildren, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.NoOfChildren)
+                        <nop-override-store-checkbox asp-for="NoOfChildren_OverrideForStore" asp-input="NoOfChildren" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="NoOfChildren" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.NoOfChildren)
-                        @Html.ValidationMessageFor(model => model.NoOfChildren)
+                        <nop-editor asp-for="NoOfChildren" />
+                        <span asp-validation-for="NoOfChildren"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IsActive_OverrideForStore, model => model.IsActive, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.IsActive)
+                        <nop-override-store-checkbox asp-for="IsActive_OverrideForStore" asp-input="IsActive" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IsActive" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.IsActive)
-                        @Html.ValidationMessageFor(model => model.IsActive)
+                        <nop-editor asp-for="IsActive" />
+                        <span asp-validation-for="IsActive"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.BlackList_OverrideForStore, model => model.BlackList, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.BlackList)
+                        <nop-override-store-checkbox asp-for="BlackList_OverrideForStore" asp-input="IsActive" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="BlackList" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.BlackList)
-                        @Html.ValidationMessageFor(model => model.BlackList)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.CategoryTabsSpecAttrName_OverrideForStore, model => model.CategoryTabsSpecAttrName, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.CategoryTabsSpecAttrName)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CategoryTabsSpecAttrName)
-                        @Html.ValidationMessageFor(model => model.CategoryTabsSpecAttrName)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AttributeInfoBlackList_OverrideForStore, model => model.AttributeInfoBlackList, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AttributeInfoBlackList)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AttributeInfoBlackList)
-                        @Html.ValidationMessageFor(model => model.AttributeInfoBlackList)
+                        <nop-editor asp-for="BlackList" />
+                        <span asp-validation-for="BlackList"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -83,4 +59,4 @@
             </div>
         </div>
     </div>
-}
+</form>

@@ -9,10 +9,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 
-/// <summary>
-/// Summary description for DBManager
-/// </summary>
-/// 
 namespace Nop.Plugin.BusinessDataAccess.GBS
 {
     public class DBManager
@@ -35,9 +31,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 return "Row Not Found";
             }
-
         }
-
 
         private DbConnection dbConnection = null;
 
@@ -49,7 +43,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
         public DBManager(string connectionString)
         {
             this.dbConnection = new SqlConnection();
-
             if (!string.IsNullOrEmpty(connectionString))
             {
                 dbConnection.ConnectionString = connectionString;
@@ -72,7 +65,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                 dbConnection.Close();
         }
 
-
         public DbConnection Connection
         {
             get
@@ -81,18 +73,14 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             }
         }
 
-
-
         public DataView GetDataView(String sqlQuery)
         {
-
             Open();
             //new DataSettingsManager().LoadSettings().
             using (DbDataAdapter dbDataAdapter = new SqlDataAdapter())
             {
                 try
                 {
-
                     dbDataAdapter.SelectCommand = new SqlCommand();
                     dbDataAdapter.SelectCommand.CommandText = sqlQuery;
                     dbDataAdapter.SelectCommand.Connection = this.Connection;
@@ -113,11 +101,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                 {
                     Close();
                 }
-
             }
-
-
-
         }
 
         public DataView RemoveDuplicateRows(DataView dTable, string colName)
@@ -142,7 +126,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             //Datatable which contains unique records will be return as output.
             return dTable;
         }
-
 
         public DataView GetParameterizedDataView(string query, Dictionary<string, string> myDict)
         {
@@ -171,8 +154,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 
                     return dv;
                 }
-
-
             }
             catch (SqlException ex)
             {
@@ -183,13 +164,12 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 Close();
             }
-
         }
+
         public DataView GetParameterizedDataView(string query, Dictionary<string, Object> myDict)
         {
             try
             {
-
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
 
@@ -212,10 +192,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
 
                     return dv;
                 }
-
-
-
-
             }
             catch (SqlException ex)
             {
@@ -226,16 +202,14 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 Close();
             }
-
         }
+
         public Object GetParameterizedScalar(string query, Dictionary<string, Object> myDict)
         {
             try
             {
-
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
-
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = (SqlConnection)this.dbConnection;
                     if (myDict.Count > 0)
@@ -246,10 +220,8 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                         }
                     }
                     Open();
-                    return cmd.ExecuteScalar();            
-                    
+                    return cmd.ExecuteScalar();
                 }
-
             }
             catch (Exception ex)
             {
@@ -260,16 +232,14 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 Close();
             }
-
         }
+
         public SqlDataReader GetParameterizedDataReader(string query, Dictionary<string, Object> myDict)
         {
             try
             {
-
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
-
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = (SqlConnection)this.dbConnection;
                     if (myDict.Count > 0)
@@ -281,9 +251,7 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                     }
                     Open();
                     return cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -295,13 +263,12 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 //Close();
             }
-
         }
+
         public string GetParameterizedJsonString(string query, Dictionary<string, Object> myDict)
         {
             try
             {
-
                 using (SqlDataReader reader = GetParameterizedDataReader(query, myDict))
                 {
                     string jsonString = "";
@@ -311,7 +278,6 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                     }
                     return jsonString;
                 }
-
             }
             catch (Exception ex)
             {
@@ -323,16 +289,14 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 Close();
             }
-
         }
+
         public void SetParameterizedQueryNoData(string query, Dictionary<string, string> myDict)
         {
             try
             {
-
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
-
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = (SqlConnection)this.dbConnection;
                     if (myDict.Count > 0)
@@ -344,10 +308,8 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                     }
                     Open();
                     cmd.ExecuteNonQuery();
-
                 }
                 Close();
-
             }
             catch (Exception ex)
             {
@@ -358,18 +320,14 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
             {
                 Close();
             }
-
         }
-
 
         public void SetParameterizedQueryNoData(string query, Dictionary<string, Object> myDict)
         {
             try
             {
-
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
-
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = (SqlConnection)this.dbConnection;
                     if (myDict.Count > 0)
@@ -381,10 +339,8 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                     }
                     Open();
                     cmd.ExecuteNonQuery();
-
                 }
                 Close();
-
             }
             catch (SqlException ex)
             {
@@ -396,9 +352,5 @@ namespace Nop.Plugin.BusinessDataAccess.GBS
                 Close();
             }
         }
-
-
     }
-
-
 }

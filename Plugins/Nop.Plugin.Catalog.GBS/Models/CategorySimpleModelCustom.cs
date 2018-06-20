@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Web.Framework.Mvc.Models;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Catalog.GBS.Models
 {
@@ -22,14 +21,5 @@ namespace Nop.Plugin.Catalog.GBS.Models
         public bool IncludeInTopMenu { get; set; }        
 
         public List<CategorySimpleModelCustom> SubCategories { get; set; }
-    }
-    public class GBSProduct : Product
-    {
-
-        public void ReplaceTierPrices(ICollection<TierPrice> tieredPrices)
-        {
-            this.TierPrices = tieredPrices;
-        }
-
     }
 }

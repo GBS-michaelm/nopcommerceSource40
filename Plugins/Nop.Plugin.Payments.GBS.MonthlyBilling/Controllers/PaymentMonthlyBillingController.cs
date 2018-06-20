@@ -1,40 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.GBS.MonthlyBilling.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Payments;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers
 {
+    [Area(AreaNames.Admin)]
     public class GBSPaymentMonthlyBillingController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly HttpContextBase _httpContext;
 
         public GBSPaymentMonthlyBillingController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            ILocalizationService localizationService,
-            HttpContextBase httpContext)
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
-            this._httpContext = httpContext;
         }
         
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -56,10 +50,8 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers
             return View("~/Plugins/Payments.GBS.MonthlyBilling/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [HttpPost]     
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -86,53 +78,6 @@ namespace Nop.Plugin.Payments.GBS.MonthlyBilling.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
-        }
-
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var model = new PaymentInfoModel();
-            
-            //set postback values
-            var form = this.Request.Form;
-            model.MonthlyBillingName = form["MonthlyBillingName"];
-            model.MonthlyBillingPhoneNumber = form["MonthlyBillingPhoneNumber"];
-            model.MonthlyBillingReference = form["MonthlyBillingReference"];
-
-            if (_httpContext.Session["monthlyBillingName"] != null)
-            {
-                model.MonthlyBillingName = _httpContext.Session["monthlyBillingName"].ToString();
-            }
-            if (_httpContext.Session["monthlyBillingPhoneNumber"] != null)
-            {
-                model.MonthlyBillingPhoneNumber = _httpContext.Session["monthlyBillingPhoneNumber"].ToString();
-            }
-            if (_httpContext.Session["monthlyBillingReference"] != null)
-            {
-                model.MonthlyBillingReference = _httpContext.Session["monthlyBillingReference"].ToString();
-            }
-
-            return View("~/Plugins/Payments.GBS.MonthlyBilling/Views/PaymentInfo.cshtml", model);
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            //paymentInfo.CustomValues.Add("Monthly Billing Name", form["MonthlyBillingName"]);
-            //paymentInfo.CustomValues.Add("Monthly Billing Phone", form["MonthlyBillingPhoneNumber"]);
-            //paymentInfo.CustomValues.Add("Monthly Billing Reference", form["MonthlyBillingReference"]);
-            _httpContext.Session["monthlyBillingName"] = form["MonthlyBillingName"];
-            _httpContext.Session["monthlyBillingPhoneNumber"] = form["MonthlyBillingPhoneNumber"];
-            _httpContext.Session["monthlyBillingReference"] = form["MonthlyBillingReference"];
-            return paymentInfo;
-        }
+        } 
     }
 }

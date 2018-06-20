@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Catalog;
 
 namespace Nop.Web.Models.Catalog
@@ -57,7 +56,6 @@ namespace Nop.Web.Models.Catalog
         public string WrittenOnStr { get; set; }
     }
 
-
     public partial class ProductReviewHelpfulnessModel : BaseNopModel
     {
         public int ProductReviewId { get; set; }
@@ -69,11 +67,9 @@ namespace Nop.Web.Models.Catalog
 
     public partial class AddProductReviewModel : BaseNopModel
     {
-        [AllowHtml]
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
-
-        [AllowHtml]
+        
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 

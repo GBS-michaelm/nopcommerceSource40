@@ -1,20 +1,23 @@
-﻿using Nop.Core.Plugins;
+﻿using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Services.Common;
-using System.Web.Routing;
 
 namespace Nop.Plugin.PriceCalculation.GBS
 {
     public class MyPriceCalculationServicePlugin : BasePlugin, IMiscPlugin
     {
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        private readonly IWebHelper _webHelper;
+
+        public MyPriceCalculationServicePlugin(IWebHelper webHelper)
         {
-            actionName = "Configure";
-            controllerName = "PriceCalculationConfigurationGBS";
-            routeValues = new RouteValueDictionary()
-            {
-                { "Namespaces", "Nop.Plugin.PriceCalculation.GBS.Controllers" },
-                { "area", null }
-            };
+            _webHelper = webHelper;
         }
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return _webHelper.GetStoreLocation() + "Admin/PriceCalculationConfigurationGBS/Configure";
+        }     
     }
 }

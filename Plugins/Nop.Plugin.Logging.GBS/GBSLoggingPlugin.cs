@@ -1,49 +1,23 @@
-﻿using Nop.Services.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nop.Core;
 using Nop.Core.Plugins;
-using System.Web.Routing;
+using Nop.Services.Common;
 
 namespace Nop.Plugin.Logging.GBS
 {
     public class GBSLoggingPlugin : BasePlugin, IMiscPlugin
     {
-        //public PluginDescriptor PluginDescriptor
-        //{
-        //    get
-        //    {
-        //        throw new NotImplementedException();
-        //    }
+        private readonly IWebHelper _webHelper;
 
-        //    set
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
-
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out System.Web.Routing.RouteValueDictionary routeValues)
+        public GBSLoggingPlugin(IWebHelper webHelper)
         {
-            actionName = "Configure";
-            controllerName = "LoggingConfigurationGBS";
-            routeValues = new RouteValueDictionary()
-            {
-                { "Namespaces", "Nop.Plugin.Logging.GBS.Controllers" },
-                { "area", null }
-            };
-            //throw new NotImplementedException();
+            _webHelper = webHelper;
         }
-
-        //public void Install()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void Uninstall()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return _webHelper.GetStoreLocation() + "Admin/LoggingConfigurationGBS/Configure";
+        }        
     }
 }

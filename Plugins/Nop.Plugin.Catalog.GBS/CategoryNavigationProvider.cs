@@ -1,73 +1,46 @@
-﻿using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core;
 using Nop.Core.Plugins;
-using Nop.Services.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Routing;
-using Nop.Services.Localization;
-using Nop.Web.Framework.Menu;
 using Nop.Services.Cms;
+using Nop.Services.Localization;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Catalog.GBS
 {
     public class CategoryNavigationProvider : BasePlugin, IWidgetPlugin
-    {    
+    {
+        private readonly IWebHelper _webHelper;
+
+        public CategoryNavigationProvider(IWebHelper webHelper)
+        {
+            _webHelper = webHelper;
+        }
+
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "category_navigation_block","category_tabs" };
-        }
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "Configure";
-            controllerName = "WidgetsCategoryNavigation";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Catalog.GBS.Controllers" }, { "area", null } };
+            return new List<string> { "category_navigation_block" };
         }
 
         /// <summary>
-        /// Gets a route for displaying widget
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            if (widgetZone == "category_tabs")
-            {
-                actionName = "CategoryTabs";
-                controllerName = "WidgetsCategoryNavigation";
-                routeValues = new RouteValueDictionary
-                {
-                    {"Namespaces", "Nop.Plugin.Catalog.GBS.Controllers"},
-                    {"area", null},
-                    {"widgetZone", widgetZone}
-                };
-            }
-            else
-            {
-                actionName = "CategoryNavigation";
-                controllerName = "WidgetsCategoryNavigation";
-                routeValues = new RouteValueDictionary
-                {
-                    {"Namespaces", "Nop.Plugin.Catalog.GBS.Controllers"},
-                    {"area", null},
-                    {"widgetZone", widgetZone}
-                };
-            }
+            return _webHelper.GetStoreLocation() + "Admin/WidgetsCategoryNavigation/Configure";
+        }
+
+        /// <summary>
+        /// Gets a view component for displaying plugin in public store
+        /// </summary>
+        /// <param name="widgetZone">Name of the widget zone</param>
+        /// <param name="viewComponentName">View component name</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
+        {
+            viewComponentName = "CategoryNavigation";
         }
 
         /// <summary>
@@ -96,6 +69,6 @@ namespace Nop.Plugin.Catalog.GBS
             this.DeletePluginLocaleResource("Nop.Plugin.Catalog.GBS.IsActive");
 
             base.Uninstall();
-        }        
+        }       
     }
 }

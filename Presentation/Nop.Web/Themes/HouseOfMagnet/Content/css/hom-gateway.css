@@ -435,15 +435,3 @@ label {
 	padding: 15px;
 }
 }
-
-.columns {
-    column-width: 180px;
-    max-width: 800px;
-    padding: 0 10px 40px 10px;
-}
-
-.teamname a {
-    align-self: stretch;
-    line-height: 30px;
-}
-

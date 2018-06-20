@@ -1,60 +1,52 @@
-@using Nop.Core;
-@using Nop.Core.Domain
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Framework.Themes
+﻿@using Nop.Core
+@using Nop.Services.Helpers
 @using Nop.Web.Framework.UI
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
 @{
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
-    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+    var isIe8 = userAgentHelper.IsIe8();
 
     //add browser specific CSS files
-    var browser = Request.Browser;
-    var isIeEightOrLess = false;
-    if (browser.Browser == "IE" && browser.MajorVersion <= 8)
+    if (isIe8)
     {
-        isIeEightOrLess = true;
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/ie8.css");
     }
-
     //add main CSS file
     if (supportRtl)
     {
-        //RTL is not supported by Simplex Theme
-        //Html.AppendCssFileParts("~/Themes/HouseOfMagnet/Content/styles.rtl.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
     }
     else
     {
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/thumbnail.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/thumbnail-responsive.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles-responsive.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/simplex-styles.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/canvas.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-awesome.min.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/bootstrap.min.css", themeName));
+        //Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/animate.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-icons.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/tab-style.css");
 
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-gateway.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-category-gallery.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-product-options-chart.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/hom-quantity-calculator.css", themeName));
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/thumbnail.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/thumbnail-responsive.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex-styles.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex-styles-responsive.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/canvas.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
 
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/hom-gateway.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/hom-category-gallery.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/hom-product-options-chart.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/hom-quantity-calculator.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/style.css");
 
-        //Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/hom-quantity-calculator.js");
-
-
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/animate.css", themeName));
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/font-icons.css", themeName));
-
-        // Custom Css for Speed Filter plugin
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/tab-style.css", themeName));
-
-        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/plugins.js");
-        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/functions.js");
     }
-    if (isIeEightOrLess)
+    //add jQuery UI css file
+    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    //add browser specific JS files
+    if (isIe8)
     {
-        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/selectivizr.min.js");
-        Html.AddScriptParts("~/Themes/HouseOfMagnet/Content/js/respond.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/selectivizr.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/respond.min.js");
     }
-
 }

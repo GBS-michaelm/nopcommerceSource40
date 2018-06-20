@@ -10,6 +10,24 @@ namespace Nop.Services.BreadCrumb.GBS
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
+        /// <summary>
+        /// Register services and interfaces
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        /// <param name="typeFinder">Type finder</param>
+        /// <param name="config">Config</param>
+        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        {
+            var pluginFinder = new PluginFinder();
+            pluginFinder.ReloadPlugins();
+
+            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("BreadCrumb.GBS");
+            if (pluginDescriptor != null)
+            {
+                builder.RegisterType<GBSProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
+            }
+        }
+
         public int Order
         {
             get
@@ -17,29 +35,5 @@ namespace Nop.Services.BreadCrumb.GBS
                 return 1000;
             }
         }
-
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder)
-        {
-
-
-        }
-
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
-        {
-
-            var pluginFinder = new PluginFinder();
-            pluginFinder.ReloadPlugins();
-
-            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("BreadCrumb.GBS");
-
-            
-
-            if (pluginDescriptor != null)  // pluginDescriptor.Installed == true
-            {
-                builder.RegisterType<GBSProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
-            }
-
-        }
     }
-
 }

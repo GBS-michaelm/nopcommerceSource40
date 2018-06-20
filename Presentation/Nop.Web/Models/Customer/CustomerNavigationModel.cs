@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Customer
 {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationEnum SelectedTab { get; set; }
     }
 
-    public class CustomerNavigationItemModel
+    public class CustomerNavigationItemModel : BaseNopModel
     {
         public string RouteName { get; set; }
         public string Title { get; set; }

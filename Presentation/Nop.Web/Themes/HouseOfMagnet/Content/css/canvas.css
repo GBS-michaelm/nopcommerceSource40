@@ -3943,15 +3943,9 @@ button.close {
 	line-height: 1.42857143
 }
 .modal-body {
-    position: relative;
-    padding: 15px;
-    text-align: center;
+	position: relative;
+	padding: 15px
 }
-img.enlargeImageModalSource {
-    max-height: 450px;
-    width: unset !important;
-}
-
 .modal-footer {
 	padding: 15px;
 	text-align: right;

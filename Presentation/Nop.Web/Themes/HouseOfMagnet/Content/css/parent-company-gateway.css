@@ -11,18 +11,7 @@
 }
 
 #agentPacks {
-    margin-left: 25px;
-}
-
-#agentPacks li {
-    list-style: disc !important;
-    margin-left: 20px;
-}
-
-.agentpacks-promo-header {
-    color: #234782;
-    font-weight: bold;
-    margin-top: 10px;
+    margin-top: 60px;
 }
 
 #agentPacks div.topic-html-content {
@@ -95,53 +84,18 @@
 
 }
 
-#officeSearch {
-    margin-top: 3px;
-    height: 31px;
-    width: 85%;
-    background-color: white;
-    padding: 5px;
-}
-
-#officeSearchWrap {
-    position: relative;
-    width: 85%;
-    background-color: white;
-    /*z-index: 5;*/
-    height: auto;
-    max-height: 350px;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 5px 8px 0 rgba(0, 0, 0, 0.1);
-}
-
-#officeSearchWrap li {
-    background-color: #fff;
-    line-height: 1.5rem;
-    padding: 10px 20px;
-    margin: 0;
-    border: 1px solid #e0e0e0;
-}
-
-#officeSearchWrap li:hover {
-    background-color: #ddd;
-}
-
-#officeSearchWrap a {
-    color: black !important;
-}
-
-
-    /*#marketCenterDropDown {
-    margin-top: 3px;
+#marketCenterDropDown {
+    margin-top : 3px;
     height: 31px;
     background-color: white;
-}*/
-    #searchAreaRight {
+}
+
+#searchAreaRight {
     margin-top: 7px;
-    margin-right: 10px;
-    float: right;
-    text-align: right;
-    width: 45%;
+    margin-right : 10px;
+    float : right;
+    text-align : right;
+    width : 45%;
 }
 
 #searchAreaRight a {
@@ -159,30 +113,3 @@
 }
 
 
-/**/
-#leftColumn {
-   width: 277px;
-}
-
-#rightColumn {
-    width: 820px;
-}
-
-
-.mc-category-gallery .item-box.col-xs-6.col-sm-3.col-md-3 {
-    width: 225px;
-    height: 250px;
-    margin: 20px;
-    border: 1px solid #e9e9e9;
-    padding-top: 25px;
-}
-
-.mc-category-gallery .category-item.product-category-item {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.mc-category-gallery .picture .product-img img {
-    width: 190px;
-}

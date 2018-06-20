@@ -1,9 +1,7 @@
 ﻿using Autofac;
-using Nop.Core.Infrastructure.DependencyManagement;
-using System;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Services.Orders;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Plugin.Logging.GBS.Logging;
 

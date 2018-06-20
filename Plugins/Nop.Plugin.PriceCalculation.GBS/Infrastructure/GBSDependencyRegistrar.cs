@@ -1,11 +1,8 @@
 ﻿using Autofac;
-using Nop.Core.Infrastructure.DependencyManagement;
-using System;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Services.Messages;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
-using Nop.Services.Common;
 using Nop.Plugin.PriceCalculation.GBS.Catalog;
 using Nop.Services.Catalog;
 

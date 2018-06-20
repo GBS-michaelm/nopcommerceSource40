@@ -1,231 +1,220 @@
 ﻿@model AddressModel
-@using Nop.Web.Models.Common;
-@using Nop.Core.Infrastructure;
-@using Nop.Core;
-@{
-    var customer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-    Model.Email = customer.Email;
-}
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
+    //we don't move this script to the footer as it's used in Ajax requests where footer is not available
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
-                var statesProgress = $("#states-loading-progress");
-                statesProgress.show();
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+            var statesProgress = $("#states-loading-progress");
+            statesProgress.show();
                 $.ajax({
-                    cache: false,
+                cache: false,
                     type: "GET",
                     url: "@(Url.RouteUrl("GetStatesByCountryId"))",
                     data: { "countryId": selectedItem, "addSelectStateItem": "true" },
                     success: function (data) {
-                        ddlStates.html('');
+                    ddlStates.html('');
                         $.each(data, function (id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        statesProgress.hide();
-                    },
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                    statesProgress.hide();
+                },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        statesProgress.hide();
-                    }
-                });
+                    alert('Failed to retrieve states.');
+                    statesProgress.hide();
+                }
             });
-            if ($("#@Html.FieldIdFor(model => model.CountryId)").val() == 0) {
-                $("#@Html.FieldIdFor(model => model.CountryId) option[value=1]").prop('selected', 'selected').trigger('change');
-            }
         });
+    });
     </script>
 }
+<input asp-for="Id" type="hidden"/>
 <div class="edit-address form-horizontal">
-    @Html.HiddenFor(model => model.Id)
     <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-sm-2 col-md-2" })
-        <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>                       
+        <label asp-for="FirstName" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
         <div class="col-sm-6 col-md-6">
-            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+            <input asp-for="FirstName" class="form-control" />
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-            @Html.ValidationMessageFor(model => model.FirstName)
+            <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+            <span asp-validation-for="FirstName"></span>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.LastName, new { @class = "control-label col-sm-2 col-md-2" })
-        <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
+        <label asp-for="LastName" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
         <div class="col-sm-6 col-md-6">
-            @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+            <input asp-for="LastName" class="form-control" />
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-            @Html.ValidationMessageFor(model => model.LastName)
-        </div>
-
-        </div>
-    <div id="emailInput" class="form-group">
-        @Html.LabelFor(model => model.Email, new { @class = "control-label col-sm-2 col-md-2" })
-        <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-        <div class="col-sm-6 col-md-6">
-            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
-        </div>
-        <div class="col-sm-4 col-md-4">
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-            @Html.ValidationMessageFor(model => model.Email)
+            <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+            <span asp-validation-for="LastName"></span>
         </div>
     </div>
-    @if (Model.StreetAddressEnabled)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Address1, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Address1, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.StreetAddressRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.Address1)
-            </div>
+    <div class="form-group">
+        <label asp-for="Email" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="Email" class="form-control" />
         </div>
-
-    }
-    @if (Model.StreetAddress2Enabled)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Address2, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.StreetAddress2Required)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.Address2)
-            </div>
+        <div class="col-sm-4 col-md-4">
+            <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+            <span asp-validation-for="Email"></span>
         </div>
-    }
-    @if (Model.CityEnabled)
+    </div>
+    @if (Model.CompanyEnabled)
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.City, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.CityRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.City)
-            </div>
+    <div class="form-group">
+        <label asp-for="Company" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="Company" class="form-control" />
         </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.CompanyRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="Company"></span>
+        </div>
+    </div>
     }
-
     @if (Model.CountryEnabled)
     {
-        <div id="countryDropdown" class="form-group">
-            @Html.LabelFor(model => model.CountryId, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "form-control dropdown-toggle form-control category-iteam category-select" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                @Html.ValidationMessageFor(model => model.CountryId)
-            </div>
+    <div class="form-group">
+        <label asp-for="CountryId" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="form-control dropdown-toggle form-control category-iteam category-select"></select>
         </div>
+        <div class="col-sm-4 col-md-4">
+            <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+            <span asp-validation-for="CountryId"></span>
+        </div>
+    </div>
     }
 
     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.StateProvinceId, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="col-sm-6 col-md-6">
-                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "form-control dropdown-toggle category-iteam form-control category-select" })
-                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                @Html.ValidationMessageFor(model => model.StateProvinceId)
-            </div>
-        </div>       
+    <div class="form-group">
+        <label asp-for="StateProvinceId" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates" class="form-control dropdown-toggle form-control category-iteam category-select"></select>
+            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <span asp-validation-for="StateProvinceId"></span>
+        </div>
+    </div>
     }
-
-
+    @if (Model.CityEnabled)
+    {
+    <div class="form-group">
+        <label asp-for="City" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="City" class="form-control" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.CityRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="City"></span>
+        </div>
+    </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+    <div class="form-group">
+        <label asp-for="Address1" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="Address1" class="form-control" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.StreetAddressRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="Address1"></span>
+        </div>
+    </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+    <div class="form-group">
+        <label asp-for="Address2" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="Address2" class="form-control" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.StreetAddress2Required)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="Address2"></span>
+        </div>
+    </div>
+    }
     @if (Model.ZipPostalCodeEnabled)
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.ZipPostalCode, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.ZipPostalCodeRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.ZipPostalCode)
-            </div>
-      </div>   
-    }
-    @if (Model.CompanyEnabled)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Company, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.Company, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.CompanyRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.Company)
-            </div>
+    <div class="form-group">
+        <label asp-for="ZipPostalCode" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="ZipPostalCode" class="form-control" />
         </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.ZipPostalCodeRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="ZipPostalCode"></span>
+        </div>
+    </div>
     }
     @if (Model.PhoneEnabled)
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control" })
-            </div> 
-            <div class="col-sm-4 col-md-4">
-                @if (Model.PhoneRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.PhoneNumber)
-            </div>
-         </div>
+    <div class="form-group">
+        <label asp-for="PhoneNumber" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="PhoneNumber" class="form-control" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.PhoneRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="PhoneNumber"></span>
+        </div>
+    </div>
     }
     @if (Model.FaxEnabled)
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.FaxNumber, new { @class = "control-label col-sm-2 col-md-2" })
-            <div class="visible-xs form-title-rquired">@Html.RequiredHint()</div>
-            <div class="col-sm-6 col-md-6">
-                @Html.TextBoxFor(model => model.FaxNumber, new { @class = "form-control" })
-            </div>
-            <div class="col-sm-4 col-md-4">
-                @if (Model.FaxRequired)
-                {
-                    <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
-                }
-                @Html.ValidationMessageFor(model => model.FaxNumber)
-            </div> 
-        </div>  
+    <div class="form-group">
+        <label asp-for="FaxNumber" asp-postfix=":" class="control-label col-sm-2 col-md-2"></label>
+        <div class="visible-xs form-title-rquired"><nop-required /></div>
+        <div class="col-sm-6 col-md-6">
+            <input asp-for="FaxNumber" class="form-control" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @if (Model.FaxRequired)
+    {
+        <nop-required class="visible-lg visible-md visible-sm form-title-rquired" />
+}
+            <span asp-validation-for="FaxNumber"></span>
+        </div>
+    </div>
     }
     @if (Model.CustomAddressAttributes.Count > 0)
     {
-        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }
 </div>

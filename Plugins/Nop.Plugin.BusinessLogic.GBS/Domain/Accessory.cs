@@ -1,27 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Plugin.BusinessDataAccess.GBS;
-using System.Data;
-using Nop.Web.Models.Catalog;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Factories;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.BusinessDataAccess.GBS;
 using Nop.Services.Catalog;
-using Nop.Services.Vendors;
-using Nop.Core;
-using Nop.Services.Directory;
 using Nop.Services.Media;
-using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Stores;
-using Nop.Services.Topics;
-using Nop.Services.Events;
-using Nop.Services.Common;
-using Nop.Core.Caching;
-using System.Web;
+using Nop.Web.Factories;
+using Nop.Web.Models.Catalog;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Domain
 {
@@ -68,8 +55,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.SubCategories = categoryModel.SubCategories;
                 this.FeaturedProducts = categoryModel.FeaturedProducts;
                 this.Products = categoryModel.Products;
-            }
-            
+            }            
 
             ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
 
@@ -79,13 +65,11 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
                 string accessoryDataQuery = "EXEC usp_SelectGBSCrossSellAccessory @categoryId";
                 DataView innerAccessoryDataView = manager.GetParameterizedDataView(accessoryDataQuery, accessoryDic);
-
                 return innerAccessoryDataView;
             });
             
             if(accessoryDataView.Count > 0)
             {
-
                 this.parentCategoryId = category.ParentCategoryId;
                 this.h1 = !string.IsNullOrEmpty(accessoryDataView[0]["H1"].ToString()) ? accessoryDataView[0]["H1"].ToString() : this.Name;
                 this.mainPicturePath = !string.IsNullOrEmpty(this.mainPicturePath) ? this.mainPicturePath : _mainPicturePath;
@@ -94,11 +78,8 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
                 this.isFeatured = accessoryDataView[0]["IsFeatured"] != null && accessoryDataView[0]["IsFeatured"] != DBNull.Value ? (Convert.ToBoolean(accessoryDataView[0]["IsFeatured"]) == true ? true : false) : _isFeatured;
                 int order;
                 this.displayOrder = Int32.TryParse(accessoryDataView[0]["DisplayOrder"].ToString(), out order) ? order : _displayOrder;
-
-            }
-            
+            }            
         }     
-
 
         public int id { get { return _id; } set { _id = value; } }
         public int parentCategoryId { get { return _parentCategoryId; } set { _parentCategoryId = value; } }
@@ -110,9 +91,7 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
         public static List<Accessory> GetAllCrossSellAccessories(int accessoryGroupId)
         {
-
             List<Accessory> accessoriesList = new List<Accessory>();
-
             ICacheManager cacheManager = EngineContext.Current.Resolve<ICacheManager>();
 
             DataView accessoryDataView = cacheManager.Get("categoryAccessory" + accessoryGroupId, 60, () => {
@@ -127,21 +106,13 @@ namespace Nop.Plugin.BusinessLogic.GBS.Domain
 
             if(accessoryDataView.Count > 0)
             {
-
                 for (int i = 0; i < accessoryDataView.Count; i++)
                 {
-
                     Accessory accessory = new Accessory(Int32.Parse(accessoryDataView[i]["CategoryId"].ToString()));
                     accessoriesList.Add(accessory);
-
                 }
-
-            }
-            
+            }            
             return accessoriesList;
-
-        }
-        
-
+        }     
     }
 }

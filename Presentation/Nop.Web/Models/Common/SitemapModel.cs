@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Topics;
 
@@ -13,11 +13,13 @@ namespace Nop.Web.Models.Common
             Categories = new List<CategorySimpleModel>();
             Manufacturers = new List<ManufacturerBriefInfoModel>();
             Topics = new List<TopicModel>();
+            ProductTags = new List<ProductTagModel>();
         }
         public IList<ProductOverviewModel> Products { get; set; }
         public IList<CategorySimpleModel> Categories { get; set; }
         public IList<ManufacturerBriefInfoModel> Manufacturers { get; set; }
         public IList<TopicModel> Topics { get; set; }
+        public IList<ProductTagModel> ProductTags { get; set; }
 
         public bool NewsEnabled { get; set; }
         public bool BlogEnabled { get; set; }

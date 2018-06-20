@@ -1,14 +1,16 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Plugin.Login.GBS.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Plugin.Login.GBS.Models;
 
 
 namespace Nop.Plugin.Login.GBS.Controllers
 {
+    [Area(AreaNames.Admin)]
     public class LoginConfigurationGBSController : BasePluginController
     {
         private readonly ILocalizationService _localizationService;
@@ -28,9 +30,7 @@ namespace Nop.Plugin.Login.GBS.Controllers
             this._workContext = workContext;
         }
 
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -60,13 +60,11 @@ namespace Nop.Plugin.Login.GBS.Controllers
 
             }
 
-            return View("~/Plugins/Login.GBS/Views/LoginGBS/Configure.cshtml", model);
+            return View("~/Plugins/Login.GBS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();

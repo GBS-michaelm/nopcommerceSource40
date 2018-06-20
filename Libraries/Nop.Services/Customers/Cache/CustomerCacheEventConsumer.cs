@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 
 namespace Nop.Services.Customers.Cache
@@ -24,16 +23,19 @@ namespace Nop.Services.Customers.Cache
 
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CustomerCacheEventConsumer()
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
+        public CustomerCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            this._cacheManager = cacheManager;
         }
 
         #endregion

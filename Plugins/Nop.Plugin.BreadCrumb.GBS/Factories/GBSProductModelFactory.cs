@@ -1,9 +1,10 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Plugins;
@@ -26,7 +27,6 @@ using Nop.Web.Models.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Nop.Plugin.BreadCrumb.GBS.Factories
 {
@@ -40,9 +40,76 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GBSProductModelFactory(IPluginFinder pluginFinder, ISpecificationAttributeService specificationAttributeService, ICategoryService categoryService, IManufacturerService manufacturerService, IProductService productService, IVendorService vendorService, IProductTemplateService productTemplateService, IProductAttributeService productAttributeService, IWorkContext workContext, IStoreContext storeContext, ITaxService taxService, ICurrencyService currencyService, IPictureService pictureService, ILocalizationService localizationService, IMeasureService measureService, IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter, IWebHelper webHelper, IDateTimeHelper dateTimeHelper, IProductTagService productTagService, IAclService aclService, IStoreMappingService storeMappingService, IPermissionService permissionService, IDownloadService downloadService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService, MediaSettings mediaSettings, CatalogSettings catalogSettings, VendorSettings vendorSettings, CustomerSettings customerSettings, CaptchaSettings captchaSettings, SeoSettings seoSettings, ICacheManager cacheManager) : 
-            base(specificationAttributeService, categoryService, manufacturerService, productService, vendorService, productTemplateService, productAttributeService, workContext, storeContext, taxService, currencyService, pictureService, localizationService, measureService, priceCalculationService, priceFormatter, webHelper, dateTimeHelper, productTagService, aclService, storeMappingService, permissionService, downloadService, productAttributeParser, dateRangeService, mediaSettings, catalogSettings, vendorSettings, customerSettings, captchaSettings, seoSettings, cacheManager)
+        public GBSProductModelFactory(IPluginFinder pluginFinder,
+                IHttpContextAccessor httpContextAccessor,
+                ISpecificationAttributeService specificationAttributeService,
+                ICategoryService categoryService,
+                IManufacturerService manufacturerService,
+                IProductService productService,
+                IVendorService vendorService,
+                IProductTemplateService productTemplateService,
+                IProductAttributeService productAttributeService,
+                IWorkContext workContext,
+                IStoreContext storeContext,
+                ITaxService taxService,
+                ICurrencyService currencyService,
+                IPictureService pictureService,
+                ILocalizationService localizationService,
+                IMeasureService measureService,
+                IPriceCalculationService priceCalculationService,
+                IPriceFormatter priceFormatter,
+                IWebHelper webHelper,
+                IDateTimeHelper dateTimeHelper,
+                IProductTagService productTagService,
+                IAclService aclService,
+                IStoreMappingService storeMappingService,
+                IPermissionService permissionService,
+                IDownloadService downloadService,
+                IProductAttributeParser productAttributeParser,
+                IDateRangeService dateRangeService,
+                MediaSettings mediaSettings,
+                CatalogSettings catalogSettings,
+                VendorSettings vendorSettings,
+                CustomerSettings customerSettings,
+                CaptchaSettings captchaSettings,
+                OrderSettings orderSettings,
+                SeoSettings seoSettings,
+                IStaticCacheManager cacheManager) :
+            base(specificationAttributeService,
+                categoryService,
+                manufacturerService,
+                productService,
+                vendorService,
+                productTemplateService,
+                productAttributeService,
+                workContext,
+                storeContext,
+                taxService,
+                currencyService,
+                pictureService,
+                localizationService,
+                measureService,
+                priceCalculationService,
+                priceFormatter,
+                webHelper,
+                dateTimeHelper,
+                productTagService,
+                aclService,
+                storeMappingService,
+                permissionService,
+                downloadService,
+                productAttributeParser,
+                dateRangeService,
+                mediaSettings,
+                catalogSettings,
+                vendorSettings,
+                customerSettings,
+                captchaSettings,
+                orderSettings,
+                seoSettings,
+                cacheManager)
         {
             _workContext = workContext;
             _storeContext = storeContext;
@@ -52,18 +119,21 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
             _aclService = aclService;
             _storeMappingService = storeMappingService;
             _pluginFinder = pluginFinder;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
         /// Prepare the product breadcrumb model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product breadcrumb model</returns>
+        /// <returns>
+        /// Product breadcrumb model
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">product</exception>
         protected override ProductDetailsModel.ProductBreadcrumbModel PrepareProductBreadcrumbModel(Product product)
         {
             try
             {
-
                 var miscPlugins = _pluginFinder.GetPlugins<BreadCrumbPlugin>(storeId: _storeContext.CurrentStore.Id).ToList();
                 if (miscPlugins.Count > 0)
                 {
@@ -84,10 +154,11 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
                             ProductName = product.GetLocalized(x => x.Name),
                             ProductSeName = product.GetSeName()
                         };
+
                         var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
                         if (productCategories.Any())
                         {
-                            var category = GetReferringCategory(HttpContext.Current.Request.UrlReferrer.AbsolutePath, productCategories);
+                            var category = GetReferringCategory(_httpContextAccessor.HttpContext.Request.Headers["Referer"].ToString(), productCategories);
                             if (category != null)
                             {
                                 foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
@@ -104,17 +175,26 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
                         }
                         return breadcrumbModel;
                     });
+
                     return cachedModel;
-                } else
+                }
+                else
                 {
                     return base.PrepareProductBreadcrumbModel(product);
                 }
-            }catch (Exception ex)
+            }
+            catch
             {
                 return base.PrepareProductBreadcrumbModel(product);
             }
         }
 
+        /// <summary>
+        /// Gets the referring category.
+        /// </summary>
+        /// <param name="referringUrl">The referring URL.</param>
+        /// <param name="categories">The categories.</param>
+        /// <returns></returns>
         private Category GetReferringCategory(string referringUrl, IList<ProductCategory> categories)
         {
             string[] referringUrlSplit = referringUrl.Split('/');
@@ -125,7 +205,7 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
                     if (referringUrlSplit[i].Length > 0)
                     {
                         var referringCategoryURL = referringUrlSplit[i];
-                        var urlRecordService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IUrlRecordService>();
+                        var urlRecordService = Core.Infrastructure.EngineContext.Current.Resolve<IUrlRecordService>();
                         UrlRecord url = urlRecordService.GetBySlug(referringCategoryURL);
                         if (url != null)
                         {
@@ -138,8 +218,8 @@ namespace Nop.Plugin.BreadCrumb.GBS.Factories
                     }
                 }
             }
+
             return categories[0].Category;
         }
-
     }
 }

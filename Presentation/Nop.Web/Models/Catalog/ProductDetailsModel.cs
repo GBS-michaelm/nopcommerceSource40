@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
@@ -64,7 +65,6 @@ namespace Nop.Web.Models.Catalog
         public bool IsFreeShipping { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
-
 
         public bool IsRental { get; set; }
         public DateTime? RentalStartDate { get; set; }
@@ -198,19 +198,21 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-            [AllowHtml]
+
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
-            [AllowHtml]
+
+            [DataType(DataType.EmailAddress)]
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-            [AllowHtml]
+
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
-            [AllowHtml]
+
+            [DataType(DataType.EmailAddress)]
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
-            [AllowHtml]
+
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }
@@ -273,7 +275,6 @@ namespace Nop.Web.Models.Catalog
             public AttributeControlType AttributeControlType { get; set; }
 
             public IList<ProductAttributeValueModel> Values { get; set; }
-
         }
 
         public partial class ProductAttributeValueModel : BaseNopEntityModel
@@ -304,6 +305,6 @@ namespace Nop.Web.Models.Catalog
             public int Quantity { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

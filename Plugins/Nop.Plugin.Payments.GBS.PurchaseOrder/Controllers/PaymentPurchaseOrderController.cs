@@ -1,40 +1,36 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.GBS.PurchaseOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
 {
+    [Area(AreaNames.Admin)]
     public class GBSPaymentPurchaseOrderController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly HttpContextBase _httpContext;
 
         public GBSPaymentPurchaseOrderController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            ILocalizationService localizationService,
-            HttpContextBase httpContext)
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
-            this._httpContext = httpContext;
-        }
+        }        
         
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -53,13 +49,11 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.GBS.PurchaseOrder/Views/Configure.cshtml", model);
+            return View("~/Plugins/Payments.GBS.PurchaseOrder/Configure.cshtml", model);
         }
 
-        [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [HttpPost]       
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -88,51 +82,6 @@ namespace Nop.Plugin.Payments.GBS.PurchaseOrder.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var model = new PaymentInfoModel();
-            
-            //set postback values
-            var form = this.Request.Form;
-            model.PurchaseOrderNumber = form["PurchaseOrderNumber"];
-            model.PurchaseOrderName = form["PurchaseOrderName"];
-            model.PurchaseOrderPhoneNumber = form["PurchaseOrderPhoneNumber"];
-
-            if (_httpContext.Session["purchaseOrderNumber"] != null)
-            {
-                model.PurchaseOrderNumber = _httpContext.Session["purchaseOrderNumber"].ToString();
-            }
-            if (_httpContext.Session["purchaseOrderName"] != null)
-            {
-                model.PurchaseOrderName = _httpContext.Session["purchaseOrderName"].ToString();
-            }
-            if (_httpContext.Session["purchaseOrderPhoneNumber"] != null)
-            {
-                model.PurchaseOrderPhoneNumber = _httpContext.Session["purchaseOrderPhoneNumber"].ToString();
-            }
-
-            return View("~/Plugins/Payments.GBS.PurchaseOrder/Views/PaymentInfo.cshtml", model);
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            //paymentInfo.CustomValues.Add("PO Number", form["PurchaseOrderNumber"]);
-            //paymentInfo.CustomValues.Add("PO Name", form["PurchaseOrderName"]);
-            //paymentInfo.CustomValues.Add("PO Phone", form["PurchaseOrderPhoneNumber"]);
-            _httpContext.Session["purchaseOrderNumber"] = form["PurchaseOrderNumber"];
-            _httpContext.Session["purchaseOrderName"] = form["PurchaseOrderName"];
-            _httpContext.Session["purchaseOrderPhoneNumber"] = form["PurchaseOrderPhoneNumber"];
-            return paymentInfo;
-        }
+      
     }
 }

@@ -24,19 +24,19 @@ namespace Nop.Web.Factories
         private readonly ITopicService _topicService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly ITopicTemplateService _topicTemplateService;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public TopicModelFactory(ITopicService topicService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IAclService aclService,
             ITopicTemplateService topicTemplateService)
@@ -62,7 +62,7 @@ namespace Nop.Web.Factories
         protected virtual TopicModel PrepareTopicModel(Topic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             var model = new TopicModel
             {

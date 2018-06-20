@@ -18,38 +18,14 @@ $(document).ready(function () {
     
     //Used js for Header Sticky Menu  
     //http://www.jqueryscript.net/menu/Sticky-Navigation-Bar-with-jQuery-Bootstrap.html
-    var scrollTimer, lastScrollFireTime = 0;
-    var oldPosition = $(window).scrollTop();
     $(window).bind('scroll', function () {
-        var minScrollTime = 100;
-        var now = new Date().getTime();
-
-        function processScroll() {
-            var navHeight = $("div.header").height();
-            var navWidth = $("div.header").width();
-            if (window.location.pathname.includes("Plugins/CcWidget/EditorPage")) {
-            }
-            else {
-                ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');
-            }
+        var navHeight = $("div.header").height();
+        var navWidth = $("div.header").width();
+        if (window.location.pathname.includes("Plugins/CcWidget/EditorPage")) {
         }
-
-        if (!scrollTimer) {
-            if (now - lastScrollFireTime > (3 * minScrollTime)) {
-                processScroll();   // fire immediately on first scroll
-                lastScrollFireTime = now;
-            }
-            scrollTimer = setTimeout(function () {
-                scrollTimer = null;
-                lastScrollFireTime = new Date().getTime();
-                if (Math.abs($(window).scrollTop() - oldPosition) > 25) {
-                    processScroll();
-                }
-                oldPosition = $(window).scrollTop();
-            }, minScrollTime);
+        else {
+            ($(window).scrollTop() > navHeight) ? $('body').addClass('goToTop').width(navWidth) : $('body').removeClass('goToTop');
         }
-
-
     });
 
     //Used js for Responsive Website Checker
@@ -200,13 +176,9 @@ function ChangeQuantity1(e) {
 
     document.getElementById(e.id).value = qtyValue;
     //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
-    if (typeof eachQuantity !== 'undefined') {
-        if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
-    }
-
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
     //document.getElementById("newprice").textContent = "$"+final;
-    $(".newprice-value-" + e.dataset.productid).text("$" + final);
+    $(".price-value-" + e.dataset.productid).text("$" + final);
     return true;
 }
 
@@ -229,13 +201,10 @@ function IncreaseQuantity(e) {
     document.getElementById(e.id).value = qtyValue;
 
     //  document.getElementById("eachprice").textContent = "(Ea. $"+document.getElementById("pricescript").textContent+")";
-    if (typeof eachQuantity !== 'undefined') {
-        if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
-    }
     $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
 
     //document.getElementById("newprice").textContent = "$"+final;
-    $(".newprice-value-" + e.dataset.productid).text("$" + final);
+    $(".price-value-" + e.dataset.productid).text("$" + final);
     return true;
 }
 
@@ -246,33 +215,27 @@ function DecreaseQuantity(e) {
     if (id <= 0 || id == 1) {
         id = 1;
     }
-
     var quantity = parseInt(id) - 1;
-    if (quantity > 0) {
-
-        var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
-        pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
+    var isPriceChange = GetTierPrice(quantity, e.dataset.productid);
+    pricechange = isPriceChange <= 0 ? pricechange : isPriceChange;
 
 
-        var qtyValue = parseInt(id);
-        if (id <= 0 || id == 1) {
-            qtyValue = 1;
-        }
-        else {
-            qtyValue = qtyValue - 1;
-        }
-
-        var final = parseFloat(qtyValue * pricechange).toFixed(2);
-        document.getElementById(e.id).value = qtyValue;
-        //document.getElementById("newprice").textContent = "$" + final;
-        //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
-        if (typeof eachQuantity !== 'undefined') {
-            if (eachQuantity && eachQuantity > 0) { pricechange = (pricechange / eachQuantity).toFixed(2); }
-        }
-        $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
-
-        $(".newprice-value-" + e.dataset.productid).text("$" + final);
+    var qtyValue = parseInt(id);
+    if (id <= 0 || id == 1) {
+        qtyValue = 1;
     }
+    else {
+        qtyValue = qtyValue - 1;
+    }
+
+    var final = parseFloat(qtyValue * pricechange).toFixed(2);
+    document.getElementById(e.id).value = qtyValue;
+    //document.getElementById("newprice").textContent = "$" + final;
+    //document.getElementById("eachprice").textContent = "(Ea. $" + document.getElementById("pricescript").textContent + ")";
+    $(".eachprice-value-" + e.dataset.productid).text("(Ea. $" + pricechange + ")");
+
+    $(".price-value-" + e.dataset.productid).text("$" + final);
+
     return true;
 }
 

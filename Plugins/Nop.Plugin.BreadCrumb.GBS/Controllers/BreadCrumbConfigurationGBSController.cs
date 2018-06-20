@@ -1,12 +1,14 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.BreadCrumb.GBS.Controllers
 {
+    [Area(AreaNames.Admin)]
     public class BreadCrumbGBSController : BasePluginController
     {
         private readonly ILocalizationService _localizationService;
@@ -20,20 +22,15 @@ namespace Nop.Plugin.BreadCrumb.GBS.Controllers
             IStoreService storeService,
             IWorkContext workContext)
         {
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._workContext = workContext;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _storeService = storeService;
+            _workContext = workContext;
         }
-
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+                
+        public IActionResult Configure()
         {       
             return View();
         }
-
-
-    }
-        
+    }       
 }

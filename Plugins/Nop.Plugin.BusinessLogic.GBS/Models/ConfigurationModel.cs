@@ -1,6 +1,5 @@
-﻿using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Models
 {
@@ -11,32 +10,5 @@ namespace Nop.Plugin.BusinessLogic.GBS.Models
         [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.Hack")]
         public bool Hack { get; set; }
         public bool Hack_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterDefaultId")]
-        public int MarketCenterDefaultId { get; set; }
-        public bool MarketCenterDefaultId_OverrideForStore { get; set; }
-
-        
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterNameBadgeDefaultId")]
-        public int MarketCenterNameBadgeDefaultId { get; set; }
-        public bool MarketCenterNameBadgeDefaultId_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterBusinessCardDefaultId")]
-        public int MarketCenterBusinessCardDefaultId { get; set; }
-        public bool MarketCenterBusinessCardDefaultId_OverrideForStore { get; set; }
-
-        
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterCarMagnetDefaultId")]
-        public int MarketCenterCarMagnetDefaultId { get; set; }
-        public bool MarketCenterCarMagnetDefaultId_OverrideForStore { get; set; }
-                
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.SportsFootballDefaultId")]
-        public int SportsFootballDefaultId { get; set; }
-        public bool SportsFootballDefaultId_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.BusinessLogic.GBS.Fields.MarketCenterWhatAmIReferenceName")]
-        public string MarketCenterWhatAmIReferenceName { get; set; }
-        public bool MarketCenterWhatAmIReferenceName_OverrideForStore { get; set; }
-
     }
 }

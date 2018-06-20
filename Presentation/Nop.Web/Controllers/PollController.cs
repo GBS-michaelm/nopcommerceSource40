@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
@@ -21,7 +20,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PollController(IPollModelFactory pollModelFactory,
             ILocalizationService localizationService,
@@ -38,22 +37,8 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [ChildActionOnly]
-        public virtual ActionResult PollBlock(string systemKeyword)
-        {
-            if (String.IsNullOrWhiteSpace(systemKeyword))
-                return Content("");
-
-            var model = _pollModelFactory.PreparePollModelBySystemName(systemKeyword);
-            if (model == null)
-                return Content("");
-
-            return PartialView(model);
-        }
-
         [HttpPost]
-        [ValidateInput(false)]
-        public virtual ActionResult Vote(int pollAnswerId)
+        public virtual IActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
@@ -75,7 +60,7 @@ namespace Nop.Web.Controllers
                     error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote"),
                 });
 
-            bool alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
+            var alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
             if (!alreadyVoted)
             {
                 //vote
@@ -92,21 +77,10 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                html = this.RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
+                html = RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
             });
-        }
-        
-        [ChildActionOnly]
-        public virtual ActionResult HomePagePolls()
-        {
-            var model = _pollModelFactory.PrepareHomePagePollModels();
-            if (!model.Any())
-                Content("");
-
-            return PartialView(model);
         }
 
         #endregion
-
     }
 }

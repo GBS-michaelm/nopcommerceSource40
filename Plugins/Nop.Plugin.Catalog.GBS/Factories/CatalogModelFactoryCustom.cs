@@ -1,28 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
+using Nop.Plugin.Catalog.GBS.Models;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Services.Seo;
-using Nop.Services.Stores;
-using Nop.Web.Infrastructure.Cache;
-using Nop.Web.Models.Catalog;
-using Nop.Plugin.Catalog.GBS.Models;
 using Nop.Services.Logging;
-using Nop.Web.Factories;
-using Nop.Plugin.Catalog.GBS.DataAccess;
-using Nop.Web.Models.Topics;
-using System.Data;
-using Nop.Core.Infrastructure;
-using Newtonsoft.Json;
+using Nop.Services.Seo;
+using Nop.Web.Infrastructure.Cache;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Plugin.Catalog.GBS.Factories
 {
@@ -30,19 +18,16 @@ namespace Nop.Plugin.Catalog.GBS.Factories
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;        
-        private readonly IProductService _productService;        
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;                                        
-        private readonly CatalogSettings _catalogSettings;        
-        private readonly ICacheManager _cacheManager;        
+        private readonly IStoreContext _storeContext;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheManager _cacheManager;
 
         private readonly CategoryNavigationSettings _categoryNavigationSettings;
         private readonly ILogger _logger;
-        private readonly ITopicModelFactory _topicModelFactory;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        public readonly IProductModelFactory _productModelFactory;
-        public readonly IProductModelFactoryCustom _gbsProductModelFactoryCustom;
+
 
         #endregion
 
@@ -50,33 +35,23 @@ namespace Nop.Plugin.Catalog.GBS.Factories
 
         public CatalogModelFactoryCustom(
             ILogger logger,
-            ICategoryService categoryService,        
-            IProductService productService,         
+            ICategoryService categoryService,
+            IProductService productService,
             IWorkContext workContext,
-            IStoreContext storeContext,         
-            CatalogSettings catalogSettings,        
-            ICacheManager cacheManager,                  
-            CategoryNavigationSettings categoryNavigationSettings,
-            ITopicModelFactory topicModelFactory,
-            ISpecificationAttributeService specificationAttributeService,
-            IProductModelFactory productModelFactory,
-            IProductModelFactoryCustom gbsProductModelFactoryCustom)
+            IStoreContext storeContext,
+            CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
+            CategoryNavigationSettings categoryNavigationSettings)
         {
             this._logger = logger;
-            this._categoryService = categoryService;            
-            this._productService = productService;          
+            this._categoryService = categoryService;
+            this._productService = productService;
             this._workContext = workContext;
-            this._storeContext = storeContext;            
-            this._catalogSettings = catalogSettings;            
-            this._cacheManager = cacheManager;           
+            this._storeContext = storeContext;
+            this._catalogSettings = catalogSettings;
+            this._cacheManager = cacheManager;
 
             this._categoryNavigationSettings = categoryNavigationSettings;
-            this._topicModelFactory = topicModelFactory;
-            this._specificationAttributeService = specificationAttributeService;
-            this._productModelFactory = productModelFactory;
-            //this._gbsProductModelFactory = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Plugin.Catalog.GBS.Factories.ProductModelFactory>();
-            //this._gbsProductModelFactory = DependencyResolver.Current.GetService<ProductModelFactory>();
-            this._gbsProductModelFactoryCustom = gbsProductModelFactoryCustom;
         }
 
         #endregion
@@ -119,35 +94,30 @@ namespace Nop.Plugin.Catalog.GBS.Factories
         /// <returns>Category navigation model</returns>
         public virtual CategoryNavigationModelCustom PrepareCategoryNavigationModel(int currentCategoryId, int currentProductId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_MODEL_KEY, currentCategoryId, currentProductId);
-
-            return _cacheManager.Get(cacheKey, 60, () =>
+            //get active category
+            int activeCategoryId = 0;
+            if (currentCategoryId > 0)
             {
-                //get active category
-                int activeCategoryId = 0;
-                if (currentCategoryId > 0)
-                {
-                    //category details page
-                    activeCategoryId = currentCategoryId;
-                }
-                else if (currentProductId > 0)
-                {
-                    //product details page
-                    var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                    if (productCategories.Any())
-                        activeCategoryId = productCategories[0].CategoryId;
-                }
+                //category details page
+                activeCategoryId = currentCategoryId;
+            }
+            else if (currentProductId > 0)
+            {
+                //product details page
+                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                if (productCategories.Any())
+                    activeCategoryId = productCategories[0].CategoryId;
+            }
 
-                var cachedCategoriesModel = PrepareCategorySimpleModels();
-                var model = new CategoryNavigationModelCustom
-                {
-                    CurrentCategoryId = activeCategoryId,
-                    Categories = cachedCategoriesModel,
-                    AllCategory = _categoryNavigationSettings.AllCategory,
-                    NoOfChildren = _categoryNavigationSettings.NoOfChildren
-                };
-                return model;
-            });
+            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            var model = new CategoryNavigationModelCustom
+            {
+                CurrentCategoryId = activeCategoryId,
+                Categories = cachedCategoriesModel,
+                AllCategory = _categoryNavigationSettings.AllCategory,
+                NoOfChildren = _categoryNavigationSettings.NoOfChildren
+            };
+            return model;
         }
 
         /// <summary>
@@ -188,7 +158,7 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                 //load categories if null passed
                 //we implemeneted it this way for performance optimization - recursive iterations (below)
                 //this way all categories are loaded only once
-               allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             List<int> BlackList = new List<int>();
@@ -199,13 +169,15 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                     BlackList = _categoryNavigationSettings.BlackList.Split(',').Select(int.Parse).ToList();
 
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                _logger.Error("BlackList misconfigured in Catalog Plugin - ",ex);
+                _logger.Error("BlackList misconfigured in Catalog Plugin - ", ex);
             }
             foreach (var category in categories)
             {
-                if (BlackList.Contains(category.Id)) {
+                if (BlackList.Contains(category.Id))
+                {
                     continue;
                 }
                 var cats = new List<int>();
@@ -247,166 +219,15 @@ namespace Nop.Plugin.Catalog.GBS.Factories
                         categoryModel.SubCategories.AddRange(subCategories);
                     }
                 }
-                if (categoryModel.ProductsCount > 0 || categoryModel.SubCategories.Count > 0) { 
-                result.Add(categoryModel); }
+                if (categoryModel.ProductsCount > 0 || categoryModel.SubCategories.Count > 0)
+                {
+                    result.Add(categoryModel);
+                }
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Prepare category Topic model.  Grabs Topic data associated with a category for use with Tab display on Category Pages
-        /// </summary>
-        /// <param name="catId">Category Id</param>
-        /// <returns>TopicModel</returns>
-        public virtual TopicModel PrepareCategoryTabTopicModel(int catId)
-        {
-            //select from tblNOPCategory_SpecificationAttribute_Mapping
-            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-            paramDicEx.Add("@categoryId", catId);
-
-            DBManager manager = new DBManager();
-            string select = "EXEC usp_SelectGBSCategorySpecAttributesOptionMapping @categoryId";
-            DataView result = manager.GetParameterizedDataView(select, paramDicEx);
-            string topicSysName = null;
-            if (result.Count > 0)
-            {
-                DataTable specAttrOptTable = result.ToTable(true, "SpecificationAttributeOptionId");
-
-                var specOptIds = specAttrOptTable.AsEnumerable().Select(r => r.Field<int>("SpecificationAttributeOptionId")).ToArray();
-                IList<SpecificationAttributeOption> specOptions = _specificationAttributeService.GetSpecificationAttributeOptionsByIds(specOptIds);
-
-                //get name from settings
-                var specAttrName = _categoryNavigationSettings.CategoryTabsSpecAttrName;
-                if (specOptions.Where(x => x.SpecificationAttribute.Name == specAttrName).Any())
-                {
-                    topicSysName = specOptions.Where(x => x.SpecificationAttribute.Name == specAttrName).FirstOrDefault().Name;
-                    return _topicModelFactory.PrepareTopicModelBySystemName(topicSysName);
-                }
-                return null;
-            }
-            else
-            {
-                return null;
-            }
-
-
-        }
-
-        /// <summary>
-        /// Prepare category featured product detail model.  Grabs product data associated with featured products
-        /// </summary>
-        /// <param name="catId">Category Id</param>
-        /// <returns>TopicModel</returns>
-        public virtual ProductDetailsModel PrepareCategoryFeaturedProductDetailsModel(int catId, bool light = false)
-        {
-            //select from tblNOPCategory
-            Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-            paramDicEx.Add("@categoryId", catId);
-
-            DBManager manager = new DBManager();
-            string select = "EXEC usp_SelectTblNopCategory @categoryId";
-            DataView result = manager.GetParameterizedDataView(select, paramDicEx);
-            int featuredProductId = 0;
-
-            if (result.Count > 0)
-            {
-                var fpid = result[0]["FeaturedProductId"];
-                var temp = 0; ;
-                if (!int.TryParse(fpid.ToString(), out temp)) { return null; }
-                featuredProductId = (int)result[0]["FeaturedProductId"];
-                if (featuredProductId == 0)
-                {
-                    return null;
-                }
-                //get product detail model
-                GBSProduct featuredProduct = ConvertToGBSProduct(_productService.GetProductById(featuredProductId));
-                featuredProduct.ReplaceTierPrices(featuredProduct.TierPrices.Distinct().ToList());
-
-                if (!light)
-                {
-                    return _productModelFactory.PrepareProductDetailsModel(featuredProduct);
-                }
-                var model = new ProductDetailsModel();
-                model.Id = featuredProductId;
-                model.ProductPrice = _gbsProductModelFactoryCustom.GetProductPriceModel(featuredProduct);
-                return model;
-
-            }
-            else
-            {
-                return new ProductDetailsModel();
-            }
-
-
-        }
-
-        public GBSProduct ConvertToGBSProduct(Product product)
-        {
-            var type = typeof(GBSProduct);
-            var instance = Activator.CreateInstance(type);
-
-            if (type.BaseType != null)
-            {
-                var properties = type.BaseType.GetProperties();
-                foreach (var property in properties)
-                    if (property.CanWrite)
-                        property.SetValue(instance, property.GetValue(product, null), null);
-            }
-
-            return (GBSProduct)instance;
-        }
-
-        /// <summary>
-        /// Get category list
-        /// </summary>
-        /// <param name="categoryService">Category service</param>
-        /// <returns>Category list</returns>
-        public virtual List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, int storeId = 0)
-        {
-
-            if (cacheManager == null)
-            {
-                DBManager manager = new DBManager();
-                string select = "EXEC usp_getCategorySelectList";
-                Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-                if (storeId > 0)
-                {
-                    select = "EXEC usp_getCategorySelectList @StoreId";
-                    paramDicEx.Add("@StoreId", storeId);
-
-                }
-                string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
-
-                var result = JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);
-
-                return result;
-            }
-            else
-            {
-                string cacheKey = "category_select_list_"+storeId;
-                var result = cacheManager.Get(cacheKey, () =>
-                {
-                    DBManager manager = new DBManager();
-                    string select = "EXEC usp_getCategorySelectList";
-                    Dictionary<string, Object> paramDicEx = new Dictionary<string, Object>();
-                    if (storeId > 0)
-                    {
-                        select = "EXEC usp_getCategorySelectList @StoreId";
-                        paramDicEx.Add("@StoreId", storeId);
-
-                    }
-                    string jsonResult = manager.GetParameterizedJsonString(select, paramDicEx);
-
-                    return JsonConvert.DeserializeObject<List<SelectListItem>>(jsonResult);
-
-                    
-                });
-                return result;
-            }
-
-
-        }
         #endregion
     }
 }

@@ -341,7 +341,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
     float: right;
     position: relative;
     margin-top: 17px;
-    padding-right: 130px;
+    /*padding-right: 130px;*/
 }
 
     .header-lower .search-box .navbar-form {
@@ -1770,8 +1770,8 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         font-size: 14px;
         text-align: center;
         color: #444444;
-        clear: both;
-        padding-top: 5px;
+	    clear: left;
+	    padding-top: 10px;
     }
 
         .item-box .product-item .product-title a {
@@ -2089,6 +2089,7 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
     background: #fff;
     color: #333;
     clear: both;
+    display:flow-root;
 }
 
     .product-selectors .product-span {
@@ -3160,8 +3161,6 @@ a.eu-cookie-privacyinfo-tag {
     text-decoration: line-through;
     color: #999;
     margin-bottom: 5px;
-    font-size: small;
-    line-height: .5;
 }
 
     .product-details-page .old-product-price label {
@@ -3281,7 +3280,7 @@ a.eu-cookie-privacyinfo-tag {
 }
 
 .product-details-page .add-to-cart .qty-dropdown {
-    width: 87px;
+    width: 50px;
     margin-top: 10px;
     margin-right: 10px;
 }
@@ -3863,7 +3862,7 @@ a.eu-cookie-privacyinfo-tag {
     margin-bottom: 0px;
 }
 
-.login-page .checkout-as-guest-or-register-block legend, .login-page .new-wrapper.register-block fieldset legend, .login-page .returning-wrapper fieldset legend {
+.login-page .checkout-as-guest-or-register-block legend, .login-page .new-wrapper.register-block fieldset legend, .login-page .returning-wrapper fieldset legend, .register-block .title, .returning-wrapper .title {
     text-align: left;
     font-weight: 700;
     color: #000;
@@ -4115,6 +4114,7 @@ a.eu-cookie-privacyinfo-tag {
     .wishlist-content .cart-header-row th, .order-summary-content .cart-header-row th {
         text-align: center;
         background: #f6f6f6;
+        white-space:nowrap;
     }
 
     .wishlist-content .cart-header-row .products-title, .order-summary-content .cart-header-row .products-title {
@@ -4602,6 +4602,7 @@ a.eu-cookie-privacyinfo-tag {
 
 .wishlist-page .share-info {
     float: left;
+    margin-bottom:20px;
 }
 
     .wishlist-page .share-info .share-label {
@@ -4611,6 +4612,8 @@ a.eu-cookie-privacyinfo-tag {
 .wishlist-page .buttons .common-buttons {
     overflow: hidden;
     margin: 30px 0px;
+    display:inline-block;
+    width:100%;
 }
 
     .wishlist-page .buttons .common-buttons .btn.btn-primary, .wishlist-page .buttons .common-buttons .btn.btn-default {
@@ -5031,8 +5034,9 @@ a.eu-cookie-privacyinfo-tag {
 .order-summary-content .cart-footer .cart-total-right {
     padding-left: 5px;
     text-align: right;
-    vertical-align: middle;
+    vertical-align: baseline;
     color: #555;
+    white-space:nowrap;
 }
 
 .checkout-data .shipping-method, .checkout-data .payment-method, .checkout-data .payment-info, .checkout-data .order-completed {
@@ -9228,6 +9232,11 @@ ul.info li label {
     bottom: 79px;
     left: 93px;
 }
+    .shopping-cart-page #checkout.btn-order-summary-check-out-top {
+        position: relative;
+        bottom: inherit;
+        left: inherit;
+    }
 
 .cart .sku-info {
     margin-left: 0px;
@@ -9609,7 +9618,7 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 
 .custom-tab li {
     margin-bottom: 5px;
-    list-style-type: disc;
+	list-style-type: disc;
 }
 
 .product-details-page .prices .product-price span {
@@ -10478,9 +10487,9 @@ div#DigiCertClickID_EUn4Gw8WSeal {
 }
 
 .header-menu .mega-menu > li > a, .header-menu .mega-menu > li > span {
-    padding: 22px 13px;
+    padding: 25px 22px;
     color: #fff;
-    font-size: 13px;
+    font-size: 14px;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -10863,7 +10872,7 @@ body hr {
     border-radius: 3px;
     border-style: none none solid;
     border-width: 0 0 3px;
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: bold;
     padding: 10px 20px;
     right: 0;
@@ -10877,6 +10886,7 @@ body hr {
 
 .award-section .shopnow {
     background: #6c8baa none repeat scroll 0 0;
+	color:#fff;
 }
 
     .award-section .shopnow:hover {
@@ -11064,14 +11074,17 @@ body hr {
 .joinin-email {
     padding-top: 50px;
     float: right;
+    padding-bottom:50px;
 }
 
-.email-lable {
-    font-size: 16px;
-    color: #fff;
-    font-weight: bold;
-    padding-bottom: 5px;
-}
+    .joinin-email .newsletter .title{display:none;}
+
+    .email-lable {
+        font-size: 16px;
+        color: #fff;
+        font-weight: bold;
+        padding-bottom: 5px;
+    }
 
 .joinin-email #newsletter-subscribe-block #newsletter-email {
     width: 225px;
@@ -11369,27 +11382,6 @@ body hr {
     display: none;
 }
 
-/*** Mad Monday Page **/
-#MadMondayPage .product-grid .Specialty-QuickStix-3-pack {
-    width: 570px;
-    height: 570px;
-}
-
-#MadMondayPage .product-grid .pictures .Specialty-QuickStix-3-pack img {
-    height: 492px;
-    left: 43px;
-    position: absolute;
-    top: 32px;
-    width: 192px;
-}
-
-#MadMondayPage #productInfo {
-    float: right !important
-}
-
-#MadMondayPage .product-grid .buttons {
-    display: inherit
-}
 /* Pager and pager dropdown Order history page*/
 .paging-size-dropdown {
     margin-left: 50px;
@@ -11406,111 +11398,16 @@ body hr {
 .head-left{
     width:100%;
 }
-.orderplace {
-    width: 165px;
+
+/*** Product Quick View ***/
+.gallery .picture{position:relative;}
+
+/*** new css added for 4.0 ***/
+.register-block .title, .returning-wrapper .title {
+    margin-bottom: 20px;
 }
-
-/*Category Tabs*/
-.category-tabs {
-    display: flex;
-    justify-content: flex-end;
-    width: 500px;
-}
-.list-content {
-    justify-content: flex-end;
-    display: inline-flex;
-}
-    .category-tabs .topic-html-content-body {
-
-    }
-
-
-/*To Make Quick View button in center*/
-.pictures > .quick-view-button {
-    margin-top: 40%;
-}
-
-
-.impersonate {
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 24px;
-    background-color: #a80101;
-}
-
-.impersonate a {
-    text-decoration: underline !important;
-}
-
-/*BLUEBOXFEATURE Category Tabs*/
-
-.blueboxfeature {
-    background-image: url('/Content/Images/Gateway/bkg_blueboxfeature.png'), linear-gradient(-25deg, rgba(22,65,106,1) 35%, rgb(49, 132, 207) 100%);
-    background-repeat: repeat-y;
-    border-bottom: 15px solid #122952;
-    margin-right: 30px;
-    width: 60%; /*Modified width*/
-}
-
-    .blueboxfeature h2 {
-        color: #92c5fe;
-        text-transform: uppercase;
-        font-size: 16px;
-        padding: 30px 30px 5px 45px;
-        font-family: 'Lato';
-        font-weight: normal;
-    }
-
-    .blueboxfeature h3 {
-        color: #ffffff;
-        padding: 0px 25px 30px 45px;
-        font-size: 30px;
-        line-height: 40px;
-        font-family: 'lato';
-        font-weight: normal;
-    }
-
-
-
-.category-tabs {
-    justify-content: flex-end;
-    width: 100%;
-}
-
-
-
-@media only screen and (max-width: 640px) {
-    .list-content {
-        display: none;
-    }
-}
-
-
-.qq-upload-button {
-    display: inline-block;
-    text-align: center;
-    background: #022c5c !important;
-    ;
-    border-bottom: 1px solid #DDD;
-    color: #FFF;
-    font-family: "Lato", sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 1px;
-    height: 34px;
-    padding: 8px 22px 8px 22px !important;
-    margin: 0px;
-    border-radius: 3px;
-    white-space: nowrap;
-    width: 140px !important;
-}
-
-.qq-upload-button-hover {
-    background: #002147 !important;
-}
-
-.overview .detail-left .attributes dl {
-    margin-bottom: 10px;
+.login-page .new-wrapper.register-block .text{margin-bottom:10px;}
+.login-page .controls{
+    margin-bottom: 30px;
+    display:table;
 }

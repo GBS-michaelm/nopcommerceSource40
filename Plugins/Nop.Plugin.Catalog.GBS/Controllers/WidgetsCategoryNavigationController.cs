@@ -1,30 +1,19 @@
-﻿using System.Web.Mvc;
-using Nop.Web.Framework.Controllers;
-using Nop.Plugin.Catalog.GBS.Models;
-using System.Linq;
-using Nop.Services.Security;
-using System.Collections.Generic;
-using Nop.Services.Catalog;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Plugin.Catalog.GBS.Factories;
+using Nop.Plugin.Catalog.GBS.Models;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Core;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
-using Nop.Plugin.Catalog.GBS.DataAccess;
-using System.Data;
-using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Themes;
-using Nop.Services.Topics;
-using Nop.Core.Domain.Topics;
-using Nop.Web.Models.Catalog;
-using Nop.Services.Logging;
+using Nop.Web.Framework.Controllers;
+using System.Linq;
 
 namespace Nop.Plugin.Catalog.GBS.Controllers
 {
     public class WidgetsCategoryNavigationController : BaseController
-    {
+    {               
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactoryCustom _catalogModelFactoryCustom;
         private readonly ICatalogModelFactory _catalogModelFactory;
@@ -34,22 +23,16 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         public readonly IStoreContext _storeContext;
-        public readonly ITopicTemplateService _topicTemplateService;
-        private readonly ILogger _logger;
 
-
-        public WidgetsCategoryNavigationController(ICatalogModelFactoryCustom catalogModelFactoryCustom,
+        public WidgetsCategoryNavigationController(ICatalogModelFactoryCustom catalogModelFactoryCustom,                        
             ICategoryService categoryService,
             ICatalogModelFactory catalogModelFactory,
             IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
             ILocalizationService localizationService,
-            IStoreContext storeContext,
-            ITopicTemplateService topicTemplateService,
-            ILogger logger
-            )
-        {
+            IStoreContext storeContext)
+        {                        
             this._categoryService = categoryService;
             this._catalogModelFactoryCustom = catalogModelFactoryCustom;
             this._catalogModelFactory = catalogModelFactory;
@@ -59,15 +42,9 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             this._settingService = settingService;
             this._localizationService = localizationService;
             this._storeContext = storeContext;
-            this._topicTemplateService = topicTemplateService;
-            this._logger = logger;
-
         }
-
-
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -78,10 +55,6 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             model.NoOfChildren = categoryNavigationSettings.NoOfChildren;
             model.IsActive = categoryNavigationSettings.IsActive;
             model.BlackList = categoryNavigationSettings.BlackList;
-            model.CategoryTabsSpecAttrName = categoryNavigationSettings.CategoryTabsSpecAttrName;
-            model.AttributeInfoBlackList = categoryNavigationSettings.AttributeInfoBlackList;
-
-
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -90,16 +63,13 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 model.NoOfChildren_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.NoOfChildren, storeScope);
                 model.IsActive_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.IsActive, storeScope);
                 model.BlackList_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.BlackList, storeScope);
-                model.CategoryTabsSpecAttrName_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.CategoryTabsSpecAttrName, storeScope);
-                model.AttributeInfoBlackList_OverrideForStore = _settingService.SettingExists(categoryNavigationSettings, x => x.AttributeInfoBlackList, storeScope);
 
             }
             return View("~/Plugins/Catalog.GBS/Views/Configure.cshtml", model);
         }
 
-        [AdminAuthorize]
         [HttpPost]
-        public ActionResult Configure(ConfigurationModel model)
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -113,8 +83,6 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             categoryNavigationSettings.NoOfChildren = model.NoOfChildren;
             categoryNavigationSettings.IsActive = model.IsActive;
             categoryNavigationSettings.BlackList = model.BlackList;
-            categoryNavigationSettings.CategoryTabsSpecAttrName = model.CategoryTabsSpecAttrName;
-            categoryNavigationSettings.AttributeInfoBlackList = model.AttributeInfoBlackList;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -124,19 +92,16 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.NoOfChildren, model.NoOfChildren_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.IsActive, model.IsActive_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.BlackList, model.BlackList_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.CategoryTabsSpecAttrName, model.CategoryTabsSpecAttrName_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(categoryNavigationSettings, x => x.AttributeInfoBlackList, model.AttributeInfoBlackList_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return Configure();         
         }
 
-        [ChildActionOnly]
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
+        [ResponseCache(Duration = 3600, VaryByQueryKeys = new string[] { "*" })]
         public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
         {
             //load settings for a chosen store scope
@@ -158,8 +123,8 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             }
             //if (categoryNavigationSettings.IsActive)
             //{
-            var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-            return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
+                var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
+                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
             //}
             //else
             //{
@@ -185,48 +150,6 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
                 }
             }
             return false;
-        }
-
-        [ChildActionOnly]
-        [OutputCache(Duration = 3600, VaryByParam = "*")]
-        public ActionResult CategoryTabs(string widgetZone, object additionalData = null)
-        {
-            var currentCategoryId = 0;
-            try
-            {
-
-                if (additionalData != null)
-                {
-                    int.TryParse(additionalData.ToString(), out currentCategoryId);
-                }
-                //get topic id from mapping table
-                var model = _catalogModelFactoryCustom.PrepareCategoryTabTopicModel(currentCategoryId);
-                if (model == null) {
-                    _logger.Information("Model is null in CategoryTabs: category id = " +currentCategoryId);
-                    return null;
-                }
-                //substitute viewpath with topic template.
-                //do this dynamically so that different templates can be used for this widget.
-                var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-                TopicTemplate topicTemplate = _topicTemplateService.GetTopicTemplateById(model.TopicTemplateId);
-                if (topicTemplate == null) {
-                    _logger.Information("topicTemplate is null in CategoryTabs: category id = " + currentCategoryId);
-                    return null;
-                }
-
-                //get pricing
-                ViewBag.ProductDetailModel = _catalogModelFactoryCustom.PrepareCategoryFeaturedProductDetailsModel(currentCategoryId);
-
-                return View("~/Themes/" + themeName + "/Views/Topic/" + topicTemplate.ViewPath + ".cshtml", model);
-            } catch (Exception ex)
-            {
-                _logger.Error("Exception in CategoryTabs: category id = "+currentCategoryId, ex);
-
-                return null;
-            }
-
-        }
-
-
+        }       
     }
 }

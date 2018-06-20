@@ -1,9 +1,0 @@
-﻿@{
-    Layout = "";
-    string artistName = ViewBag.ArtistName;
-    string sename = ViewBag.seName;
-}
-
-<div class="product-by">
-    <a href="@Url.RouteUrl("Category", new { SeName = sename })">@artistName</a>
-</div>

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
+using Nop.Plugin.Login.GBS.Models;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -26,18 +22,11 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Extensions;
-using Nop.Web.Factories;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
-using Nop.Web.Framework.Security.Honeypot;
-using Nop.Web.Models.Customer;
 using Nop.Web.Controllers;
-using Nop.Plugin.Login.GBS.Models;
-using Nop.Core.Infrastructure;
-using Nop.Services.Custom.Customers;
+using Nop.Web.Factories;
+using Nop.Web.Framework.Security.Captcha;
+using Nop.Web.Models.Customer;
+using System;
 namespace Nop.Plugin.Login.GBS.Controllers
 {
     public partial class GBSLoginController : BasePublicController
@@ -69,7 +58,6 @@ namespace Nop.Plugin.Login.GBS.Controllers
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressAttributeParser _addressAttributeParser;
@@ -80,6 +68,7 @@ namespace Nop.Plugin.Login.GBS.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
 
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly ILogger _logger;
@@ -111,7 +100,6 @@ namespace Nop.Plugin.Login.GBS.Controllers
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IShoppingCartService shoppingCartService,
-            IOpenAuthenticationService openAuthenticationService,
             IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
             IAddressAttributeParser addressAttributeParser,
@@ -124,7 +112,8 @@ namespace Nop.Plugin.Login.GBS.Controllers
             CaptchaSettings captchaSettings,
             StoreInformationSettings storeInformationSettings,
             ILogger logger, 
-            CaptchaSettings _captchaSettings) 
+            CaptchaSettings _captchaSettings,
+            IExternalAuthenticationService externalAuthenticationService) 
         {
             this._addressModelFactory = addressModelFactory;
             this._customerModelFactory = customerModelFactory;
@@ -149,7 +138,6 @@ namespace Nop.Plugin.Login.GBS.Controllers
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._shoppingCartService = shoppingCartService;
-            this._openAuthenticationService = openAuthenticationService;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._addressAttributeParser = addressAttributeParser;
@@ -162,6 +150,7 @@ namespace Nop.Plugin.Login.GBS.Controllers
             this._captchaSettings = captchaSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._logger = logger;
+            this._externalAuthenticationService = externalAuthenticationService;
 
             this._baseNopCustomerController = new Nop.Web.Controllers.CustomerController(
             this._addressModelFactory,
@@ -187,12 +176,11 @@ namespace Nop.Plugin.Login.GBS.Controllers
             this._pictureService,
             this._newsLetterSubscriptionService,
             this._shoppingCartService,
-            this._openAuthenticationService,
+            this._externalAuthenticationService,
             this._webHelper,
             this._customerActivityService,
             this._addressAttributeParser,
             this._addressAttributeService,
-            this._storeService,
             this._eventPublisher,
             this._mediaSettings,
             this._workflowMessageService,
@@ -204,8 +192,7 @@ namespace Nop.Plugin.Login.GBS.Controllers
         #endregion
 
         [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult LoginModal(LoginModel model)
+        public IActionResult LoginModal(LoginModel model)
         {
             try
             {

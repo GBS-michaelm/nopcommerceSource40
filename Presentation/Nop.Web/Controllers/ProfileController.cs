@@ -1,13 +1,15 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.No)]
+    [HttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly IProfileModelFactory _profileModelFactory;
@@ -26,7 +28,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        public virtual ActionResult Index(int? id, int? page)
+        public virtual IActionResult Index(int? id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -47,38 +49,10 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = "Admin" }));
+                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
-            var model = _profileModelFactory.PrepareProfileIndexModel(customer, page);
+            var model = _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
             return View(model);
-        }
-
-        //profile info tab
-        [ChildActionOnly]
-        public virtual ActionResult Info(int customerProfileId)
-        {
-            var customer = _customerService.GetCustomerById(customerProfileId);
-            if (customer == null)
-            {
-                return RedirectToRoute("HomePage");
-            }
-
-            var model = _profileModelFactory.PrepareProfileInfoModel(customer);
-            return PartialView(model);
-        }
-
-        //latest posts tab
-        [ChildActionOnly]
-        public virtual ActionResult Posts(int customerProfileId, int page)
-        {
-            var customer = _customerService.GetCustomerById(customerProfileId);
-            if (customer == null)
-            {
-                return RedirectToRoute("HomePage");
-            }
-            
-            var model = _profileModelFactory.PrepareProfilePostsModel(customer, page);
-            return PartialView(model);
         }
     }
 }

@@ -1,9 +1,0 @@
-Group: GBS
-FriendlyName: GBS Business Logic
-SystemName: BusinessLogic.GBS
-Version: 1.00
-SupportedVersions: 3.90
-Author: Vic Rivera
-DisplayOrder: 1
-FileName: Nop.Plugin.BusinessLogic.GBS.dll
-Description: Generic GBS Objects

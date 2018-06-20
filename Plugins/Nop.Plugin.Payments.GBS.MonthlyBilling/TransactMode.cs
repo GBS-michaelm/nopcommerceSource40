@@ -1,7 +1,7 @@
 namespace Nop.Plugin.Payments.GBS.MonthlyBilling
 {
     /// <summary>
-    /// Represents MonthlyBilling payment processor transaction mode
+    /// Represents purchaseOrder payment processor transaction mode
     /// </summary>
     public enum TransactMode
     {

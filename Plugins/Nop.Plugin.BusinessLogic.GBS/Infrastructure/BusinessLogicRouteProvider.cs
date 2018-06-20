@@ -1,59 +1,33 @@
-﻿using System;
-using System.Web.Routing;
-using Nop.Web.Framework.Mvc.Routes;
-using Nop.Web.Infrastructure;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Localization;
-
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.BusinessLogic.GBS.Infrastructure
 {
     public partial class BusinessLogicRouteProvider : IRouteProvider
-    {
-               
-
-        public void RegisterRoutes(RouteCollection routes)
-        {
-            
-            routes.MapLocalizedRoute("GenerateTeamHtml",
+    {       
+        public void RegisterRoutes(IRouteBuilder routes)
+        {            
+            routes.MapRoute("GenerateTeamHtml",
                            "sportsgateway/SportsTeamHtml/{id}",
-                           new { controller = "GatewayPageController", action = "SportsTeamHtml" },
-                           new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
+                           new { controller = "GatewayPageController", action = "SportsTeamHtml" });
 
-            routes.MapLocalizedRoute("SportsTeamGatewayTabs",
-                            "sportsgateway/SportsTeamGatewayTabs/{id}",
-                            new { controller = "GatewayPage", action = "SportsTeamGatewayTabs" },
-                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
-
-            routes.MapLocalizedRoute("GatewayCatalogProducts",
+            routes.MapRoute("GatewayCatalogProducts",
                             "sportsgateway/GatewayCatalogProducts/{type}/{id}",
-                            new { controller = "GatewayPage", action = "GatewayCatalogProducts" },
-                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
+                            new { controller = "GatewayPage", action = "GatewayCatalogProducts" });
 
-            routes.MapLocalizedRoute("MarketCenterTabs",
+            routes.MapRoute("MarketCenterTabs",
                             "marketcentergateway/MarketCenterGatewayTabs/{id}/{type}",
-                            new { controller = "GatewayPage", action = "MarketCenterTabs" },
-                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
+                            new { controller = "GatewayPage", action = "MarketCenterTabs" });
 
-            routes.MapLocalizedRoute("MarketCenterCategories",
-                            "marketcentergateway/GetNonMarketCenterCategories/{id}",
-                            new { controller = "GatewayPage", action = "MarketCenterCategories" },
-                            new[] { "Nop.Plugin.GBSGateway.GBS.Controllers" });
-
-            routes.MapLocalizedRoute("AccessoryPage",
+            routes.MapRoute("AccessoryPage",
                             "accessory/{groupId}/{productId}",
-                            new { controller = "AccessoryPage", action = "AccessoryPage" },
-                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
+                            new { controller = "AccessoryPage", action = "AccessoryPage" });
 
-            routes.MapLocalizedRoute("AccessoryCategories",
+            routes.MapRoute("AccessoryCategories",
                             "accessory/AccessoryCategories/{groupid}",
-                            new { controller = "AccessoryPage", action = "AccessoryCategories" },
-                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
-
-            routes.MapLocalizedRoute("CanvasNameBadge",
-                            "namebadgecanvas/{companyId}",
-                            new { controller = "Company", action = "CanvasNameBadge" },
-                            new[] { "Nop.Plugin.BusinessLogic.GBS.Controllers" });
-
+                            new { controller = "AccessoryPage", action = "AccessoryCategories" });
 
         }
 
