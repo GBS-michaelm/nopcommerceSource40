@@ -52,7 +52,6 @@
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
       <Private></Private>
     </ProjectReference>
-    <ProjectReference Include="..\Nop.Plugin.BreadCrumb.GBS\Nop.Plugin.BreadCrumb.GBS.csproj" />
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->
