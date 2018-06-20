@@ -1,0 +1,11 @@
+﻿{
+  "Group": "GBS Payments",
+  "FriendlyName": "Monthly Billing",
+  "SystemName": "Payments.GBS.MonthlyBilling",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Parth S. Patel",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.GBS.MonthlyBilling.dll",
+  "Description": "This plugin allows paying with Monthly Billing"
+}

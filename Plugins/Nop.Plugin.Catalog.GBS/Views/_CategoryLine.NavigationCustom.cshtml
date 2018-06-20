@@ -1,0 +1,89 @@
+﻿@model CategoryNavigationModelCustom.CategoryLineModelCustom
+@using Nop.Plugin.Catalog.GBS.Models;
+
+@functions{
+    public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModelCustom category)
+    {
+        if (Model.CurrentCategoryId == 0)
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+@{
+    var active = Model.Category.Id == Model.CurrentCategoryId || Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    var last = Model.Category.Id == Model.CurrentCategoryId;
+    var liClass = active ? "active" : "inactive";
+    if (last)
+    {
+        liClass += " last";
+    }
+}
+<li class="@liClass">
+    <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+        @Model.Category.Name
+        @if (Model.Category.NumberOfProducts.HasValue)
+        {
+            <text> </text>@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)
+        }
+    </a>
+    @{
+        if (Model.Category.Id == Model.CurrentCategoryId ||
+            Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
+        {
+            if (Model.Category.SubCategories.Count > 0)
+            {
+                <ul class="sublist">
+                    @foreach (var subCategory in Model.Category.SubCategories)
+                    {
+                        if (Model.AllCategory)
+                        {
+                            var categoryLineModel = new CategoryNavigationModelCustom.CategoryLineModelCustom
+                            {
+                                CurrentCategoryId = Model.CurrentCategoryId,
+                                Category = subCategory,
+                                AllCategory = Model.AllCategory
+                            };
+                            @await Html.PartialAsync("_CategoryLine.NavigationCustom", categoryLineModel)
+                        }
+                        else if (subCategory.ProductsCount > 0 || Nop.Plugin.Catalog.GBS.Controllers.WidgetsCategoryNavigationController.HasSubcategoryProducts(subCategory))
+                        {
+                            var categoryLineModel = new CategoryNavigationModelCustom.CategoryLineModelCustom
+                            {
+                                CurrentCategoryId = Model.CurrentCategoryId,
+                                Category = subCategory,
+                                AllCategory = Model.AllCategory
+                            };
+                            @await Html.PartialAsync("_CategoryLine.NavigationCustom", categoryLineModel)
+                        }                      
+                    }
+                </ul>
+            }
+        }
+    }
+</li>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        if ($('.block-category-navigation .listbox ul.list li ul').hasClass('sublist')) {
+            $('.block-category-navigation .listbox ul.list li ul').parent().addClass('submenuwrap');
+            $('.block-category-navigation .listbox ul.list li.submenuwrap').append('<div class="menuclick"></div>');
+        }
+
+        $(".menuclick").click(function () {
+            $(this).prev().slideToggle("fast");
+        });
+    });
+</script>

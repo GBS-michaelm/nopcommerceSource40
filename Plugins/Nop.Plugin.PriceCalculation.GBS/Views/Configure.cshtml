@@ -1,0 +1,72 @@
+﻿@model Nop.Plugin.Login.GBS.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="LoginConfigurationGBS" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSLoginWebServiceAddress_OverrideForStore" asp-input="GBSLoginWebServiceAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSLoginWebServiceAddress" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSLoginWebServiceAddress" />
+                        <span asp-validation-for="GBSLoginWebServiceAddress"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSRegisterWebService_OverrideForStore" asp-input="GBSRegisterWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSRegisterWebService" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSRegisterWebService" />
+                        <span asp-validation-for="GBSRegisterWebService"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSUpdateCustomerWebService_OverrideForStore" asp-input="GBSUpdateCustomerWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSUpdateCustomerWebService" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSUpdateCustomerWebService" />
+                        <span asp-validation-for="GBSUpdateCustomerWebService"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSCustomerWebServiceName_OverrideForStore" asp-input="GBSCustomerWebServiceUserName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSCustomerWebServiceUserName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSCustomerWebServiceUserName" />
+                        <span asp-validation-for="GBSCustomerWebServiceUserName"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSCustomerWebServicePassword_OverrideForStore" asp-input="GBSCustomerWebServicePassword" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSCustomerWebServicePassword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSCustomerWebServicePassword" />
+                        <span asp-validation-for="GBSCustomerWebServicePassword"></span>
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

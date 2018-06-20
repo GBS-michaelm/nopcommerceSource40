@@ -1,0 +1,45 @@
+﻿<div class="header">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_before" })
+    <div class="header-upper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="shippingall">
+                        <div class="pre-header-promo-text">@await Component.InvokeAsync("TopicBlock", new { systemName = "hom_pre-header-promo-text" })</div>
+                        <div class="pre-header-back-link">@await Component.InvokeAsync("TopicBlock", new { systemName = "ncc_pre-header-back-link" })</div>
+                    </div>
+                </div>
+                <div class="col-md-9 header-upper-right pull-right">
+                    <div class="header-links-wrapper">
+                        @await Component.InvokeAsync("FlyoutShoppingCart")
+                        @await Component.InvokeAsync("HeaderLinks")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_middle" })
+    <div class="header-lower">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="header-logo">
+                        @await Component.InvokeAsync("Logo")
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6  pull-right">
+                    <div class="search-box">
+                        @await Component.InvokeAsync("SearchBox")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="newmenu">
+        <div class="container">
+            @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_MegaMenu" })
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_after" })
+</div>

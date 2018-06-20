@@ -1,0 +1,272 @@
+﻿@model FooterModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@inject IWorkContext workContext;
+<div id="footer-wrap" class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 footerleft">
+                <div id="aboutUsSection">
+                    <h3>About House of Magnets</h3>
+                    @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_about-us" })
+                </div>
+                <div id="contactUsSection">
+                    @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_contact-us" })
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="row footer-upper">
+                    <div class="column newsletter-wrapper col-sm-7 col-md-12">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_footer_emaillist" })
+                                @*Pending for code*@ @*@Html.Widget("join_email_list", new { list = "HOM:Website_Signups", form = "FooterOptIn" })*@
+                                <div class="follow-us">
+                                    @await Component.InvokeAsync("SocialButtons")
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <h3 class="footer-title">Shop With Confidence</h3>
+                                <div id="DigiCertClickID_PckNbLXo" style="padding-top: 15px;">
+                                    <a href="https://seal.digicert.com/seals/popup/?tag=PckNbLXo&lang=en" target="_blank"><img alt="DigiCert SSL" src="~/Themes/HouseOfMagnet/Content/images/digicert.png"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row footer-middle">
+                    <div class="column my-account col-sm-4 col-md-4">
+                        <div class="title">
+                            <strong>NAVIGATION</strong>
+                        </div>
+                        <ul class="nav nav-list">
+                            <li><a href="/"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                            @if (Model.NewsEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("NewsArchive")"><i class="fa fa-angle-double-right"></i>@T("News")</a></li>
+                            }
+                            @if (Model.BlogEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("Blog")"><i class="fa fa-angle-double-right"></i>@T("Blog")</a></li>
+                            }
+                            @if (Model.ForumEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("Boards")"><i class="fa fa-angle-double-right"></i>@T("Forum.Forums")</a></li>
+                            }
+                            @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
+                            {
+                                <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
+                            }
+                            <li><a href="/business-cards"><i class="fa fa-angle-double-right"></i>Business Cards</a></li>
+                            <li><a href="/calendars"><i class="fa fa-angle-double-right"></i>Calendars</a></li>
+                            <li><a href="/sports-schedules"><i class="fa fa-angle-double-right"></i>Sports Schedules</a></li>
+                            <li><a href="/notepads"><i class="fa fa-angle-double-right"></i>Notepads</a></li>
+                            <li><a href="/specialty"><i class="fa fa-angle-double-right"></i>Specialty Magnets</a></li>
+                            <li><a href="/other-products"><i class="fa fa-angle-double-right"></i>More Products</a></li>
+                        </ul>
+                    </div>
+                    <div class="column customer-service col-sm-4 col-md-4">
+                        <div class="title">
+                            <strong>@T("Footer.CustomerService")</strong>
+                        </div>
+                        <ul class="nav nav-list">
+                            <li><a href="@Url.RouteUrl("ProductSearch")"><i class="fa fa-angle-double-right"></i>@T("Search")</a> </li>
+                            @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                            {
+                                <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
+                            }
+                            @if (Model.SitemapEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("Sitemap")"><i class="fa fa-angle-double-right"></i>@T("Sitemap")</a></li>
+                            }
+                            @if (Model.RecentlyViewedProductsEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("RecentlyViewedProducts")"><i class="fa fa-angle-double-right"></i>@T("Products.RecentlyViewedProducts")</a></li>
+                            }
+                            @if (Model.CompareProductsEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("CompareProducts")"><i class="fa fa-angle-double-right"></i>@T("Products.Compare.List")</a></li>
+                            }
+                            @if (Model.NewProductsEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("NewProducts")"><i class="fa fa-angle-double-right"></i>@T("Products.NewProducts")</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="column contact-wrapper col-sm-4 col-md-4">
+                        <div class="title">
+                            <strong>My Account</strong>
+                        </div>
+                        <ul class="nav nav-list">
+                            <li><a href="@Url.RouteUrl("CustomerInfo")"><i class="fa fa-angle-double-right"></i>@T("Account.MyAccount")</a></li>
+                            <li><a href="@Url.RouteUrl("CustomerOrders")"><i class="fa fa-angle-double-right"></i>@T("Account.CustomerOrders")</a></li>
+                            <li><a href="@Url.RouteUrl("CustomerAddresses")"><i class="fa fa-angle-double-right"></i>@T("Account.CustomerAddresses")</a></li>
+                            @if (Model.ShoppingCartEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("ShoppingCart")"><i class="fa fa-angle-double-right"></i>@T("ShoppingCart")</a></li>
+                            }
+                            @if (Model.WishlistEnabled)
+                            {
+                                <li><a href="@Url.RouteUrl("Wishlist")"><i class="fa fa-angle-double-right"></i>@T("Wishlist")</a></li>
+                            }
+                            @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
+                            {
+                                <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })"><i class="fa fa-angle-double-right"></i>@topic.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="footer-upper">
+            <div class="footer-block information">
+                <div class="title">
+                    <strong>@T("Footer.Information")</strong>
+                </div>
+                <ul class="list">
+                    @if (Model.SitemapEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+                    }
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
+                    {
+                        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                </ul>
+            </div>
+            <div class="footer-block customer-service">
+                <div class="title">
+                    <strong>@T("Footer.CustomerService")</strong>
+                </div>
+                <ul class="list">
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    @if (Model.NewsEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
+                    }
+                    @if (Model.BlogEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                    }
+                    @if (Model.ForumEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                    }
+                    @if (Model.RecentlyViewedProductsEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>
+                    }
+                    @if (Model.CompareProductsEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>
+                    }
+                    @if (Model.NewProductsEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+                    }
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                    {
+                        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="footer-block my-account">
+                <div class="title">
+                    <strong>@T("Footer.MyAccount")</strong>
+                </div>
+                <ul class="list">
+                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                    <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
+                    <li><a href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
+                    @if (Model.ShoppingCartEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
+                    }
+                    @if (Model.WishlistEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
+                    }
+                    @if (Model.AllowCustomersToApplyForVendorAccount)
+                    {
+                        <li><a href="@Url.RouteUrl("ApplyVendorAccount")">@T("Vendors.ApplyAccount")</a></li>
+                    }
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
+                    {
+                        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="footer-block follow-us">
+                <div class="social">
+                    <div class="title">
+                        <strong>@T("Footer.FollowUs")</strong>
+                    </div>
+                    @await Component.InvokeAsync("SocialButtons")
+                </div>
+                @await Component.InvokeAsync("NewsletterBox")
+            </div>
+        </div>*@
+    <div class="footer-lower">
+        <div class="container">
+            <div class="row">
+                <div class="footerlink"> @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_footer-gbs-family" }) </div>
+                <div class="footer-disclaimer">
+                    @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
+                </div>
+            </div>
+        </div>
+        @*<div class="footer-info">
+                <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+                @if (Model.DisplayTaxShippingInfoFooter)
+                {
+                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                    <span class="footer-tax-shipping">
+                        @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo")}))
+                    </span>
+                }
+            </div>*@
+        @*@if (!Model.HidePoweredByNopCommerce)
+            {
+                <div class="footer-powered-by">
+
+                    Powered by <a href="https://www.nopcommerce.com/">nopCommerce</a>
+                </div>
+            }
+            @await Component.InvokeAsync("StoreThemeSelector")*@
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "footer" })
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $('.footer-block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 769) {
+                $(this).siblings('.list').slideToggle('slow');
+            }
+        });
+    });
+</script>
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1001) {
+                $(this).siblings('.listbox').slideToggle('slow');
+            }
+        });
+    });
+</script>
