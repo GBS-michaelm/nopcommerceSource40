@@ -1,0 +1,26 @@
+﻿@model Nop.Plugin.Products.SpecificationAttributes.Models.ProductByArtistModel
+@using Nop.Web.Framework.UI
+@using Nop.Web.Extensions
+@{
+    Layout = "";  
+}
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+
+@if (Model.Products.Count > 0)
+{
+    <div class="related-products-grid product-grid">
+        <div class="title">
+            <strong>@Model.ArtistName</strong>
+        </div>
+        <div class="item-grid">
+            @foreach (var item in Model.Products)
+            {
+                <div class="item-box">@Html.Partial("_ProductBox", item)</div>
+            }
+        </div>
+    </div>
+}
+

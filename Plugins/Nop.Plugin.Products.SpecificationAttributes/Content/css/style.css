@@ -1,0 +1,565 @@
+﻿
+
+/*.gallery .picture img {display:none;   }*/
+.gallery img {
+    /*display: block !important;*/
+    z-index: -1;
+}
+
+.product-details-page .gallerys {
+    margin-bottom: 40px;
+    float: left;
+    width: auto;
+    height: auto;
+    margin-top: 10px;
+    position: relative;
+}
+
+.product-item .picture {
+    width: 250px;
+    height: 250px;
+    margin: auto;
+    position: relative;
+}
+/*********list page**********/
+.product-grid .pictures {
+    width: 250px;
+    margin: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.product-grid img {
+    z-index: -1;
+}
+
+.product-grid .picture {
+    display: none !important;
+}
+
+.cart-item-row .product-picture .gallerys {
+    position: sticky;
+}
+
+/****************ofer page css***********/
+
+.order-list.row {
+    display: none;
+}
+
+.tabcontainer .tabheading {
+    border-bottom: 1px solid #dddddd;
+    width: 100%;
+    float: left;
+}
+
+    .tabcontainer .tabheading li {
+        padding: 0px 10px;
+        border: 0px;
+        background-color: transparent;
+        float: left;
+    }
+
+        .tabcontainer .tabheading li a {
+            white-space: nowrap;
+            padding: 5px 15px;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            float: left;
+            border-bottom: 2px #fff solid;
+        }
+
+        .tabcontainer .tabheading li.active a {
+            border-bottom: 2px #4c6468 solid;
+        }
+
+        .tabcontainer .tabheading li.active {
+            margin-bottom: 0px;
+            background-color: transparent;
+        }
+    
+.tab-headsection {
+    width: 100%;
+    clear: both;
+    float: left;
+    padding: 15px 0px;
+}
+
+.head-left {
+    float: left;
+    padding-bottom: 10px;
+}
+
+.orderplace {
+    float: left;
+    padding-right: 10px;
+    padding-top: 4px;
+}
+
+.account-page .tabbody {
+    border: 0px;
+    width: 100%;
+    padding: 0px;
+}
+.active {
+    display: block;
+}
+.hide {
+    display: none;
+}.pastorder-select {
+    background: #eaebef url(../images/dropdown-arro.png) no-repeat right center;
+    padding: 3px 7px;
+    border: 1px #8e9295 solid;
+    border-radius: 3px;
+    float: left;
+}
+
+    .pastorder-select select {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: 0px;
+        padding-right: 12px;
+    }
+
+.ordersearch {
+    float: right;
+    position: relative;
+    padding-right: 153px;
+    display: none;
+}
+
+    .ordersearch .ordersearch {
+        border: 1px #cbcbcb solid;
+        padding: 5px 10px;
+        float: left;
+        width: 100%;
+    }
+
+    .ordersearch .order-submit {
+        background: #43686a;
+        border: 0px;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        color: #fff;
+        text-transform: uppercase;
+        padding: 6px 15px 4px 15px;
+        font-weight: bold;
+    }
+
+        .ordersearch .order-submit:hover {
+            background-color: #1abc9c;
+        }
+
+.order-list .section {
+    float: left;
+    width: 100%;
+    clear: both;
+}
+
+.orderhead-section {
+    background: #f6f6f6;
+    border: 1px #dcdcdc solid;
+    padding: 15px 18px;
+    width: 100%;
+    float: left;
+    clear: both;
+    border-radius: 3px 3px 0px 0px;
+    border-bottom: 0px;
+}
+
+.head-col1 {
+    float: left;
+    padding-right: 30px;
+}
+
+.head-col2 {
+    float: left;
+    padding-right: 30px;
+}
+
+.head-col3 {
+    float: left;
+    padding-right: 10px;
+}
+
+.head-col4 {
+    float: right;
+    text-align: right;
+    width: 175px;
+}
+
+.order-label {
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #696969;
+    float: left;
+    width: 100%;
+}
+
+.order-date {
+    font-size: 13px;
+    color: #696969;
+}
+
+.order-links {
+    float: right;
+    width: 100%;
+    color: #dddddd;
+}
+
+    .order-links a {
+        color: #53777a;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+.rachel {
+    float: left;
+    background: url(../images/downarrow.png) no-repeat right 11px;
+}
+
+    .rachel select {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: 0px;
+        padding-right: 10px;
+        color: #53777a;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+.order-productlist {
+    float: left;
+    width: 100%;
+    padding: 15px;
+}
+
+    .order-productlist table td {
+        border: 0px;
+    }
+
+.productlist-left {
+    float: left;
+    width: 75%;
+    padding-right: 25px;
+}
+
+.productlist-right {
+    float: right;
+    width: 21%;
+}
+
+.prdouctrow-list {
+    position: relative;
+    padding-left: 0px;
+    min-height: 105px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.order-productimg {
+    width: 80px;
+    float: left;
+    height: 100px;
+    position: absolute;
+    left: 0px;
+    top: 15px;
+}
+
+    .order-productimg img {
+        width: 100%;
+        height: auto;
+    }
+
+.order-productname a {
+    color: #53777a;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.product-unit-price {
+    width: 100%;
+    font-size: 11PX;
+    color: #c32631;
+    padding: 5px 0px 10px 0px;
+}
+
+
+
+.productlist-right ul li {
+    width: 100%;
+    padding-top: 11px;
+}
+
+    .productlist-right ul li a {
+        background: #e9e9e9;
+        border: 0px;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        color: #505050;
+        text-transform: uppercase;
+        padding: 6px 15px 5px 15px;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        font-size: 12px;
+    }
+
+        .productlist-right ul li a:hover {
+            background-color: #ebd077;
+            color: #505050;
+        }
+
+.orderstatus {
+    width: 100%;
+    padding-bottom: 22px;
+
+}
+
+    .orderstatus h3 {
+        font-size: 17px;
+        padding-bottom: 5px;
+    }
+
+.ontheway {
+    font-size: 12px;
+    color: #008a01;
+    padding: 2px;
+}
+
+.ordertimeline {
+    background: #f2f2f2;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+    .ordertimeline span {
+        background: #008a01;
+        height: 10px;
+        border-radius: 5px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 5;
+    }
+
+.padtop25 {
+    padding-top: 20px;
+    float: left;
+    width: 100%;
+}
+
+.order-list {
+    float: left;
+    width: 100%;
+}
+
+.order-productlist {
+    float: left;
+    width: 100%;
+}
+
+.prdouctrow-list {
+    width: 100%;
+    float: left;
+}
+
+.account-page .order-details-page .picture {
+    margin-right: 25px;
+    top: 0px;
+}
+
+.account-page .order-details-page .picture {
+    width: 120px;
+    height: auto;
+}
+
+.account-page .order-details-page .Vertical {
+    width: 120px;
+    height: 120px;
+}
+
+    .account-page .order-details-page .Vertical img {
+        height: 97px;
+        left: 12px;
+        max-width: 100%;
+        position: absolute;
+        top: 19px;
+        width: 77px;
+    }
+
+.account-page .order-details-page .Horizontal {
+    width: 120px;
+    height: 120px;
+}
+
+    .account-page .order-details-page .Horizontal img {
+        height: 72px;
+        left: 19px;
+        max-width: 100%;
+        position: absolute;
+        top: 17px;
+        width: 97px;
+    }
+
+/***********order detailpage***************/
+
+table.orderdetails-list {
+    border: none !important;
+    border-collapse: collapse
+}
+
+    table.orderdetails-list th {
+        border: 1px #e3e3e3 solid !important;
+        background: #f5f5f5;
+        border-collapse: collapse;
+        padding: 10px !important;
+    }
+
+    table.orderdetails-list td {
+        border: 1px #e3e3e3 solid !important;
+        background: #fff;
+        vertical-align: top !important;
+        border-collapse: collapse;
+        padding: 10px !important;
+        text-align: center
+    }
+
+.product-tile a {
+    font-size: 16px;
+    color: #43686a;
+}
+
+.sku-number {
+    display: block;
+    padding: 10px 0px 0px 0px;
+}
+
+/*.orderdetails-list .product-item .picture img {
+    height: 151px;
+    left: 40px;
+    position: absolute;
+    top: 35px;
+    width: 199px;
+}*/
+
+.totalsection {
+    box-shadow: none !important;
+    padding: 0px !important
+}
+
+    .totalsection .total-title {
+        background: #f5f5f5;
+        padding: 10px 15px;
+        text-transform: uppercase;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    .totalsection .total-table tr td {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+.grand-total-title strong, .grand-total-prices .nobr strong {
+    color: #83b872;
+}
+
+.order-details-page .page-body {
+    padding-bottom: 20px;
+}
+
+
+@media (max-width:1200px) {
+    .product-details-page .gallerys {
+        width: 470px;
+    }
+
+    .product-details-page .gallery .Horizontal img {
+        height: 283px;
+        left: 76px;
+        position: absolute;
+        top: 66px;
+        width: 373px;
+    }
+}
+
+    @media (max-width:767px) {
+        .head-col4 {
+            text-align: left;
+            width: 100%;
+            float: left;
+        }
+
+        .orderdetails-wrapper {
+            width: 100%;
+            overflow: scroll;
+            overflow: y-hidden
+        }
+    }
+
+
+    @media (max-width:500px) {
+        .product-details-page .gallery .Horizontal img {
+            height: 181px;
+            left: 48px;
+            position: relative;
+            top: 42px;
+            width: 239px;
+        }
+
+        .product-details-page .gallerys {
+            width: auto
+        }
+
+        .productlist-left {
+            width: 100%;
+            padding-right: 0px;
+        }
+
+        .productlist-right {
+            width: 100%;
+        }
+
+        .tabcontainer .tabheading li {
+            padding-left: 0px;
+            padding: 0px;
+        }
+
+            .tabcontainer .tabheading li a {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+    }
+
+.buyitagain {
+  //  display: none;
+}
+.productlist-right ul li {
+    display: none;
+}
+.productlist-right ul li:nth-child(1) {
+        display: block;
+    }
+	
+.details-order-button {
+	color: #fff !important;
+}
+    
+.red {
+    color:red;
+    padding-left: 25px;
+}
+.space {
+    padding-left : 25px;
+}

@@ -1,0 +1,104 @@
+﻿@model ConfigurationModel
+@{
+	Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+@using Nop.Plugin.Order.GBS.Models;
+<form asp-controller="ConfigurationGBS" asp-action="Configure" method="post">
+	<div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="LoginId_OverrideForStore" asp-input="LoginId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="LoginId" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="LoginId" />
+						<span asp-validation-for="LoginId"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="Password_OverrideForStore" asp-input="Password" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="Password" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="Password" />
+						<span asp-validation-for="Password"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="GBSOrderWebServiceAddress_OverrideForStore" asp-input="GBSOrderWebServiceAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="GBSOrderWebServiceAddress" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="GBSOrderWebServiceAddress" />
+						<span asp-validation-for="GBSOrderWebServiceAddress"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="GBSPrintFileWebServiceAddress_OverrideForStore" asp-input="GBSPrintFileWebServiceAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="GBSPrintFileWebServiceAddress" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="GBSPrintFileWebServiceAddress" />
+						<span asp-validation-for="GBSPrintFileWebServiceAddress"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="GBSStoreNamePrepend_OverrideForStore" asp-input="GBSStoreNamePrepend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="GBSStoreNamePrepend" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="GBSStoreNamePrepend" />
+						<span asp-validation-for="GBSStoreNamePrepend"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="HOMConnectionString_OverrideForStore" asp-input="HOMConnectionString" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="HOMConnectionString" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="HOMConnectionString" />
+						<span asp-validation-for="HOMConnectionString"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="IntranetBaseAddress_OverrideForStore" asp-input="IntranetBaseAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="IntranetBaseAddress" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="IntranetBaseAddress" />
+						<span asp-validation-for="IntranetBaseAddress"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="LegacyOrdersInOrderHistory_OverrideForStore" asp-input="LegacyOrdersInOrderHistory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="LegacyOrdersInOrderHistory" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="LegacyOrdersInOrderHistory" />
+						<span asp-validation-for="LegacyOrdersInOrderHistory"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						&nbsp;
+					</div>
+					<div class="col-md-9">
+						<input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

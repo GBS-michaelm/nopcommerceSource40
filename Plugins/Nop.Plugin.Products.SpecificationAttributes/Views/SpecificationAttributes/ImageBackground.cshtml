@@ -1,0 +1,15 @@
+﻿@model Nop.Web.Models.Catalog.ProductOverviewModel
+    @{
+        Layout = "";
+        string fill = ViewBag.fill;
+        string className = ViewBag.ClassName;
+        int productId = ViewBag.ProductId;
+        string sename = ViewBag.SeName;
+}
+<div class="pictures" style="@fill">
+    <a href="@Url.RouteUrl("Product", new { SeName = sename })" title="@Model.DefaultPictureModel.Title" class="@className">
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+    </a>
+</div>
+
+<link rel="stylesheet" href="/plugins/Products.SpecificationAttributes/Content/css/style.css" />

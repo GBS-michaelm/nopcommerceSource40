@@ -1,0 +1,47 @@
+﻿@model Nop.Web.Models.Catalog.SearchModel
+@using Nop.Web.Framework.UI
+@using Nop.Web.Extensions
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-search-page");
+}
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@*category breadcrumb*@
+
+<div class="page category-page">
+    <div class="page-title">
+        <h1>@ViewBag.Name</h1>
+    </div>
+    <div class="page-body">
+
+        @if (Model.Products.Count > 0)
+            {
+            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
+                <div class="item-grid">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!pager.IsEmpty())
+            {
+            <div class="pager">
+                @pager
+            </div>
+        }
+    </div>
+</div>

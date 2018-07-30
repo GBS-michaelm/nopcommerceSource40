@@ -1,0 +1,11 @@
+﻿{
+	"Group": "GBS",
+	"FriendlyName": "GBS ORDER SERVICE",
+	"SystemName": "Order.GBS",
+	"Version": "1.00",
+	"SupportedVersions": [ "4.00" ],
+	"Author": "Parth S. Patel",
+	"DisplayOrder": 1,
+	"FileName": "Nop.Plugin.Order.GBS.dll",
+	"Description": "This plugin integrates gbs breadcrumb service"
+}

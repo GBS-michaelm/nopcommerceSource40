@@ -1,0 +1,34 @@
+﻿@{
+	Layout = "_ConfigurePlugin";
+}
+@model Nop.Plugin.Products.SpecificationAttributes.Models.ConfigureModel
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="SpecificationAttributes" asp-action="Configure" method="post">
+	<div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				@Html.HiddenFor(model => model.Id, new { Value = 0 })
+				<div class="form-group">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="ArtistCategoryID_OverrideForStore" asp-input="ArtistCategoryID" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="ArtistCategoryID" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="ArtistCategoryID" />
+						<span asp-validation-for="ArtistCategoryID"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-3">
+						&nbsp;
+					</div>
+					<div class="col-md-9">
+						<input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
