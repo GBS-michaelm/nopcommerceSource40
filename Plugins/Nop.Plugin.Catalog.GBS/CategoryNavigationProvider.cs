@@ -40,7 +40,7 @@ namespace Nop.Plugin.Catalog.GBS
         /// <exception cref="System.NotImplementedException"></exception>
         public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
         {
-            viewComponentName = "CategoryNavigation";
+            viewComponentName = "CategoryNavigationPlugin";
         }
 
         /// <summary>

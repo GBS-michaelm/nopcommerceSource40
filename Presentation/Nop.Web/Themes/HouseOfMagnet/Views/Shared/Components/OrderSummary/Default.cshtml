@@ -318,7 +318,7 @@
 
                 @if (Model.IsEditable)
                 {
-                    @await Html.PartialAsync("_CheckoutAttributes", Model)
+                    @await Html.PartialAsync("_CheckoutAttributes", Model.CheckoutAttributes)
                 }
                 @await Component.InvokeAsync("SelectedCheckoutAttributes")
             </div>

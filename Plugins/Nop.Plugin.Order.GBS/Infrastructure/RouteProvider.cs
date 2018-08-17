@@ -25,6 +25,10 @@ namespace Nop.Plugin.Order.GBS.Infrastructure
             routes.MapRoute("GetOrderPdfInvoiceL",
                             "orderdetailsL/pdf/{orderId}",
                             new { controller = "GBSOrder", action = "GetPdfInvoiceLegacy" });
+
+             routes.MapRoute("GBSCustomerOrders",
+                            "order/history",
+                            new { controller = "CustomerOrder", action = "CustomerOrders" });
         }       
 
         public int Priority

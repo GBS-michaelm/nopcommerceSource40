@@ -6,12 +6,13 @@ using Nop.Services.Common;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Web.Controllers;
 using System;
 using NW = Nop.Web.Controllers;
 
 namespace Nop.Plugin.Order.GBS.Controllers
 {
-    public class OrderController : NW.OrderController
+    public class CustomerOrderController : BasePublicController
     {
         #region Fields
 
@@ -29,7 +30,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
 
         #region Constructors
 
-        public OrderController(IOrderModelFactory orderModelFactory, IOrderService orderService, IShipmentService shipmentService, IWorkContext workContext, IOrderProcessingService orderProcessingService, IPaymentService paymentService, IPdfService pdfService, IWebHelper webHelper, RewardPointsSettings rewardPointsSettings) : base(orderModelFactory, orderService, shipmentService, workContext, orderProcessingService, paymentService, pdfService, webHelper, rewardPointsSettings)
+        public CustomerOrderController(IOrderModelFactory orderModelFactory, IOrderService orderService, IShipmentService shipmentService, IWorkContext workContext, IOrderProcessingService orderProcessingService, IPaymentService paymentService, IPdfService pdfService, IWebHelper webHelper, RewardPointsSettings rewardPointsSettings)
         {
             this._orderModelFactory = orderModelFactory;
             this._orderService = orderService;
@@ -43,8 +44,8 @@ namespace Nop.Plugin.Order.GBS.Controllers
         }
 
         #endregion
-                
-        public override IActionResult CustomerOrders()
+
+        public IActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -65,7 +66,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             ViewBag.SelectedTab = status;
             TempData["SelectedTab"] = status;
 
-            return View(model);
+            return View("~/Views/Order/CustomerOrders.cshtml", model);
         }
     }
 }

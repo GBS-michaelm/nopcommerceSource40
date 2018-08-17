@@ -43,7 +43,7 @@ namespace Nop.Services.Order.GBS
 
             if (pluginDescriptor != null)  // pluginDescriptor.Installed == true
             {
-                builder.RegisterType<OrderController>().As<NW.OrderController>();
+               // builder.RegisterType<OrderController>().As<NW.OrderController>();
                 builder.RegisterType<GBSOrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
                 builder.RegisterType<CustomTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
                 builder.RegisterType<GBSPdfService>().As<IPdfService>().InstancePerLifetimeScope();

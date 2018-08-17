@@ -27,6 +27,7 @@ using Nop.Web.Models.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Plugin.BreadCrumb.GBS;
 
 namespace Nop.Plugin.BreadCrumb.GBS.Factories
 {
