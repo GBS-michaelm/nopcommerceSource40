@@ -1,0 +1,70 @@
+﻿@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
+@using Nop.Web.Framework;
+
+@{
+    Layout = "";
+}
+<div id="saveCC">
+    @*@Model.customerID*@
+
+    <div class="form-group row">
+
+        <div class="col-sm-6 col-md-6 gbs-margin-left-10">
+            <select id="payment-method-dropdown" name="paymentmethod" class="form-control dropdown-toggle form-control category-iteam category-select">
+                @if (Model.SavedProfiles.Count > 0)
+                {
+                    foreach (var item in Model.SavedProfiles)
+                    {
+
+                        <option id="" value="@item.profileID">@item.UCardType ending @item.Last4Digits Expires @item.ExpMonth/@item.ExpYear @item.NickName</option>
+
+                    }
+                }
+                <option id="" value="New Card">Add a new credit card</option>
+            </select>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+        </div>
+    </div>
+    @*<div class="gbs-margin-top-10 row">
+            <input id="btn-select-saved-card" class="button button-3d button-small button-rounded button-green" type="button" name="nextstep" value="Continue" />
+        </div>*@
+</div>
+
+<div class="gbs-margin-top-10 gbs-padding-left-15" style="display:none;">
+    <input id="HiddenNext" class="button button-3d button-small button-rounded button-green" type="hidden" name="nextstep" value="Continue" />
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#payment-method-dropdown").change(function () { ChooseCreditCardOption($(this).val()); })
+
+    });
+
+    function ChooseCreditCardOption(option) {
+        console.log(option);
+        switch (option) {
+            case "New Card":
+                $(".saved-credit-card-input-wrap").show();
+                //$("#btn-select-saved-card").hide();
+                //$("#btn-new-card-submit").show();
+                //$("#btn-select-saved-cart").show()
+                break;
+            default:
+                $(".saved-credit-card-input-wrap").hide();
+                //$("#btn-select-saved-card").show();
+                //$("#btn-new-card-submit").hide();
+                break;
+        }
+    }
+
+    function CheckNewAddress(option) {
+        switch (option) {
+            case "New Address":
+                return true;
+            default:
+                return false;
+        }
+    }
+</script>

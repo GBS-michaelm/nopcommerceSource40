@@ -1,0 +1,63 @@
+﻿@using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Domain.Customers;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Customers;
+@{
+    Layout = "~/Views/Shared/_Root.Head.cshtml";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+@Html.Partial("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@Html.Partial("OldInternetExplorerWarning")
+
+<div class="master-wrapper-page">
+    @await Component.InvokeAsync("AdminHeaderLinks")
+
+
+    @if (EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsInCustomerRole("little-caesars"))
+    {
+        @Html.Partial("Header_LittleCaesars")
+    }
+
+    else if (EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsInCustomerRole("pizza-hut"))
+    {
+        @Html.Partial("Header_PizzaHut")
+    }
+    else
+    {
+        @Html.Partial("Header")
+    }
+
+
+
+
+
+    <script type="text/javascript">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+    </script>
+    <div class="header-menu">
+        @await Component.InvokeAsync("TopMenu")
+    </div>
+
+
+
+
+
+
+    <div class="master-wrapper-content">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        <div class="master-column-wrapper">
+            @RenderBody()
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+    </div>
+    @await Component.InvokeAsync("Footer")
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

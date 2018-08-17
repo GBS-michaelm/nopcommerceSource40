@@ -1,0 +1,11 @@
+﻿@using Nop.Web.Framework.UI;
+@{
+    Html.AppendScriptParts("~/Plugins/Widgets.CustomersCanvas/Scripts/webcomponents-lite.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/widget/CcWidget.js");
+
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/es6-shim.min.js");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/finally.js");
+}
+<script type="text/javascript">
+    var ccWidgetBaseUrl = '@Url.Content("~/")';
+</script>

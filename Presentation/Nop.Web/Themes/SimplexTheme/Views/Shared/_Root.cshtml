@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@await Html.PartialAsync("_OldInternetExplorerWarning")
+<div class="master-wrapper-page">
+    @await Component.InvokeAsync("AdminHeaderLinks")
+    @await Html.PartialAsync("_Header")
+    <script type="text/javascript" asp-location="Footer">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+    </script>
+    <div class="header-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/" class="fixed-logo"></a>
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "theme_header_menu" })
+                </div>
+            </div>
+        </div>
+        @*@await Component.InvokeAsync("TopMenu")*@
+    </div>
+    <div class="master-wrapper-content test">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        <div class="master-column-wrapper">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+    </div>
+    @await Component.InvokeAsync("Footer")
+    @* Use this content for back to top page scrolling *@
+    <div id="backTop"></div>
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

@@ -1,0 +1,32 @@
+<script>
+AttributeEditorBehaviour = {
+    properties: {
+        propertyName: {
+            type: String,
+        },
+        attributeName: {
+            type: String,
+        },
+        attributeValue: {
+            type: String,
+            observer: "_attributeValueChange",
+        },
+        defaultValue: {
+            type: String,
+        },
+    },
+
+    _attributeValueChange: function() {
+        if (this.attributeName && typeof(this.attributeValue) != 'undefined' && this.attributeValue != null) {
+            this.fire('iron-signal', {
+                name: 'change-attribute',
+                data: {
+                    name: this.attributeName,
+                    value: this.attributeValue
+                }
+            });
+        }
+    },
+
+};
+</script>

@@ -1,0 +1,101 @@
+﻿@model TopMenuModel
+<ul class="top-menu">
+    <li><a href="@Url.RouteUrl("HomePage")">Home</a></li>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
+    @{
+        var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+    }
+    @foreach (var category in rootCategories)
+    {
+        var categoryLineModel = new TopMenuModel.CategoryLineModel
+        {
+            Category = category
+        };
+        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+    }
+    @foreach (var topic in Model.Topics)
+    {
+        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+    }
+    @if (rootCategories.Count == 0 && Model.Topics.Count == 0)
+    {
+        //no categories or topis to display? in this case let's diplay some default menu items (should we?)
+        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+        if (Model.NewProductsEnabled)
+        {
+            <li>
+                <a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
+            </li>
+        }
+        <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+        if (Model.BlogEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+        }
+        if (Model.ForumEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+        }
+        <li><a href="/contact_us">@T("ContactUs")</a></li>
+    }
+
+    <li><a href="/contact_us">@T("ContactUs")</a></li>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+</ul>
+@{
+    var rootCategoriesResponsive = Model.Categories.ToList();
+    //name it "Categories" if we have only categories. Otherwise, "Menu"
+    var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
+    <div class="menu-toggle">@responsiveMenuTitle</div>
+    <ul class="top-menu mobile">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
+        <li><a href="@Url.RouteUrl("HomePage")">Home</a></li>
+        @foreach (var category in rootCategories)
+        {
+            var categoryLineModel = new TopMenuModel.CategoryLineModel
+            {
+                Category = category
+            };
+            @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+        }
+        @foreach (var topic in Model.Topics)
+        {
+            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+        }
+        @if (rootCategoriesResponsive.Count == 0 && Model.Topics.Count == 0)
+        {
+            //no categories or topis to display? in this case let's diplay some default menu items (should we?)
+            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+            if (Model.NewProductsEnabled)
+            {
+                <li>
+                    <a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
+                </li>
+            }
+            <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+            <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+            if (Model.BlogEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+            }
+            if (Model.ForumEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+            }
+            <li><a href="contact_us">@T("ContactUs")</a></li>
+        }
+        <li><a href="/contact_us">@T("ContactUs")</a></li>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+    </ul>
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $('.menu-toggle').click(function () {
+                $(this).siblings('.top-menu.mobile').slideToggle('slow');
+            });
+            $('.top-menu.mobile .sublist-toggle').click(function () {
+                $(this).siblings('.sublist').slideToggle('slow');
+            });
+        });
+    </script>
+}

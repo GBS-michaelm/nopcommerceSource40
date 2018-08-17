@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+@Html.Partial("_Notifications")
+<div class="master-wrapper-page">
+    @await Html.PartialAsync("_JavaScriptDisabledWarning")
+    @Html.Partial("OldInternetExplorerWarning")
+    <div class="admin-header-link">
+        <ul>
+            @await Component.InvokeAsync("AdminHeaderLinks")
+        </ul>
+    </div>
+    @Html.Partial("Header")
+    @*<script type="text/javascript">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+    </script>*@
+    <div class="header-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    @await Component.InvokeAsync("TopMenu")
+                    @*@await Component.InvokeAsync("Widget", new { widgetZone = "theme_header_menu" })*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="master-wrapper-content">
+        @*@Html.Widget("home_page_top")*@
+        @*<div class="container ">
+            <div class="row">
+                <div class="col-md-12 ">
+                     @Html.Widget("content_before")
+                </div>
+            </div>*@
+        @*ajax loading window*@
+        <div class="ajax-loading-block-window" style="display: none">
+            <div class="loading-image">
+            </div>
+        </div>
+    </div>
+    <div class="master-column-wrapper">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+</div>
+@await Component.InvokeAsync("Footer")
+@* Use this content for back to top page scrolling *@
+<div id="backTop"></div>
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
+

@@ -1,0 +1,124 @@
+﻿@model CategoryNavigationModel
+@using Nop.Web.Models.Catalog;
+
+@functions{
+    public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
+    {
+        if (Model.CurrentCategoryId == 0)
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+	
+	public bool IsCurrentCategory(CategorySimpleModel category)
+	{	
+		return category.Id == Model.CurrentCategoryId;	
+		
+	}
+	
+	
+}
+@helper RenderCategoryLine(CategorySimpleModel category)
+{
+    <li>
+        <a href="#@category.Id" data-toggle="collapse" data-parent="#accordion" class="left-nav">@category.Name
+            @if (category.NumberOfProducts.HasValue)
+            {
+                <text> </text>@T("Categories.TotalProducts", category.NumberOfProducts.Value)
+            }
+        </a>
+        @{		
+			if (category.SubCategories.Count > 0)
+			{
+				string divClass = "panel-collapse collapse";				
+				
+				/*			
+								
+				//check if the parent category is the current category
+				if (IsCurrentCategory(category))
+					{
+						divClass = " panel-collapse";		
+					}
+				else 
+				{
+					//loop to find if any of the subcategories is the current category
+					foreach (var subCategory in category.SubCategories)
+					{	
+						if (IsCurrentCategory(subCategory))
+						{
+							divClass = " panel-collapse";		
+						}				
+					}				
+				}
+				*/
+					
+				<div id="@category.Id" class="@divClass">	
+				<ul class="sublist nav nav-list">
+					@foreach (var subCategory in category.SubCategories)
+					{
+						@RenderSubCategoryLine(subCategory)
+					}
+				</ul>
+				</div>
+			}            
+        }
+    </li>
+}
+@helper RenderSubCategoryLine(CategorySimpleModel category)
+{
+    bool active = category.Id == Model.CurrentCategoryId || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;    
+	string liClass = active ? "active" : "inactive";
+	
+	if (IsCurrentCategory(category))
+    {
+        liClass += " last";		
+    }
+	
+    <li class="@liClass">
+        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })" class="left-nav-submenu">@category.Name
+            @if (category.NumberOfProducts.HasValue)
+            {
+                <text> </text>@T("Categories.TotalProducts", category.NumberOfProducts.Value)
+            }
+        </a>
+        @{
+                if (category.SubCategories.Count > 0)
+                {
+            <ul class="sublist nav nav-list">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderSubCategoryLine(subCategory)
+                }
+            </ul>
+                }
+            
+        }
+    </li>
+}
+@if (Model.Categories.Count > 0)
+{
+    <div class="block test block-category-navigation well box-shadow-wrapper">
+        <div class="title main-title">
+            <strong>@T("Categories")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="nav nav-list">
+                @foreach (var category in Model.Categories)
+                {
+                    @RenderCategoryLine(category)
+                }
+            </ul>
+        </div>
+    </div>
+}

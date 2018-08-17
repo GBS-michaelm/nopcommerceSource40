@@ -1,0 +1,117 @@
+﻿@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@model Nop.Plugin.Payments.GBS.Models.PaymentInfoModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core;
+@{
+    var cardDisplayClass = "gbs-no-display";
+    Layout = "";
+    ISettingService _mySettings = EngineContext.Current.Resolve<ISettingService>();
+    var currentStoreContext = EngineContext.Current.Resolve<IStoreContext>();
+    var settingValue = _mySettings.GetSettingByKey<string>("gbspaymentsettings.usesavedcards", null, currentStoreContext.CurrentStore.Id, true);
+    CheckoutBillingAddressModel BillingAddresses = ViewBag.BillingAddresses as CheckoutBillingAddressModel;
+}
+@if (ViewBag.UseSavedCards !=null && ViewBag.UseSavedCards && (int?)ViewBag.SavedCCCount > 0)
+{
+
+}
+else
+{
+  @*<input type="hidden" name="paymentmethod" value="New Card"/>*@
+    cardDisplayClass = "";
+}
+@*StoreID: @currentStoreContext.CurrentStore.Id <br/>
+SettingValue: @settingValue<br />
+ViewBag ccount: @ViewBag.SavedCCCount<br />
+ViewBag usesavedcards: @ViewBag.UseSavedCards<br />
+ViewBag StoreID: @ViewBag.StoreID<br />*@
+
+
+
+
+<div class="saved-credit-card-wrap gbs-padding-15">
+
+    <div class="title small-heading">
+        <strong><i class="fa fa-lock fa-1x gbs-lock-icon-color" aria-hidden="true"></i> Secure Payment Credit Card Payment</strong>
+    </div>
+    @Html.Action("SaveCCView", "PaymentProfile")
+
+
+</div>
+<div class="form-horizontal saved-credit-card-input-wrap gbs-margin-bottom-15 @cardDisplayClass">
+    <div class="form-group">
+        @Html.LabelFor(model => model.CardholderName, new { @class = "control-label col-sm-2 col-md-2 cc-label" })
+        <div class="col-sm-6 col-md-6">
+            @Html.TextBoxFor(model => model.CardholderName, new { autocomplete = "off", @class = "form-control" })
+            <i class="fa fa-cc-visa fa-2x gbs-visa-icon-color" aria-hidden="true"></i>
+            <i class="fa fa-cc-mastercard fa-2x gbs-master-card-icon-color" aria-hidden="true"></i>
+            <i class="fa fa-cc-amex fa-2x gbs-amex-card-icon-color" aria-hidden="true"></i>
+            <i class="fa fa-cc-discover fa-2x gbs-discover-card-icon-color" aria-hidden="true"></i>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            @Html.ValidationMessageFor(model => model.CardholderName)
+            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CardNumber, new { @class = "control-label col-sm-2 col-md-2 cc-label" })
+        <div class="col-sm-6 col-md-6">
+            @Html.TextBoxFor(model => model.CardNumber, new { autocomplete = "off", maxlength = 22, @class = "form-control" })
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+            @Html.ValidationMessageFor(model => model.CardNumber)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ExpireMonth, new { @class = "control-label col-sm-2 col-md-2 cc-label" })
+        <div class="col-sm-2 col-md-3">
+            @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths, new { @class = "form-control dropdown-toggle form-control category-iteam category-select" })
+        </div>
+        <div class="col-sm-2 col-md-2">
+            @Html.DropDownListFor(model => model.ExpireYear, Model.ExpireYears, new { @class = "form-control dropdown-toggle form-control category-iteam category-select" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CardCode, new { @class = "control-label col-sm-2 col-md-2 cc-label" })
+        <div class="col-sm-6 col-md-6">
+            @Html.TextBoxFor(model => model.CardCode, new { autocomplete = "off", maxlength = 4, @class = "form-control" })
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+            @Html.ValidationMessageFor(model => model.CardCode)
+        </div>
+    </div>
+    @if (settingValue != null && settingValue == "True")
+    {
+        <div class="form-group">
+            <label class="control-label col-sm-2 col-md-2 cc-label">Nickname</label>
+            <div class="col-sm-6 col-md-6">
+                @Html.TextBoxFor(model => model.NickName, new { @class = "form-control" })
+            </div>
+        </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2 col-md-2 cc-label">Store Card:</label>
+                <div class="col-sm-6 col-md-6">
+                    @*@Html.CheckBox("StoreProfile1", true)
+                        @Html.CheckBoxFor(model => model.StoreProfile, new { @value = "true" })*@
+                    <input id="StoreProfile" name="StoreProfile" type="checkbox" value="true" checked="checked" onclick="showNickname();">
+                </div>
+            </div>
+    }
+</div>
+
+@Html.HiddenFor(model => model.ProfileID, new { id = "ProfileID" })
+
+<script>
+    function showNickname() {
+        if ($("#StoreProfile").is(':checked')) {
+            $("#nicknameBox").show();
+        }
+        else {
+            $("#nicknameBox").hide();
+        }
+    }
+</script>

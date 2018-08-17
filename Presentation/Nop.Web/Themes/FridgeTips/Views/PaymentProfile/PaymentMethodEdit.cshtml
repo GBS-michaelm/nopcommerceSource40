@@ -1,0 +1,139 @@
+﻿@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-address-list-page");
+    var validationResult = ViewBag.warnings;
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer")
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "payeditform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="page account-page address-edit-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - Edit payment method</h1>
+        </div>
+        @if (validationResult != null)
+        {
+            if (validationResult.Count > 0)
+            {
+                <div class="validation-warnings" style="color:crimson; padding-bottom:15px;">
+                    @foreach (var item in validationResult)
+                    {
+                        @item<br />
+                    }
+                </div>
+            }
+        }
+        <div class="page-body">
+            @if (Model != null)
+            {
+                if (Model.SavedProfiles.Count > 0)
+                {
+                    foreach (var item in Model.SavedProfiles)
+                    {
+                        <div class="form-fields form-horizontal">
+                            <div class="edit-address">
+                                <div class="form-group">
+                                    <label for="CardNumber" class="control-label col-xs-3 col-sm-2 col-md-2">Card number:</label>
+                                    <div class="col-xs-9 col-sm-6 col-md-6">
+                                        <input autocomplete="off" class="form-control single-line" id="CardNumber" name="CardNumber" type="text" value="@item.Last4Digits">
+                                    </div>
+                                    <div class="col-sm-4 col-md-4">
+                                        <span class="required">*</span>
+                                        <span class="field-validation-valid" data-valmsg-for="CardNumber" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ExpireMonth" class="control-label col-xs-3 col-sm-2 col-md-2">Expiration date:</label>
+                                    <div class="col-xs-9 col-sm-6 col-md-6">
+                                        <select id="ExpireMonth" name="ExpireMonth" style="Width: 35px; Margin-right: 10px;" class="valid">
+                                            @for (var i = 1; i <= 12; i++)
+                                            {
+                                                var text = (i < 10) ? "0" + i : i.ToString();
+                                                {
+                                                    if (item.ExpMonth.ToString() == i.ToString())
+                                                    {
+                                                    <option value="@i.ToString()" selected>@text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                    <option value="@i.ToString()">@text</option>
+                                                    }
+                                                };
+                                            }
+                                        </select>
+                                        <select id="ExpireYear" name="ExpireYear" style="Width: 70px;" class="valid">
+                                            @for (var i = 0; i < 15; i++)
+                                            {
+                                                var year = Convert.ToString(DateTime.Now.Year + i);
+                                                {
+                                                    if (item.ExpYear.ToString() == year)
+                                                    {
+                                                    <option value="@year" selected>@year</option>
+                                                    }
+                                                    else
+                                                    {
+                                                    <option value="@year">@year</option>
+                                                    }
+                                                };
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4">
+                                        <span class="required">*</span>
+                                        <span class="field-validation-valid" data-valmsg-for="CardholderName" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="CardCode" class="control-label col-xs-3 col-sm-2 col-md-2">Card code:</label>
+                                    <div class="col-xs-9 col-sm-6 col-md-6">
+                                        <input autocomplete="off" class="form-control single-line" id="CardCode" name="CardCode" type="text" value="">
+                                    </div>
+                                    <div class="col-sm-4 col-md-4">
+                                        <span class="field-validation-valid" data-valmsg-for="CardCode" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="NickName" class="control-label col-xs-3 col-sm-2 col-md-2">Nickname:</label>
+                                    <div class="col-xs-9 col-sm-6 col-md-6">
+                                        <input autocomplete="off" class="form-control single-line" id="NickName" name="NickName" type="text" value="@item.NickName">
+                                    </div>
+                                    <div class="col-sm-4 col-md-4">
+                                        <span class="required">*</span>
+                                        <span class="field-validation-valid" data-valmsg-for="NickName" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <div class="control-label col-xs-3 col-sm-2 col-md-2">&nbsp;</div>
+                        <div class="buttons col-xs-9 col-sm-6 col-md-6 row padingleft20">
+                            @*<input type="submit" class="button-1 save-address-button" value="@T("Common.Save")" />*@
+                            <a onclick="document.getElementById('payeditform').submit();" class="button button-3d button-rounded button-darkgreen"><i class="fa fa-floppy-o"></i>@T("Common.Save")</a>
+                        </div>
+                    </div>
+
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        document.getElementsByClassName('customer-info')[0].getElementsByTagName('a')[0].classList.remove("active");
+        document.getElementsByClassName('customer-info')[0].getElementsByTagName('a')[0].classList.add("inactive");
+        $('#payment_method_link').addClass('active').removeClass('inactive');
+    });
+</script>
+

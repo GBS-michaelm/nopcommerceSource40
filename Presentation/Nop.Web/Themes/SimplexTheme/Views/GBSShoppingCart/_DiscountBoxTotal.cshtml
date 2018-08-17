@@ -1,0 +1,109 @@
+﻿@model ShoppingCartModel.DiscountBoxModel
+@using Nop.Web.Models.ShoppingCart;
+@{
+    var currentURL = Request.Url.AbsolutePath;
+}
+@if (Model.Display)
+{
+
+
+
+
+    <div class="coupon-box">
+        <div class="title">
+            <strong>@T("ShoppingCart.DiscountCouponCode")</strong>
+        </div>
+        <div class="hint">
+            @T("ShoppingCart.DiscountCouponCode.Tooltip")
+        </div>
+        <div class="coupon-code">
+            <input name="discountcouponcode" id="discountcouponcode" type="text" class="discount-coupon-code" />
+            <input type="submit" name="applydiscountcouponcode" id="applydiscountcouponcode"
+                   value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button-2 apply-discount-coupon-code-button" />
+        </div>
+        @foreach (var message in Model.Messages)
+        {
+            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
+                @message
+            </div>
+        }
+        @foreach (var discount in Model.AppliedDiscountsWithCodes)
+        {
+            <div class="current-code">
+                <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
+                @*empty value (little hack for FormValueExistsAttribute)*@
+                <input type="submit" name="removediscount-@discount.Id" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
+            </div>
+        }
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#discountcouponcode').keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#applydiscountcouponcode').click();
+                    return false;
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+    @*RESTRUCTURE THIS MESS YO!*@
+
+
+    
+    //using (Html.BeginRouteForm((!String.IsNullOrEmpty(Model.CurrentCode)) ? "GBSRemoveDiscount" : "GBSApplyDiscount", FormMethod.Post, new { enctype = "multipart /form-data", id = "shopping-cart-form" }))
+    //{
+    
+
+        @*<input type="hidden" name="urlname" value="@currentURL" />
+        if (!String.IsNullOrEmpty(Model.CurrentCodes))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".discount-box-td").hide();
+                    $(".coupon-total-wrap").show();
+                });
+            </script>
+            <div class="current-code">
+                <span class="bg-success">
+                    @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.AppliedDiscountsWithCodes)
+
+
+                    <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")">
+                </span>
+            </div>
+        }
+        else
+        {
+            <div id="coupon-total-wrap" >*@
+           
+
+            @*<div class="hint gbs-padding-bottom-10">@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>*@
+            @*<div class="col-md-6 col-sm-6">
+                <input name="discountcouponcode" type="text" class="discount-coupon-code form-control" />&nbsp;
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button button-3d button-small button-rounded button-teal" />
+            </div>
+           @foreach (var message in Model.Messages)
+           {
+            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
+                @message
+            </div>
+           }
+            </div>
+        }*@
+
+   // }
+}

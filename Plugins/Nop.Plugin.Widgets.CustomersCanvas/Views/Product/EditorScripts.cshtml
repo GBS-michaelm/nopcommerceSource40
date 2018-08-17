@@ -1,0 +1,119 @@
+﻿@using Nop.Web.Framework.UI;
+@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcEditorLoaderModel
+@inject IJsonHelper Json
+@{
+    Layout = "";
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/bootstrap/bootstrap.min.css");
+    Html.AddScriptParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Scripts/bootstrap/bootstrap.min.js");
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.CustomersCanvas/Content/aurigma.css");
+}
+<script type="text/javascript">
+    function Version(versionNumber) {
+        var components = versionNumber.split(".");
+        if (components.length < 3) {
+            throw "The version number " + versionNumber + " is incorrect! It should have format x.y.z";
+        }
+        Object.defineProperty(this, 'major', {
+            value: components[0],
+            writable: false,
+            enumerable: true
+        });
+        Object.defineProperty(this, 'minor', {
+            value: components[1],
+            writable: false,
+            enumerable: true
+        });
+        Object.defineProperty(this, 'revision', {
+            value: components[2],
+            writable: false,
+            enumerable: true
+        });
+    }
+
+    $(document).ready(function () {
+
+        // When RequireJS-compatible modules are inserted through <script>, you have to add require.js reference only in the end. That's why we dynamically load it only when the page is loaded completely.
+        var requireJsUrl = "@Url.Content("~/Plugins/Widgets.CustomersCanvas/Scripts/require.js")";
+        $.getScript(requireJsUrl).done(function () {
+
+            var requireCommon = requirejs.config({
+                baseUrl: '@Url.Content("~/Plugins/Widgets.CustomersCanvas/Scripts/")',
+            });
+
+            requireCommon(['ecommerce-driver', 'resource-helper'], function (driver, resources) {
+                
+                var editorLoaderModel = JSON.parse(JSON.stringify(@Json.Serialize(Model)));
+                editorLoaderModel.PluginSettings.NopCommerceBaseUrl =   "@Context.Request.Scheme" + "://" + "@Context.Request.Host" + "/" + "@Context.Request.PathBase" + "/";
+
+                var editorJson = JSON.parse(@Json.Serialize(Model.Editor));
+                var config = JSON.parse(@Json.Serialize(Model.Config));
+
+                var editorVersion = new Version(editorJson.version);
+                if (editorVersion.major < 1) {
+                    if (typeof (editorJson.styles) === 'object' && Array.isArray(editorJson.styles)) {
+                        editorJson.styles.forEach(function (style) {
+                            resources.loadLink("@Url.Content(Model.Path)/styles/" + style, "stylesheet", "text/css");
+                        });
+                    }
+
+                    // TODO: Consider removing it - only non-RequireJS scripts should be connected this way
+                    if (typeof (editorJson.imports) === 'object' && Array.isArray(editorJson.imports)) {
+                        editorJson.imports.forEach(function (imported) {
+                            // if we meet a HTML file there, we consider it as a Polymer component and import it in a Polymer way.
+                            if (imported.endsWith(".html")) {
+                                resources.loadLink("@Url.Content(Model.Path)/imports/" + imported, "import");
+                            } else {
+                                resources.loadScript("@Url.Content(Model.Path)/imports/" + imported);
+                            }
+                        });
+                    }
+                }
+
+                var editorModuleName = !!editorJson.entry ? editorJson.entry : "editor.js";
+
+                // Remove extension
+                var namecomp = editorModuleName.split(".");
+                namecomp.pop();
+                editorModuleName = namecomp.join(".");
+
+                var requirePlugin = requirejs.config({
+                    baseUrl: '@Url.Content("~/Plugins/Widgets.CustomersCanvas/Editors/"+Model.EditorFolder)'
+                });
+
+                requirePlugin([editorModuleName], function (editor) {
+                    editorLoaderModel.ProductDetails.updateCartItemId = editorLoaderModel.UpdateCartItemId;
+                    config.config.language = '@Model.Language';
+                    editorLoaderModel.PluginSettings.Currency = editorLoaderModel.Currency;
+                    var curDriver = driver.init(editorLoaderModel.ProductDetails, editor, config, editorLoaderModel.PluginSettings, null, editorLoaderModel.Quantity, editorLoaderModel.User);
+                    if (editorLoaderModel.CcData != null) {
+                        curDriver.orders.current.initAsReturning(
+                            editorLoaderModel.UpdateCartItemId,
+                            Number(editorLoaderModel.ProductDetails.ProductAttributes.find(x => x.Name === "CcId").DefaultValue),
+                            JSON.parse(editorLoaderModel.CcData.Data));
+
+                        var optionsPath = "";
+                        editorLoaderModel.ProductDetails.ProductAttributes.forEach(function (attr) {
+                            var productId = attr.Id;
+                            var value = attr.Values.find(function (value) { return value.IsPreSelected === true });
+                            if (value) {
+                                var valueId = value.Id;
+                                optionsPath += "product_attribute_" + productId + "=" + valueId + "&";
+                            }
+                        });
+                        if (optionsPath.length > 0) {
+                                optionsPath = optionsPath.substring(0, optionsPath.length - 1);
+                        }
+                        window.history.replaceState(null, null, window.location.href + "&" + optionsPath);
+                    }
+
+                    var editorid = "#editor-parent-for-productid-@Model.ProductDetails.Id";
+                    window.ecommerceDriver = curDriver;
+                    curDriver.products.current.renderEditor($(editorid)[0]);
+                });
+
+            });
+        }).fail(function () {
+            console.error("Failed to load RequireJS from " + requireJsUrl);
+        });
+    });
+</script>

@@ -1,0 +1,122 @@
+﻿@model CheckoutBillingAddressModel
+@using Nop.Web.Models.Checkout;
+@{
+    bool localPickUp = false;
+    if (Session["PickUpInStore"] != null)
+    {
+        localPickUp = Convert.ToBoolean(Session["PickUpInStore"]);
+
+    }
+
+
+}
+
+<div class="select-billing-address">
+        <div class="title small-heading">
+            <strong>Enter Your Billing Address</strong>
+        </div>
+    <div class="billing-form-wrap gbs-padding-15">
+      @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
+      {
+            <div class="billing-addresses">
+                @if (Model.ShipToSameAddressAllowed)
+                {
+                    <div class="ship-to-same-address">
+                        <div class="selector">
+                            @Html.CheckBoxFor(x => x.ShipToSameAddress)
+                            <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                        </div>
+                    </div>
+                }
+                <div class="address-dropdown-wrap  gbs-width-50-percent">
+                    @if (Model.ExistingAddresses.Count > 0)
+                    {
+
+
+
+
+                        <select id="billing-address-dropdown" class="select-1 form-control">
+                            @if (!localPickUp)
+                            {
+                                <option value="Same Address">My billing address is the same as my shipping</option>
+                            }
+                            @foreach (var item in Model.ExistingAddresses)
+                            {
+
+                                <option value="@T("Checkout.BillToThisAddress"),@item.Id">
+                                    @item.FirstName @item.LastName,
+                                    @if (item.StreetAddressEnabled)
+                                    {
+                                        @item.Address1<text>,</text>
+                                    }
+                                    @if (item.CityEnabled)
+                                    {
+                                        @item.City
+                                    }
+                                    @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                                    {
+                                        <text>,</text>
+                                    }
+                                    @if (item.StateProvinceEnabled)
+                                    {
+                                        @item.StateProvinceName
+                                    }
+                                    @if (item.ZipPostalCodeEnabled)
+                                    {
+                                        @item.ZipPostalCode
+                                    }
+                                </option>
+
+                            }
+                            <option value="New Address">New Address</option>
+                        </select>
+                        
+                    }
+                    else
+                    {
+
+                        if (localPickUp)
+                        {
+                            <select id="billing-address-dropdown" class="select-1 form-control">
+                                <option value="New Address">New Address</option>
+                            </select>
+                        }
+
+                    }
+
+                   
+                </div>
+
+                
+            </div>
+        }
+    </div>
+                            
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#billing-address-dropdown").change(function () { BillingAddressDropdownChange($(this)); });
+    });
+
+    function BillingAddressDropdownChange(evt) {
+        var billingVal = evt.val();
+        $("#hdn-billing-type").val(billingVal);
+        $("#hdn-billing-address-id").val(evt.attr('addressid'));
+        switch (billingVal) {
+            case "New Address":
+                $(".enter-address-body").show();
+                break;
+            default:
+                $(".enter-address-body").hide();
+                break;
+        }
+    }
+
+    function EditShippingAddress()
+    {
+        $(".new-shipping-address").show();
+    }
+</script>

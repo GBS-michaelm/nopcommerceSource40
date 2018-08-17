@@ -1,0 +1,69 @@
+﻿@model IList<ProductOverviewModel>
+
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="related-products-grid">
+        <div class="title sub-title">
+             <strong>@T("Products.RelatedProducts")</strong>
+        </div>
+
+
+        <div class="sliderinner">
+        
+                @if (Model.Count <= 4)
+                {
+                    <div class="related-products-slider owl-carousel owl-theme">
+                        @foreach (var item in Model)
+                        {
+                            <div class="item-box product-grid item">
+                                <div class="thumbnail">
+                                    @Html.Partial("_ProductBox", item)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="related-products-slider owl-carousel owl-theme">
+                        @foreach (var item in Model)
+                        {
+                            <div class="item-box product-grid item">
+                                <div class="thumbnail">@Html.Partial("_ProductBox", item)</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                    </div>
+    </div> 
+}
+
+
+<script type="text/javascript">
+
+    $('.owl-carousel').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        pagination: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 2
+            },
+            800: {
+                items: 3
+            },
+            1200: {
+                items: 4
+            },
+            1400: {
+                items: 4
+            }
+        }
+    })
+</script>

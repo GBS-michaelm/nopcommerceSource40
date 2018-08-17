@@ -1,0 +1,184 @@
+﻿@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Orders;
+@using Nop.Core.Infrastructure;
+@if (Model.AddToCart.UpdatedShoppingCartItemId > 0)
+{
+    @Html.HiddenFor(x => x.AddToCart.UpdatedShoppingCartItemId)
+    string pageID = "42";
+
+
+}
+@if (!Model.AddToCart.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)
+{
+<div class="add-to-cart">
+    @if (Model.AddToCart.CustomerEntersPrice)
+    {
+        <div class="customer-entered-price clearfix">
+            <div class="price-input">
+                @Html.LabelFor(model => Model.AddToCart.CustomerEnteredPrice, "", new { @class = "enter-price-label" })
+                @*round price*@
+                @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.AddToCart.CustomerEnteredPrice)), new { @class = "enter-price-input form-control" })
+            </div>
+            <div class="price-range alert alert-info">
+                @Model.AddToCart.CustomerEnteredPriceRange
+            </div>
+        </div>
+    }
+    @if (!String.IsNullOrEmpty(Model.AddToCart.MinimumQuantityNotification))
+    {
+        <div class="min-qty-notification">@Model.AddToCart.MinimumQuantityNotification</div>
+    }
+    @if (!Model.AddToCart.DisableBuyButton)
+    {
+        <div class="add-to-cart-panel">
+            <div class="quantity-box">
+                <div class="enter-quantity">
+                    Enter Quantity:
+                    @*@Html.LabelFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-label" }, ":")*@
+                </div>
+                @if (Model.AddToCart.AllowedQuantities.Count > 0)
+                {
+                    @Html.DropDownListFor(model => Model.AddToCart.EnteredQuantity, Model.AddToCart.AllowedQuantities, new { @class = "qty- dropdown form-control" })
+                }
+                else
+                {
+                    <div class="addtocart-quantity-box">
+                        @Html.TextBoxFor(model => Model.AddToCart.EnteredQuantity, new { @class = "qty-input form-control", @onkeyup = "ChangeQuantity1(this)", @data_productid = Model.AddToCart.ProductId })
+                        <span class="increase-quantity" onclick="IncreaseQuantity(@Html.IdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                        <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.IdFor(model => Model.AddToCart.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                    </div>
+                    //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => Model.AddToCart.EnteredQuantity)").keydown(function (event) {
+                                if (event.keyCode == 13) {
+                                    $("#add-to-cart-button-@Model.Id").click();
+                                    return false;
+                                }
+                            });
+                        });
+                    </script>
+                }
+            </div>
+
+            <div class="product-add-button">
+                @* <input id="add-to-cart-button-@Model.AddToCart.ProductId"  type="button" class=" btn btn-primary add-to-cart-button" value="@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />*@
+
+                <button id="add-to-cart-button" type="button" class=" button button-rounded button-reveal button-small button-green tright" data-productid="@Model.AddToCart.ProductId" onclick="">
+
+                    <i class="icon-line-arrow-right"></i><span>Customize</span>
+                </button>
+
+                @*<a  data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" class="button button-3d button-rounded button-green"><i class="icon-shopping-cart"></i>@(Model.AddToCart.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))</a>*@
+            </div>
+
+        </div>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.Id })
+  </div>
+
+
+
+    string cartID = ((int)ShoppingCartType.ShoppingCart).ToString();
+    string updateCartItemId = string.Empty;
+    string sku = string.Empty;
+    var addToCartText = "";
+    if (Model.AddToCart.UpdatedShoppingCartItemId > 0 && Model.AddToCart.UpdateShoppingCartItemType.HasValue && Model.AddToCart.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+    {
+        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+    }
+    else
+    {
+        addToCartText = T("ShoppingCart.AddToCart").Text;
+        if (Model.AddToCart.IsRental)
+        {
+            addToCartText = T("ShoppingCart.Rent").Text;
+        }
+        if (Model.AddToCart.AvailableForPreOrder)
+        {
+            addToCartText = T("ShoppingCart.PreOrder").Text;
+        }
+    }
+    var data = Model.ProductSpecifications;
+    string productType = string.Empty;
+    foreach (var item in data)
+    {
+        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEURL")
+        {
+            TempData["iframeurl"] = item.ValueRaw;
+            break;
+        }
+    }
+    foreach (var item in data)
+    {
+        if (item.SpecificationAttributeName.ToUpper().Trim() == "IFRAMEHEIGHT")
+        {
+            TempData["iframeheight"] = item.ValueRaw;
+            break;
+        }
+    }
+
+
+    if (Context.Request.Query["updatecartitemid"].Count > 0)
+    {
+        updateCartItemId = "&updatecartitemid=" + Context.Request.Query["updatecartitemid"].ToString();
+    }
+
+    //if(Model.Sku.Contains("-G") && Model.Name.ToLower().Contains("envelopes"))
+    //{
+    //    sku = Model.Sku.Replace("-G", "CU");
+    //} else
+    //{
+    //    sku = Model.Sku;
+    //}
+    string url = "/chili?sku=" + Model.Sku + "&id=" + Model.Id + "&cartid=" + cartID + updateCartItemId + "&qty=";
+
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-custom-submit.js"></script>
+    <script type="text/javascript" src="/Themes/HouseofMagnet/Content/js/iframe-data.js"></script>
+    <script type="text/javascript">
+    var done = false;
+    var everythingLoaded = setInterval(function () {
+        if (/loaded|complete/.test(document.readyState) && !done) {
+            clearInterval(everythingLoaded);
+            $(".qty-input").each(function (index) {
+                ChangeQuantity1(this);
+            });
+            //  ChangeQuantity1($(".qty-input")); // this is the function that gets called when everything is loaded
+            done = true;
+        }
+    }, 100);
+
+
+
+    $(document).ready(function () {
+        var productAttr = JSON.parse(JSON.stringify(@Html.Raw(Json.Serialize(Model.ProductAttributes))));
+        console.log(productAttr);
+        var jsonArray = {};
+        var option;
+        var jsonStr
+
+
+         $("#add-to-cart-button").click(function () {
+            // for (var i = 0; i < productAttr.length; i++) {
+            //     option = new Options(productAttr[i]);
+            //     CreateJson(jsonArray, option);
+            // }
+
+             LoadingUpdate();
+
+            //var jsonSend = JSON.stringify(jsonArray);
+            //TempData["productOptions"] = jsonSend;
+            
+            SetProductOption("", htmlDecode("@url") + $(".qty-input").val());
+        });
+
+         function LoadingUpdate()
+         {
+             $("#dv-loading-gif").show();
+             $(".product-details-page").hide();
+         }
+    });
+    </script>
+
+}

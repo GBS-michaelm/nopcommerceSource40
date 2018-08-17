@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "_ColumnsOne";
+
+    //page class
+    Html.AppendPageCssClassParts("html-home-page");
+}
+<div class="page home-page">
+    <div class="page-body">
+        <div class="container">
+            <div class="banner-section">
+                <div class="main-banner">@await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })</div>
+                <div class="banner-right">
+                    @*@Html.Action("TopicBlock", "Topic", new { systemName = "ft_home-features" })*@
+                    @await Component.InvokeAsync("TopicBlock", new { systemName = "ft_home-features" })
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        @*@Html.Action("TopicBlock", "Topic", new { systemName = "ft_home-page-callout" })*@
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "ft_home-page-callout" })
+        <div class="container">
+            @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })
+            @await Component.InvokeAsync("HomepageCategories")
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4"><a href="blog/tag/delicious%20desserts%202018"><img src="/Themes/FridgeTips/Content/images/cal2018_desserts.jpg" alt="Delicious Desserts Video Recipes"></a></div>
+                <div class="col-sm-4"><a href="blog/tag/family%20favorite%20recipes%202018"><img src="/Themes/FridgeTips/Content/images/cal2018_family.jpg" alt="Family Favorite Recipes"></a></div>
+                <div class="col-sm-4"><a href="blog/tag/quick%20and%20healthy%202018"><img src="/Themes/FridgeTips/Content/images/cal2018_healthy.jpg" alt="Quick and Healthy Recipes"></a></div>
+            </div>
+        </div>
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_products" })
+        @await Component.InvokeAsync("HomepageProducts")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_best_sellers" })
+        @await Component.InvokeAsync("HomepageBestSellers")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_news" })
+        @await Component.InvokeAsync("HomepageNews")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_poll" })
+        @await Component.InvokeAsync("HomepagePolls")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_bottom" })*@
+    </div>
+</div>
