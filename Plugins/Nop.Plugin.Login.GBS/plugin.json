@@ -1,11 +1,11 @@
 ﻿{
-  "Group": "GBS",
-  "FriendlyName": "GBS LOGIN SERVICE",
-  "SystemName": "Login.GBS",
-  "Version": "1.00",
-  "SupportedVersions": [ "4.00" ],
-  "Author": "Parth S. Patel",
-  "DisplayOrder": 1,
-  "FileName": "Nop.Plugin.Login.GBS.dll",
-  "Description": "This plugin integrates Login module"
+	"Group": "GBS",
+	"FriendlyName": "GBS LOGIN SERVICE",
+	"SystemName": "Login.GBS",
+	"Version": "1.00",
+	"SupportedVersions": [ "4.00" ],
+	"Author": "Naveed Anjum",
+	"DisplayOrder": 1,
+	"FileName": "Nop.Plugin.Login.GBS.dll",
+	"Description": "This plugin integrates Login module"
 }

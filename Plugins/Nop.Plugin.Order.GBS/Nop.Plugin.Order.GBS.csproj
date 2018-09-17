@@ -62,18 +62,16 @@
 
   <ItemGroup>
     <Reference Include="FileService">
-      <HintPath>..\..\Libraries\GBS\FileService.dll</HintPath>
+      <HintPath>..\..\GBS\FileService.dll</HintPath>
     </Reference>
     <Reference Include="GBSFileServiceClient">
-      <HintPath>..\..\Libraries\GBS\GBSFileServiceClient.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>..\..\GBS\GBSFileServiceClient.dll</HintPath>
     </Reference>
     <Reference Include="GBSOrderServiceClient">
-      <HintPath>..\..\Libraries\GBS\GBSOrderServiceClient.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>..\..\GBS\GBSOrderServiceClient.dll</HintPath>
     </Reference>
     <Reference Include="OrderService">
-      <HintPath>..\..\Libraries\GBS\OrderService.dll</HintPath>
+      <HintPath>..\..\GBS\OrderService.dll</HintPath>
     </Reference>
   </ItemGroup>
   
