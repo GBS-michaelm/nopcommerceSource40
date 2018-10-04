@@ -4,7 +4,7 @@
 	"SystemName": "Products.SpecificationAttributes",
 	"Version": "1.00",
 	"SupportedVersions": [ "4.00" ],
-	"Author": "Parth Patel",
+	"Author": "Nav Anj",
 	"DisplayOrder": 1,
 	"FileName": "Nop.Plugin.Products.SpecificationAttributes.dll",
 	"Description": "This plugin enables product specification attributes"

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "GBS",
+  "FriendlyName": "Shipping GBS Extended Field Plugin",
+  "SystemName": "Nop.Plugin.Shipping.GBS",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Nav Anj",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Shipping.GBS.dll",
+  "Description": "This plugin integrates GBS shipping"
+}

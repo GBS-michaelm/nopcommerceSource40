@@ -1,0 +1,163 @@
+﻿@model Nop.Plugin.Shipping.GBS.Models.Product.ProductExtendedFieldsModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+@using Nop.Web.Framework;
+
+<form asp-controller="ExtendedFields" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4> Admin Resource for service / webApi </h4>
+                <hr>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="LoginId_OverrideForStore" asp-input="LoginId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="LoginId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LoginId" />
+                        <span asp-validation-for="LoginId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Password_OverrideForStore" asp-input="Password" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Password" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSShippingWebServiceAddress_OverrideForStore" asp-input="GBSShippingWebServiceAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSShippingWebServiceAddress" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSShippingWebServiceAddress" />
+                        <span asp-validation-for="GBSShippingWebServiceAddress"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GBSStoreNamePrepend_OverrideForStore" asp-input="GBSStoreNamePrepend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GBSStoreNamePrepend" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GBSStoreNamePrepend" />
+                        <span asp-validation-for="GBSStoreNamePrepend"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseFlatRate_OverrideForStore" asp-input="UseFlatRate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseFlatRate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseFlatRate" />
+                        <span asp-validation-for="UseFlatRate"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="FlatRateAmount_OverrideForStore" asp-input="FlatRateAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="FlatRateAmount" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FlatRateAmount" />
+                        <span asp-validation-for="FlatRateAmount"></span>
+                    </div>
+                </div>
+
+                <hr>
+                <h4> Admin Side Extended Filed Local Resource Description </h4>
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippingCategoryA" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippingCategoryA" />
+                        <span asp-validation-for="ShippingCategoryA"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippingCategoryB" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippingCategoryB" />
+                        <span asp-validation-for="ShippingCategoryB"></span>
+                    </div>
+                </div>
+
+                <hr>
+                <h4> Local Resource Setting Update </h4>
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippingOptionDesError" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippingOptionDesError" />
+                        <span asp-validation-for="ShippingOptionDesError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippingOptionDesSuccess" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippingOptionDesSuccess" />
+                        <span asp-validation-for="ShippingOptionDesSuccess"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippingOptionDesName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippingOptionDesName" />
+                        <span asp-validation-for="ShippingOptionDesName"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TableName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TableName" />
+                        <span asp-validation-for="TableName"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
