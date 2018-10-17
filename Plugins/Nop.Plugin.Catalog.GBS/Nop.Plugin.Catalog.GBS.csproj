@@ -18,6 +18,8 @@
   <ItemGroup>
     <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
+    <None Remove="Views\CategoryNavigationCustom.cshtml" />
+    <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\_CategoryLine.NavigationCustom.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
@@ -39,9 +41,15 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\CategoryNavigationCustom.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\_CategoryLine.NavigationCustom.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -54,15 +62,6 @@
       <Private></Private>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Plugin.BreadCrumb.GBS\Nop.Plugin.BreadCrumb.GBS.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Views\CategoryNavigationCustom.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Views\Configure.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->
