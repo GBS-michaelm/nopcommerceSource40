@@ -3,7 +3,7 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Framework.Themes
-@using Nop.Plugin.DataAccess.GBS;
+@using Nop.Web.Infrastructure;
 @using System.Data;
 @using Nop.Services.Catalog;
 @using Nop.Core.Domain.Catalog;
@@ -31,7 +31,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(productUrl);
     }
     //open graph META tags
@@ -41,7 +41,7 @@
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
     }
 
@@ -53,7 +53,7 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
     }
 
 
@@ -100,7 +100,7 @@
     if (featuredProductDataView.Count > 0)
     {
         featuredProductId = Int32.Parse(featuredProductDataView[0]["FeaturedProductId"].ToString());
-        featuredProduct = productService.GetProductById(featuredProductId); //allow access to products tier price chart    
+        featuredProduct = productService.GetProductById(featuredProductId); //allow access to products tier price chart
     }
 
 
@@ -109,35 +109,34 @@
 
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
-@Html.Widget("productdetails_after_breadcrumb", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 
-     <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
-	 
+<div id="gateway-sales-banner">@await Component.InvokeAsync("TopicBlock", new { systemName = "hom_gateway_sale_banner" })</div>
+
 <div class="page product-details-page grouped">
     <div class="page-body">
-        @Html.Widget("productdetails_top", Model.Id)
-        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
-        {
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+        <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     @Html.Partial("_Discontinued", Model)
                     <div class="product-name panel-heading">
                         <h1 itemprop="name">
                             @Model.Name
-                            @Html.Widget("product_artist_name", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "product_artist_name", additionalData = Model.Id })
                         </h1>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            @Html.Widget("productdetails_before_pictures", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                             <!--product pictures-->
                             @Html.Partial("_ProductDetailsPictures", Model)
-                            @Html.Widget("productdetails_after_pictures", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
 
                             @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
-                            @Html.Widget("productdetails_bottom", Model.Id)
-                            @Html.Widget("productdetails_before_collateral", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
 
                             @if (!String.IsNullOrEmpty(Model.ShortDescription))
                             {
@@ -148,26 +147,25 @@
                             @Html.Raw(Model.FullDescription)
 
 
-                            @Html.Partial("_ProductTierPrices", Model.TierPrices)  
-                           <div class="overview">
+                            @Html.Partial("_ProductTierPrices", Model.TierPrices)
+                            <div class="overview">
 
-
-                                @Html.Widget("productdetails_overview_top", Model.Id)
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                                 <!--product reviews-->
                                 @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
                                 <!--product manufacturers-->
                                 @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
                                 <!--compare, email a friend-->
                                 <div class="overview-buttons">
-                                    @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
                                     @Html.Partial("_CompareProductsButton", Model)
                                     @Html.Partial("_ProductEmailAFriendButton", Model)
-                                    @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
                                 </div>
                                 <!--price breaks-->
                                 @Html.Partial("_ShareButton", Model)
-                                @Html.Widget("product_category_titles", Model.Id)
-                                @Html.Widget("productdetails_overview_bottom", Model.Id)
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "product_category_titles", additionalData = Model.Id })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
                             </div>
 
                         </div>
@@ -192,7 +190,7 @@
                                                 @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
                                                 {
                                                     <div class="variant-picture">
-                                                        @Html.Widget("product_details_widget", variant.Id)
+                                                        @await Component.InvokeAsync("Widget", new { widgetZone = "product_details_widget", additionalData = Model.Id })
                                                         @*<img alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
                                                             title="@variant.DefaultPictureModel.Title" id="main-product-img-@variant.Id" />*@
                                                     </div>
@@ -207,22 +205,22 @@
                                                         }*@
                                                     <!--price & add to cart-->
                                                     @{
-                                                        var dataDictPrice = new ViewDataDictionary();
+                                                        var dataDictPrice = new ViewDataDictionary(ViewData);
                                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                                         @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                                     }
                                                     <!--gift card-->
                                                     @{
-                                                        var dataDictGiftCard = new ViewDataDictionary();
+                                                        var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
                                                         @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                                     }
                                                     @{
-                                                        var dataDictAddToCart = new ViewDataDictionary();
+                                                        var dataDictAddToCart = new ViewDataDictionary(ViewData);
                                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
 
                                                         bool amalgamateThis = false;
-                                                        
+
 
                                                         if (amalgamation)
                                                         {
@@ -262,41 +260,41 @@
                                                             {
                                                                 variant.AddToCart.CustomProperties.Add("masterCategoryId", amalgamationCategoryId);
                                                                 variant.AddToCart.CustomProperties.Add("featuredProductId", featuredProductId);
-                                                                
+
                                                                 @Html.Partial("_AmalgamationAddToCart", variant.AddToCart, dataDictAddToCart)
                                                             }
 
                                                             else
                                                             {
 
-                                                                            @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
-                                                                        }
+                                                                @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                                            }
 
-                                                                    }
-                                                                    else
-                                                                    {
+                                                        }
+                                                        else
+                                                        {
 
-                                                                        @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
-                                                                    }
+                                                            @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                                        }
 
-                                                                }
+                                                    }
                                                     <!--rental info-->
                                                     @{
-                                                                    var dataDictRental = new ViewDataDictionary();
-                                                                    dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
-                                                                    @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                        var dataDictRental = new ViewDataDictionary(ViewData);
+                                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
                                                     }
                                                     <!--attributes-->
                                                     @{
-                                                                    var dataDictAttributes = new ViewDataDictionary();
-                                                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                                                    @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                        var dataDictAttributes = new ViewDataDictionary(ViewData);
+                                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                                     }
 
                                                     <div class="form-group overview-buttons">
                                                         <!--wishlist-->
                                                         @{
-                                                            var dataDictAddToWishlist = new ViewDataDictionary();
+                                                            var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                                             dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                                             @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                                         }
@@ -335,10 +333,10 @@
                                                     @Html.Partial("_ProductTierPrices", @variant.TierPrices)
                                                 }
                                             }
-                                            
+
                                             @*@Html.Partial("_DeliveryInfo", variant)*@
                                         </div>
-                                                            }
+                                    }
                                     @*we do not display "also purchased" for grouped products
                                         @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
 
@@ -349,10 +347,7 @@
 
                     </div>
                     <div class="product-slider">
-                        @Html.Action("RelatedProducts", "Product", new
-                   {
-                       productId = Model.Id
-                   })
+                        @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
                     </div>
 
 
@@ -362,7 +357,7 @@
                 </div>
 
             </div>
-                                                            }
+        </form>
     </div>
 
 
@@ -377,9 +372,9 @@
                 CatalogPagingFilteringModel catalogPagingFilteringModel = new CatalogPagingFilteringModel();
                 catalogPagingFilteringModel.PageSize = 1;
                 CategoryModel categoryModel = catalogModelFactory.PrepareCategoryModel(category, catalogPagingFilteringModel);
-                categoryModel.CustomProperties.Add("BarType", "Browse");              
+                categoryModel.CustomProperties.Add("BarType", "Browse");
                 categoryModel.CustomProperties.Add("ParentBrowseURL", categoryModel.SeName);
-                
+
                 @Html.Partial("_AmalgamationBar", categoryModel);
             }
         }

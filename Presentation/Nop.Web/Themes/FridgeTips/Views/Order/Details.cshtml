@@ -1,10 +1,10 @@
 ﻿@model OrderDetailsModel
-@using Nop.Plugin.DataAccess.GBS;
+@using Nop.Web.Infrastructure;
 @using Nop.Web.Models.Order
 
 @functions {
 
-    Nop.Plugin.DataAccess.GBS.DBManager manager = new DBManager();
+    DBManager manager = new DBManager();
     //DataManager.getGBSOrderID()
 }
 

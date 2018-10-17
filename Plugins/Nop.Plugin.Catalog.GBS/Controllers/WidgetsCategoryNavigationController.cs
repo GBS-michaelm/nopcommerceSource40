@@ -101,37 +101,37 @@ namespace Nop.Plugin.Catalog.GBS.Controllers
             return Configure();         
         }
 
-        [ResponseCache(Duration = 3600, VaryByQueryKeys = new string[] { "*" })]
-        public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
-        {
-            //load settings for a chosen store scope
-            var storeScope = _storeContext.CurrentStore.Id;
-            var categoryNavigationSettings = _settingService.LoadSetting<CategoryNavigationSettings>(storeScope);
-            int currentCategoryId = 0;
-            int currentProductId = 0;
-            if (additionalData != null)
-            {
-                string[] data = additionalData.ToString().Split(',');
-                if (data.Any())
-                {
-                    int.TryParse(data[0], out currentCategoryId);
-                    if (data.Count() > 1)
-                    {
-                        int.TryParse(data[1], out currentProductId);
-                    }
-                }
-            }
-            //if (categoryNavigationSettings.IsActive)
-            //{
-                var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
-                return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
-            //}
-            //else
-            //{
-            //    var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-            //    return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
-            //}
-        }
+        //[ResponseCache(Duration = 3600, VaryByQueryKeys = new string[] { "*" })]
+        //public ActionResult CategoryNavigation(string widgetZone, object additionalData = null)
+        //{
+        //    //load settings for a chosen store scope
+        //    var storeScope = _storeContext.CurrentStore.Id;
+        //    var categoryNavigationSettings = _settingService.LoadSetting<CategoryNavigationSettings>(storeScope);
+        //    int currentCategoryId = 0;
+        //    int currentProductId = 0;
+        //    if (additionalData != null)
+        //    {
+        //        string[] data = additionalData.ToString().Split(',');
+        //        if (data.Any())
+        //        {
+        //            int.TryParse(data[0], out currentCategoryId);
+        //            if (data.Count() > 1)
+        //            {
+        //                int.TryParse(data[1], out currentProductId);
+        //            }
+        //        }
+        //    }
+        //    //if (categoryNavigationSettings.IsActive)
+        //    //{
+        //        var model = _catalogModelFactoryCustom.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);              
+        //        return View("~/Plugins/Catalog.GBS/Views/CategoryNavigationCustom.cshtml", model);
+        //    //}
+        //    //else
+        //    //{
+        //    //    var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
+        //    //    return View("~/Plugins/Catalog.GBS/Views/CategoryNavigation.cshtml", model);
+        //    //}
+        //}
 
         public static bool HasSubcategoryProducts(CategorySimpleModelCustom category)
         {

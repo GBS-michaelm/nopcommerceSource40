@@ -743,7 +743,8 @@ input[type="file"]:focus, input[type="checkbox"]:focus, input[type="radio"]:focu
         }
 
 .slider-wrapper.theme-custom {
-    margin-top: 0px;    
+    margin-top: 0px;
+    display: none;
 }
 
 #index-page .slider-wrapper.theme-custom {

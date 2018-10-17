@@ -41,6 +41,7 @@
     </Content>
     <Content Include="Views\_CategoryLine.NavigationCustom.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -53,6 +54,15 @@
       <Private></Private>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Plugin.BreadCrumb.GBS\Nop.Plugin.BreadCrumb.GBS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Views\CategoryNavigationCustom.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->

@@ -62,6 +62,9 @@
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\images\qv-plus.png" />
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\QuickView.css" />
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\QuickView.rtl.css" />
+    <Content Update="Themes\HouseOfMagnet\Views\Catalog\_CategoryLine.Navigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

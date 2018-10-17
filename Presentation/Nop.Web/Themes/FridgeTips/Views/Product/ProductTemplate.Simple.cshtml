@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
-
+@using Microsoft.AspNetCore.Http.Extensions
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -18,7 +18,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(productUrl);
     }
     //open graph META tags
@@ -28,7 +28,7 @@
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
     }
 
@@ -40,31 +40,33 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
     }
 }
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
-@Html.Widget("productdetails_after_breadcrumb", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <div class="page product-details-page">
     <div class="page-body">
-        @Html.Widget("productdetails_top", Model.Id)
-        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
-        {
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+        <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     <div class="row">
                         <div class="col-md-6">
-                            @Html.Widget("productdetails_before_pictures", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                             <!--product pictures-->
                             @Html.Partial("_ProductDetailsPictures", Model)
-                            @Html.Widget("productdetails_after_pictures", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
                         </div>
                         <div class="col-md-6">
                             @Html.Partial("_Discontinued", Model)
                             <div class="overview">
                                 <div class="product-name panel-heading">
-                                    <h1 itemprop="name">@Model.Name <span>@Html.Widget("product_artist_name", Model.Id)</span>
+                                    <h1 itemprop="name">
+                                        @Model.Name <span>
+                                            @await Component.InvokeAsync("Widget", new { widgetZone = "product_artist_name", additionalData = Model.Id })
+                                        </span>
                                     </h1>
                                 </div>
                                 <div class="detail-left">
@@ -75,7 +77,7 @@
                                             @Html.Raw(Model.ShortDescription)
                                         </div>
                                     }
-                                    @Html.Widget("productdetails_overview_top", Model.Id)
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                                     <!--product reviews-->
                                     @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
                                     <!--availability-->
@@ -90,44 +92,44 @@
                                     @Html.Partial("_DownloadSample", Model)
                                     <!--rental info-->
                                     @{
-                                    var dataDictRental = new ViewDataDictionary();
-                                    dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
-                                    @Html.Partial("_RentalInfo", Model, dataDictRental)
+                                        var dataDictRental = new ViewDataDictionary(ViewData);
+                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
+                                        @Html.Partial("_RentalInfo", Model, dataDictRental)
                                     }
 
                                     <!--product attributes-->
                                     @{
-                                    var dataDictAttributes = new ViewDataDictionary();
-                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
-                                    @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
+                                        var dataDictAttributes = new ViewDataDictionary(ViewData);
+                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                                        @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
                                     }
                                     <!--gift card-->
                                     @{
-                                    var dataDictGiftCard = new ViewDataDictionary();
-                                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-                                    @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                                        var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                                        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                     }
                                     <div class="price-section">
                                         <!--product price-->
                                         @{
-                                    var dataDictPrice = new ViewDataDictionary();
-                                    dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-                                    @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                                            var dataDictPrice = new ViewDataDictionary(ViewData);
+                                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                                            @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
                                         }
                                         <!--addtocart-->
                                         @{
-                                    var dataDictAddToCart = new ViewDataDictionary();
-                                    dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                                    @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)
+                                            var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                            @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)
                                         }
                                     </div>
                                     <div class="overview-buttons">
                                         <!--wishlist, compare, email a friend-->
-                                        @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
                                         @{
-                                    var dataDictAddToWishlist = new ViewDataDictionary();
-                                    dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                                    @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                            var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                            @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
                                         }
                                         @*@Html.Partial("_CompareProductsButton", Model)
                                         @Html.Partial("_ProductEmailAFriendButton", Model)
@@ -135,78 +137,78 @@
                                     </div>
                                     @Html.Partial("_ShareButton", Model)
                                     <div class="category-tag">
-                                        @Html.Widget("product_category_titles", Model.Id)
-				    @*@if (Model.ProductTags.Count > 0)
-                                    {
-                                   	@Html.Partial("_ProductTags", Model.ProductTags)
-                                    }*@
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "product_category_titles", additionalData = Model.Id })
+                                        @*@if (Model.ProductTags.Count > 0)
+                                        {
+                                        @Html.Partial("_ProductTags", Model.ProductTags)
+                                        }*@
                                     </div>
-                                    @Html.Widget("productdetails_overview_bottom", Model.Id)
-                                    
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
+
                                 </div>
-								
-						@{
-								var isSingleCard = true;
-							{
-								var categories = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>().GetProductCategoriesByProductId(Model.Id);
-								
-								foreach (var cat in categories)
-								{		
-									if (cat.CategoryId == 89) // 89 is the Category Id of View All Sets.  It is ASSUMED that every set will be tagged under View All Sets
-									{
-										isSingleCard = false;
-									}
-								}
-								
-							}
-						}	
+
+                                @{
+                                    var isSingleCard = true;
+                                    {
+                                        var categories = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>().GetProductCategoriesByProductId(Model.Id);
+
+                                        foreach (var cat in categories)
+                                        {
+                                            if (cat.CategoryId == 89) // 89 is the Category Id of View All Sets.  It is ASSUMED that every set will be tagged under View All Sets
+                                            {
+                                                isSingleCard = false;
+                                            }
+                                        }
+
+                                    }
+                                }
 
                                 @if (isSingleCard)
-                                {						
-								<div class="product-delivar">
-                                       <ul>
-                                           <li>
-                                            <h3 class=""><i class="fa fa-envelope" aria-hidden="true"></i>14 ENVELOPE COLORS</h3>
-                                               <p>Choose from 14 envelope colors at no additional cost!</p>
-                                           </li>
-                                           <li>
-                                               <h3><i class="fa fa-truck" aria-hidden="true"></i>TURNAROUND TIME</h3>
-                                               <p>Ships out in 2-4 business days from San Diego, CA</p>
-                                           </li>
-                                           <li>
-                                               <h3><i class="fa fa-flag" aria-hidden="true"></i>MADE IN THE USA</h3>
-                                               <p>Our greeting cards are  made right here in the US!</p>
-                                           </li>
-                                       </ul> 
-                                </div>
-								}
-								
-                                @if (!isSingleCard)
-                                {						
-								<div class="product-delivar">
-                                       <ul>
-                                           <li>
-                                            <h3 class=""><i class="fa fa-envelope" aria-hidden="true"></i>ENVELOPES INCLUDED</h3>
-                                               <p>Envelopes included at no additional cost!</p>
-                                           </li>
-                                           <li>
-                                               <h3><i class="fa fa-truck" aria-hidden="true"></i>TURNAROUND TIME</h3>
+                                {
+                                    <div class="product-delivar">
+                                        <ul>
+                                            <li>
+                                                <h3 class=""><i class="fa fa-envelope" aria-hidden="true"></i>14 ENVELOPE COLORS</h3>
+                                                <p>Choose from 14 envelope colors at no additional cost!</p>
+                                            </li>
+                                            <li>
+                                                <h3><i class="fa fa-truck" aria-hidden="true"></i>TURNAROUND TIME</h3>
+                                                <p>Ships out in 2-4 business days from San Diego, CA</p>
+                                            </li>
+                                            <li>
+                                                <h3><i class="fa fa-flag" aria-hidden="true"></i>MADE IN THE USA</h3>
+                                                <p>Our greeting cards are  made right here in the US!</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
 
-                                               <p>Ships out in 2-4 business days from San Diego, CA</p>
-                                           </li>
-                                           <li>
-                                               <h3><i class="fa fa-pencil" aria-hidden="true"></i>BLANK INSIDE</h3>
-                                               <p>Glossy on the outside, perfect for writing on the inside!</p>
-                                           </li>
-                                       </ul> 
-                                </div>
-								}								
-								
-								
-								
+                                @if (!isSingleCard)
+                                {
+                                    <div class="product-delivar">
+                                        <ul>
+                                            <li>
+                                                <h3 class=""><i class="fa fa-envelope" aria-hidden="true"></i>ENVELOPES INCLUDED</h3>
+                                                <p>Envelopes included at no additional cost!</p>
+                                            </li>
+                                            <li>
+                                                <h3><i class="fa fa-truck" aria-hidden="true"></i>TURNAROUND TIME</h3>
+
+                                                <p>Ships out in 2-4 business days from San Diego, CA</p>
+                                            </li>
+                                            <li>
+                                                <h3><i class="fa fa-pencil" aria-hidden="true"></i>BLANK INSIDE</h3>
+                                                <p>Glossy on the outside, perfect for writing on the inside!</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+
+
+
                             </div>
                             <div class="detailpage-tab">
-                                @Html.Widget("productdetails_before_collateral")
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
                             </div>
                         </div>
                         @*<div class="col-md-12 product-details-tabs">
@@ -246,15 +248,15 @@
                                 </div>
                             </div>
                         </div>*@
-                    </div> 
+                    </div>
                 </div>
-                
+
                 <div class="product-collateral">
-                        @*<div class="product-slider">@Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
-                        <div class="product-slider">@Html.Action("RelatedProducts", "Product", new { productId = Model.Id })</div>
+                    @*<div class="product-slider">@Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
+                    <div class="product-slider"> @await Component.InvokeAsync("RelatedProducts", new { additionalData = Model.Id })</div>
                 </div>
             </div>
-        }
-        @Html.Widget("productdetails_bottom", Model.Id)
+        </form>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
     </div>
 </div>
