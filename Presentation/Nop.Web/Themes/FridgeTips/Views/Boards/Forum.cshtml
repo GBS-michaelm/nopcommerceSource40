@@ -10,9 +10,9 @@
     //page class
     Html.AppendPageCssClassParts("html-forum-page");
 }
-@Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
-@Html.Partial("_ForumHeader")
-@Html.Widget("boards_forum_after_header", Model.Id)
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
+@await Html.PartialAsync("_ForumHeader")
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_after_header", additionalData = Model.Id })
 <div class="page forum-page">
     <div class="forum-top">
         <div class="forum-info">
@@ -53,7 +53,7 @@
             }
         </div>
     </div>
-    @Html.Widget("boards_forum_top", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_top", additionalData = Model.Id })
     <div class="pagination">
         @{
             var pager = Html.Pager(new PagerModel
@@ -102,25 +102,25 @@
                             <tr>
                                 <td class="image">
                                     @{
-                            var topicType = "post";
-                            var topicText = String.Empty;
-                            switch (topic.ForumTopicType)
-                            {
-                                case ForumTopicType.Normal:
-                                    topicType = "post";
-                                    break;
-                                case ForumTopicType.Sticky:
-                                    topicType = "sticky";
-                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
-                                    break;
-                                case ForumTopicType.Announcement:
-                                    topicType = "announcement";
-                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
-                                    break;
-                                default:
-                                    topicType = "post";
-                                    break;
-                            }
+                                        var topicType = "post";
+                                        var topicText = String.Empty;
+                                        switch (topic.ForumTopicType)
+                                        {
+                                            case ForumTopicType.Normal:
+                                                topicType = "post";
+                                                break;
+                                            case ForumTopicType.Sticky:
+                                                topicType = "sticky";
+                                                topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                                break;
+                                            case ForumTopicType.Announcement:
+                                                topicType = "announcement";
+                                                topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                                break;
+                                            default:
+                                                topicType = "post";
+                                                break;
+                                        }
                                         <div class="@topicType">
                                         </div>
                                         <i class="fa fa-folder-open"></i>
@@ -166,7 +166,7 @@
                                     </td>
                                 }
                                 <td class="last-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
@@ -175,11 +175,11 @@
             </div>
         }
     </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager
         </div>
     }
-    @Html.Widget("boards_forum_bottom", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_bottom", additionalData = Model.Id })
 </div>

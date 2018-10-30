@@ -55,7 +55,7 @@
                                 Category = subCategory,
                                 AllCategory = Model.AllCategory
                             };
-                            @await Html.PartialAsync("_CategoryLine.NavigationCustom", categoryLineModel)
+                            @await Html.PartialAsync("~/Plugins/Catalog.GBS/Views/_CategoryLine.NavigationCustom.cshtml", categoryLineModel)
                         }
                         else if (subCategory.ProductsCount > 0 || Nop.Plugin.Catalog.GBS.Controllers.WidgetsCategoryNavigationController.HasSubcategoryProducts(subCategory))
                         {
@@ -65,7 +65,7 @@
                                 Category = subCategory,
                                 AllCategory = Model.AllCategory
                             };
-                            @await Html.PartialAsync("_CategoryLine.NavigationCustom", categoryLineModel)
+                            @await Html.PartialAsync("~/Plugins/Catalog.GBS/Views/_CategoryLine.NavigationCustom.cshtml", categoryLineModel)
                         }                      
                     }
                 </ul>

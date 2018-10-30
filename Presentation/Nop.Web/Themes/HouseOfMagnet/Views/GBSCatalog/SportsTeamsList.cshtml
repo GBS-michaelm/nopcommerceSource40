@@ -1,6 +1,5 @@
 ﻿@model List<Category>
 @using System.Data.Entity;
-@using Nop.Plugin.DataAccess.GBS;
 @using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
@@ -8,7 +7,7 @@
 @using System.Data;
 @using System.Text;
 @using Nop.Services.Catalog;
-@using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using Nop.Web.Infrastructure;
 @{ 
     var categoryService = EngineContext.Current.Resolve<ICategoryService>();
     SportsTeam sportsTeam = new SportsTeam(ViewBag.Id);

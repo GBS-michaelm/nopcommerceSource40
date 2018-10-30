@@ -1,12 +1,13 @@
 ﻿@model HeaderLinksModel
 @using Nop.Web.Models.Common;
+@using System.Text.Encodings.Web
 <div class="header-links header-top-right">
     <ul>
-        @Html.Widget("header_links_before")
-        @Html.Action("AdminHeaderLinks", "Common")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
+        @await Component.InvokeAsync("AdminHeaderLinks")
         @if (Model.IsAuthenticated)
         {
-            <li class="my-account"><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><span>@Model.CustomerEmailUsername</span></a></li>
+            <li class="my-account"><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><span>@Model.CustomerName</span></a></li>
         }
         else
         {
@@ -29,15 +30,15 @@
                 </a>
             </li>
         }
-@*@if (Model.ShoppingCartEnabled)
-        {
-            <li id="topcartlink">
-                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
-                    <span class="cart-label">@T("ShoppingCart")</span>
-                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
-                </a>
-            </li>
-        }*@
+        @*@if (Model.ShoppingCartEnabled)
+            {
+                <li id="topcartlink">
+                    <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                        <span class="cart-label">@T("ShoppingCart")</span>
+                        <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                    </a>
+                </li>
+            }*@
         @if (Model.AllowPrivateMessages)
         {
             <li>
@@ -47,19 +48,18 @@
                 </a>
             </li>
         }
-
-        @Html.Widget("header_links_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
     </ul>
     @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
     {
         //new private message notification
         <script type="text/javascript">
             $(document).ready(function () {
-                displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
+                 displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
             });
         </script>
     }
-@if (Model.ShoppingCartEnabled)
+    @if (Model.ShoppingCartEnabled)
     {
         <script type="text/javascript">
             $(document).ready(function () {

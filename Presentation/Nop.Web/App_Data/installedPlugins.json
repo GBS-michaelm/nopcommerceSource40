@@ -23,20 +23,5 @@
   "Widgets.GoogleAnalytics",
   "Widgets.NivoSlider",
   "BusinessLogic.GBS",
-  "SevenSpikes.Core",
-  "SevenSpikes.Nop.Plugins.CloudZoom",
-  "SevenSpikes.Nop.Plugins.MegaMenu",
-  "SevenSpikes.Nop.Plugins.ProductRibbons",
-  "SevenSpikes.Nop.Plugins.NopQuickTabs",
-  "SevenSpikes.Nop.Plugins.QuickView",
-  "Order.GBS",
-  "Products.SpecificationAttributes",
-  "FoxNetSoft.CDNConnector",
-  "FoxNetSoft.Pagespeed",
-  "FoxNetSoft.Plugin.Misc.MSSQLProvider",
-  "FoxNetSoft.PriceManager",
-  "FoxNetSoft.RedirectManager",
-  "FoxNetSoft.Plugin.Misc.SpeedFilters",
-  "Widgets.CustomersCanvas",
-  "Shipping.Director"
+  "SevenSpikes.Core"
 ]

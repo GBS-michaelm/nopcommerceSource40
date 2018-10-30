@@ -1,7 +1,7 @@
 ﻿@model CheckoutBillingAddressModel
 @using Nop.Web.Models.Checkout;
 @{
- 
+
 }
 
 <div class="page checkout-page">
@@ -9,20 +9,19 @@
         <h1>@T("Checkout.BillingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
-        {
+        <form asp-route="CheckoutBillingAddress" method="post">
             <div class="billing-addresses">
-                @Html.Widget("checkout_billing_address_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_top" })
                 @if (Model.ShipToSameAddressAllowed)
                 {
                     <div class="section ship-to-same-address">
                         <div class="selector">
                             @Html.CheckBoxFor(x => x.ShipToSameAddress)
-                            <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                            <label for="@Html.IdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
                         </div>
                     </div>
                 }
-                @Html.Widget("checkout_billing_address_middle")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_middle" })
                 <div class="section new-billing-address">
                     <div class="title small-heading">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -39,22 +38,22 @@
                             @{
                                 var validationSummary = Html.ValidationSummary(true);
                             }
-                            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                            @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                             {
                                 <div class="message-error">@validationSummary</div>
                             }
                         </div>
                         <div class="enter-address-body form-horizontal">
                             @{
-                                var dataDictAddress = new ViewDataDictionary();
+                                var dataDictAddress = new ViewDataDictionary(ViewData);
                                 //Merge ModelState (required for validation)
                                 dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                                @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+                                @Html.Partial("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)
                             }
                         </div>
                     </div>
-                    @Html.Widget("checkout_billing_address_bottom")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_bottom" })
                 </div>
                 <div class="form-group row next-btn-wrapper">
                     <div class="col-md-6">
@@ -65,9 +64,9 @@
                     <div class="title small-heading">
                         <strong>@T("Checkout.OrderSummary")</strong>
                     </div>
-                    @Html.Action("OrderSummary", "ShoppingCart")
+                    @await Component.InvokeAsync("OrderSummary")
                 </div>
             </div>
-            }
+        </form>
     </div>
 </div>
