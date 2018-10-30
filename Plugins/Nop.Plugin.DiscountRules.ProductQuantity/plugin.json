@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Discount requirements",
+  "FriendlyName": "Must be assigned according to product quantity",
+  "SystemName": "DiscountRequirement.MustBeAssignedAsPerProductQuantity",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Parth S. Patel",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.DiscountRules.ProductQuantity.dll",
+  "Description": "This plugin allows you to configure discounts for product quantity from to"
+}

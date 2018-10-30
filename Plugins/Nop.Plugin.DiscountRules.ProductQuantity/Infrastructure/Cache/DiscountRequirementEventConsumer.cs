@@ -1,0 +1,51 @@
+﻿using Nop.Core.Domain.Discounts;
+using Nop.Core.Events;
+using Nop.Services.Configuration;
+using Nop.Services.Events;
+
+namespace Nop.Plugin.DiscountRules.ProductQuantity.Infrastructure.Cache
+{
+    /// <summary>
+    /// Discount requirement rule event consumer (used for removing unused settings)
+    /// </summary>
+    public partial class DiscountRequirementEventConsumer : IConsumer<EntityDeleted<DiscountRequirement>>
+    {
+        #region Fields
+        
+        private readonly ISettingService _settingService;
+
+        #endregion
+
+        #region Ctor
+
+        public DiscountRequirementEventConsumer(ISettingService settingService)
+        {
+            this._settingService = settingService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Handle discount requirement deleted event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
+        public void HandleEvent(EntityDeleted<DiscountRequirement> eventMessage)
+        {
+            var discountRequirement = eventMessage?.Entity;
+            if (discountRequirement == null)
+                return;
+
+            var settingFrom = _settingService.GetSetting(string.Format(DiscountRequirementDefaults.SettingsFromKey, discountRequirement.Id));
+            if (settingFrom != null)
+                _settingService.DeleteSetting(settingFrom);
+
+			var settingTo = _settingService.GetSetting(string.Format(DiscountRequirementDefaults.SettingsToKey, discountRequirement.Id));
+			if (settingTo != null)
+				_settingService.DeleteSetting(settingTo);
+		}
+
+        #endregion
+    }
+}
