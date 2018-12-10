@@ -21,8 +21,7 @@ namespace Nop.Plugin.Api.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer<ApiObjectContext>(null);
-
-            modelBuilder.Configurations.Add(new ClientMap());
+            
             modelBuilder.Configurations.Add(new WebHooksMap());
 
             //disable EdmMetadata generation
@@ -51,10 +50,6 @@ namespace Nop.Plugin.Api.Data
         /// </summary>
         public void Uninstall()
         {
-            //drop the table
-            var tableName = this.GetTableName<Client>();
-            this.DropPluginTable(tableName);
-
             var webHooksName = this.GetTableName<Domain.WebHooks>();
             DropPluginTableWithSchema(this, webHooksName);
         }

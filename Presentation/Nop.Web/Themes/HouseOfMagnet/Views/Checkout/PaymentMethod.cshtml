@@ -1,4 +1,4 @@
-﻿@model CheckoutPaymentMethodModel
+@model CheckoutPaymentMethodModel
 @using Nop.Web.Models.Checkout;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -67,7 +67,7 @@
     </div>
 </div>
 <div class="col-sm-3 col-md-3">
-    @*@Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })*@
+    @*@await Component.InvokeAsync("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })*@
     @await Component.InvokeAsync("GBSOrderTotals", new { additionalData = true })
 </div>
 <script type="text/javascript">

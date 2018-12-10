@@ -1,4 +1,4 @@
-﻿@model CheckoutPaymentInfoModel
+@model CheckoutPaymentInfoModel
 @using Nop.Web.Models.Checkout;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -71,7 +71,7 @@
 </div>
 
 <div class="col-sm-3 col-md-3">
-    @await Component.InvokeAsync("GBSOrderTotals", new { isEditable = true })
+    @await Component.InvokeAsync("GBSOrderTotals", new { additionalData = true })
 </div>
 <script type="text/javascript">
     var billingChk = '@paymentMethodValue';

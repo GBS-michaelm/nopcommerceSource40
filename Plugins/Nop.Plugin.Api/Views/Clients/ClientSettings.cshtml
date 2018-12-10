@@ -1,7 +1,5 @@
-﻿@using Nop.Web.Framework
-@using Nop.Plugin.Api.Models
+﻿@model ClientApiModel
 
-@model ClientModel
 <div class="content">
     <div class="form-horizontal">
 
@@ -10,53 +8,69 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Name)
+                            <nop-label asp-for="ClientName" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
+                            <nop-editor asp-for="ClientName" asp-required="true"/>
+                            <span asp-validation-for="ClientName"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ClientId)
+                            <nop-label asp-for="ClientId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ClientId)
-                            @Html.ValidationMessageFor(model => model.ClientId)
+                            <nop-editor asp-for="ClientId" asp-disabled="true" asp-required="true" />
+                            <span asp-validation-for="ClientId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ClientSecret)
+                            <nop-label asp-for="ClientSecret" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ClientSecret)
-                            @Html.ValidationMessageFor(model => model.ClientSecret)
+                            <nop-editor asp-for="ClientSecret" asp-disabled="true" asp-required="true" />
+                            <span asp-validation-for="ClientSecret"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CallbackUrl)
+                            <nop-label asp-for="RedirectUrl" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CallbackUrl)
-                            @Html.ValidationMessageFor(model => model.CallbackUrl)
+                            <nop-editor asp-for="RedirectUrl" asp-required="true" />
+                            <span asp-validation-for="RedirectUrl"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.IsActive)
+                            <nop-label asp-for="AccessTokenLifetime" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.IsActive)
-                            @Html.ValidationMessageFor(model => model.IsActive)
+                            <nop-editor asp-for="AccessTokenLifetime" asp-required="true" asp-postfix="sec"/>
+                            <span asp-validation-for="AccessTokenLifetime"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RefreshTokenLifetime" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RefreshTokenLifetime" asp-required="true" asp-postfix="sec"/>
+                            <span asp-validation-for="RefreshTokenLifetime"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Enabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Enabled" />
+                            <span asp-validation-for="Enabled"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-

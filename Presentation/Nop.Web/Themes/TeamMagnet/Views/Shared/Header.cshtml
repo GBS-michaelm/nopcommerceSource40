@@ -1,4 +1,4 @@
-﻿@using Nop.Core
+@using Nop.Core
 @using Nop.Core.Infrastructure
 @using Nop.Services.Localization
 @using Nop.Web.Framework.Themes
@@ -11,21 +11,21 @@
     var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
 }
 <div class="header">
-    @Html.Widget("header")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
     <div class="header-upper">
        <!-- <div class="header-selectors-wrapper">
             
-            @Html.Action("TaxTypeSelector", "Common")
+            @await Component.InvokeAsync("TaxTypeSelector", "Common")
             
-            @Html.Action("CurrencySelector", "Common")
+            @await Component.InvokeAsync("CurrencySelector", "Common")
             
-            @Html.Action("LanguageSelector", "Common")
+            @await Component.InvokeAsync("LanguageSelector", "Common")
             
-            @Html.Widget("header_selectors")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
         </div>-->
         <div class="header-links-wrapper">
-            @Html.Action("HeaderLinks", "Common")
-            @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+            @await Component.InvokeAsync("HeaderLinks", "Common")
+            @await Component.InvokeAsync("FlyoutShoppingCart", "ShoppingCart")
         </div>
     </div>
     <div class="header-lower">
@@ -35,7 +35,7 @@
             </a>
         </div>
         <div class="search-box store-search-box">
-            @Html.Action("SearchBox", "Catalog")
+            @await Component.InvokeAsync("SearchBox", "Catalog")
         </div>
     </div>
 </div>

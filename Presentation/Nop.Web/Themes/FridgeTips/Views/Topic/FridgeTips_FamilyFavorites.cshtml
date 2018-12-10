@@ -1,4 +1,4 @@
-﻿@model TopicModel
+@model TopicModel
 @using Nop.Web.Models.Topics;
 @if (Model.IsPasswordProtected)
 {
@@ -6,7 +6,7 @@
     $(document).ready(function () {
         $('#button-password-@Model.Id').click(function () {
             var postData = {
-                id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                id: $("#@Html.IdFor(model => model.Id)").val(),
                 password: $('#password-@Model.Id').val()
             };
             addAntiForgeryToken(postData);
@@ -72,7 +72,7 @@
 else
 {
     <div class="topic-html-content">
-	 <div class="sidebar col-md-3">        @Html.Action("TopicBlock", "Topic", new { systemName = "fridgetips_familyfavorites_column" })</div>
+	 <div class="sidebar col-md-3">        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "fridgetips_familyfavorites_column" })</div>
     <div class="side-content col-md-9">
         @if (!String.IsNullOrEmpty(Model.Title))
         {

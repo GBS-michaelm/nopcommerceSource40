@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTOs.Images;
+using Nop.Plugin.Api.DTOs.Languages;
+using Nop.Plugin.Api.DTOs.SpecificationAttributes;
 using Nop.Plugin.Api.Validators;
 
 namespace Nop.Plugin.Api.DTOs.Products
@@ -18,8 +20,10 @@ namespace Nop.Plugin.Api.DTOs.Products
         private List<int> _discountIds;
         private List<int> _roleIds;
         private List<int> _manufacturerIds;
+        private List<LocalizedNameDto> _localizedNames;
         private List<ImageMappingDto> _images;
         private List<ProductAttributeMappingDto> _productAttributeMappings;
+        private List<ProductSpecificationAttributeDto> _productSpecificationAttributes;
         private List<int> _associatedProductIds;
         private List<string> _tags;
 
@@ -42,6 +46,23 @@ namespace Nop.Plugin.Api.DTOs.Products
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the localized names
+        /// </summary>
+        [JsonProperty("localized_names")]
+        public List<LocalizedNameDto> LocalizedNames
+        {
+            get
+            {
+                return _localizedNames;
+            }
+            set
+            {
+                _localizedNames = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the short description
         /// </summary>
@@ -235,6 +256,15 @@ namespace Nop.Plugin.Api.DTOs.Products
         /// </summary>
         [JsonProperty("use_multiple_warehouses")]
         public bool? UseMultipleWarehouses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating how to manage inventory.
+        /// 0 - do not track inventory
+        /// 1 - track inventory
+        /// 2 - track invetory by attributes
+        /// </summary>
+        [JsonProperty("manage_inventory_method_id")]
+        public int? ManageInventoryMethodId { get; set; }
 
         /// <summary>
         /// Gets or sets the stock quantity
@@ -562,6 +592,19 @@ namespace Nop.Plugin.Api.DTOs.Products
             set
             {
                 _productAttributeMappings = value;
+            }
+        }
+
+        [JsonProperty("product_specification_attributes")]
+        public List<ProductSpecificationAttributeDto> ProductSpecificationAttributes
+        {
+            get
+            {
+                return _productSpecificationAttributes;
+            }
+            set
+            {
+                _productSpecificationAttributes = value;
             }
         }
 

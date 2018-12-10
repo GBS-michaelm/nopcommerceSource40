@@ -1,9 +1,9 @@
-﻿@model HeaderLinksModel
+@model HeaderLinksModel
 @using Nop.Web.Models.Common;
 <div class="header-links header-top-right">
     <ul>
-        @Html.Widget("header_links_before")
-        @Html.Action("AdminHeaderLinks", "Common")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
+        @await Component.InvokeAsync("AdminHeaderLinks", "Common")
         @if (Model.IsAuthenticated)
         {
             <li><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><span>@T("Account.MyAccount")@*@Model.CustomerName*@</span></a></li>
@@ -48,7 +48,7 @@
             </li>
         }
 
-        @Html.Widget("header_links_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
     </ul>
     @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
     {

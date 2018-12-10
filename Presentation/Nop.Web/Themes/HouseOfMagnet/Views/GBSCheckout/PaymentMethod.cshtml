@@ -1,4 +1,4 @@
-﻿@model CheckoutPaymentMethodModel
+@model CheckoutPaymentMethodModel
 @using Nop.Web.Models.Checkout;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -11,7 +11,7 @@
 }
 
 <div class="page checkout-page payment-method-page col-sm-9 col-md-9 gbs-margin-bottom-20">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Payment })
     <div class="payment-method-wrap gbs-checkout-border row gbs-padding-15">
         <div class="payment-address-title">
             <h3>@T("Checkout.PaymentInfo")</h3>
@@ -67,7 +67,7 @@
     </div>
 </div>
 <div class="col-sm-3 col-md-3">
-   @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+   @await Component.InvokeAsync("GBSOrderTotals", new { additionalData = true })
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

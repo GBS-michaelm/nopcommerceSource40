@@ -1,3 +1,5 @@
+@model ClientApiModel
+
 @{
     Layout = ViewNames.AdminLayout;
 
@@ -7,15 +9,7 @@
     Html.SetActiveMenuItemSystemName("Api-Clients-Menu");
 }
 
-@using Nop.Plugin.Api.Constants
-@using Nop.Plugin.Api.Models
-@using Nop.Web.Framework.UI
-
-@model ClientModel
-
-@using (Html.BeginForm())
-{
-    @Html.HiddenFor(model => model.Id)
+<form asp-controller="ManageClientsAdmin" asp-action="Create" method="post">
     @Html.AntiForgeryToken()
 
     <div class="content-header clearfix">
@@ -35,6 +29,5 @@
         </div>
     </div>
 
-    @Html.Partial(ViewNames.AdminApiClientsCreateOrUpdate, Model)
-}
-
+    @await Html.PartialAsync(ViewNames.AdminApiClientsCreateOrUpdate, Model)
+</form>

@@ -1,4 +1,4 @@
-﻿@model OrderDetailsModel
+@model OrderDetailsModel
 @using Nop.Web.Infrastructure;
 @using Nop.Web.Models.Order
 
@@ -48,7 +48,7 @@ DBManager manager = new DBManager();
                 </div>
             }
         </div>
-        @Html.Widget("orderdetails_page_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model.Id })
         <div class="order-overview">
             <div class="order-number">
                 @*<h4>@T("Order.Order#")@Model.Id</h4>*@
@@ -65,7 +65,7 @@ DBManager manager = new DBManager();
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @Html.Widget("orderdetails_page_overview", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model.Id })
         </div>
         <div class="order-details-area">
             <div class="row">
@@ -495,7 +495,7 @@ DBManager manager = new DBManager();
                     </div>
                 </div>
             }
-            @Html.Widget("orderdetails_page_beforeproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -577,7 +577,7 @@ DBManager manager = new DBManager();
                                                 <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                        @Html.Widget("orderdetails_product_line", item.Id)
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
                                     </td>
                                     <td class="a-left price prices-alignment-right">
                                         <span class="product-unit-price">@item.UnitPrice</span>
@@ -603,7 +603,7 @@ DBManager manager = new DBManager();
                     }
                 </div>
             </div>
-            @Html.Widget("orderdetails_page_afterproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
             <div class="section options">
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -788,6 +788,6 @@ DBManager manager = new DBManager();
                 }
             </div>
         }
-        @Html.Widget("orderdetails_page_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model.Id })
     </div>
 </div>

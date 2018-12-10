@@ -1,4 +1,4 @@
-﻿@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
+@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
 @using Nop.Web.Framework;
 @using Nop.Plugin.Payments.GBS.Models;
 @using Nop.Web.Models.Customer;
@@ -14,7 +14,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer")
+    @await Component.InvokeAsync("CustomerNavigation")
 }
 <div class="page account-page address-list-page">
     <div class="page-title">

@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel
+@model ProductDetailsModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @using Nop.Core.Infrastructure;
@@ -77,7 +77,7 @@
 
         </div>
     }
-    @*@Html.Widget("productdetails_add_info", Model.AddToCart.ProductId)*@
+    @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.AddToCart.ProductId })*@
     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.Id })
 </div>
 

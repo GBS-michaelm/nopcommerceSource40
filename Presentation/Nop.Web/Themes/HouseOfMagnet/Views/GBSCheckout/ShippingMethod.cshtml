@@ -1,4 +1,4 @@
-﻿@model CheckoutShippingMethodModel
+@model CheckoutShippingMethodModel
 @using Nop.Web.Models.Checkout;
 @{
     
@@ -14,7 +14,7 @@
 
 <div class="page checkout-page shipping-method-page">
 
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Shipping })
     
     <div class="shipping-address-title">
         <h3>@T("Checkout.SelectShippingMethod")</h3>
@@ -26,7 +26,7 @@
             @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
         {
 
-                @Html.Widget("checkout_shipping_method_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
                 if (Model.Warnings.Count == 0)
                 {
                     <ul class="method-list">
@@ -77,16 +77,16 @@
                         </ul>
                     </div>
                 }
-                @Html.Widget("checkout_shipping_method_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
             }
         </div>
 
-        @*@Html.Widget("checkout_shipping_method_bottom")*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })*@
         @*<div class="section order-summary-body">
                 <div class="title small-heading">bottom
                     <strong>@T("Checkout.OrderSummary")</strong>
                 </div>
-                @Html.Action("OrderSummary", "ShoppingCart")
+                @await Component.InvokeAsync("OrderSummary", "ShoppingCart")
             </div>*@
     </div>
 </div>

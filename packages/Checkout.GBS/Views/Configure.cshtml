@@ -1,0 +1,199 @@
+﻿@model Nop.Plugin.Widgets.CustomersCanvas.Model.CcSettingsViewModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="CcConfig" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ServerHostUrl_OverrideForStore" asp-input="ServerHostUrl"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ServerHostUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ServerHostUrl" />
+                        <span asp-validation-for="ServerHostUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomersCanvasApiKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomersCanvasApiKey" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <br />
+                        <p><b> <i>You can use the following keywords: </i> </b> </p>
+
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 200px;">Keyword</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<order_id>")) </code> </td>
+                                    <td>order id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<order_guid>")) </code> </td>
+                                    <td>order guid</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<store_id> ")) </code></td>
+                                    <td>current store id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<customer_id>")) </code> </td>
+                                    <td>customer id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<affiliate_id> "))</code></td>
+                                    <td> affiliate id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_id> "))</code></td>
+                                    <td>  product id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_name> "))</code></td>
+                                    <td>  product name</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_sku> "))</code></td>
+                                    <td>  product sku</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<product_vendorId> "))</code></td>
+                                    <td>  vendor id</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_guid> "))</code></td>
+                                    <td>  order item guid</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_index> "))</code></td>
+                                    <td> item index in order</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<item_quantity> "))</code></td>
+                                    <td>  quantity</td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Html.Raw(Html.Encode("<specattr_"))<i>NAME</i>@Html.Raw(Html.Encode(">"))</code></td>
+                                    <td>  value of specifcation attribute by name </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br />
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DesignFileName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DesignFileName" />
+                    </div>
+                </div>
+                <br />
+
+                @{
+                    var isExpand = (Model.IsOrderExportButton == true) ? "true" : "false";
+                    var isCollapse = (Model.IsOrderExportButton == true) ? "collapse in" : "collapse";
+                }
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="IsOrderExportButton" />
+                    </div>
+                    <div class="col-md-9">
+                        <label data-toggle="collapse" data-target="#orderPathGroupDiv" aria-expanded="@isExpand" aria-controls="orderPathGroupDiv">
+                            <nop-editor asp-for="IsOrderExportButton"></nop-editor>
+
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group @isCollapse" aria-expanded="@isExpand" id="orderPathGroupDiv">
+                    <div class="col-md-3">
+                        <nop-label asp-for="OrderExportPath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="OrderExportPath" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+
+                <br /> <hr /> <br />
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Plugins.Widgets.CustomersCanvas.Config.UpdateFonts")</label>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="button" name="updateFonts" id="ccupdatefonts" onclick="ccUpdateFonts()"
+                               class="btn bg-blue" value="@T("Plugins.Widgets.CustomersCanvas.Config.UpdateFontsButton")" />
+                    </div>
+                </div>
+
+                <label id="succ-cc-label" style="display:none; color:green;"> Success! </label>
+                <label id="err-cc-label" style="display:none; color:red;"> Error! </label>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function ccUpdateFonts() {
+        var link = '@Url.Action("ReloadLocalFonts", "CcConfig")';
+        $.ajax({
+            cache: false,
+            url: link,
+            type: "post",
+            success: function () {
+                $("#succ-cc-label").show();
+                $("#err-cc-label").hide();
+                setTimeout(function () {
+                    $("#succ-cc-label").hide();
+                }, 4000);
+            },
+            error: function (xhr, textStatus, thrownError) {
+                console.error("Error reload Customers Canvas fonts: " + thrownError);
+                console.error("filed to load" + this.url, textStatus, xhr.status, thrownError);
+                $("#succ-cc-label").hide();
+                $("#err-cc-label").text("Error! " + thrownError);
+                $("#err-cc-label").show();
+            }
+        });
+    }
+</script>

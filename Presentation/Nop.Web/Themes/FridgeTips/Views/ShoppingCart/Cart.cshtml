@@ -1,4 +1,4 @@
-﻿@model ShoppingCartModel
+@model ShoppingCartModel
 @using Nop.Web.Models.Checkout
 @using Nop.Web.Models.ShoppingCart;
 @using System.Web.UI;
@@ -15,7 +15,7 @@
 }
 @*@if (!Model.OnePageCheckoutEnabled)
 {
-    @Html.Action("CheckoutProgress", "Checkout", new {step = CheckoutProgressStep.Cart})
+    @await Component.InvokeAsync("CheckoutProgress", new {step = CheckoutProgressStep.Cart})
 }*@
 <div class="page shopping-cart-page">
     <div class="page-title panel-heading">

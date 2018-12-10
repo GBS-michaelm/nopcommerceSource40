@@ -1,8 +1,8 @@
-﻿@model CheckoutProgressModel
+@model CheckoutProgressModel
 @using Nop.Web.Models.Checkout;
 <div class="order-progress">
     <ul class="nav nav-pills">
-        @Html.Widget("checkout_progress_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_before" })
         <li class="active-step">
             <a class="cart-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("ShoppingCart"))) : null)><span class="progress-icon"><i class="fa fa-cart-plus"></i></span> <span class="progress-test">@T("Checkout.Progress.Cart")</span></a>
         </li>
@@ -22,6 +22,6 @@
         <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
             <a class="complete-progress-icon"><span class="progress-icon"><i class="fa fa-check-circle"></i></span> <span class="progress-test">@T("Checkout.Progress.Complete")</span></a>
         </li>
-        @Html.Widget("checkout_progress_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_after" })
     </ul>
 </div>

@@ -1,4 +1,4 @@
-﻿@model ProfileIndexModel
+@model ProfileIndexModel
 @using Nop.Web.Models.Profile;
 @{    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -25,12 +25,12 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tabs-1">
-                @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+                @await Component.InvokeAsync("info", new { customerProfileId = Model.CustomerProfileId })
             </div>
             @if (Model.ForumsEnabled)
             {
                 <div class="tab-pane" id="tabs-2">
-                    @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                    @await Component.InvokeAsync("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
                 </div>
             }
         </div>

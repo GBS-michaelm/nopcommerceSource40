@@ -1,4 +1,4 @@
-﻿@model ActiveDiscussionsModel
+@model ActiveDiscussionsModel
 @using Nop.Web.Models.Boards;
 @using Nop.Web.Models.Common;
 <div class="forums-table-section topics-group active-discussions">
@@ -18,7 +18,7 @@
                     RouteValues = new ForumActiveDiscussionsRouteValues()
                 });
             }
-            @if (!MvcHtmlString.IsNullOrEmpty(pager))
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager upper">
                     @pager
@@ -102,7 +102,7 @@
                                         </td>
                                     }
                                     <td class="last-post">
-                                        @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                        @await Component.InvokeAsync("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                     </td>
                                 </tr>
                             }
@@ -111,7 +111,7 @@
                 </div>
             }
         </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager

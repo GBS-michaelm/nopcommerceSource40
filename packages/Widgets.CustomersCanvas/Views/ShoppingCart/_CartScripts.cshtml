@@ -1,0 +1,8 @@
+﻿@model List<Nop.Plugin.Widgets.CustomersCanvas.Model.ICcCartScriptItem>
+
+<script type="text/javascript">
+    @foreach (var item in Model)
+    {
+        @Html.Raw(item.Script)
+    }
+</script>

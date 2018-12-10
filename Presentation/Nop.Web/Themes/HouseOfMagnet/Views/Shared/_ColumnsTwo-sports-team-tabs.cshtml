@@ -1,4 +1,4 @@
-﻿@using System.Data.Entity;
+@using System.Data.Entity;
 @using Nop.Web.Infrastructure;
 @using Nop.Core;
 @using Nop.Core.Domain.Catalog;
@@ -313,8 +313,8 @@
                                 </section>
                         }
                         
-                           @*@Html.Action("SportsTeamsList", "GBSCatalog", new { model = teamCategories, sportsTeamId = Model.Id })*@  
-                           @*@Html.Action("SportsTeamsTest", "GBSCatalog")*@     
+                           @*@await Component.InvokeAsync("SportsTeamsList", "GBSCatalog", new { model = teamCategories, sportsTeamId = Model.Id })*@  
+                           @*@await Component.InvokeAsync("SportsTeamsTest", "GBSCatalog")*@     
                         
                     </main>
 
@@ -563,33 +563,33 @@ string link = testLink;*@
     {
         <div id="chartWrap">
             <div id="chartSection">
-                @Html.Action("TopicBlock", "Topic", new { systemName = @chart.ToString() })
+                @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = @chart.ToString() })
             </div>
         </div>
     }
 
     @*<div id="videoAndQuantityCalculatorWrap">
         <div id="innerVidAndWQtyCalc">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
+            @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
         </div>
     </div>*@
 
     <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })
     </div>
 
     <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })
     </div>
 
     <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_testimonials" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_testimonials" })
     </div>
     <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })
     </div>
     <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "hom_opc_video" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_opc_video" })
     </div>
 
 
@@ -626,22 +626,22 @@ string link = testLink;*@
         }
         else
         {
-            @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
+			@await Component.InvokeAsync("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })*@
             
-            @*@Html.Widget("left_side_column_after_category_navigation")
-            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-            @Html.Action("VendorNavigation", "Catalog")*@
-            @*@Html.Action("PopularProductTags", "Catalog")*@
-            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
-            @*@Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation", "Catalog")*@
+            @*@await Component.InvokeAsync("PopularProductTags", "Catalog")*@
+            @*@await Component.InvokeAsync("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
+            @*@await Component.InvokeAsync("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
         }
     </div>*@
     <div class="side-content col-md-9">
-        @*@Html.Widget("main_column_before")*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })*@
         @RenderBody()
-        @*@Html.Widget("main_column_after")*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })*@
     </div>
 @*</div>*@
 

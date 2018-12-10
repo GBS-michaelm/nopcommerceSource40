@@ -11,14 +11,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
+        $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
 
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
 
-        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }
         else {
@@ -41,7 +41,7 @@
                             @Html.TextBoxFor(model => model.q, new { @class = "search-text form-control" })
                         </div>
                     </div>
-                    @Html.Widget("productsearch_page_basic")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-md-offset-2 col-sm-10 col-md-10">
                             <label class="checkbox" for="accept-privacy-policy">
@@ -118,7 +118,7 @@
                             </label>
                         </div>
                     </div>
-                    @Html.Widget("productsearch_page_advanced")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_advanced" })
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-offset-2 col-md-offset-2 col-sm-2 col-md-2">
@@ -129,9 +129,9 @@
         </div>
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary(ViewData))
         }
-        @Html.Widget("productsearch_page_before_results")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
         <div class="search-results">
             @if (!String.IsNullOrEmpty(Model.Warning))
             {
@@ -171,6 +171,6 @@
                 </div>
             }
         </div>
-        @Html.Widget("productsearch_page_after_results")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })
     </div>
 </div>

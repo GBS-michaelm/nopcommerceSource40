@@ -1,0 +1,26 @@
+﻿<div class="btn-group">
+    <button type="button" class='btn bg-blue' id='design-pdf-export-selected'>
+        @T("Plugins.Widgets.CustomersCanvas.OrderExportButton")
+    </button>
+</div>
+
+<script>
+$('#design-pdf-export-selected').click(function (e) {
+    e.preventDefault();
+    var ids = selectedIds.join(",");
+    var link = '@Url.Action("Export", "CcOrder")';
+
+    var form = document.createElement("form");
+    document.body.appendChild(form);
+    form.method = "POST";
+    form.action = link;
+
+    var element1 = document.createElement("input");
+    element1.name = "selectedIds";
+    element1.value = ids;
+    form.appendChild(element1);
+    form.submit();
+
+    return false;
+});
+</script>

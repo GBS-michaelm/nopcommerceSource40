@@ -1,0 +1,11 @@
+﻿{
+  "Group": "GBS",
+  "FriendlyName": "GBS Checkout",
+  "SystemName": "Checkout.GBS",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Naveed Anjum",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Checkout.GBS.dll",
+  "Description": "This plugin allows you to integrate checkout process"
+}

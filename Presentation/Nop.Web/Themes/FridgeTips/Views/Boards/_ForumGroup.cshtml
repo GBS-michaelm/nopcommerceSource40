@@ -1,4 +1,4 @@
-﻿@model ForumGroupModel
+@model ForumGroupModel
 @using Nop.Web.Models.Boards;
 <div class="forums-table-section forum-group">
     <div class="forums-table-section-title">
@@ -45,7 +45,7 @@
                                 @forum.NumPosts
                             </td>
                             <td class="last-post">
-                                @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
+                                @await Component.InvokeAsync("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
                             </td>
                         </tr>
                     }

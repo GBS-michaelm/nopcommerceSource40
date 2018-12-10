@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
-using Microsoft.AspNet.WebHooks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Api.Attributes;
-using Nop.Plugin.Api.Serializers;
+using Nop.Plugin.Api.JSON.Serializers;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
@@ -18,9 +13,17 @@ using Nop.Services.Stores;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [BearerTokenAuthorize]
+    using System.Net;
+    using Microsoft.AspNet.WebHooks;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
+    using Nop.Plugin.Api.Services;
+
+    [ApiAuthorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WebHookFiltersController : BaseApiController
     {
+        private readonly IWebHookFilterManager _filterManager;
+
         public WebHookFiltersController(IJsonFieldsSerializer jsonFieldsSerializer,
             IAclService aclService,
             ICustomerService customerService,
@@ -29,7 +32,8 @@ namespace Nop.Plugin.Api.Controllers
             IDiscountService discountService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
-            IPictureService pictureService) :
+            IPictureService pictureService,
+            IWebHookService webHookService) :
             base(jsonFieldsSerializer, 
                 aclService, 
                 customerService, 
@@ -40,15 +44,16 @@ namespace Nop.Plugin.Api.Controllers
                 localizationService,
                 pictureService)
         {
+            _filterManager = webHookService.GetWebHookFilterManager();
         }
 
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<WebHookFilter>))]
+        [Route("/api/webhooks/filters")]
+        [ProducesResponseType(typeof(IEnumerable<WebHookFilter>), (int)HttpStatusCode.OK)]
         [GetRequestsErrorInterceptorActionFilter]
         public async Task<IEnumerable<WebHookFilter>> GetWebHookFilters()
         {
-            IWebHookFilterManager filterManager = Configuration.DependencyResolver.GetFilterManager();
-            IDictionary<string, WebHookFilter> filters = await filterManager.GetAllWebHookFiltersAsync();
+            IDictionary<string, WebHookFilter> filters = await _filterManager.GetAllWebHookFiltersAsync();
             return filters.Values;
         }
     }

@@ -1,4 +1,4 @@
-﻿@model CheckoutShippingMethodModel
+@model CheckoutShippingMethodModel
 @using Nop.Web.Models.Checkout;
 @{
    
@@ -11,7 +11,7 @@
     <div class="page-body checkout-data">
         <div class="shipping-method ">
 
-            @Html.Widget("checkout_shipping_method_top")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
             @if (Model.Warnings.Count == 0)
             {
                 <select id="shipping-method-dropdown" class="select-1 form-control">
@@ -62,7 +62,7 @@
                     </ul>
                 </div>
             }
-            @Html.Widget("checkout_shipping_method_bottom")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
 
 
         </div>

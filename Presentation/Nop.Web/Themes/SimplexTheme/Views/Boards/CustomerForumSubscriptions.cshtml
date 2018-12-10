@@ -1,4 +1,4 @@
-﻿@model CustomerForumSubscriptionsModel
+@model CustomerForumSubscriptionsModel
 @using Nop.Web.Models.Boards;
 @using Nop.Web.Models.Customer;
 @{    
@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
 }
 <div class="page account-page forum-subscriptions-page">
     <div class="page-title panel-heading">
@@ -87,7 +87,7 @@
                 @{
                     var pager = Html.Pager(Model.PagerModel);
                 }
-                @if (!MvcHtmlString.IsNullOrEmpty(pager))
+                @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
                 {
                     <div class="pagination">
                         @pager

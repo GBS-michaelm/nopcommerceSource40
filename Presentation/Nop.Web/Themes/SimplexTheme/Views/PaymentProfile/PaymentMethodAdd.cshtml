@@ -1,4 +1,4 @@
-﻿@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
+@model Nop.Plugin.Payments.GBS.Models.CustomerPaymentProfilesModel
 @using Nop.Web.Models.Customer;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer")
+    @await Component.InvokeAsync("CustomerNavigation")
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "payaddform" }))
 {

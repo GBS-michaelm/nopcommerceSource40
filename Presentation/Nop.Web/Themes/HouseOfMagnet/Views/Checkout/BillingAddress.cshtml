@@ -1,8 +1,8 @@
-﻿@model CheckoutBillingAddressModel
+@model CheckoutBillingAddressModel
 @using Nop.Web.Models.Checkout;
 
 <div class="page checkout-page col-sm-9 col-md-9 gbs-margin-bottom-20">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Payment })
 
     <div class="page-body gbs-checkout-border gbs-padding-15 row">
         <div class="page-title panel-heading">
@@ -17,17 +17,17 @@
                             var validationSummary = Html.ValidationSummary(true);
                         }
                     </div>
-                    @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                     {
                         <div class="message-error">@validationSummary</div>
                     }
                     <div class="enter-address-body form-horizontal gbs-padding-15">
                         @{
-                            var dataDictAddress = new ViewDataDictionary();
+                            var dataDictAddress = new ViewDataDictionary(ViewData);
                             //Merge ModelState (required for validation)
                             dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                            @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+                            @Html.Partial("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)
                         }
                     </div>
                 </div>
@@ -49,5 +49,5 @@
 </div>
 
 <div class="col-sm-3 col-md-3">
-    @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+    @await Component.InvokeAsync("GBSOrderTotals",  new { additionalData = true })
 </div>

@@ -1,11 +1,11 @@
-﻿@model OrderDetailsModel
+@model OrderDetailsModel
 @*@using Nop.Plugin.DataAccess.GBS;*@
 @using Nop.Web.Models.Order
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Catalog;
 @using Nop.Core;
 @using Nop.Services.Stores;
-@using Nop.Plugin.Widgets.CustomersCanvas.Services
+@using Nop.Web.Infrastructure;
 @using Nop.Services.Orders;
 @using Nop.Services.Custom.Orders;
 @{
@@ -14,7 +14,6 @@
     var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
     var _storeService = EngineContext.Current.Resolve<IStoreService>();
     var _ccService = EngineContext.Current.Resolve<ICcService>();
-    var _gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
 }
 @*@functions {
 
@@ -63,7 +62,7 @@
                 </div>
             }
         </div>
-        @Html.Widget("orderdetails_page_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model.Id })
         <div class="order-overview">
             <div class="order-number">
                 <h4>@T("Order.Order#")@Model.CustomValues["Order Number"]</h4>
@@ -80,7 +79,7 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @Html.Widget("orderdetails_page_overview", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model.Id })
         </div>
         <div class="order-details-area">
             <div class="row">
@@ -510,7 +509,7 @@
                     </div>
                 </div>
             }
-            @Html.Widget("orderdetails_page_beforeproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -555,18 +554,18 @@
                                 <tr>
                                     <td class="name">                                      
                                         @{  var nopProduct = _productService.GetProductBySku(item.Sku);
-                                            if (nopProduct != null && (!_ccService.IsProductForCc(nopProduct.Id) || (_ccService.IsProductForCc(nopProduct.Id) && _gbsOrderService.GetOrderItemById(item.Id, true) == null)))
+                                            if (nopProduct != null && (!_ccService.IsProductForCc(nopProduct.Id) || (_ccService.IsProductForCc(nopProduct.Id) && _ccService.GetOrderItemById(item.Id, true) == null)))
                                             {
 
-                                                @Html.Widget("orderdetails_product_line_product", item.Id)
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line_product", additionalData = item.Id })
                                             }
-                                            else if (_gbsOrderService.GetOrderItemById(item.Id, true) == null)
+                                            else if (_ccService.GetOrderItemById(item.Id, true) == null)
                                             {
-                                                @Html.Widget("orderdetails_product_line_legacy", item.Id)
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line_legacy", additionalData = item.Id })
                                             }
                                             else
                                             {
-                                                @Html.Widget("orderdetails_product_line", item.Id)
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
                                             }
                                         }                                    </td>
                                     <td class="a-left">
@@ -661,7 +660,7 @@
                     }
                 </div>
             </div>
-            @Html.Widget("orderdetails_page_afterproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
             <div class="section options">
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -851,6 +850,6 @@
                 }
             </div>
         }
-        @Html.Widget("orderdetails_page_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model.Id })
     </div>
 </div>

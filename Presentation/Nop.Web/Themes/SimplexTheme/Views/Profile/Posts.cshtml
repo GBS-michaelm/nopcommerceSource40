@@ -1,4 +1,4 @@
-﻿@model ProfilePostsModel
+@model ProfilePostsModel
 @using Nop.Web.Models.Profile;
 @if (Model.Posts.Count > 0)
 {
@@ -30,7 +30,7 @@ else
 @{
     var pager = Html.Pager(Model.PagerModel);
 }
-@if (!MvcHtmlString.IsNullOrEmpty(pager))
+@if (!string.IsNullOrEmpty(pager.ToHtmlString()))
 {
     <div class="pager">
         @pager

@@ -1,4 +1,4 @@
-﻿@model IList<Nop.Web.Models.Common.AddressAttributeModel>
+@model IList<Nop.Web.Models.Common.AddressAttributeModel>
 @using Nop.Core.Domain.Catalog;
 @foreach (var attribute in Model)
 {
@@ -72,7 +72,7 @@
         }
         @if (attribute.IsRequired)
         {
-            @Html.RequiredHint()
+            <nop-required />
         }
     </div>
 }

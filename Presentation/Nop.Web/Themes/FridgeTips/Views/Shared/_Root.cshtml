@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_Root.Head";
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
@@ -26,11 +26,11 @@
         </div>
     </div>
     <div class="master-wrapper-content">
-        @*@Html.Widget("home_page_top")*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })*@
         @*<div class="container ">
             <div class="row">
                 <div class="col-md-12 ">
-                     @Html.Widget("content_before")
+                     @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
                 </div>
             </div>*@
         @*ajax loading window*@

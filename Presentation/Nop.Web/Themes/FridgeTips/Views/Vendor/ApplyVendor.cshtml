@@ -1,4 +1,4 @@
-﻿@model ApplyVendorModel
+@model ApplyVendorModel
 @using Nop.Web.Models.Vendors;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -13,8 +13,8 @@
         <h1>@T("PageTitle.Vendors.Apply")</h1>
     </div>
     <div class="page-body">
-        @Html.Action("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
-        @Html.Widget("applyvendor_top")
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_top" })
         @if (Model.DisableFormInput)
         {
             <div class="result alert alert-success">
@@ -27,7 +27,7 @@
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                 {
                     <div class="message-error">@validationSummary</div>
                 }
@@ -38,7 +38,7 @@
                             @Html.TextBoxFor(model => model.Name, new { @class = "name form-control", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
                          </div>
                          <div class="col-sm-3 col-md-3">
-                             @Html.RequiredHint()
+                             <nop-required />
                              @Html.ValidationMessageFor(model => model.Name)
                          </div>
                       </div>
@@ -48,7 +48,7 @@
                              @Html.TextBoxFor(model => model.Email, new { @class = "email form-control", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
                          </div>
                          <div class="col-sm-3 col-md-3">
-                             @Html.RequiredHint()
+                             <nop-required />
                              @Html.ValidationMessageFor(model => model.Email)
                          </div>
                      </div>
@@ -84,6 +84,6 @@
                 </div>
             }
         }
-        @Html.Widget("applyvendor_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
     </div>
 </div>

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -20,7 +17,6 @@ using Nop.Plugin.Api.JSON.ActionResults;
 using Nop.Plugin.Api.MappingExtensions;
 using Nop.Plugin.Api.ModelBinders;
 using Nop.Plugin.Api.Models.CustomersParameters;
-using Nop.Plugin.Api.Serializers;
 using Nop.Plugin.Api.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -35,7 +31,13 @@ using Nop.Services.Stores;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [BearerTokenAuthorize]
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Nop.Plugin.Api.DTOs.Errors;
+    using Nop.Plugin.Api.JSON.Serializers;
+
+    [ApiAuthorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CustomersController : BaseApiController
     {
         private readonly ICustomerApiService _customerApiService;
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Api.Controllers
         private readonly ICountryService _countryService;
         private readonly IMappingHelper _mappingHelper;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly ILanguageService _languageService;
         private readonly IFactory<Customer> _factory;
 
         // We resolve the customer settings this way because of the tests.
@@ -81,7 +84,7 @@ namespace Nop.Plugin.Api.Controllers
             ICountryService countryService, 
             IMappingHelper mappingHelper, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IPictureService pictureService) : 
+            IPictureService pictureService, ILanguageService languageService) : 
             base(jsonFieldsSerializer, aclService, customerService, storeMappingService, storeService, discountService, customerActivityService, localizationService,pictureService)
         {
             _customerApiService = customerApiService;
@@ -89,6 +92,7 @@ namespace Nop.Plugin.Api.Controllers
             _countryService = countryService;
             _mappingHelper = mappingHelper;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _languageService = languageService;
             _encryptionService = encryptionService;
             _genericAttributeService = genericAttributeService;
             _customerRolesHelper = customerRolesHelper;
@@ -101,9 +105,12 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="400">Bad request</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CustomersRootObject))]
+        [Route("/api/customers")]
+        [ProducesResponseType(typeof(CustomersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetCustomers(CustomersParametersModel parameters)
+        public IActionResult GetCustomers(CustomersParametersModel parameters)
         {
             if (parameters.Limit < Configurations.MinLimit || parameters.Limit > Configurations.MaxLimit)
             {
@@ -136,9 +143,13 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="404">Not Found</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CustomersRootObject))]
+        [Route("/api/customers/{id}")]
+        [ProducesResponseType(typeof(CustomersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetCustomerById(int id, string fields = "")
+        public IActionResult GetCustomerById(int id, string fields = "")
         {
             if (id <= 0)
             {
@@ -167,8 +178,11 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="200">OK</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CustomersCountRootObject))]
-        public IHttpActionResult GetCustomersCount()
+        [Route("/api/customers/count")]
+        [ProducesResponseType(typeof(CustomersCountRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        public IActionResult GetCustomersCount()
         {
             var allCustomersCount = _customerApiService.GetCustomersCount();
 
@@ -187,7 +201,11 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="400">Bad Request</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        public IHttpActionResult Search(CustomersSearchParametersModel parameters)
+        [Route("/api/customers/search")]
+        [ProducesResponseType(typeof(CustomersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult Search(CustomersSearchParametersModel parameters)
         {
             if (parameters.Limit <= Configurations.MinLimit || parameters.Limit > Configurations.MaxLimit)
             {
@@ -212,8 +230,11 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpPost]
-        [ResponseType(typeof(CustomersRootObject))]
-        public IHttpActionResult CreateCustomer([ModelBinder(typeof(JsonModelBinder<CustomerDto>))] Delta<CustomerDto> customerDelta)
+        [Route("/api/customers")]
+        [ProducesResponseType(typeof(CustomersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult CreateCustomer([ModelBinder(typeof(JsonModelBinder<CustomerDto>))] Delta<CustomerDto> customerDelta)
         {
             // Here we display the errors if the validation has failed at some point.
             if (!ModelState.IsValid)
@@ -229,12 +250,26 @@ namespace Nop.Plugin.Api.Controllers
 
             foreach (var address in customerDelta.Dto.CustomerAddresses)
             {
+                // we need to explicitly set the date as if it is not specified
+                // it will default to 01/01/0001 which is not supported by SQL Server and throws and exception
+                if (address.CreatedOnUtc == null)
+                {
+                    address.CreatedOnUtc = DateTime.UtcNow;
+                }
                 newCustomer.Addresses.Add(address.ToEntity());
             }
             
             _customerService.InsertCustomer(newCustomer);
 
             InsertFirstAndLastNameGenericAttributes(customerDelta.Dto.FirstName, customerDelta.Dto.LastName, newCustomer);
+
+            int languageId = 0;
+
+            if (!string.IsNullOrEmpty(customerDelta.Dto.LanguageId) && int.TryParse(customerDelta.Dto.LanguageId, out languageId)
+                && _languageService.GetLanguageById(languageId) != null)
+            {
+                _genericAttributeService.SaveAttribute(newCustomer, SystemCustomerAttributeNames.LanguageId, languageId);
+            }
 
             //password
             if (!string.IsNullOrWhiteSpace(customerDelta.Dto.Password))
@@ -264,7 +299,7 @@ namespace Nop.Plugin.Api.Controllers
             newCustomerDto.FirstName = customerDelta.Dto.FirstName;
             newCustomerDto.LastName = customerDelta.Dto.LastName;
 
-            newCustomerDto.RoleIds = newCustomer.CustomerRoles.Select(x => x.Id).ToList();
+            newCustomerDto.LanguageId = customerDelta.Dto.LanguageId;
 
             //activity log
             _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), newCustomer.Id);
@@ -279,8 +314,13 @@ namespace Nop.Plugin.Api.Controllers
         }
         
         [HttpPut]
-        [ResponseType(typeof(CustomersRootObject))]
-        public IHttpActionResult UpdateCustomer([ModelBinder(typeof(JsonModelBinder<CustomerDto>))] Delta<CustomerDto> customerDelta)
+        [Route("/api/customers/{id}")]
+        [ProducesResponseType(typeof(CustomersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult UpdateCustomer([ModelBinder(typeof(JsonModelBinder<CustomerDto>))] Delta<CustomerDto> customerDelta)
         {
             // Here we display the errors if the validation has failed at some point.
             if (!ModelState.IsValid)
@@ -335,6 +375,15 @@ namespace Nop.Plugin.Api.Controllers
 
             InsertFirstAndLastNameGenericAttributes(customerDelta.Dto.FirstName, customerDelta.Dto.LastName, currentCustomer);
 
+
+            int languageId = 0;
+
+            if (!string.IsNullOrEmpty(customerDelta.Dto.LanguageId) && int.TryParse(customerDelta.Dto.LanguageId, out languageId)
+                && _languageService.GetLanguageById(languageId) != null)
+            {
+                _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.LanguageId, languageId);
+            }
+
             //password
             if (!string.IsNullOrWhiteSpace(customerDelta.Dto.Password))
             {
@@ -369,7 +418,13 @@ namespace Nop.Plugin.Api.Controllers
                 updatedCustomer.LastName = lastNameGenericAttribute.Value;
             }
 
-            updatedCustomer.RoleIds = currentCustomer.CustomerRoles.Select(x => x.Id).ToList();
+            var languageIdGenericAttribute = _genericAttributeService.GetAttributesForEntity(currentCustomer.Id, typeof(Customer).Name)
+                .FirstOrDefault(x => x.Key == "LanguageId");
+
+            if (languageIdGenericAttribute != null)
+            {
+                updatedCustomer.LanguageId = languageIdGenericAttribute.Value;
+            }
 
             //activity log
             _customerActivityService.InsertActivity("UpdateCustomer", _localizationService.GetResource("ActivityLog.UpdateCustomer"), currentCustomer.Id);
@@ -384,8 +439,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpDelete]
+        [Route("/api/customers/{id}")]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult DeleteCustomer(int id)
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult DeleteCustomer(int id)
         {
             if (id <= 0)
             {

@@ -1,4 +1,4 @@
-﻿@model CustomerProductReviewsModel
+@model CustomerProductReviewsModel
 @using Nop.Web.Models.Catalog
 @using Nop.Web.Models.Customer;
 @{
@@ -11,7 +11,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
 }
 
 <div class="page account-page my-product-reviews-list-page">
@@ -26,7 +26,7 @@
                 @GetReviewRow(review)
             }
             var pager = Html.Pager(Model.PagerModel);
-            if (!MvcHtmlString.IsNullOrEmpty(pager))
+            if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager">
                     @pager

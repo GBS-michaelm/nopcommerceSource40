@@ -1,13 +1,13 @@
-﻿@model CheckoutBillingAddressModel
+@model CheckoutBillingAddressModel
 @using Nop.Web.Models.Checkout;
 <div class="checkout-data">
-    @Html.Widget("op_checkout_billing_address_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_top" })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
             <p class="selector">
                 @Html.CheckBoxFor(x => x.ShipToSameAddress)
-                <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                <label for="@Html.IdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
             </p>
         </div>
     }
@@ -51,27 +51,27 @@
             </div>
         </div>
     }
-    @Html.Widget("op_checkout_billing_address_middle")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
     <div class="section new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
 	    @{
              var validationSummary = Html.ValidationSummary(true);
                
          }
-	     @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+	     @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
          {
       	   <div class="message-error">@validationSummary</div>
          }
             <div class="enter-address-body form-horizontal">
                 @{
-                    var dataDictAddress = new ViewDataDictionary();
+                    var dataDictAddress = new ViewDataDictionary(ViewData);
                     //Merge ModelState (required for validation)
                     dataDictAddress.ModelState.Merge(ViewData.ModelState);
                     dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
-                    @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
+                    @Html.Partial("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)              
                 }
             </div>
         </div>
     </div>
-    @Html.Widget("op_checkout_billing_address_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
 </div>

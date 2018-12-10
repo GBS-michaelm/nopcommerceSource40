@@ -1,4 +1,4 @@
-﻿@using Nop.Core.Plugins
+@using Nop.Core.Plugins
 @using Nop.Core.Infrastructure
 @using Nop.Services.Configuration
 @using Nop.Plugin.Catalog.GBS
@@ -95,7 +95,7 @@
     </div>*@
     @*</div>*@
 @*</div>*@
-        <div id="gateway-sales-banner"> @Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
+        <div id="gateway-sales-banner"> @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })</div>
 <div class="listing-page">
     <div class="sidebar col-md-3">
         <div class=" sidebar-title">
@@ -108,27 +108,27 @@
         }
         else
         {
-            @Html.Widget("left_side_column_before")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
             if (categoryNavigationSettings.IsActive)
             {
-                @Html.Widget("category_navigation_block", currentCategoryId + "," + currentProductId)
+                @await Component.InvokeAsync("Widget", new { widgetZone = "category_navigation_block", additionalData = currentCategoryId + ", additionalData =" + currentProductId })
             }
             else
             {
-                @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+                @await Component.InvokeAsync("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
             }
-            @*@Html.Widget("left_side_column_after_category_navigation")
-            @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-            @Html.Action("VendorNavigation", "Catalog")*@
-            @*@Html.Action("PopularProductTags", "Catalog")*@
-            @*@Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
-            @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation", "Catalog")*@
+            @*@await Component.InvokeAsync("PopularProductTags", "Catalog")*@
+            @*@await Component.InvokeAsync("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })*@
+            @await Component.InvokeAsync("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
         }
     </div>
     <div class="side-content col-md-9">
-        @Html.Widget("main_column_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
         @RenderBody()
-        @Html.Widget("main_column_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
     </div>
 </div>

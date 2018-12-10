@@ -62,7 +62,90 @@
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\images\qv-plus.png" />
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\QuickView.css" />
     <Content Remove="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\DefaultClean\Content\QuickView.rtl.css" />
+    <Content Remove="Themes\FridgeTips\Views\Checkout\Completed - Copy.cshtml" />
+    <Content Remove="Themes\HouseOfMagnet\Views\Checkout\Completed - Copy.cshtml" />
     <Content Update="Themes\HouseOfMagnet\Views\Catalog\_CategoryLine.Navigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\HouseOfMagnet\Views\Shared\Components\PaymentGBS\PaymentInfo.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\HouseOfMagnet\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\BillingAddress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\CheckoutProgress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\CheckoutProgressOG.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\Completed - Copy.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\Completed.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\Confirm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\CustomerNavigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OnePageCheckout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcBillingAddress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcConfirmOrder.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcPaymentInfo.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcPaymentMethods.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcShippingAddress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\OpcShippingMethods.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\PaymentInfo - Copy.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\PaymentInfo.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\PaymentMethod.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\ShippingAddress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\ShippingMethod.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\ShippingMethodOG.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\_AddressBookDropdown.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\_BillingAddressBook.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\_BillingNewAddressForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\_PaymentInfo.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Themes\MagneticAttractions\Views\GBSCheckout\_ShippingMethod.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
 

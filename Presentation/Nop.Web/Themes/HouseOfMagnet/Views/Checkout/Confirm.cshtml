@@ -1,4 +1,4 @@
-﻿@model CheckoutConfirmModel
+@model CheckoutConfirmModel
 @using Nop.Web.Models.Checkout;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -11,7 +11,7 @@
 }
 
 <div class="page checkout-page col-sm-9 col-md-9 gbs-margin-bottom-20">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
  
     <div class="confirm-order-wrap gbs-checkout-border gbs-padding-15 row">
        
@@ -21,7 +21,7 @@
         <div class="confirm-info-check gbs-margin-top-20">
             <span>Confirm that all of your order details are correct and place your order.</span>
         </div>
-        @Html.Widget("checkout_confirm_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
         <div class="confirm-order">
             @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
             {
@@ -106,7 +106,7 @@
                                     if (warning.ToLower().Contains("payment error"))
                                     {
                                         <li><i class="icon-remove"></i>@warning</li>
-                                        <li><i class="icon-remove"></i>@Html.Action("TopicBlock", "Topic", new { systemName = "ncc_payment_error_msg" })</li>
+                                        <li><i class="icon-remove"></i>@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "ncc_payment_error_msg" })</li>
                                     }
                                     else
                                     {
@@ -119,18 +119,18 @@
                 }
             }
         </div>
-        @Html.Widget("checkout_confirm_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
         <div class="order-summary-body">
-          @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+          @await Component.InvokeAsync("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
         </div>
     </div>
 </div>
 <div class="col-sm-3 col-md-3">
-   @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+   @await Component.InvokeAsync("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
 </div>
 <div class="col-sm-12 col-md-12">
     <div class="order-summary-confirm">
-        @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = false })
+        @await Component.InvokeAsync("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = false })
     </div>
 </div>
 

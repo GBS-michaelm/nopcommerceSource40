@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
 using Nop.Plugin.Api.Converters;
 
 namespace Nop.Plugin.Api.ModelBinders
 {
-    // The idea comes from this article http://can-we-code-it.blogspot.co.uk/2015/04/handling-put-content-of-any-mime-type.html
-    // but instead of using streams I am using the properties of the request.
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    
     public class ParametersModelBinder<T> : IModelBinder where T : class, new()
     {
         private readonly IObjectConverter _objectConverter;
@@ -15,22 +16,29 @@ namespace Nop.Plugin.Api.ModelBinders
         {
             _objectConverter = objectConverter;
         }
-
-        public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+        
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            // MS_QueryNameValuePairs contains key value pair representation of the query parameters passed to in the request.
-            if (actionContext.Request.Properties.ContainsKey("MS_QueryNameValuePairs"))
+            if (bindingContext == null)
             {
-                bindingContext.Model = _objectConverter.ToObject<T>(
-                    (ICollection<KeyValuePair<string, string>>)actionContext.Request.Properties["MS_QueryNameValuePairs"]);
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+            
+            if (bindingContext.HttpContext.Request.QueryString.HasValue)
+            {
+                Dictionary<string, string> queryParameters = bindingContext.HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
+
+                bindingContext.Model = _objectConverter.ToObject<T>(queryParameters);
             }
             else
             {
                 bindingContext.Model = new T();
             }
 
+            bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
+
             // This should be true otherwise the model will be null.
-            return true;
+            return Task.CompletedTask;
         }
     }
 }

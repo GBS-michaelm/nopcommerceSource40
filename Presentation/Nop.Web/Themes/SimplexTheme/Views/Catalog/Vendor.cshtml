@@ -1,4 +1,4 @@
-﻿@model VendorModel
+@model VendorModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -25,7 +25,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("vendordetails_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -45,7 +45,7 @@
         	<div class="row">
 	            <div class="col-md-12">
         	    	<div class="contact-vendor">
-                		@Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+                		@Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary(ViewData))
 		            </div>
         	    </div>
 	        </div>
@@ -75,6 +75,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("vendordetails_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model.Id })
     </div>
 </div>

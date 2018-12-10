@@ -148,7 +148,7 @@ namespace Nop.Plugin.Order.GBS.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CopyFilesToProduction(FormCollection ccFiles)
+        public IActionResult CopyFilesToProduction(IFormCollection ccFiles)
         {
             try
             {

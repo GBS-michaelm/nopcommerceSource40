@@ -1,4 +1,4 @@
-﻿@model ProfileInfoModel
+@model ProfileInfoModel
 @using Nop.Web.Models.Profile;
 <div class="profile-info-box">
     <div class="user-details">
@@ -28,7 +28,7 @@
         <div class="title">
             @T("Profile.Statistics")
         </div>
-        @Html.Widget("profile_page_info_userdetails", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userdetails", additionalData = Model.Id })
         <ul>
             @if (Model.TotalPostsEnabled)
             {
@@ -52,6 +52,6 @@
                 </li>
             }
         </ul>
-        @Html.Widget("profile_page_info_userstats", Model.CustomerProfileId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userstats", additionalData = Model.CustomerProfileId })
     </div>
 </div>

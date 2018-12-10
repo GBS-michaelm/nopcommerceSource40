@@ -58,7 +58,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Widgets.CustomersCanvas</OutputPath>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Widgets.CustomersCanvas\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 

@@ -1,10 +1,10 @@
-﻿@model SearchBoxModel
+@model SearchBoxModel
 @using Nop.Web.Models.Catalog;
 @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { @class = "navbar-form navbar-left", id = "small-search-box-form"}))
 {
     <div class="form-group">
         <input type="text" class="search-nav form-control" id="small-searchterms" autocomplete="off" placeholder="@T("Search.SearchBox.Tooltip")" name="q" />
-        @Html.Widget("searchbox_before_search_button")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
 		<input checked="checked" id="adv" name="adv" type="checkbox" value="true" hidden/>
 		<input checked="checked" id="sid" name="sid" type="checkbox" value="true" hidden />				
         @*<input type="submit" class="btn search-box-button" value="Search" />*@
@@ -50,6 +50,6 @@
             </script>
         </text>
         }
-        @Html.Widget("searchbox")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
     </div>
 }

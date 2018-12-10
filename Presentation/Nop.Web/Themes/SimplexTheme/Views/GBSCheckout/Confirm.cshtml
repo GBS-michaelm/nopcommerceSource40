@@ -1,4 +1,4 @@
-﻿@model CheckoutConfirmModel
+@model CheckoutConfirmModel
 @{
     Layout = "_ColumnsOne";
 
@@ -120,7 +120,7 @@
             
             @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
             <div class="order-summary-body">
-                @*@Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })*@
+                @*@await Component.InvokeAsync("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })*@
                 @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
             </div>
         </div>
@@ -131,7 +131,7 @@
     </div>
 <div class="col-sm-12 col-md-12">
     <div class="order-summary-confirm">
-        @*@Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = false })*@
+        @*@await Component.InvokeAsync("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = false })*@
         @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = false })
     </div>
 </div>

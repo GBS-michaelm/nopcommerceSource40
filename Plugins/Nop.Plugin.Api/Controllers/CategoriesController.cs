@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Constants;
 using Nop.Plugin.Api.DTOs.Categories;
-using Nop.Plugin.Api.MappingExtensions;
 using Nop.Plugin.Api.Models.CategoriesParameters;
-using Nop.Plugin.Api.Serializers;
 using Nop.Plugin.Api.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -30,16 +25,20 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Plugin.Api.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [BearerTokenAuthorize]
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Nop.Plugin.Api.DTOs.Errors;
+    using Nop.Plugin.Api.JSON.Serializers;
+
+    [ApiAuthorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoriesController : BaseApiController
     {
         private readonly ICategoryApiService _categoryApiService;
         private readonly ICategoryService _categoryService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IPictureService _pictureService;
         private readonly IFactory<Category> _factory; 
         private readonly IDTOHelper _dtoHelper;
 
@@ -62,7 +61,6 @@ namespace Nop.Plugin.Api.Controllers
             _categoryService = categoryService;
             _urlRecordService = urlRecordService;
             _factory = factory;
-            _pictureService = pictureService;
             _dtoHelper = dtoHelper;
         }
 
@@ -73,9 +71,11 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="400">Bad Request</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CategoriesRootObject))]
+        [Route("/api/categories")] 
+        [ProducesResponseType(typeof(CategoriesRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetCategories(CategoriesParametersModel parameters)
+        public IActionResult GetCategories(CategoriesParametersModel parameters)
         {
             if (parameters.Limit < Configurations.MinLimit || parameters.Limit > Configurations.MaxLimit)
             {
@@ -87,10 +87,11 @@ namespace Nop.Plugin.Api.Controllers
                 return Error(HttpStatusCode.BadRequest, "page", "Invalid page parameter");
             }
 
-            IList<Category> allCategories = _categoryApiService.GetCategories(parameters.Ids, parameters.CreatedAtMin, parameters.CreatedAtMax,
+            var allCategories = _categoryApiService.GetCategories(parameters.Ids, parameters.CreatedAtMin, parameters.CreatedAtMax,
                                                                              parameters.UpdatedAtMin, parameters.UpdatedAtMax,
                                                                              parameters.Limit, parameters.Page, parameters.SinceId,
-                                                                             parameters.ProductId, parameters.PublishedStatus);
+                                                                             parameters.ProductId, parameters.PublishedStatus)
+                                                   .Where(c => _storeMappingService.Authorize(c));
 
             IList<CategoryDto> categoriesAsDtos = allCategories.Select(category =>
             {
@@ -114,9 +115,12 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="200">OK</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CategoriesCountRootObject))]
+        [Route("/api/categories/count")]
+        [ProducesResponseType(typeof(CategoriesCountRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetCategoriesCount(CategoriesCountParametersModel parameters)
+        public IActionResult GetCategoriesCount(CategoriesCountParametersModel parameters)
         {
             var allCategoriesCount = _categoryApiService.GetCategoriesCount(parameters.CreatedAtMin, parameters.CreatedAtMax,
                                                                             parameters.UpdatedAtMin, parameters.UpdatedAtMax,
@@ -139,9 +143,12 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="404">Not Found</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [ResponseType(typeof(CategoriesRootObject))]
+        [Route("/api/categories/{id}")]
+        [ProducesResponseType(typeof(CategoriesRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetCategoryById(int id, string fields = "")
+        public IActionResult GetCategoryById(int id, string fields = "")
         {
             if (id <= 0)
             {
@@ -167,8 +174,12 @@ namespace Nop.Plugin.Api.Controllers
         }
         
         [HttpPost]
-        [ResponseType(typeof(CategoriesRootObject))]
-        public IHttpActionResult CreateCategory([ModelBinder(typeof(JsonModelBinder<CategoryDto>))] Delta<CategoryDto> categoryDelta)
+        [Route("/api/categories")]
+        [ProducesResponseType(typeof(CategoriesRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult CreateCategory([ModelBinder(typeof(JsonModelBinder<CategoryDto>))] Delta<CategoryDto> categoryDelta)
         {
             // Here we display the errors if the validation has failed at some point.
             if (!ModelState.IsValid)
@@ -227,8 +238,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpPut]
-        [ResponseType(typeof(CategoriesRootObject))]
-        public IHttpActionResult UpdateCategory(
+        [Route("/api/categories/{id}")]
+        [ProducesResponseType(typeof(CategoriesRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        public IActionResult UpdateCategory(
             [ModelBinder(typeof (JsonModelBinder<CategoryDto>))] Delta<CategoryDto> categoryDelta)
         {
             // Here we display the errors if the validation has failed at some point.
@@ -285,8 +301,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpDelete]
+        [Route("/api/categories/{id}")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult DeleteCategory(int id)
+        public IActionResult DeleteCategory(int id)
         {
             if (id <= 0)
             {
@@ -344,7 +365,7 @@ namespace Nop.Plugin.Api.Controllers
             }
         }
 
-        public void UpdateDiscounts(Category category, List<int> passedDiscountIds)
+        private void UpdateDiscounts(Category category, List<int> passedDiscountIds)
         {
             if(passedDiscountIds == null)
                 return;

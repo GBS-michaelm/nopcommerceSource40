@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel.AddToCartModel
+@model ProductDetailsModel.AddToCartModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @if (Model.UpdatedShoppingCartItemId > 0)
@@ -40,13 +40,13 @@
                 {
                     <div class="addtocart-quantity-box">
                         @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input form-control" ,@onkeyup="ChangeQuantity1(this)", @data_productid = Model.ProductId})
-                        <span class="increase-quantity" onclick="IncreaseQuantity(@Html.FieldIdFor(model => model.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                        <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.FieldIdFor(model => model.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                        <span class="increase-quantity" onclick="IncreaseQuantity(@Html.IdFor(model => model.EnteredQuantity));"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                        <span class="decrease-quantity" onclick="DecreaseQuantity(@Html.IdFor(model => model.EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>
                     </div>
                     //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                            $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
                                 if (event.keyCode == 13) {
                                     $("#add-to-cart-button-@Model.ProductId").click();
                                     return false;
@@ -86,7 +86,7 @@
             }
 	    </div>
     }
-    @Html.Widget("productdetails_add_info", Model.ProductId)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.ProductId })
 </div>
 <script type="text/javascript">
     var done = false;

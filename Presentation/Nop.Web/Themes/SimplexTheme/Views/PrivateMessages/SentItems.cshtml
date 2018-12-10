@@ -1,4 +1,4 @@
-﻿@model PrivateMessageListModel
+@model PrivateMessageListModel
 @using Nop.Web.Models.PrivateMessages;
 <div class="private-messages-box">
     <script type="text/javascript">
@@ -75,7 +75,7 @@
             </div>
             //send message pagination
             var pager = Html.Pager(Model.PagerModel);
-            if (!MvcHtmlString.IsNullOrEmpty(pager))
+            if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pagination">
                     <div class="pager">

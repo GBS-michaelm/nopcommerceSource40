@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel.ProductBreadcrumbModel
+@model ProductDetailsModel.ProductBreadcrumbModel
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
@@ -9,7 +9,7 @@
 {
 <div class="breadcrumb-wrapper">
     <ol class="breadcrumb">
-        @Html.Widget("productbreadcrumb_before", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_before", additionalData = Model.ProductId })
         <li>
             <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
                 <a href="@Url.RouteUrl("HomePage")" itemprop="url">
@@ -32,7 +32,7 @@
         <li>
             <strong class="active">@Model.ProductName</strong>
             @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" itemprop="url">@Model.ProductName</a></strong>*@
-            @Html.Widget("productbreadcrumb_after", Model.ProductId)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_after", additionalData = Model.ProductId })
         </li>
     </ol>
 </div>

@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_Root";
 }
 @{
@@ -82,15 +82,15 @@
         }
         else
         {
-            @Html.Widget("left_side_column_before")
-			@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })                       
-            @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-            @Html.Widget("left_side_column_after")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
+			@await Component.InvokeAsync("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })                       
+            @await Component.InvokeAsync("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
         }
     </div>*@
     <div class="side-content col-md-9">
-        @Html.Widget("main_column_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
         @RenderBody()
-        @Html.Widget("main_column_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
     </div>
 </div>

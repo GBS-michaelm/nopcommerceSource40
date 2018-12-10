@@ -55,9 +55,7 @@
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
       <Private></Private>
     </ProjectReference>
-    <ProjectReference Include="..\Nop.Plugin.Widgets.CustomersCanvas\Nop.Plugin.Widgets.CustomersCanvas.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\Nop.Plugin.Widgets.CustomersCanvas\Nop.Plugin.Widgets.CustomersCanvas.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +71,21 @@
     <Reference Include="OrderService">
       <HintPath>..\..\GBS\OrderService.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Views\OrderGBS\AddPhoneNumber.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\OrderGBS\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\OrderGBS\UpdateCanvasProduct.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\OrderGBS\UpdateCanvasProductComplete.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->

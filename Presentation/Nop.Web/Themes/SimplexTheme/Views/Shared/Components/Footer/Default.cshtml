@@ -1,4 +1,4 @@
-﻿@model FooterModel
+@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @inject IWorkContext workContext;
@@ -21,7 +21,7 @@
                             <div class="col-sm-7">
                                 @await Component.InvokeAsync("TopicBlock", new { systemName = "ncc_footer_emaillist" })
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "join_email_list", list = "NCC:Website_Signups", form = "FooterOptIn" })
-                                @*@Html.Widget("join_email_list", new { list = "NCC:Website_Signups", form = "FooterOptIn" })*@
+                                @*@await Component.InvokeAsync("Widget", new { widgetZone = "join_email_list", additionalData = new { list = "NCC:Website_Signups", additionalData = form = "FooterOptIn" } })*@
                                 <div class="follow-us">
                                     @await Component.InvokeAsync("SocialButtons")
                                 </div>

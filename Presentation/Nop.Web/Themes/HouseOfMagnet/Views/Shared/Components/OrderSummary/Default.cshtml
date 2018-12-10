@@ -243,7 +243,7 @@
                                                     else
                                                     {
                                                                                                     <div class="product-picture">
-                                                                                                        @Html.Widget("product_details_widget", item.ProductId)
+                                                                                                        @await Component.InvokeAsync("Widget", new { widgetZone = "product_details_widget", additionalData = item.ProductId })
                                                                                                     </div>
                                                     }
                                                     }*@

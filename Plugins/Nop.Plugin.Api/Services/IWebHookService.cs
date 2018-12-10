@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNet.WebHooks;
-
-namespace Nop.Plugin.Api.Services
+﻿namespace Nop.Plugin.Api.Services
 {
+    using Microsoft.AspNet.WebHooks;
+
     public interface IWebHookService
     {
-        IWebHookManager GetHookManager();
+        IWebHookManager GetWebHookManager();
+        IWebHookSender GetWebHookSender();
+        IWebHookStore GetWebHookStore();
+        IWebHookFilterManager GetWebHookFilterManager();
     }
 }

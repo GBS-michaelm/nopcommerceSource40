@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+@model CategoryModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo-listing.cshtml";
 
@@ -131,13 +131,13 @@
         @*  @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
            @* <div class="well">
-                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary(ViewData))
             </div>
         }
         @*filtering*@
         @*     @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
             {
-                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary(ViewData))
             }
         </div>*@
 

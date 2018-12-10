@@ -1,4 +1,4 @@
-﻿@model CheckoutBillingAddressModel
+@model CheckoutBillingAddressModel
 @using Nop.Web.Models.Checkout;
 @{
     bool localPickUp = false;
@@ -23,7 +23,7 @@
                     <div class="ship-to-same-address">
                         <div class="selector">
                             @Html.CheckBoxFor(x => x.ShipToSameAddress)
-                            <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                            <label for="@Html.IdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
                         </div>
                     </div>
                 }

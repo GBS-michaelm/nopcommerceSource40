@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel.AddToCartModel
+@model ProductDetailsModel.AddToCartModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
 @if (Model.UpdatedShoppingCartItemId > 0)
@@ -89,7 +89,7 @@
             }
         </div>
     }
-    @*@Html.Widget("productdetails_add_info", Model.ProductId)*@
+    @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.ProductId })*@
     @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.ProductId })*@
 </div>
 <script type="text/javascript">

@@ -3,35 +3,47 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Nop.Plugin.Api.Serializers;
+using Nop.Plugin.Api.JSON.Serializers;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Microsoft.AspNet.WebHooks;
-using System.Web.Http.Controllers;
-using System.Web.Http.Description;
-using System.Web.Http;
+using Nop.Core.Domain.Stores;
 using System.Net.Http;
 using System.Net;
-using Nop.Plugin.Api.Helpers;
 using System.Globalization;
+using Nop.Core;
 using Nop.Plugin.Api.Constants;
 using Nop.Services.Media;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNet.WebHooks;
+using Nop.Plugin.Api.Services;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [BearerTokenAuthorize]
+    using System.Security;
+    using System.Security.Claims;
+    using IdentityServer4.EntityFramework.Entities;
+    using IdentityServer4.Stores;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Nop.Plugin.Api.JSON.Serializers;
+
+    [ApiAuthorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WebHookRegistrationsController : BaseApiController
     {
-
-        private IWebHookManager _manager;
-        private IWebHookStore _store;
-        private IWebHookUser _user;
-        private readonly IAuthorizationHelper _authorizationHelper;
+        private const string ErrorPropertyKey = "webhook";
         private const string PRIVATE_FILTER_PREFIX = "MS_Private_";
+
+        private readonly IWebHookManager _manager;
+        private readonly IWebHookStore _store;
+        private readonly IWebHookFilterManager _filterManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IClientStore _clientStore;
 
         public WebHookRegistrationsController(IJsonFieldsSerializer jsonFieldsSerializer,
             IAclService aclService,
@@ -42,17 +54,25 @@ namespace Nop.Plugin.Api.Controllers
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             IPictureService pictureService,
-            IAuthorizationHelper authorizationHelper)
+            IStoreContext storeContext,
+            IWebHookService webHookService,
+            IHttpContextAccessor httpContextAccessor,
+            IClientStore clientStore)
             : base(jsonFieldsSerializer,
-                  aclService, customerService, 
-                  storeMappingService, 
-                  storeService, 
-                  discountService, 
+                  aclService, customerService,
+                  storeMappingService,
+                  storeService,
+                  discountService,
                   customerActivityService,
                   localizationService,
                   pictureService)
         {
-            _authorizationHelper = authorizationHelper;
+            _storeContext = storeContext;
+            _manager = webHookService.GetWebHookManager();
+            _store = webHookService.GetWebHookStore();
+            _filterManager = webHookService.GetWebHookFilterManager();
+            _httpContextAccessor = httpContextAccessor;
+            _clientStore = clientStore;
         }
 
         /// <summary>
@@ -60,7 +80,9 @@ namespace Nop.Plugin.Api.Controllers
         /// </summary>
         /// <returns>A collection containing the registered <see cref="WebHook"/> instances for a given user.</returns>
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<WebHook>))]
+        [Route("/api/webhooks/registrations")]
+        [ProducesResponseType(typeof(IEnumerable<WebHook>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
         public async Task<IEnumerable<WebHook>> GetAllWebHooks()
         {
@@ -75,9 +97,12 @@ namespace Nop.Plugin.Api.Controllers
         /// </summary>
         /// <returns>The registered <see cref="WebHook"/> instance for a given user.</returns>
         [HttpGet]
-        [ResponseType(typeof(WebHook))]
+        [Route("/api/webhooks/registrations/{id}",Name = WebHookNames.GetWebhookByIdAction)]
+        [ProducesResponseType(typeof(WebHook), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public async Task<IHttpActionResult> GetWebHookById(string id)
+        public async Task<IActionResult> GetWebHookById(string id)
         {
             string userId = GetUserId();
             WebHook webHook = await _store.LookupWebHookAsync(userId, id);
@@ -86,6 +111,7 @@ namespace Nop.Plugin.Api.Controllers
                 RemovePrivateFilters(new[] { webHook });
                 return Ok(webHook);
             }
+
             return NotFound();
         }
 
@@ -94,8 +120,13 @@ namespace Nop.Plugin.Api.Controllers
         /// </summary>
         /// <param name="webHook">The <see cref="WebHook"/> to create.</param>
         [HttpPost]
-        [ResponseType(typeof(WebHook))]
-        public async Task<IHttpActionResult> RegisterWebHook(WebHook webHook)
+        [Route("/api/webhooks/registrations")]
+        [ProducesResponseType(typeof(StoreResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(HttpResponseMessage), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(HttpResponseMessage), (int)HttpStatusCode.Conflict)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public async Task<IActionResult> RegisterWebHook([FromBody]WebHook webHook)
         {
             if (!ModelState.IsValid)
             {
@@ -108,8 +139,16 @@ namespace Nop.Plugin.Api.Controllers
             }
 
             string userId = GetUserId();
-            await VerifyFilters(webHook);
-            await VerifyWebHook(webHook);
+
+            try
+            {
+                await VerifyFilters(webHook);
+                await VerifyWebHook(webHook);
+            }
+            catch (VerificationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             // In order to ensure that a web hook filter is not registered multiple times for the same uri
             // we remove the already registered filters from the current web hook.
@@ -125,8 +164,7 @@ namespace Nop.Plugin.Api.Controllers
                 if (!webHook.Filters.Any())
                 {
                     string msg = _localizationService.GetResource("Api.WebHooks.CouldNotRegisterDuplicateWebhook");
-                    HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.Conflict, msg);
-                    return ResponseMessage(error);
+                    return Error(HttpStatusCode.Conflict, ErrorPropertyKey, msg);
                 }
             }
 
@@ -141,7 +179,6 @@ namespace Nop.Plugin.Api.Controllers
                 // Ensure we have a normalized ID for the WebHook
                 webHook.Id = null;
 
-
                 // Add WebHook for this user.
                 StoreResult result = await _store.InsertWebHookAsync(userId, webHook);
 
@@ -154,9 +191,8 @@ namespace Nop.Plugin.Api.Controllers
             catch (Exception ex)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, _localizationService.GetResource("Api.WebHooks.CouldNotRegisterWebhook"), ex.Message);
-                Configuration.DependencyResolver.GetLogger().Error(msg, ex);
-                HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg, ex);
-                return ResponseMessage(error);
+                //Configuration.DependencyResolver.GetLogger().Error(msg, ex);
+                return Error(HttpStatusCode.Conflict, ErrorPropertyKey, msg);
             }
         }
 
@@ -166,7 +202,13 @@ namespace Nop.Plugin.Api.Controllers
         /// <param name="id">The WebHook ID.</param>
         /// <param name="webHook">The new <see cref="WebHook"/> to use.</param>
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateWebHook(string id, WebHook webHook)
+        [Route("/api/webhooks/registrations/{id}")]
+        [ProducesResponseType(typeof(StoreResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(HttpResponseMessage), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateWebHook(string id, WebHook webHook)
         {
             if (webHook == null)
             {
@@ -189,9 +231,8 @@ namespace Nop.Plugin.Api.Controllers
             catch (Exception ex)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, _localizationService.GetResource("Api.WebHooks.CouldNotUpdateWebhook"), ex.Message);
-                Configuration.DependencyResolver.GetLogger().Error(msg, ex);
-                HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg, ex);
-                return ResponseMessage(error);
+               // Configuration.DependencyResolver.GetLogger().Error(msg, ex);
+                return Error(HttpStatusCode.InternalServerError, ErrorPropertyKey, msg);
             }
         }
 
@@ -200,7 +241,11 @@ namespace Nop.Plugin.Api.Controllers
         /// </summary>
         /// <param name="id">The WebHook ID.</param>
         [HttpDelete]
-        public async Task<IHttpActionResult> DeleteWebHook(string id)
+        [Route("/api/webhooks/registrations/{id}")]
+        [ProducesResponseType(typeof(StoreResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(HttpResponseMessage), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public async Task<IActionResult> DeleteWebHook(string id)
         {
             string userId = GetUserId();
 
@@ -212,9 +257,8 @@ namespace Nop.Plugin.Api.Controllers
             catch (Exception ex)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, _localizationService.GetResource("Api.WebHooks.CouldNotDeleteWebhook"), ex.Message);
-                Configuration.DependencyResolver.GetLogger().Error(msg, ex);
-                HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg, ex);
-                return ResponseMessage(error);
+                //Configuration.DependencyResolver.GetLogger().Error(msg, ex);
+                return Error(HttpStatusCode.InternalServerError, ErrorPropertyKey, msg);
             }
         }
 
@@ -222,7 +266,11 @@ namespace Nop.Plugin.Api.Controllers
         /// Deletes all existing WebHook registrations.
         /// </summary>
         [HttpDelete]
-        public async Task<IHttpActionResult> DeleteAllWebHooks()
+        [Route("/api/webhooks/registrations")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(HttpResponseMessage), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public async Task<IActionResult> DeleteAllWebHooks()
         {
             string userId = GetUserId();
 
@@ -234,23 +282,9 @@ namespace Nop.Plugin.Api.Controllers
             catch (Exception ex)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, _localizationService.GetResource("Api.WebHooks.CouldNotDeleteWebhooks"), ex.Message);
-                Configuration.DependencyResolver.GetLogger().Error(msg, ex);
-                HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg, ex);
-                return ResponseMessage(error);
+               // Configuration.DependencyResolver.GetLogger().Error(msg, ex);
+                return Error(HttpStatusCode.InternalServerError, ErrorPropertyKey, msg);
             }
-        }
-
-        /// <inheritdoc />
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext);
-
-            // The Microsoft.AspNet.WebHooks library registeres an extension method for the DependencyResolver.
-            // Sadly we cannot access these properties by using out Autofac dependency injection.
-            // In order to access them we have to resolve them through the Configuration.
-            _manager = Configuration.DependencyResolver.GetManager();
-            _store = Configuration.DependencyResolver.GetStore();
-            _user = Configuration.DependencyResolver.GetUser();
         }
 
         /// <summary>
@@ -269,9 +303,8 @@ namespace Nop.Plugin.Api.Controllers
                 webHook.Filters.Add(WildcardWebHookFilterProvider.Name);
                 return;
             }
-
-            IWebHookFilterManager filterManager = Configuration.DependencyResolver.GetFilterManager();
-            IDictionary<string, WebHookFilter> filters = await filterManager.GetAllWebHookFiltersAsync();
+            
+            IDictionary<string, WebHookFilter> filters = await _filterManager.GetAllWebHookFiltersAsync();
             HashSet<string> normalizedFilters = new HashSet<string>();
             List<string> invalidFilters = new List<string>();
             foreach (string filter in webHook.Filters)
@@ -290,12 +323,11 @@ namespace Nop.Plugin.Api.Controllers
             if (invalidFilters.Count > 0)
             {
                 string invalidFiltersMsg = string.Join(", ", invalidFilters);
-                string link = Url.Link(WebHookNames.FiltersGetAction, routeValues: null);
+                string link = Url.Link(WebHookNames.FiltersGetAction, null);
                 string msg = string.Format(CultureInfo.CurrentCulture, _localizationService.GetResource("Api.WebHooks.InvalidFilters"), invalidFiltersMsg, link);
-                Configuration.DependencyResolver.GetLogger().Info(msg);
-
-                HttpResponseMessage response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, msg);
-                throw new HttpResponseException(response);
+                //Configuration.DependencyResolver.GetLogger().Info(msg);
+                
+                throw new VerificationException(msg);
             }
             else
             {
@@ -352,8 +384,7 @@ namespace Nop.Plugin.Api.Controllers
             }
             catch (Exception ex)
             {
-                HttpResponseMessage error = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message, ex);
-                throw new HttpResponseException(error);
+                throw new VerificationException(ex.Message);
             }
         }
 
@@ -361,20 +392,25 @@ namespace Nop.Plugin.Api.Controllers
         /// Gets the user ID for this request.
         /// </summary>
         private string GetUserId()
-        {
+        {          
             // If we are here the client is already authorized.
             // So there is a client ID and the client is active.
-            var client = _authorizationHelper.GetCurrentClientFromClaims();
+            var clientId =
+                _httpContextAccessor.HttpContext.User.FindFirst("client_id")?.Value;
 
-            return client.ClientId;
+            var storeId = _storeContext.CurrentStore.Id;
+
+            var webHookUser = clientId + "-" + storeId;
+
+            return webHookUser;
         }
 
         /// <summary>
-        /// Creates an <see cref="IHttpActionResult"/> based on the provided <paramref name="result"/>.
+        /// Creates an <see cref="IActionResult"/> based on the provided <paramref name="result"/>.
         /// </summary>
-        /// <param name="result">The result to use when creating the <see cref="IHttpActionResult"/>.</param>
-        /// <returns>An initialized <see cref="IHttpActionResult"/>.</returns>
-        private IHttpActionResult CreateHttpResult(StoreResult result)
+        /// <param name="result">The result to use when creating the <see cref="IActionResult"/>.</param>
+        /// <returns>An initialized <see cref="IActionResult"/>.</returns>
+        private IActionResult CreateHttpResult(StoreResult result)
         {
             switch (result)
             {
@@ -382,7 +418,7 @@ namespace Nop.Plugin.Api.Controllers
                     return Ok();
 
                 case StoreResult.Conflict:
-                    return Conflict();
+                    return Error(HttpStatusCode.Conflict);
 
                 case StoreResult.NotFound:
                     return NotFound();
@@ -391,7 +427,7 @@ namespace Nop.Plugin.Api.Controllers
                     return BadRequest();
 
                 default:
-                    return InternalServerError();
+                    return Error(HttpStatusCode.InternalServerError);
             }
         }
     }

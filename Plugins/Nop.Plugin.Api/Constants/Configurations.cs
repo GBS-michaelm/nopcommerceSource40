@@ -2,9 +2,10 @@
 {
     public class Configurations
     {
-        // time is in minutes (30 days = 43200 minutes)
-        public const int AccessTokenExpirationMinutes = 43200;
-        public const int RefreshTokenExpirationMinutes = int.MaxValue;
+        // time is in seconds (10 years = 315360000 seconds) and should not exceed 2038 year
+        // https://stackoverflow.com/questions/43593074/jwt-validation-fails/43605820
+        public const int DefaultAccessTokenExpiration = 315360000;
+        public const int DefaultRefreshTokenExpiration = int.MaxValue;
         public const int DefaultLimit = 50;
         public const int DefaultPageValue = 1;
         public const int DefaultSinceId = 0;
@@ -16,5 +17,7 @@
         public const string UnpublishedStatus = "unpublished";
         public const string AnyStatus = "any";
         public const string JsonTypeMapsPattern = "json.maps";
+
+        public const string NEWSLETTER_SUBSCRIBERS_KEY = "Nop.api.newslettersubscribers";
     }
 }

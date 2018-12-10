@@ -1,4 +1,4 @@
-﻿@model PrivateMessageIndexModel
+@model PrivateMessageIndexModel
 @using Nop.Web.Models.PrivateMessages;
 @{    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -23,10 +23,10 @@
         </ul>
         <div class="tab-content">
             <div id="tabs-1" class="tab-pane active">
-                @Html.Action("Inbox", new { page = Model.InboxPage, tab = "inbox" })
+                @await Component.InvokeAsync("Inbox", new { page = Model.InboxPage, tab = "inbox" })
             </div>
             <div id="tabs-2" class="tab-pane">
-                @Html.Action("SentItems", new { page = Model.SentItemsPage, tab = "sent" })
+                @await Component.InvokeAsync("SentItems", new { page = Model.SentItemsPage, tab = "sent" })
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel
+@model ProductDetailsModel
 @using Microsoft.AspNetCore.Http.Extensions
 @using Nop.Core.Domain.Seo;
 @inject SeoSettings seoSettings
@@ -77,7 +77,7 @@
                 @Html.Raw(Model.ShortDescription)
             </div>
         }*@
-                                    @*@Html.Widget("productdetails_overview_top", Model.Id)*@
+                                    @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })*@
                                     <!--product reviews-->
                                     @*@Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)*@
                                     <!--availability-->
@@ -133,7 +133,7 @@
                                         }
                                         @*@Html.Partial("_CompareProductsButton", Model)
             @Html.Partial("_ProductEmailAFriendButton", Model)
-            @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)*@
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })*@
                                     </div>
                                     @Html.Partial("_ShareButton", Model)
 
@@ -205,13 +205,13 @@
                 </div>
 
                 <div class="product-collateral">
-                    @*<div class="product-slider">@Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
+                    @*<div class="product-slider">@await Component.InvokeAsync("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
                     <div class="product-slider">
                         @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
                     </div>
                 </div>
             </div>
        </form>
-            @*@Html.Widget("productdetails_bottom", Model.Id)*@
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })*@
 </div>
 </div>

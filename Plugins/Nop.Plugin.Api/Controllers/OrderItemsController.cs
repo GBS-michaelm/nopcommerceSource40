@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Constants;
 using Nop.Plugin.Api.Delta;
 using Nop.Plugin.Api.DTOs.OrderItems;
+using Nop.Plugin.Api.Helpers;
 using Nop.Plugin.Api.JSON.ActionResults;
 using Nop.Plugin.Api.MappingExtensions;
 using Nop.Plugin.Api.ModelBinders;
 using Nop.Plugin.Api.Models.OrderItemsParameters;
-using Nop.Plugin.Api.Serializers;
 using Nop.Plugin.Api.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -30,7 +27,12 @@ using Nop.Services.Tax;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [BearerTokenAuthorize]
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Mvc;
+    using Nop.Plugin.Api.DTOs.Errors;
+    using Nop.Plugin.Api.JSON.Serializers;
+
+    [ApiAuthorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OrderItemsController : BaseApiController
     {
         private readonly IOrderItemApiService _orderItemApiService;
@@ -39,6 +41,8 @@ namespace Nop.Plugin.Api.Controllers
         private readonly IProductApiService _productApiService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ITaxService _taxService;
+        private readonly IDTOHelper _dtoHelper;
+        private readonly IProductAttributeConverter _productAttributeConverter;
 
         public OrderItemsController(IJsonFieldsSerializer jsonFieldsSerializer, 
             IAclService aclService, 
@@ -54,7 +58,7 @@ namespace Nop.Plugin.Api.Controllers
             IProductApiService productApiService, 
             IPriceCalculationService priceCalculationService, 
             ITaxService taxService,
-            IPictureService pictureService) 
+            IPictureService pictureService, IDTOHelper dtoHelper) 
             : base(jsonFieldsSerializer, 
                   aclService, 
                   customerService, 
@@ -71,12 +75,17 @@ namespace Nop.Plugin.Api.Controllers
             _productApiService = productApiService;
             _priceCalculationService = priceCalculationService;
             _taxService = taxService;
+            _dtoHelper = dtoHelper;
         }
         
         [HttpGet]
-        [ResponseType(typeof(OrderItemsRootObject))]
+        [Route("/api/orders/{orderId}/items")]
+        [ProducesResponseType(typeof(OrderItemsRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetOrderItems(int orderId, OrderItemsParametersModel parameters)
+        public IActionResult GetOrderItems(int orderId, OrderItemsParametersModel parameters)
         {
             if (parameters.Limit < Configurations.MinLimit || parameters.Limit > Configurations.MaxLimit)
             {
@@ -99,7 +108,7 @@ namespace Nop.Plugin.Api.Controllers
 
             var orderItemsRootObject = new OrderItemsRootObject()
             {
-                OrderItems = allOrderItemsForOrder.Select(item => item.ToDto()).ToList()
+                OrderItems = allOrderItemsForOrder.Select(item => _dtoHelper.PrepareOrderItemDTO(item)).ToList()
             };
 
             var json = _jsonFieldsSerializer.Serialize(orderItemsRootObject, parameters.Fields);
@@ -108,9 +117,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(OrderItemsCountRootObject))]
+        [Route("/api/orders/{orderId}/items/count")]
+        [ProducesResponseType(typeof(OrderItemsCountRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetOrderItemsCount(int orderId)
+        public IActionResult GetOrderItemsCount(int orderId)
         {
             Order order = _orderApiService.GetOrderById(orderId);
 
@@ -130,9 +143,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(OrderItemsRootObject))]
+        [Route("/api/orders/{orderId}/items/{orderItemId}")]
+        [ProducesResponseType(typeof(OrderItemsRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult GetOrderItemByIdForOrder(int orderId, int orderItemId, string fields = "")
+        public IActionResult GetOrderItemByIdForOrder(int orderId, int orderItemId, string fields = "")
         {
             Order order = _orderApiService.GetOrderById(orderId);
 
@@ -149,7 +166,7 @@ namespace Nop.Plugin.Api.Controllers
             }
 
             var orderItemDtos = new List<OrderItemDto>();
-            orderItemDtos.Add(orderItem.ToDto());
+            orderItemDtos.Add(_dtoHelper.PrepareOrderItemDTO(orderItem));
 
             var orderItemsRootObject = new OrderItemsRootObject()
             {
@@ -162,8 +179,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpPost]
-        [ResponseType(typeof (OrderItemsRootObject))]
-        public IHttpActionResult CreateOrderItem(int orderId,
+        [Route("/api/orders/{orderId}/items")]
+        [ProducesResponseType(typeof(OrderItemsRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult CreateOrderItem(int orderId,
             [ModelBinder(typeof (JsonModelBinder<OrderItemDto>))] Delta<OrderItemDto> orderItemDelta)
         {
             // Here we display the errors if the validation has failed at some point.
@@ -229,8 +251,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpPut]
-        [ResponseType(typeof(OrderItemsRootObject))]
-        public IHttpActionResult UpdateOrderItem(int orderId, int orderItemId,
+        [Route("/api/orders/{orderId}/items/{orderItemId}")]
+        [ProducesResponseType(typeof(OrderItemsRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        public IActionResult UpdateOrderItem(int orderId, int orderItemId,
           [ModelBinder(typeof(JsonModelBinder<OrderItemDto>))] Delta<OrderItemDto> orderItemDelta)
         {
             // Here we display the errors if the validation has failed at some point.
@@ -279,8 +306,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpDelete]
+        [Route("/api/orders/{orderId}/items/{orderItemId}")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult DeleteOrderItemById(int orderId, int orderItemId)
+        public IActionResult DeleteOrderItemById(int orderId, int orderItemId)
         {
             Order order = _orderApiService.GetOrderById(orderId);
 
@@ -296,8 +328,13 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpDelete]
+        [Route("/api/orders/{orderId}/items")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
         [GetRequestsErrorInterceptorActionFilter]
-        public IHttpActionResult DeleteAllOrderItemsForOrder(int orderId)
+        public IActionResult DeleteAllOrderItemsForOrder(int orderId)
         {
             Order order = _orderApiService.GetOrderById(orderId);
 

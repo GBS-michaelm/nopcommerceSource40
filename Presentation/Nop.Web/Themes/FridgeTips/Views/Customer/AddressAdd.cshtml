@@ -1,4 +1,4 @@
-﻿@model CustomerAddressEditModel
+@model CustomerAddressEditModel
 @using Nop.Web.Models.Customer;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -11,7 +11,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Addresses })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addraddform" }))
 {
@@ -24,14 +24,14 @@
             @{
                 var validationSummary = Html.ValidationSummary(true);
             }
-            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
             {
                 <div class="message-error">
                     @validationSummary
                 </div>
             }
             @{
-            var dataDictAddress = new ViewDataDictionary();
+            var dataDictAddress = new ViewDataDictionary(ViewData);
             //Merge ModelState (required for validation)
             dataDictAddress.ModelState.Merge(ViewData.ModelState);
             dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";

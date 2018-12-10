@@ -13,8 +13,8 @@ namespace Nop.Plugin.Shipping.GBS.Infrastructure
         public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig nopConfig)
         {
             //FilterProviders.Providers.Add(new NopFilterProvider());
-            builder.RegisterType<GBSShippingComputationPlugin>().As<IShippingRateComputationMethod>().InstancePerRequest();
-            builder.RegisterType<GBSShippingService>().As<IShippingService>().InstancePerRequest();
+            builder.RegisterType<GBSShippingComputationPlugin>().As<IShippingRateComputationMethod>().InstancePerLifetimeScope();
+            builder.RegisterType<GBSShippingService>().As<IShippingService>().InstancePerLifetimeScope();
 
         }
 

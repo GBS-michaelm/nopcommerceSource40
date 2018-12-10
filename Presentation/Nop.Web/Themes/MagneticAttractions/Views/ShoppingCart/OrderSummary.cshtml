@@ -7,7 +7,7 @@
    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 <div class="order-summary-content">
-   @Html.Widget("order_summary_content_before")
+   @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
    @Html.Partial("_OrderReviewData", Model.OrderReviewData)
    @if (Model.Items.Count > 0)
    {
@@ -206,7 +206,7 @@
            }
            @if (Model.IsEditable)
            {
-               @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
+               @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary(ViewData))
            }
            @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
            {
@@ -216,20 +216,20 @@
            }
        </div>
        <div class="cart-footer">
-           @Html.Widget("order_summary_cart_footer")
+           @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_cart_footer" })
            @if (Model.IsEditable)
            {
                <div class="cart-collaterals">
                    <div class="deals">
                        @Html.Partial("_DiscountBox", Model.DiscountBox)
                        @Html.Partial("_GiftCardBox", Model.GiftCardBox)
-                       @Html.Widget("order_summary_content_deals")
+                       @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
                    </div>
                    @Html.Partial("EstimateShipping", Model.EstimateShipping)
                </div>
            }
            <div class="totals">
-               @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
+               @await Component.InvokeAsync("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
                @if (Model.IsEditable)
                {
                    if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
@@ -286,7 +286,7 @@
        </div>
        if (Model.IsEditable)
        {
-            @Html.Action("CrossSellProducts", "Product")
+            @await Component.InvokeAsync("CrossSellProducts", "Product")
        }
        }
    }
@@ -296,5 +296,5 @@
            @T("ShoppingCart.CartIsEmpty")
        </div>
    }
-   @Html.Widget("order_summary_content_after")
+   @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
 </div>

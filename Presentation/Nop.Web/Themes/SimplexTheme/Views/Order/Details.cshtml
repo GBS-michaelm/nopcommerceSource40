@@ -1,8 +1,8 @@
-﻿@model OrderDetailsModel
+@model OrderDetailsModel
 @using Nop.Web.Infrastructure;
 @using Nop.Web.Models.Order
 @using Nop.Core.Infrastructure;
-@using Nop.Plugin.Widgets.CustomersCanvas.Services
+@using Nop.Web.Infrastructure;
 
 @{
 
@@ -56,11 +56,11 @@
                 </div>
             }
         </div>
-        @Html.Widget("orderdetails_page_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model.Id })
         <div class="order-overview">
             <div class="order-number">
                 @*<h4>@T("Order.Order#")@Model.Id</h4>*@
-                <h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>   
+                <h4>@T("Order.Order#") @DBManager.getGBSOrderID(Model.Id)</h4>
             </div>
             <ul class="order-details order-overview-content">
                 <li class="order-date">
@@ -73,7 +73,7 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @Html.Widget("orderdetails_page_overview", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model.Id })
         </div>
         <div class="order-details-area">
             <div class="row">
@@ -121,8 +121,8 @@
                                     </li>
                                 }
                                 @if (Model.BillingAddress.CityEnabled ||
-                Model.BillingAddress.StateProvinceEnabled ||
-                Model.BillingAddress.ZipPostalCodeEnabled)
+Model.BillingAddress.StateProvinceEnabled ||
+Model.BillingAddress.ZipPostalCodeEnabled)
                                 {
                                     <li class="city-state-zip">
                                         @if (Model.BillingAddress.CityEnabled)
@@ -569,7 +569,7 @@
                     </div>
                 </div>
             }
-            @Html.Widget("orderdetails_page_beforeproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -612,15 +612,15 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-                                    <td class="name">                                      
-                                        @{  if (!_ccService.IsProductForCc(item.ProductId) )
+                                    <td class="name">
+                                        @{ if (!_ccService.IsProductForCc(item.ProductId))
                                             {
 
-                                                    @Html.Widget("orderdetails_product_line_product", item.Id)
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line_product", additionalData = item.Id })
                                             }
-                                            else 
+                                            else
                                             {
-                                                @Html.Widget("orderdetails_product_line", item.Id)
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
                                             }
                                         }
                                     </td>
@@ -698,7 +698,7 @@
                     }
                 </div>
             </div>
-            @Html.Widget("orderdetails_page_afterproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
             <div class="section options">
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -888,6 +888,6 @@
                 }
             </div>
         }
-        @Html.Widget("orderdetails_page_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model.Id })
     </div>
 </div>

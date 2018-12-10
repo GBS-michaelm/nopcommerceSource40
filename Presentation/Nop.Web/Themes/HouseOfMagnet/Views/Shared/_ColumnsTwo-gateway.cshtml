@@ -1,5 +1,4 @@
-﻿@using System.Data.Entity;
-@using Nop.Plugin.DataAccess.GBS;
+@using System.Data.Entity;
 @using Nop.Core;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
@@ -7,7 +6,7 @@
 @using System.Data;
 @using System.Text;
 @using Nop.Services.Catalog;
-@using Nop.Plugin.BusinessLogic.GBS.Domain;
+@using Nop.Web.Infrastructure;
 
 @{
     Layout = "_Root";
@@ -341,13 +340,13 @@
 
     if (!string.IsNullOrEmpty(@bannerad))
     {
-    <div id="banners">@await Component.InvokeAsync("TopicBlock", new { systemName = @bannerad.ToString() })@*@Html.Action("TopicBlock", "Topic", new { systemName = @bannerad.ToString() })*@ </div>
+    <div id="banners">@await Component.InvokeAsync("TopicBlock", new { systemName = @bannerad.ToString() })@*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = @bannerad.ToString() })*@ </div>
     }
 	}
 	
     <div id="gateway-sales-banner">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_gateway_sale_banner" })
-        @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })*@
+        @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_gateway_sale_banner" })*@
     </div>
     <div id="gateway-body" class="bgstretchouter" style="background-color : @backgroundColor; background-image: url(@backgroundImage);">
         <div id="gateway-body-inner" class="bgstretchinner">
@@ -441,7 +440,7 @@
     {
         <div id="chartWrap">
             <div id="chartSection">
-                @*@Html.Action("TopicBlock", "Topic", new { systemName = @chart.ToString() })*@
+                @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = @chart.ToString() })*@
                 @await Component.InvokeAsync("TopicBlock", new { systemName = @chart.ToString() })
             </div>
         </div>
@@ -452,7 +451,7 @@
     {
         <div id="featcont">
             <div id="featcontSection">
-                @*@Html.Action("TopicBlock", "Topic", new { systemName = @featcont.ToString() })*@
+                @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = @featcont.ToString() })*@
                 @await Component.InvokeAsync("TopicBlock", new { systemName = @featcont.ToString() })
             </div>
         </div>
@@ -461,30 +460,30 @@
 
     @*<div id="videoAndQuantityCalculatorWrap">
         <div id="innerVidAndWQtyCalc">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
+            @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_video_quantity_chart" })
         </div>
     </div>*@
 
         <div>
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_calendar_reorder_steps" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_calendar_reorder_steps" })
         </div>
 
         <div>
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_product_features_notepads" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_product_features_notepads" })
         </div>
 
         <div>
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_testimonials" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_testimonials" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_testimonials" })
         </div>
         <div>
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_accessories_specialty_magnets" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_accessories_specialty_magnets" })
         </div>
         <div>
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "hom_opc_video" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_opc_video" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "hom_opc_video" })
         </div>
 

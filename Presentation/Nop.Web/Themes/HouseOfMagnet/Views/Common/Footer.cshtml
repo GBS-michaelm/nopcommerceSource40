@@ -1,4 +1,4 @@
-﻿@model FooterModel
+@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
@@ -9,10 +9,10 @@
             <div class="col-sm-4 footerleft">
                 <div id="aboutUsSection">
                     <h3>About House of Magnets</h3>
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "hom_about-us" })
+                    @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_about-us" })
                 </div>
                 <div id="contactUsSection">
-                    @Html.Action("TopicBlock", "Topic", new { systemName = "hom_contact-us" })
+                    @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_contact-us" })
                 </div>
               
 
@@ -22,13 +22,13 @@
                     <div class="column newsletter-wrapper col-sm-7 col-md-12">
                         <div class="row">
                             <div class="col-sm-7">
-                                 @Html.Action("TopicBlock", "Topic", new { systemName = "hom_footer_emaillist" })
-                                @Html.Widget("join_email_list", new { list = "HOM:Website_Signups", form = "FooterOptIn" })
+                                 @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_footer_emaillist" })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "join_email_list", additionalData = new { list = "HOM:Website_Signups", additionalData = form = "FooterOptIn" } })
 
 								
-                                @*@Html.Action("NewsletterBox", "Newsletter")*@
+                                @*@await Component.InvokeAsync("NewsletterBox", "Newsletter")*@
                                 <div class="follow-us">
-                                    @Html.Action("Social", "Common")
+                                    @await Component.InvokeAsync("Social", "Common")
                                 </div>
 
                             </div>
@@ -154,7 +154,7 @@
     <div class="footer-lower">
         <div class="container">
             <div class="row ">
-                <div class="footerlink">  @Html.Action("TopicBlock", "Topic", new { systemName = "hom_footer-gbs-family" })</div>
+                <div class="footerlink">  @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "hom_footer-gbs-family" })</div>
                 <div class="footer-disclaimer">
                     @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
                 </div>
@@ -191,7 +191,7 @@
                     <div class="footer-disclaimer">
                         @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
                     </div>
-                    @Html.Action("StoreThemeSelector", "Common")
+                    @await Component.InvokeAsync("StoreThemeSelector", "Common")
                 </div>*@
                 @*<div class="col-xs-12 col-sm-4 col-md-4">
                     <div class="designedby pull-right">
@@ -202,6 +202,6 @@
             </div>
         </div>
     </div>
-    @Html.Widget("footer")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "footer" })
 </div>
 

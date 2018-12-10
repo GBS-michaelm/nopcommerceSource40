@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_ColumnsOne";
 
     //page class
@@ -10,13 +10,13 @@
             <div class="banner-section">
                 <div class="main-banner">@await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })</div>
                 <div class="banner-right">
-                    @*@Html.Action("TopicBlock", "Topic", new { systemName = "ft_home-features" })*@
+                    @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "ft_home-features" })*@
                     @await Component.InvokeAsync("TopicBlock", new { systemName = "ft_home-features" })
                 </div>
             </div>
         </div>
         <div class="clearfix"></div>
-        @*@Html.Action("TopicBlock", "Topic", new { systemName = "ft_home-page-callout" })*@
+        @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "ft_home-page-callout" })*@
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ft_home-page-callout" })
         <div class="container">
             @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })

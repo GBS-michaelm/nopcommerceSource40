@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_Root";
 }
 @{
@@ -89,8 +89,8 @@
 <div class="listing-page">
    
     <div class="col-md-12">
-        @Html.Widget("main_column_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
         @RenderBody()
-        @Html.Widget("main_column_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
     </div>
 </div>

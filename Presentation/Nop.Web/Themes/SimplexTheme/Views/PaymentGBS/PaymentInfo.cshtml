@@ -1,4 +1,4 @@
-﻿@using Nop.Web.Framework;
+@using Nop.Web.Framework;
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Configuration;
 @model Nop.Plugin.Payments.GBS.Models.PaymentInfoModel
@@ -36,7 +36,7 @@ ViewBag StoreID: @ViewBag.StoreID<br />*@
     <div class="title small-heading">
         <strong><i class="fa fa-lock fa-1x gbs-lock-icon-color" aria-hidden="true"></i> Secure Payment Credit Card Payment</strong>
     </div>
-    @Html.Action("SaveCCView", "PaymentProfile")
+    @await Component.InvokeAsync("SaveCCView")
 
 
 </div>
@@ -49,7 +49,7 @@ ViewBag StoreID: @ViewBag.StoreID<br />*@
         </div>
         <div class="col-sm-4 col-md-4">
             @Html.ValidationMessageFor(model => model.CardholderName)
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+            <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
         </div>
     </div>
     <div class="form-group">
@@ -62,7 +62,7 @@ ViewBag StoreID: @ViewBag.StoreID<br />*@
             <i class="fa fa-cc-discover fa-2x gbs-discover-card-icon-color" aria-hidden="true"></i>
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+            <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
             @Html.ValidationMessageFor(model => model.CardNumber)
         </div>
     </div>
@@ -81,7 +81,7 @@ ViewBag StoreID: @ViewBag.StoreID<br />*@
             @Html.TextBoxFor(model => model.CardCode, new { autocomplete = "off", maxlength = 4, @class = "form-control" })
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="visible-lg visible-md visible-sm form-title-rquired">@Html.RequiredHint()</div>
+            <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
             @Html.ValidationMessageFor(model => model.CardCode)
         </div>
     </div>

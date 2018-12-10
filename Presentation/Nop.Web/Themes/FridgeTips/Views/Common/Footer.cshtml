@@ -1,4 +1,4 @@
-﻿@model FooterModel
+@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
@@ -8,7 +8,7 @@
     <div class="footer-lower">
         <div class="container">
             <div class="row ">
-                <div class="footerlink">  @Html.Action("TopicBlock", "Topic", new { systemName = "ft_footer-gbs-family" })</div>
+                <div class="footerlink">  @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "ft_footer-gbs-family" })</div>
                 <div class="footer-disclaimer">
                     @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
                 </div>
@@ -45,7 +45,7 @@
                         <div class="footer-disclaimer">
                             @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
                         </div>
-                        @Html.Action("StoreThemeSelector", "Common")
+                        @await Component.InvokeAsync("StoreThemeSelector", "Common")
                     </div>*@
                 @*<div class="col-xs-12 col-sm-4 col-md-4">
                         <div class="designedby pull-right">

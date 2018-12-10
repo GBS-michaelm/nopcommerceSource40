@@ -1,4 +1,4 @@
-﻿<div class="header">
+<div class="header">
     @await Component.InvokeAsync("Widget", new { widgetZone = "header_before" })
 
     <div class="header-lower">
@@ -11,11 +11,11 @@
                 </div>
                 <div class="col-xs-12 col-sm-6  pull-right">
                     @*<div class="search-box">
-                            @Html.Action("SearchBox", "Catalog")
+                            @await Component.InvokeAsync("SearchBox", "Catalog")
                         </div>*@
                 </div>
                 @*<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+                        @await Component.InvokeAsync("FlyoutShoppingCart", "ShoppingCart")
                     </div>*@
             </div>
         </div>

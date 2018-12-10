@@ -1,4 +1,4 @@
-﻿@model FooterModel
+@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
@@ -89,7 +89,7 @@
         </div>
         <div class="footer-block follow-us">
          
-                 @Html.Action("TopicBlock", "Topic", new { systemName = "am_footer-about" })
+                 @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "am_footer-about" })
         </div>
     </div>
     <div class="footer-lower">
@@ -112,9 +112,9 @@
                 Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
             </div>
         }
-        @Html.Action("StoreThemeSelector", "Common")
+        @await Component.InvokeAsync("StoreThemeSelector", "Common")
     </div>
-    @Html.Widget("footer")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "footer" })
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

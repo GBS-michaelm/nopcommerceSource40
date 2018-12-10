@@ -1,4 +1,4 @@
-﻿@model TopMenuModel
+@model TopMenuModel
 @using Nop.Web.Models.Catalog;
 
 @helper RenderCategoryLine(CategorySimpleModel category, int level, bool responsiveMobileMenu)
@@ -39,7 +39,7 @@
 
 <ul class="top-menu">
 <li><a href="@Url.RouteUrl("HomePage")">Home</a></li>
-    @Html.Widget("header_menu_before")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
     @{
         var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
     }
@@ -74,7 +74,7 @@
     }
    
     <li><a href="/contact_us">@T("ContactUs")</a></li>
-    @Html.Widget("header_menu_after")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
 </ul>
 
 @{
@@ -83,7 +83,7 @@
     var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
-        @Html.Widget("mob_header_menu_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "mob_header_menu_before" })
 		<li><a href="@Url.RouteUrl("HomePage")">Home</a></li>
         @foreach (var category in rootCategoriesResponsive)
         {
@@ -116,7 +116,7 @@
            <li><a href="contact_us">@T("ContactUs")</a></li>
         }
         <li><a href="/contact_us">@T("ContactUs")</a></li>
-		  @Html.Widget("mob_header_menu_after")
+		  @await Component.InvokeAsync("Widget", new { widgetZone = "mob_header_menu_after" })
     </ul>
     
     <script type="text/javascript">

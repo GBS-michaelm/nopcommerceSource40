@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel
+@model ProductDetailsModel
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
@@ -338,7 +338,7 @@
                                         </div>
                                     }
                                     @*we do not display "also purchased" for grouped products
-                                        @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
+                                        @await Component.InvokeAsync("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
 
                                 </div>
 

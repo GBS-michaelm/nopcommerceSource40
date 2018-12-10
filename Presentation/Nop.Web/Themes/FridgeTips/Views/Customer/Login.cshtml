@@ -1,4 +1,4 @@
-﻿@model LoginModel
+@model LoginModel
 @using System.Net
 @using Nop.Core
 @inject IWebHelper webHelper
@@ -34,7 +34,7 @@
                                 <legend>@T("Account.Login.CheckoutAsGuestOrRegister")</legend>
 
                                 <div class="text">
-                                    @*@Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })*@
+                                    @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })*@
                                     @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
                                     <div class="buttons buttons col-sm-offset-1 col-md-offset-1 col-md-10">
                                         @*<input type="button" class="btn btn-primary checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />*@

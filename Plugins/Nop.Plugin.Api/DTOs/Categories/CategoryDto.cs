@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Newtonsoft.Json;
 using Nop.Plugin.Api.DTOs.Images;
+using Nop.Plugin.Api.DTOs.Languages;
 using Nop.Plugin.Api.Validators;
 
 namespace Nop.Plugin.Api.DTOs.Categories
@@ -13,6 +13,7 @@ namespace Nop.Plugin.Api.DTOs.Categories
     public class CategoryDto
     {
         private ImageDto _imageDto;
+        private List<LocalizedNameDto> _localizedNames;
         private List<int> _storeIds;
         private List<int> _discountIds;
         private List<int> _roleIds;
@@ -22,6 +23,22 @@ namespace Nop.Plugin.Api.DTOs.Categories
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the localized names
+        /// </summary>
+        [JsonProperty("localized_names")]
+        public List<LocalizedNameDto> LocalizedNames
+        {
+            get
+            {
+                return _localizedNames;
+            }
+            set
+            {
+                _localizedNames = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the description

@@ -1,4 +1,4 @@
-﻿@model ContactVendorModel
+@model ContactVendorModel
 @using Nop.Web.Models.Common;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -13,7 +13,7 @@
         <h1>@T("PageTitle.ContactVendor", Model.VendorName)</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("contactvendor_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_top" })
         @if (Model.SuccessfullySent)
         {
             <div class="alert alert-success">
@@ -26,7 +26,7 @@
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                 {
                     <div class="message-error">@validationSummary</div>
                 }
@@ -37,7 +37,7 @@
                             @Html.TextBoxFor(model => model.FullName, new { @class = "fullname form-control", placeholder = T("ContactVendor.FullName.Hint") })
                         </div>
                         <div class="col-sm-3 col-md-3">
-                            @Html.RequiredHint()
+                            <nop-required />
                             @Html.ValidationMessageFor(model => model.FullName)
                         </div> 
                     </div>
@@ -47,7 +47,7 @@
                             @Html.TextBoxFor(model => model.Email, new { @class = "email form-control", placeholder = T("ContactVendor.Email.Hint") })
                         </div>
                         <div class="col-sm-3 col-md-3">
-                            @Html.RequiredHint()
+                            <nop-required />
                             @Html.ValidationMessageFor(model => model.Email)
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                                 @Html.TextBoxFor(model => model.Subject, new { @class = "subject form-control", placeholder = T("ContactVendor.Subject.Hint") })
                             </div>
                             <div class="col-sm-3 col-md-3">
-                                @Html.RequiredHint()
+                                <nop-required />
                                 @Html.ValidationMessageFor(model => model.Subject)
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                             @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry form-control", placeholder = T("ContactVendor.Enquiry.Hint") })
                         </div>
                         <div class="col-sm-3 col-md-3">
-                            @Html.RequiredHint()
+                            <nop-required />
                             @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
                     </div>
@@ -90,6 +90,6 @@
                 </div>
             }
         }
-        @Html.Widget("contactvendor_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_bottom" })
     </div>
 </div>

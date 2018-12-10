@@ -1,4 +1,4 @@
-﻿@model FooterModel
+@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @inject IWorkContext workContext;
@@ -127,7 +127,7 @@
         </div> -->
 
         <div class="footer-block follow-us">
-            @*@Html.Action("TopicBlock", "Topic", new { systemName = "tm_about-footer" })*@
+            @*@await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "tm_about-footer" })*@
             @await Component.InvokeAsync("TopicBlock", new { systemName = "tm_about-footer" })
         </div>
 

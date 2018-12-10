@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+@model CategoryModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo-namebadge.cshtml";
 
@@ -44,7 +44,7 @@
 
 
 
-@Html.Widget("categorydetails_after_breadcrumb", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_breadcrumb", additionalData = Model.Id })
 <div class="page category-page">
     <div class="page-body nb-body">
         @*<div class="pager clearfix">
@@ -56,7 +56,7 @@
             {
                 @pager
             }
-            @Html.Widget("categorydetails_bottom", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
         </div>*@
         
         
@@ -67,7 +67,7 @@
                 @* check if product has canvas data and has or has not been added to nop yet *@
                 @* canvas *@
                 @*<div>
-                    @Html.Action("CategoryNameBadges", "NameBadge", new { isDefault = true, categoryid = Model.Id })
+                    @await Component.InvokeAsync("CategoryNameBadges", "NameBadge", new { isDefault = true, categoryid = Model.Id })
                 </div>*@
             }
             else
@@ -82,7 +82,7 @@
                 int topicID = topicService.GetTopicBySystemName("hom_iframe_namebadge").Id;
                 @* iframe garbage *@
                 <div id="nbIframe" class="nb">
-                    @Html.Action("TopicDetails", "Topic", new { topicId = topicID })
+                    @await Component.InvokeAsync("TopicDetails", "Topic", new { topicId = topicID })
                 </div>
 
 
@@ -100,7 +100,7 @@
             {
                 @pager
             }
-            @Html.Widget("categorydetails_bottom", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
         </div>*@
     </div>
 </div>

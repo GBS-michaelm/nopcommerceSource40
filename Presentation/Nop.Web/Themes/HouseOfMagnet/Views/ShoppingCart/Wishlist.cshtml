@@ -236,7 +236,7 @@
                                                         {
                                                             <div class="wishlist-mobile">
                                                                 <a href="@Url.RouteUrl(" Product", new { SeName=item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
-                                                                @*@Html.Widget("product_details_widget", item.ProductId)*@
+                                                                @*@await Component.InvokeAsync("Widget", new { widgetZone = "product_details_widget", additionalData = item.ProductId })*@
                                                             </div>
                                                         }
                                                     </div>

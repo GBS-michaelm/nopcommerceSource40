@@ -1,4 +1,4 @@
-﻿@model CheckoutShippingAddressModel
+@model CheckoutShippingAddressModel
 @using Nop.Web.Models.Checkout;
 @using Nop.Web.Models.ShoppingCart;
 @{
@@ -295,7 +295,7 @@
 </div>
 
 <div class="col-sm-3 col-md-3">
-    @await Component.InvokeAsync("GBSOrderTotals", new { isEditable = true })
+     @await Component.InvokeAsync("GBSOrderTotals", new { additionalData = true })
 </div>
 
 

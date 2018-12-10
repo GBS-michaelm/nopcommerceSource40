@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel
+@model ProductDetailsModel
 @using Nop.Web.Models.Catalog;
 @{
     Html.AddScriptParts("~/Scripts/jquery.magnific-popup.min.js");
@@ -33,7 +33,7 @@
         {
             @*/ ------------- Nav 7/27/17 updated on 8/22/17 removed if condition for sets or single cards------------------ /*@
 
-            @*@Html.Widget("product_details_widget", Model.Id)*@
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "product_details_widget", additionalData = Model.Id })*@
             @await Component.InvokeAsync("Widget", new { widgetZone = "product_details_widget", additionalData = Model.Id })
 
         }

@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.Catalog.SearchModel
+@model Nop.Web.Models.Catalog.SearchModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -91,7 +91,7 @@
                                 @Html.CheckBoxFor(model => model.sid)
                                 @Html.LabelFor(model => model.sid)
                             </div>
-                            @Html.Widget("productsearch_page_advanced")
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_advanced" })
                         </div>
                     </div>
                 </div>

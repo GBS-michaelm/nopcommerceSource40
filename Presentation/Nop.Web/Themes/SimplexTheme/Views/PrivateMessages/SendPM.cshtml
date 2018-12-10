@@ -1,4 +1,4 @@
-﻿@model SendPrivateMessageModel
+@model SendPrivateMessageModel
 @using Nop.Web.Models.PrivateMessages;
 @{    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -20,7 +20,7 @@
             @{
                 var validationSummary = Html.ValidationSummary(true);
             }
-            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
             {
                 <div class="message-error">@validationSummary</div>
             }

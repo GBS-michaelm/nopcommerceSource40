@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+@model CategoryModel
 @{
     Layout = "~/Themes/SimplexTheme/Views/Shared/_ColumnsTwo-listing.cshtml";
 
@@ -30,7 +30,7 @@
 
 
 
-@*@Html.Widget("categorydetails_after_breadcrumb", Model.Id)*@
+@*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_breadcrumb", additionalData = Model.Id })*@
 @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_breadcrumb" })
 
 <div class="page category-page">
@@ -44,10 +44,10 @@
             {
                 @pager
             }
-            @*@Html.Widget("categorydetails_bottom", Model.Id)*@
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })*@
             @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom" })
         </div>
-        @*@Html.Widget("categorydetails_top", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_top", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_top", additionalData = Model.Id })
         @*description*@
         @*@if (!String.IsNullOrWhiteSpace(Model.Description))
@@ -56,7 +56,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }*@
-        @*@Html.Widget("categorydetails_before_subcategories", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_subcategories", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_subcategories", additionalData = Model.Id })
         @*subcategories*@
         @*@if (Model.SubCategories.Count > 0)
@@ -102,7 +102,7 @@
                 }
             </div>
         }*@
-        @*@Html.Widget("categorydetails_before_featured_products", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_featured_products", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_featured_products", additionalData = Model.Id })
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
@@ -125,13 +125,13 @@
                 </div>
             </div>
         }
-        @*@Html.Widget("categorydetails_after_featured_products", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_featured_products", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_featured_products", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
-            @*@Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())*@
+            @*@Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary(ViewData))*@
         }
-        @*@Html.Widget("categorydetails_before_filters", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })
 
         @*<div class="product-filters-wrapper">
@@ -139,18 +139,18 @@
         @*  @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
            @* <div class="well">
-                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary(ViewData))
             </div>
         }
         @*filtering*@
         @*     @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
             {
-                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary(ViewData))
             }
         </div>*@
 
 
-        @*@Html.Widget("categorydetails_before_product_list", Model.Id)*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })*@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })
         @*product grid and list*@
         @if (Model.Products.Count > 0)
@@ -179,7 +179,7 @@
                 {
                     @pager
                 }
-                @*@Html.Widget("categorydetails_bottom", Model.Id)*@
+                @*@await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })*@
                 @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
             </div>
     </div>

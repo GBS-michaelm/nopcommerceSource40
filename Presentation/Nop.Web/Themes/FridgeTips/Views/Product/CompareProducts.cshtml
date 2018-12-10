@@ -1,4 +1,4 @@
-﻿@model CompareProductsModel
+@model CompareProductsModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -140,7 +140,7 @@
                                 }
                             </tr>
                         }
-                        @*@Html.Widget("compareproducts_row")*@
+                        @*@await Component.InvokeAsync("Widget", new { widgetZone = "compareproducts_row" })*@
                     </tbody>
                 </table>
             </div>

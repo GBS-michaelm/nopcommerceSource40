@@ -1,4 +1,4 @@
-﻿@model EditForumTopicModel
+@model EditForumTopicModel
 @using Nop.Core.Domain.Forums;
 @using Nop.Web.Models.Boards;
 @{
@@ -6,7 +6,7 @@
     Html.AppendPageCssClassParts("html-forum-edit-page");
 }
 
-@Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
 <div class="page forum-edit-page">
     <div class="page-title panel-heading">
         @if (Model.IsEdit)
@@ -23,7 +23,7 @@
         {
             @Html.AntiForgeryToken()
             var validationSummary = Html.ValidationSummary(true);
-            if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
             {
                 <div class="message-error">@validationSummary</div> 
             }

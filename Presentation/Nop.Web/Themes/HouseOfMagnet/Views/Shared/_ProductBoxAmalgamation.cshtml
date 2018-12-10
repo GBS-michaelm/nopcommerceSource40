@@ -1,4 +1,4 @@
-﻿@model ProductOverviewModel
+@model ProductOverviewModel
 @using Nop.Core
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
@@ -121,7 +121,7 @@
 }
 
 <div class="product-item clearfix" data-productid="@amalgamationID">
-    @Html.Widget("product_listing_widget", amalgamationID)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "product_listing_widget", additionalData = amalgamationID })
     <div class="picture">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
@@ -142,7 +142,7 @@
             <h3 class="product-title">
                 <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
             </h3>
- 	    @Html.Widget("product_artist_name", amalgamationID)            
+ 	    @await Component.InvokeAsync("Widget", new { widgetZone = "product_artist_name", additionalData = amalgamationID })            
             <div class="prices">
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
@@ -187,8 +187,8 @@
                 @Html.Raw(Model.ShortDescription)
             </p>
             <div class="add-info">
-		        @*@Html.Widget("productbox_addinfo_before", Model.Id)  
-                @Html.Widget("productbox_addinfo_middle", Model.Id)*@
+		        @*@await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })  
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })*@
                 <div class="amalgamation-buttons">
                     <div class="amalgamation-buttons-details">
                         <input type="button" value="@T("Products.Details")" class="btn btn-primary product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />
@@ -243,8 +243,8 @@
                                             }
                                         }
 
-                                        @*<span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity ));"><i class="fa fa-plus" aria-hidden="true"></i></span>*@
-                                        @*<span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.FieldIdFor(model => @EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>*@
+                                        @*<span class="increase-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalIncreaseTextBoxQuantity(@Html.IdFor(model => @EnteredQuantity ));"><i class="fa fa-plus" aria-hidden="true"></i></span>*@
+                                        @*<span class="decrease-quantity" data-productid="@amalgamationID" data-featuredproductid="@featuredId" onclick="AmalDecreaseTextBoxQuantity(@Html.IdFor(model => @EnteredQuantity));"><i class="fa fa-minus" aria-hidden="true"></i></span>*@
 
                                         <span class="increase-quantity amal-group" data-productid="@amalgamationID" data-featuredproductid="@featuredId" data-textboxid=""><i class="fa fa-plus" aria-hidden="true"></i></span>
                                         <span class="decrease-quantity amal-group" data-productid="@amalgamationID" data-featuredproductid="@featuredId" data-textboxid="@textBoxId"><i class="fa fa-minus" aria-hidden="true"></i></span>
@@ -252,7 +252,7 @@
                                     @*//when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)*@
                                     <script type="text/javascript">
                                         $(document).ready(function () {
-                                            $("#@Html.FieldIdFor(model => amalgamationID)").keydown(function (event) {
+                                            $("#@Html.IdFor(model => amalgamationID)").keydown(function (event) {
                                                 if (event.keyCode == 13) {
                                                     //$("#add-to-cart-button-@Model.Id").click();
                                                     //$("#add-to-cart-button-@Model.Id").click();
@@ -289,7 +289,7 @@
                         </div>
                                     }
                 </div>
-                @*@Html.Widget("productbox_addinfo_after", Model.Id)*@
+                @*@await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })*@
             </div>
         </div>
     </div>

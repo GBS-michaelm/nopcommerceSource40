@@ -1,4 +1,4 @@
-﻿@model ProductDetailsModel
+@model ProductDetailsModel
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
@@ -143,7 +143,7 @@
                                         }
                                         @*@Html.Partial("_CompareProductsButton", Model)
                                         @Html.Partial("_ProductEmailAFriendButton", Model)
-                                        @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)*@
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })*@
                                     </div>
                                     @Html.Partial("_ShareButton", Model)
                                     <div class="category-tag">
@@ -184,11 +184,11 @@
                 </div>
 
                 <div class="product-collateral">
-                    @*<div class="product-slider">@Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
+                    @*<div class="product-slider">@await Component.InvokeAsync("ProductsAlsoPurchased", "Product", new { productId = Model.Id })</div>*@
                     <div class="product-slider">  @await Component.InvokeAsync("RelatedProducts", new { additionalData = Model.Id })</div>
                 </div>
             </div>
             </form>
-            @*@Html.Widget("productdetails_bottom", Model.Id)*@
+            @*@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })*@
     </div>
 </div>

@@ -1,4 +1,4 @@
-﻿@model ProductReviewsModel
+@model ProductReviewsModel
 @using Nop.Web.Models.Catalog;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -14,7 +14,7 @@
         <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
     </div>
     <div class="page-body">
-        @Html.Widget("productreviews_page_top", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_top", additionalData = Model.ProductId })
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result alert alert-success">
@@ -31,7 +31,7 @@
                 {
                     @Html.AntiForgeryToken()
                     var validationSummary = Html.ValidationSummary(true);
-                    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                     {
                         <div class="message-error">@validationSummary</div>
                     }
@@ -42,7 +42,7 @@
                                 @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title form-control" }) : (object)(new { @class = "review-title form-control", disabled = "disabled" }))
                             </div>
                             <div class="col-sm-3 col-md-3">
-                                @Html.RequiredHint()
+                                <nop-required />
                                 @Html.ValidationMessageFor(model => model.AddProductReview.Title)
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                                 @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text form-control" }) : (object)(new { @class = "review-text form-control", disabled = "disabled" }))
                             </div>
                             <div class="col-sm-3 col-md-3">
-                                @Html.RequiredHint()
+                                <nop-required />
                                 @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
                             </div>
                         </div>
@@ -136,12 +136,12 @@
                                 @review.WrittenOnStr
                             </span>
                         </div>
-                        @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
-                        @Html.Widget("productreviews_page_inside_review", review.Id)
+                        @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary(ViewData))
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
                     </div>
                 }
             </div>
         }
-        @Html.Widget("productreviews_page_bottom", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_bottom", additionalData = Model.ProductId })
     </div>
 </div>

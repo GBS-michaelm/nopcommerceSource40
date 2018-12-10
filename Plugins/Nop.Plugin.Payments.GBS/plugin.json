@@ -4,7 +4,7 @@
   "SystemName": "Payments.GBS",
   "Version": "1.00",
   "SupportedVersions": [ "4.00" ],
-  "Author": "Parth S. Patel",
+  "Author": "N.Anj",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.GBS.dll",
   "Description": "This plugin allows you to integrate payment plugin"

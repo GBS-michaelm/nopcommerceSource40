@@ -1,4 +1,4 @@
-﻿@model CheckoutShippingAddressModel
+@model CheckoutShippingAddressModel
 @using Nop.Web.Models.Checkout;
 @using Nop.Web.Models.ShoppingCart;
 @{
@@ -20,7 +20,7 @@
 
 <div class="page checkout-page shipping-address-page col-sm-9 col-md-9 gbs-margin-bottom-20">
 
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Shipping })
     <div class="shipping-address-wrap row gbs-checkout-border">
         <div class="shipping-address-title">
             <h3>@T("Checkout.ShippingAddress")</h3>
@@ -35,16 +35,16 @@
                     <div class="section pickup-in-store" style="display:none;">
                             <div class="selector">
                                 @Html.CheckBoxFor(x => x.PickUpInStore)
-                                <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@T("Checkout.PickupPoints").Text</label>
+                                <label for="@Html.IdFor(model => model.PickUpInStore)">@T("Checkout.PickupPoints").Text</label>
                             </div>
                             <div class="description">@T("Checkout.PickupPoints.Description")</div>
                             <script type="text/javascript">
                                 $(document).ready(function () {
-                                    $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                                    $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
                                     //togglePickUpInStore();
                                 });
                                 function togglePickUpInStore() {
-                                    if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                                    if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                                         $('#pickup-points-form').show();
                                         $('#shipping-addresses-form').hide();
                                     } else {
@@ -185,8 +185,8 @@
                                                             new google.maps.event.trigger(markers.get(this.value), 'click' );
                                                         });
 
-                                                        $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(function() {
-                                                            if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                                                        $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
+                                                            if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                                                                 var center = googleMap.getCenter();
                                                                 google.maps.event.trigger(googleMap, 'resize');
                                                                 googleMap.setCenter(center);
@@ -211,14 +211,14 @@
                 if (!Model.PickUpInStoreOnly)
                 {
             <div class="shipping-addresses" id="shipping-addresses-form">
-                @Html.Widget("checkout_shipping_address_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
                 @Html.Partial("_AddressBookDropdown", Model)
                 @*@if (Model.ExistingAddresses.Count > 0)
                     {
                         <a id="edit-saved-address">Edit Saved Address</a>
                     }*@
 
-                @Html.Widget("checkout_shipping_address_middle")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_middle" })
 
                 <div class="new-shipping-address @newShippingCheck">
 
@@ -238,7 +238,7 @@
                     var validationSummary = Html.ValidationSummary(true);
                             }
                         </div>
-                        @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                        @if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                                 {
                                 <div class="message-error">@validationSummary</div>
                                 <script type="text/javascript">
@@ -258,23 +258,23 @@
 
                         <div class="enter-address-body form-horizontal">
                             @{
-                                var dataDictAddress = new ViewDataDictionary();
+                                var dataDictAddress = new ViewDataDictionary(ViewData);
                                 //Merge ModelState (required for validation)
                                 dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                                    @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                                    @Html.Partial("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
                             }
                         </div>
                     </div>
 
                 </div>
 
-                @Html.Widget("checkout_shipping_address_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
             </div>
             }
         
             <div  id="local-pickup-msg" style="display:none;">
-                 @Html.Widget("order_addPhoneNumber_widget") 
+                 @await Component.InvokeAsync("Widget", new { widgetZone = "order_addPhoneNumber_widget" }) 
                 <div class="style-msg infomsg">
                 <div class="sb-msg"><i class="icon-info-sign"></i><strong>NOTE</strong> Local pickup availible 7am-5pm PT Monday through Friday</div>
                 </div>
@@ -291,7 +291,7 @@
 
 
             }
-                @Html.Widget("checkout_shipping_address_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
 
 
 
@@ -309,7 +309,7 @@
 </div>
 
 <div class="col-sm-3 col-md-3">
-    @Html.Action("GBSOrderTotals", "GBSShoppingCart", new { isEditable = true })
+    @await Component.InvokeAsync("GBSOrderTotals", new { additionalData = true })
 </div>
 
 

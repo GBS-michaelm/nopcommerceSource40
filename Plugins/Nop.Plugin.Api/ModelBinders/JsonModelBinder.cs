@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
 using FluentValidation.Attributes;
 using FluentValidation.Results;
 using Newtonsoft.Json;
@@ -17,21 +15,23 @@ using Nop.Services.Localization;
 
 namespace Nop.Plugin.Api.ModelBinders
 {
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+
     public class JsonModelBinder<T> : IModelBinder where T : class, new()
     {
         private readonly IJsonHelper _jsonHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
         private readonly int FirstLanguageId;
 
         public JsonModelBinder(IJsonHelper jsonHelper, ILocalizationService localizationService, ILanguageService languageService)
         {
             _jsonHelper = jsonHelper;
             _localizationService = localizationService;
-            _languageService = languageService;
 
             // Languages are ordered by display order so the first language will be with the smallest display order.
-            Language firstLanguage = _languageService.GetAllLanguages().FirstOrDefault();
+            Language firstLanguage = languageService.GetAllLanguages().FirstOrDefault();
 
             if (firstLanguage != null)
             {
@@ -43,15 +43,14 @@ namespace Nop.Plugin.Api.ModelBinders
             }
         }
 
-        public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            bool modelBinded = false;
-
-            Dictionary<string, object> result = GetResult(actionContext, bindingContext);
+            Dictionary<string, object> result = GetResult(bindingContext);
 
             if (result == null)
             {
-                return modelBinded;
+                bindingContext.Result = ModelBindingResult.Failed();
+                return Task.CompletedTask;
             }
             
             string rootProperty = GetRootProperty(bindingContext);
@@ -63,12 +62,12 @@ namespace Nop.Plugin.Api.ModelBinders
             {
                 // The validation for the key is in the Validate method.
                 Dictionary<string, object> propertyValuePaires =
-                    (Dictionary<string, object>)result[rootProperty];
+                    (Dictionary<string, object>) result[rootProperty];
 
                 // You will have id parameter passed in the model binder only when you have put request.
                 // because get and delete do not use the model binder.
                 // Here we insert the id in the property value pairs to be validated by the dto validator in a later point.
-                object routeDataId = GetRouteDataId(actionContext);
+                object routeDataId = GetRouteDataId(bindingContext.ActionContext);
 
                 if (routeDataId != null)
                 {
@@ -86,24 +85,44 @@ namespace Nop.Plugin.Api.ModelBinders
                 if (bindingContext.ModelState.IsValid)
                 {
                     delta = new Delta<T>(propertyValuePaires);
-                    ValidateModel(actionContext, bindingContext, propertyValuePaires, delta.Dto);
+                    ValidateModel(bindingContext, propertyValuePaires, delta.Dto);
                 }
 
                 if (bindingContext.ModelState.IsValid)
                 {
                     bindingContext.Model = delta;
-                    modelBinded = true;
+                    bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
+                }
+                else
+                {
+                    bindingContext.Result = ModelBindingResult.Failed();
                 }
             }
+            else
+            {
+                bindingContext.Result = ModelBindingResult.Failed();
+            }
 
-            return modelBinded;
+            return Task.CompletedTask;
         }
 
-        private Dictionary<string, object> GetResult(HttpActionContext actionContext, ModelBindingContext bindingContext)
+        private Dictionary<string, object> GetResult(ModelBindingContext bindingContext)
         {
             Dictionary<string, object> result = null;
 
-            var requestPayload = actionContext.Request.Content.ReadAsStringAsync();
+            Stream requestPayloadStream = bindingContext.ActionContext.HttpContext.Request.Body;
+
+            string requestPayload = string.Empty;
+
+            using (requestPayloadStream)
+            {
+                if (requestPayloadStream != null)
+                {
+                    var streamReader = new StreamReader(requestPayloadStream);
+                    requestPayload = streamReader.ReadToEnd();
+                    streamReader.Close();
+                }
+            }
 
             // We need to check if the request has a payload.
             CheckIfJsonIsProvided(bindingContext, requestPayload);
@@ -117,13 +136,13 @@ namespace Nop.Plugin.Api.ModelBinders
             return result;
         }
 
-        private object GetRouteDataId(HttpActionContext actionContext)
+        private object GetRouteDataId(ActionContext actionContext)
         {
             object routeDataId = null;
 
-            if (actionContext.RequestContext.RouteData.Values.ContainsKey("id"))
+            if (actionContext.RouteData.Values.ContainsKey("id"))
             {
-                routeDataId = actionContext.RequestContext.RouteData.Values["id"];
+                routeDataId = actionContext.RouteData.Values["id"];
             }
 
             return routeDataId;
@@ -199,32 +218,31 @@ namespace Nop.Plugin.Api.ModelBinders
             }
         }
 
-        private Dictionary<string, object> DeserializeReqestPayload(ModelBindingContext bindingContext, Task<string> requestPayload)
+        private Dictionary<string, object> DeserializeReqestPayload(ModelBindingContext bindingContext, string requestPayload)
         {
             Dictionary<string, object> result = null;
 
             // Here we check if validation has passed to this point.
             if (bindingContext.ModelState.IsValid)
             {
-                result = _jsonHelper.DeserializeToDictionary(requestPayload.Result);
+                result = _jsonHelper.DeserializeToDictionary(requestPayload);
             }
 
             return result;
         }
 
-        private void CheckIfJsonIsProvided(ModelBindingContext bindingContext, Task<string> requestPayload)
+        private void CheckIfJsonIsProvided(ModelBindingContext bindingContext, string requestPayload)
         {
-            if ((requestPayload == null || 
-                string.IsNullOrEmpty(requestPayload.Result)) &&
+            if (string.IsNullOrEmpty(requestPayload) &&
                 bindingContext.ModelState.IsValid)
             {
                 bindingContext.ModelState.AddModelError("json", _localizationService.GetResource("Api.NoJsonProvided", FirstLanguageId, false));
             }
         }
         
-        private void ValidateModel(HttpActionContext actionContext, ModelBindingContext bindingContext, Dictionary<string, object> propertyValuePaires, T dto)
+        private void ValidateModel(ModelBindingContext bindingContext, Dictionary<string, object> propertyValuePaires, T dto)
         {
-            ValidationResult validationResult = GetValidationResult(actionContext, propertyValuePaires, dto);
+            ValidationResult validationResult = GetValidationResult(bindingContext.ActionContext, propertyValuePaires, dto);
 
             if (!validationResult.IsValid)
             {
@@ -240,7 +258,7 @@ namespace Nop.Plugin.Api.ModelBinders
             }
         }
 
-        private ValidationResult GetValidationResult(HttpActionContext actionContext, Dictionary<string, object> propertyValuePaires, T dto)
+        private ValidationResult GetValidationResult(ActionContext actionContext, Dictionary<string, object> propertyValuePaires, T dto)
         {
             var validationResult = new ValidationResult();
 
@@ -258,7 +276,8 @@ namespace Nop.Plugin.Api.ModelBinders
                 var validator = Activator.CreateInstance(validatorType,
                     new object[]
                     {
-                        actionContext.Request.Method.ToString(),
+                        //TODO: find this
+                        actionContext.HttpContext.Request.Method,
                         propertyValuePaires
                     });
 

@@ -1,4 +1,4 @@
-﻿@model OrderDetailsModel
+@model OrderDetailsModel
 @*@using Nop.Plugin.DataAccess.GBS;*@
 @using Nop.Web.Models.Order
 @using Nop.Core.Infrastructure;
@@ -6,13 +6,13 @@
 @using Nop.Core;
 @using Nop.Services.Stores;
 @using Nop.Services.Orders;
+@using Nop.Web.Infrastructure;
 @{
     var _productService = EngineContext.Current.Resolve<IProductService>();
     var _storeContext = EngineContext.Current.Resolve<IStoreContext>();
     var _storeMappingService = EngineContext.Current.Resolve<IStoreMappingService>();
     var _storeService = EngineContext.Current.Resolve<IStoreService>();
-    var _ccService = EngineContext.Current.Resolve<ICcService>();
-    var _gbsOrderService = (GBSOrderService)DependencyResolver.Current.GetServices<IOrderService>().Where(x => x is GBSOrderService).FirstOrDefault();
+    var _ccService = EngineContext.Current.Resolve<ICcService>();   
 }
 @*@functions {
 
@@ -585,11 +585,11 @@
                                                 </div>
                                             }
                                             @{ var nopProduct = _productService.GetProductBySku(item.Sku);
-                                                if (nopProduct != null && (!_ccService.IsProductForCc(nopProduct.Id) || (_ccService.IsProductForCc(nopProduct.Id) && _gbsOrderService.GetOrderItemById(item.Id, true) == null)))
+                                                if (nopProduct != null && (!_ccService.IsProductForCc(nopProduct.Id) || (_ccService.IsProductForCc(nopProduct.Id) && _ccService.GetOrderItemById(item.Id, true) == null)))
                                                 {
                                                     @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line_product", additionalData = item.Id })
                                                 }
-                                                else if (_gbsOrderService.GetOrderItemById(item.Id, true) == null)
+                                                else if (_ccService.GetOrderItemById(item.Id, true) == null)
                                                 {
                                                     @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line_legacy", additionalData = item.Id })
                                                 }

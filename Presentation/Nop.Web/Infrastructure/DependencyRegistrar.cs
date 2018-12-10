@@ -45,6 +45,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<TopicModelFactory>().As<ITopicModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<VendorModelFactory>().As<IVendorModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetModelFactory>().As<IWidgetModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CcService>().As<ICcService>().InstancePerLifetimeScope();
         }
 
         /// <summary>

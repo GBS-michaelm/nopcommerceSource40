@@ -1,4 +1,4 @@
-﻿@model CustomerBackInStockSubscriptionsModel
+@model CustomerBackInStockSubscriptionsModel
 @using Nop.Web.Models.Catalog
 @using Nop.Web.Models.Customer
 @{    
@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title panel-heading">
@@ -76,7 +76,7 @@
                     @{
                          var pager = Html.Pager(Model.PagerModel);
                     }
-                    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+                    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
                     {
                         <div class="pagination">
                             @pager

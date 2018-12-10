@@ -1,4 +1,4 @@
-﻿@model CustomerRewardPointsModel
+@model CustomerRewardPointsModel
 @using Nop.Web.Models.Customer
 @using Nop.Web.Models.Order
 @{
@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
 <div class="page account-page reward-points-page">
     <div class="page-title panel-heading">
@@ -79,7 +79,7 @@
                     </table>
                 </div>
                 var pager = Html.Pager(Model.PagerModel);
-                if (!MvcHtmlString.IsNullOrEmpty(pager))
+                if (!string.IsNullOrEmpty(pager.ToHtmlString()))
                 {
                     <div class="pager">
                         @pager

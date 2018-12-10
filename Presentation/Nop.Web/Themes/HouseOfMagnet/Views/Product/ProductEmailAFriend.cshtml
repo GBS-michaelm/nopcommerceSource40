@@ -1,4 +1,4 @@
-﻿@model ProductEmailAFriendModel
+@model ProductEmailAFriendModel
 @using Nop.Web.Models.Catalog;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -29,7 +29,7 @@
             {     
                 @Html.AntiForgeryToken()    
            	    var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                if (!string.IsNullOrEmpty(validationSummary.ToHtmlString()))
                 {
                     <div class="message-error">@validationSummary</div>
                 }
@@ -40,7 +40,7 @@
                             @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email form-control", placeholder = T("Products.EmailAFriend.FriendEmail.Hint") })
                         </div>
                         <div class="col-sm-3 col-md-3">
-                            @Html.RequiredHint()
+                            <nop-required />
                             @Html.ValidationMessageFor(model => model.FriendEmail)    
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email form-control", placeholder = T("Products.EmailAFriend.YourEmailAddress.Hint") })
                         </div>
                         <div class="col-sm-3 col-md-3">
-                            @Html.RequiredHint()
+                            <nop-required />
                             @Html.ValidationMessageFor(model => model.YourEmailAddress)         
                         </div>
                     </div>

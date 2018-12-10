@@ -1,5 +1,4 @@
-﻿using ImageResizer.Configuration.Logging;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -14,8 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Nop.Services.Logging;
 
-namespace Nop.Plugin.Payments.PayPalDirect.Components
+
+namespace Nop.Plugin.Payments.GBS.Components
 {
     [ViewComponent(Name = "PaymentGBS")]
     public class PaymentGBSViewComponent : NopViewComponent
@@ -24,9 +25,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Components
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
-        private readonly ILogger _logger;
+		private readonly ILogger _logger;
 
-        private readonly GBSPaymentSettings _gbsPaymentSettings;
+		private readonly GBSPaymentSettings _gbsPaymentSettings;
 
         public PaymentGBSViewComponent(ILocalizationService localizationService,
             ISettingService settingService,
@@ -73,19 +74,21 @@ namespace Nop.Plugin.Payments.PayPalDirect.Components
                 ViewBag.UseSavedCards = _gbsPaymentSettings.UseSavedCards;
                 ViewBag.StoreID = storeScope;
 
-                if ((_gbsPaymentSettings.UseSavedCards))
-                {
+				if ((_gbsPaymentSettings.UseSavedCards))
+				{
 
-                    DBManager dbmanager = new DBManager();
-                    Dictionary<string, string> paramDic = new Dictionary<string, string>();
-                    paramDic.Add("@CustomerID", customerID.ToString());
-                    string select = "SELECT * FROM Profiles WHERE CustomerID = " + customerID + "";
-                    DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
-                    ViewBag.SavedCCCount = dView.Count;
-                }
+					DBManager dbmanager = new DBManager();
+					Dictionary<string, string> paramDic = new Dictionary<string, string>();
+					paramDic.Add("@CustomerID", customerID.ToString());
+					string select = "exec usp_getCCProfiles @CustomerID";
+					DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  //dbmanager.GetDataView(select);
+					ViewBag.SavedCCCount = dView.Count;
 
 
-                var model = new PaymentInfoModel();
+
+				}
+
+				var model = new PaymentInfoModel();
 
                 //years
                 for (var i = 0; i < 15; i++)
@@ -110,20 +113,24 @@ namespace Nop.Plugin.Payments.PayPalDirect.Components
                 }
 
                 //set postback values
-                var form = this.Request.Form;
-                model.CardholderName = form["CardholderName"];
-                model.CardNumber = form["CardNumber"];
-                model.CardCode = form["CardCode"];
-                var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
+                //var form = HttpContext.Request.Form;
+                //if (form != null)
+                //{
+                //    model.CardholderName = form["CardholderName"];
+                //    model.CardNumber = form["CardNumber"];
+                //    model.CardCode = form["CardCode"];
+                //    var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
 
-                if (selectedMonth != null)
-                    selectedMonth.Selected = true;
+                //    if (selectedMonth != null)
+                //        selectedMonth.Selected = true;
 
-                var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
+                //    var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
 
-                if (selectedYear != null)
-                    selectedYear.Selected = true;
-                return View("~/Views/PaymentGBS/PaymentInfo.cshtml", model);
+                //    if (selectedYear != null)
+                //        selectedYear.Selected = true;
+                //}
+                return View("~/Plugins/Payments.GBS/Views/PaymentGBS/PaymentInfo.cshtml", model);
+				
             }
             catch (Exception ex)
             {

@@ -166,29 +166,29 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
         }
 
-        #endregion
+		#endregion
 
-        //public IActionResult GBSOrderTotals(bool isEditable)
-        //{
-        //    var cart = _workContext.CurrentCustomer.ShoppingCartItems
-        //        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-        //        .LimitPerStore(_storeContext.CurrentStore.Id)
-        //        .ToList();
+		public IActionResult GBSOrderTotals(bool isEditable)
+		{
+			var cart = _workContext.CurrentCustomer.ShoppingCartItems
+				.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+				.LimitPerStore(_storeContext.CurrentStore.Id)
+				.ToList();
 
-        //    var shoppingCartModel = new ShoppingCartModel();
-        //    _shoppingCartModelFactory.PrepareShoppingCartModel(shoppingCartModel, cart,
-        //    isEditable: false,
-        //    prepareAndDisplayOrderReviewData: false);
-        //    ViewBag.ShoppingCartModel = shoppingCartModel;
+			var shoppingCartModel = new ShoppingCartModel();
+			_shoppingCartModelFactory.PrepareShoppingCartModel(shoppingCartModel, cart,
+			isEditable: false,
+			prepareAndDisplayOrderReviewData: false);
+			ViewBag.ShoppingCartModel = shoppingCartModel;
 
-        //    var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
-        //    return PartialView("OrderTotals", model);
-        //}
+			var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
+			return PartialView("OrderTotals", model);
+		}
 
-        [HttpPost]
+		[HttpPost]
         [ActionName("MyPDA")]
         new public IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
-                    bool loadPicture, FormCollection form)
+                    bool loadPicture, IFormCollection form)
         {
             var miscPlugins = _pluginFinder.GetPlugins<GBSCheckout>(storeId: _storeContext.CurrentStore.Id).ToList();
             if (miscPlugins.Count > 0)
@@ -779,7 +779,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
             return "";
         }
 
-        private string ParseProductAttributes(Product product, FormCollection form)
+        private string ParseProductAttributes(Product product, IFormCollection form)
         {
             string attributesXml = "";
 
@@ -998,7 +998,7 @@ namespace Nop.Plugin.ShoppingCart.GBS.Controllers
 
 
         [HttpPost]
-        public IActionResult NameBadgeIframeAddToCart(FormCollection form)
+        public IActionResult NameBadgeIframeAddToCart(IFormCollection form)
         {
             IProductService productService = EngineContext.Current.Resolve<IProductService>();
             IProductAttributeService productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();

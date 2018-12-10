@@ -22,7 +22,10 @@ namespace Nop.Plugin.DataAccess.GBS
             Dictionary<string, string> paramDic = new Dictionary<string, string>();
             paramDic.Add("@ProductID", pID.ToString());
             string select = "Select ProductID, shippingCategoryA, shippingCategoryB from " + tableName + " where ProductID = " + pID + "";
-            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);  
+            DataView dView = dbmanager.GetParameterizedDataView(select, paramDic);
+
+            if (dView == null)
+                return productgbsModel;
 
             if (dView.Count > 0)
             {

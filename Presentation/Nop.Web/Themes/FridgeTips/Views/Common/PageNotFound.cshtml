@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
@@ -11,6 +11,6 @@
         <h1>@T("PageTitle.PageNotFound")</h1>
     </div>
     <div class="page-body">
-        @Html.Action("TopicBlock", "Topic", new { systemName = "PageNotFound" })
+        @await Component.InvokeAsync("TopicBlock", "Topic", new { systemName = "PageNotFound" })
     </div>
 </div>

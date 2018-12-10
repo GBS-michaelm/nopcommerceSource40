@@ -1,4 +1,4 @@
-﻿@model CustomerOrderListModel
+@model CustomerOrderListModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -21,7 +21,7 @@
 
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Orders })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders })
 }
 <div class="page account-page order-list-page">
     <div class="page-title panel-heading">
@@ -122,7 +122,7 @@
                 </div>
             }
         }
-        @Html.Widget("order_listing_widget", Model.Orders)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "order_listing_widget", additionalData = Model.Orders })
         @{
             var pagerModel = Model.CustomProperties["PagerModel"] as Nop.Web.Models.Common.PagerModel;
 
@@ -135,7 +135,7 @@
             </select>*@
 
             var pager = Html.Pager(pagerModel);
-            if (!MvcHtmlString.IsNullOrEmpty(pager))
+            if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager">
                     @pager

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nop.Plugin.Api.DTOs;
 using System.Xml;
 using Nop.Services.Catalog;
@@ -32,6 +30,9 @@ namespace Nop.Plugin.Api.Services
         public string ConvertToXml(List<ProductItemAttributeDto> attributeDtos, int productId)
         {
             string attributesXml = "";
+
+            if (attributeDtos == null)
+                return attributesXml;
 
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(productId);
             foreach (var attribute in productAttributes)
